@@ -69,6 +69,7 @@ public class Pioneer {
 	//Debugging
 	final boolean DEBUG_LASER = false;
 	final boolean DEBUG_STATE = false;
+	final boolean DEBUG_SONAR = false;
 
 	/// Returns the minimum distance of the given arc.
 	/// Algorithm calculates the average of BEAMCOUNT beams
@@ -218,7 +219,7 @@ public class Pioneer {
 		rightLeftMinArray[1] = (distFront + distLeftFront)  / 2;
 	}
 
-	// Biased by left wall following
+	// Biased by left wall following TODO change parameter to CbR
 	final void collisionAvoid ( double turnrate, StateType currentState)
 	{
 		// Scan FOV for Walls
@@ -306,69 +307,62 @@ public class Pioneer {
 			System.out.println();
 			for(int i=0; i< 16; i++) // TODO use dynamic array size
 				System.out.println("Sonar " + i + ": " + sonarValues[i]);
-			}
-			if ( trackTurnrate == TRACKING_NO ) { ///< Check if ball is not detected in camera FOV
-
-				// (Left) Wall following
-				turnrate = wallfollow(&currentState);
-				// Collision avoidance overrides other turnrate if neccessary!
-				collisionAvoid(&turnrate, &currentState);
-				trackSpeed = VEL; // Disable track speed
-
-			} else {
-				// Track the ball
-				currentState = BALL_TRACKING;
-				std::cout << "BALL_TRACKING" << std::endl;
-				turnrate = trackTurnrate;
-				speed    = trackSpeed;
-			}
-
-			// Set speed dependend on the wall distance
-			speed = calcspeed();
-
-			// Fusion speed with ball tracking: lower wins
-			speed>trackSpeed ? speed=trackSpeed : speed;
-
-			// Check if rotating is safe
-			checkrotate(&tmp_turnrate);
-
-			// Fusion of the vectors makes a smoother trajectory
-			turnrate = (tmp_turnrate + turnrate) / 2;
-			#ifdef DEBUG_STATE  // {{{
-			std::cout << "turnrate/speed/state:\t" << turnrate << "\t" << speed << "\t"
-			<< currentState << std::endl;
-			#endif  // }}}
-			#ifdef DEBUG_DIST // {{{
-			std::cout << "Laser (l/lf/f/rf/r/rb/b/lb):\t" << getDistanceLas(LMIN, LMAX)-HORZOFFSET << "\t"
-			<< getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET  << "\t"
-			<< getDistanceLas(FMIN,  FMAX)              << "\t"
-			<< getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET  << "\t"
-			<< getDistanceLas(RMIN,  RMAX) -HORZOFFSET  << "\t"
-			<< "XXX"                                    << "\t"
-			<< "XXX"                                    << "\t"
-			<< "XXX"                                    << std::endl;
-			std::cout << "Sonar (l/lf/f/rf/r/rb/b/lb):\t" << PlayerCc::min(sp->GetScan(15),sp->GetScan(0)) << "\t"
-			<< PlayerCc::min(sp->GetScan(1), sp->GetScan(2))              << "\t"
-			<< PlayerCc::min(sp->GetScan(3), sp->GetScan(4))              << "\t"
-			<< PlayerCc::min(sp->GetScan(5), sp->GetScan(6))              << "\t"
-			<< PlayerCc::min(sp->GetScan(7), sp->GetScan(8))              << "\t"
-			<< PlayerCc::min(sp->GetScan(9), sp->GetScan(10))-MOUNTOFFSET << "\t"
-			<< PlayerCc::min(sp->GetScan(11),sp->GetScan(12))-MOUNTOFFSET << "\t"
-			<< PlayerCc::min(sp->GetScan(13),sp->GetScan(14))-MOUNTOFFSET << std::endl;
-			std::cout << "Shape (l/lf/f/rf/r/rb/b/lb):\t" << getDistance(LEFT) << "\t"
-			<< getDistance(LEFTFRONT)  << "\t"
-			<< getDistance(FRONT)      << "\t"
-			<< getDistance(RIGHTFRONT) << "\t"
-			<< getDistance(RIGHT)      << "\t"
-			<< getDistance(RIGHTREAR)  << "\t"
-			<< getDistance(BACK)       << "\t"
-			<< getDistance(LEFTREAR)   << std::endl;
-			#endif // }}}
-			#ifdef DEBUG_POSITION // {{{
-			std::cout << pp->GetXPos() << "\t" << pp->GetYPos() << "\t" << rtod(pp->GetYaw()) << std::endl;
 		}
+
+
+		// (Left) Wall following
+		turnrate = wallfollow(currentState);
+		// Collision avoidance overrides other turnrate if neccessary!
+		// TODO change IF
+		collisionAvoid(turnrate, currentState);
+
+		// Set speed dependend on the wall distance
+		speed = calcspeed();
+
+		// Check if rotating is safe
+		tmp_turnrate = checkrotate(tmp_turnrate);
+
+		// Fusion of the vectors makes a smoother trajectory
+		turnrate = (tmp_turnrate + turnrate) / 2;
+		if (DEBUG_STATE) {
+			System.out.println("turnrate/speed/state:\t" + turnrate + "\t" + speed + "\t" + currentState);
+		}
+		if (DEBUG_DIST) {
+		System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
+		System.out.print(getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
+		System.out.print(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
+		System.out.print(getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
+		System.out.print(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
+		System.out.print(getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
+		System.out.println("\t" + "XXX" + "\t" + "XXX" + "\t" + "XXX");
+		// Wait for sonar readings
+		while (!soni.isDataReady ());
+		float[] sonarValues = soni.getData ().getRanges ();		
+
+		System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
+		System.out.print(java.lang.Math.min(sonarValues[15],sonarValues[0]));
+		System.out.print("\t");
+		+ java.lang.Math.min(sonarValues[1], sonarValues[2])              + "\t"
+		+ java.lang.Math.min(sonarValues[3], sonarValues[4])              + "\t"
+		+ java.lang.Math.min(sonarValues[5], sonarValues[6])              + "\t"
+		+ java.lang.Math.min(sonarValues[7], sonarValues[8])              + "\t"
+		+ java.lang.Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET + "\t"
+		+ java.lang.Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET + "\t"
+		+ java.lang.Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
+		std::cout + "Shape (l/lf/f/rf/r/rb/b/lb):\t" + getDistance(LEFT) + "\t"
+		+ getDistance(LEFTFRONT)  + "\t"
+		+ getDistance(FRONT)      + "\t"
+		+ getDistance(RIGHTFRONT) + "\t"
+		+ getDistance(RIGHT)      + "\t"
+		+ getDistance(RIGHTREAR)  + "\t"
+		+ getDistance(BACK)       + "\t"
+		+ getDistance(LEFTREAR)   + std::endl;
+		}
+		#ifdef DEBUG_POSITION // {{{
+		std::cout << pp->GetXPos() << "\t" << pp->GetYPos() << "\t" << rtod(pp->GetYaw()) << std::endl;
 	}
-	/// Command the motors
+
+/// Command the motors
 	final void execute() { pp->SetSpeed(speed, turnrate); }
 	void go() {
 		this->update();
