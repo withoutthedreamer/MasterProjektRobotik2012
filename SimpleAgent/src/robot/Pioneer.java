@@ -5,11 +5,16 @@ package robot;
 //import java.lang.Math;
 
 import javaclient3.PlayerClient;
+import javaclient3.PlayerException;
+import javaclient3.Position2DInterface;
+import javaclient3.Position2DInterface;
 import javaclient3.RangerInterface;
 import javaclient3.SonarInterface;
+import javaclient3.structures.PlayerConstants;
 
 public class Pioneer {
 	PlayerClient        playerclient = null;
+	Position2DInterface posi  = null;
 	SonarInterface      soni  = null;
 	RangerInterface		rang  = null;
 	
@@ -34,7 +39,7 @@ public class Pioneer {
 	   RIGHTREAR,
 	   ALL
 	}
-	// Parameters TODO shall be in own config file
+	// Parameters TODO shall be in own config file or superclass
 	final double VEL       = 0.3;///< Normal_advance_speed in meters per sec.
 	final double TURN_RATE = 40; ///< Max wall following turnrate in deg per sec.
 	                             /// Low values: Smoother trajectory but more
@@ -67,16 +72,34 @@ public class Pioneer {
 	final int RMIN  = 0;  /**< RIGHT min angle.      */ final int RMAX  = 65;  ///< RIGHT max angle.
 	
 	//Debugging
-	final boolean DEBUG_LASER = false;
-	final boolean DEBUG_STATE = false;
-	final boolean DEBUG_SONAR = false;
+	final boolean DEBUG_LASER = true;
+	final boolean DEBUG_STATE = true;
+	final boolean DEBUG_SONAR = true;
+	final boolean DEBUG_DIST  = true;
+	final boolean DEBUG_POSITION = true;
+	
+	// Constructor: do all playerclient communication setup here
+	public Pioneer () {
+		try {
+			// Connect to the Player server and request access to Position and Sonar
+			// TODO singleton to manage port numbers globally (Blackboard?)
+			playerclient  = new PlayerClient ("localhost", 6665);
+			posi = playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
+			soni = playerclient.requestInterfaceSonar      (0, PlayerConstants.PLAYER_OPEN_MODE);
+			rang = playerclient.requestInterfaceRanger	   (0, PlayerConstants.PLAYER_OPEN_MODE);
+		} catch (PlayerException e) {
+			System.err.println ("WallFollowerExample: > Error connecting to Player: ");
+			System.err.println ("    [ " + e.toString() + " ]");
+			System.exit (1);
+		}
+		playerclient.runThreaded (-1, -1);
+	}
 
 	/// Returns the minimum distance of the given arc.
 	/// Algorithm calculates the average of BEAMCOUNT beams
 	/// to define a minimum value per degree.
 	/// @param Range of angle (degrees)
 	/// @return Minimum distance in range
-
 	final double getDistanceLas ( int minAngle, int maxAngle ) {
 		double minDist         = LPMAX; ///< Min distance in the arc.
 	    double distCurr        = LPMAX; ///< Current distance of a laser beam
@@ -166,13 +189,13 @@ public class Pioneer {
 		double DistLFov  = 0;
 		double DistL     = 0;
 		double DistLRear = 0;
-		double DistFront = 0;
+		//double DistFront = 0;
 
 		// As long global goal is WF set it by default
 		// Will potentially be overridden by higher prior behaviours
 		currentState = StateType.WALL_FOLLOWING;
 
-		DistFront = getDistance(viewDirectType.FRONT);
+		//DistFront = getDistance(viewDirectType.FRONT);
 		DistLFov  = getDistance(viewDirectType.LEFTFRONT);
 		DistL     = getDistance(viewDirectType.LEFT);
 		DistLRear = getDistance(viewDirectType.LEFTREAR);
@@ -219,13 +242,13 @@ public class Pioneer {
 		rightLeftMinArray[1] = (distFront + distLeftFront)  / 2;
 	}
 
-	// Biased by left wall following TODO change parameter to CbR
-	final void collisionAvoid ( double turnrate, StateType currentState)
+	// Biased by left wall following
+	final void collisionAvoid ()
 	{
 		// Scan FOV for Walls
 		double[] rightLeftMinArray = new double[2];
-		rightLeftMinArray[1] = LPMAX;
-		rightLeftMinArray[0] = LPMAX;
+		rightLeftMinArray[1] = LPMAX; // Left
+		rightLeftMinArray[0] = LPMAX; // Right
 		
 		getDistanceFOV(rightLeftMinArray);
 
@@ -260,7 +283,7 @@ public class Pioneer {
 				//speed=(VEL*(tmpMinDistBack-tmpMinDistFront))/SHAPE_DIST;
 				//tmpMinDistBack<tmpMinDistFront ? speed=(VEL*(tmpMinDistFront-tmpMinDistBack))/WALLFOLLOWDIST : speed;
 		}
-		return speed;
+		return speed; // TODO set speed globally in robot object
 	}
 
 	/// Checks if turning the robot is not causing collisions.
@@ -294,90 +317,88 @@ public class Pioneer {
 		return turnrate;
 	}
 
-//	final void update () {
-//		//robot->Read(); ///< This blocks until new data comes; 10Hz by default
-//		playerclient.readAll();
-//	}
+	final void update () {
+		///< This blocks until new data comes; 10Hz by default
+		this.playerclient.readAll();
+	}
 	final void plan () {
 		if (DEBUG_SONAR){
 			// Wait for sonar readings
 			while (!soni.isDataReady ());
-			float[] sonarValues = soni.getData ().getRanges ();		
+			float[] sonarValues = soni.getData ().getRanges ();	
+			int 	sonarCount  = soni.getData().getRanges_count();
 
 			System.out.println();
-			for(int i=0; i< 16; i++) // TODO use dynamic array size
+			for(int i=0; i< sonarCount; i++)
 				System.out.println("Sonar " + i + ": " + sonarValues[i]);
 		}
 
 
 		// (Left) Wall following
-		turnrate = wallfollow(currentState);
+		this.turnrate = wallfollow(this.currentState);
 		// Collision avoidance overrides other turnrate if neccessary!
-		// TODO change IF
-		collisionAvoid(turnrate, currentState);
-
+		// May change this.turnrate or this.currentState
+		collisionAvoid();
+		
 		// Set speed dependend on the wall distance
-		speed = calcspeed();
+		this.speed = calcspeed();
 
 		// Check if rotating is safe
-		tmp_turnrate = checkrotate(tmp_turnrate);
+		this.tmp_turnrate = checkrotate(this.tmp_turnrate);
 
 		// Fusion of the vectors makes a smoother trajectory
-		turnrate = (tmp_turnrate + turnrate) / 2;
+		this.turnrate = (this.tmp_turnrate + this.turnrate) / 2;
 		if (DEBUG_STATE) {
 			System.out.println("turnrate/speed/state:\t" + turnrate + "\t" + speed + "\t" + currentState);
 		}
 		if (DEBUG_DIST) {
-		System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
-		System.out.print(getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
-		System.out.print(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
-		System.out.print(getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
-		System.out.print(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
-		System.out.print(getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
-		System.out.println("\t" + "XXX" + "\t" + "XXX" + "\t" + "XXX");
-		// Wait for sonar readings
-		while (!soni.isDataReady ());
-		float[] sonarValues = soni.getData ().getRanges ();		
+			System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
+			System.out.print(getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
+			System.out.print(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
+			System.out.print(getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
+			System.out.print(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
+			System.out.print(getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
+			System.out.println("\t" + "XXX" + "\t" + "XXX" + "\t" + "XXX");
+			
+			// Wait for sonar readings
+			while (!soni.isDataReady ());
+			float[] sonarValues = soni.getData ().getRanges ();		
 
-		System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
-		System.out.print(java.lang.Math.min(sonarValues[15],sonarValues[0]));
-		System.out.print("\t");
-		+ java.lang.Math.min(sonarValues[1], sonarValues[2])              + "\t"
-		+ java.lang.Math.min(sonarValues[3], sonarValues[4])              + "\t"
-		+ java.lang.Math.min(sonarValues[5], sonarValues[6])              + "\t"
-		+ java.lang.Math.min(sonarValues[7], sonarValues[8])              + "\t"
-		+ java.lang.Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET + "\t"
-		+ java.lang.Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET + "\t"
-		+ java.lang.Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
-		std::cout + "Shape (l/lf/f/rf/r/rb/b/lb):\t" + getDistance(LEFT) + "\t"
-		+ getDistance(LEFTFRONT)  + "\t"
-		+ getDistance(FRONT)      + "\t"
-		+ getDistance(RIGHTFRONT) + "\t"
-		+ getDistance(RIGHT)      + "\t"
-		+ getDistance(RIGHTREAR)  + "\t"
-		+ getDistance(BACK)       + "\t"
-		+ getDistance(LEFTREAR)   + std::endl;
+			System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
+			System.out.print(java.lang.Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
+			System.out.print(java.lang.Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
+			System.out.print(java.lang.Math.min(sonarValues[3], sonarValues[4]));   System.out.print("\t");
+			System.out.print(java.lang.Math.min(sonarValues[5], sonarValues[6]));   System.out.print("\t");
+			System.out.print(java.lang.Math.min(sonarValues[7], sonarValues[8]));   System.out.print("\t");
+			System.out.print(java.lang.Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET); System.out.print("\t");
+			System.out.print(java.lang.Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET); System.out.print("\t");
+			System.out.println(java.lang.Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
+			
+			System.out.print("Shape (l/lf/f/rf/r/rb/b/lb):\t");
+			System.out.print(getDistance(viewDirectType.LEFT)); System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.LEFTFRONT));  System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.FRONT));      System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.RIGHTFRONT)); System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.RIGHT));      System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.RIGHTREAR));  System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.BACK));       System.out.print("\t");
+			System.out.println(getDistance(viewDirectType.LEFTREAR));
 		}
-		#ifdef DEBUG_POSITION // {{{
-		std::cout << pp->GetXPos() << "\t" << pp->GetYPos() << "\t" << rtod(pp->GetYaw()) << std::endl;
+		if (DEBUG_POSITION) {
+			System.out.print(posi.getData().getPos().getPx());	System.out.print("\t");
+			System.out.print(posi.getData().getPos().getPy());	System.out.print("\t");
+			System.out.println(java.lang.Math.toDegrees(posi.getData().getPos().getPa()));
+		}
 	}
 
 /// Command the motors
-	final void execute() { pp->SetSpeed(speed, turnrate); }
-	void go() {
-		this->update();
-		this->plan();
-		this->execute();
+	final void execute() {
+		this.posi.setSpeed(speed, turnrate);
 	}
-	/// Set turnrate in radians
-	/// @param Turnrate in radians, '0' will do wall follow
-	/// @todo Make thread safe
-	void setTurnrate( double vl_turnrate ) { trackTurnrate = vl_turnrate; }
-	/// Set Robot speed in meters per sec
-	/// @param vl_speed Robot speed in meters per sec
-	/// @todo Make thread safe
-	void setSpeed ( double vl_speed ) { trackSpeed = vl_speed; }
-	/// Get global robot orientation in radians
-	double getOrientation ( void ) { return pp->GetYaw(); }
+	public void go() {
+		update();
+		plan();
+		execute();
+	}
 
 }
