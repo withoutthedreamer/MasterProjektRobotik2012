@@ -317,11 +317,11 @@ public class Pioneer {
 		return turnrate;
 	}
 
-	final void update () {
+	final void readSensors () {
 		///< This blocks until new data comes; 10Hz by default
 		this.playerclient.readAll();
-//		this.sonar.updateRanges();
-//		this.laser.updateRanges();
+		this.sonar.updateRanges();
+		this.laser.updateRanges();
 	}
 	final void plan () {
 		if (DEBUG_SONAR){
@@ -393,8 +393,8 @@ public class Pioneer {
 	final void execute() {
 		this.posi.setSpeed(speed, turnrate);
 	}
-	public void go() {
-		update();
+	public void update() {
+		readSensors();
 		plan();
 		execute();
 	}

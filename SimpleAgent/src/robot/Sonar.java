@@ -27,7 +27,7 @@ public class Sonar {
 	public void updateRanges() {
 		// Wait for sonar readings
 		while (!soni.isDataReady ());
-		this.ranges = soni.getData ().getRanges ();
+		this.ranges = soni.getData().getRanges();
 	}
 
 	public float[] getRanges() {

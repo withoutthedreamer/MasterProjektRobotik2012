@@ -43,7 +43,7 @@ public class WallFollowTams  {
 		Pioneer pioneer2dx = new Pioneer();
 			
 		while (true) {
-			pioneer2dx.go();
+			pioneer2dx.update();
 			try { Thread.sleep (100); } catch (Exception e) { }
 		}
 	}
