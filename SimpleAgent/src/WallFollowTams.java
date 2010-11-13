@@ -39,6 +39,7 @@ import robot.Pioneer;
 public class WallFollowTams  {
 
 	public static void main (String[] args) {
+		System.setProperty("PlayerClient.isDebugging","true");
 		Pioneer pioneer2dx = new Pioneer();
 			
 		while (true) {

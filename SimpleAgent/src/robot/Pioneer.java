@@ -2,22 +2,20 @@
 
 package robot;
 
-//import java.lang.Math;
+import robot.LaserUrg;
+import robot.Sonar;
 
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.Position2DInterface;
-import javaclient3.Position2DInterface;
-import javaclient3.RangerInterface;
-import javaclient3.SonarInterface;
 import javaclient3.structures.PlayerConstants;
 
 public class Pioneer {
 	PlayerClient        playerclient = null;
 	Position2DInterface posi  = null;
-	SonarInterface      soni  = null;
-	RangerInterface		rang  = null;
 	
+	LaserUrg 			laser = null;
+	Sonar				sonar = null;
 	
 	int robotID = -1;
 	double speed = -1.0;
@@ -78,15 +76,21 @@ public class Pioneer {
 	final boolean DEBUG_DIST  = true;
 	final boolean DEBUG_POSITION = true;
 	
+//	final boolean DEBUG_LASER = false;
+//	final boolean DEBUG_STATE = false;
+//	final boolean DEBUG_SONAR = false;
+//	final boolean DEBUG_DIST  = false;
+//	final boolean DEBUG_POSITION = false;
+	
 	// Constructor: do all playerclient communication setup here
 	public Pioneer () {
 		try {
 			// Connect to the Player server and request access to Position and Sonar
 			// TODO singleton to manage port numbers globally (Blackboard?)
 			playerclient  = new PlayerClient ("localhost", 6665);
+			this.laser    = new LaserUrg (playerclient);
+			this.sonar 	  = new Sonar (playerclient);
 			posi = playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
-			soni = playerclient.requestInterfaceSonar      (0, PlayerConstants.PLAYER_OPEN_MODE);
-			rang = playerclient.requestInterfaceRanger	   (0, PlayerConstants.PLAYER_OPEN_MODE);
 		} catch (PlayerException e) {
 			System.err.println ("WallFollowerExample: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
@@ -94,7 +98,7 @@ public class Pioneer {
 		}
 		playerclient.runThreaded (-1, -1);
 	}
-
+		
 	/// Returns the minimum distance of the given arc.
 	/// Algorithm calculates the average of BEAMCOUNT beams
 	/// to define a minimum value per degree.
@@ -111,9 +115,7 @@ public class Pioneer {
 	      double sumDist     = 0.; ///< Sum of BEAMCOUNT beam's distance.
 	      double averageDist = LPMAX; ///< Average of BEAMCOUNT beam's distance.
 	      
-	      // Wait for the laser readings
-	      while (!rang.isDataReady());
-	      double[] laserValues = rang.getData().getRanges();
+	      double[] laserValues = this.laser.getRanges();
 
 	      for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
 	        //distCurr = lp->GetRange(beamIndex);
@@ -154,27 +156,25 @@ public class Pioneer {
 	/// @return Minimum distance of requested view Direction
 	final double getDistance( viewDirectType viewDirection )
 	{
-		// Wait for sonar readings
-		while (!soni.isDataReady ());
-		float[] sonarValues = soni.getData ().getRanges ();
+		float[] sonarValues = this.sonar.getRanges();
 		
 		// Scan safety areas for walls
 		switch (viewDirection) {
-		case LEFT      : return java.lang.Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, java.lang.Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
-		case RIGHT     : return java.lang.Math.min(getDistanceLas(RMIN,  RMAX) -HORZOFFSET-SHAPE_DIST, java.lang.Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST);
-		case FRONT     : return java.lang.Math.min(getDistanceLas(FMIN,  FMAX)            -SHAPE_DIST, java.lang.Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST);
-		case RIGHTFRONT: return java.lang.Math.min(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET-SHAPE_DIST, java.lang.Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST);
-		case LEFTFRONT : return java.lang.Math.min(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET-SHAPE_DIST, java.lang.Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST);
-		case BACK      : return java.lang.Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-		case LEFTREAR  : return java.lang.Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-		case RIGHTREAR : return java.lang.Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-		case ALL       : return java.lang.Math.min(getDistance(viewDirectType.LEFT),
-				java.lang.Math.min(getDistance(viewDirectType.RIGHT),
-						java.lang.Math.min(getDistance(viewDirectType.FRONT),
-								java.lang.Math.min(getDistance(viewDirectType.BACK),
-										java.lang.Math.min(getDistance(viewDirectType.RIGHTFRONT),
-												java.lang.Math.min(getDistance(viewDirectType.LEFTFRONT),
-														java.lang.Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
+		case LEFT      : return Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
+		case RIGHT     : return Math.min(getDistanceLas(RMIN,  RMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST);
+		case FRONT     : return Math.min(getDistanceLas(FMIN,  FMAX)            -SHAPE_DIST, Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST);
+		case RIGHTFRONT: return Math.min(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST);
+		case LEFTFRONT : return Math.min(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST);
+		case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+		case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+		case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+		case ALL       : return Math.min(getDistance(viewDirectType.LEFT),
+				Math.min(getDistance(viewDirectType.RIGHT),
+						Math.min(getDistance(viewDirectType.FRONT),
+								Math.min(getDistance(viewDirectType.BACK),
+										Math.min(getDistance(viewDirectType.RIGHTFRONT),
+												Math.min(getDistance(viewDirectType.LEFTFRONT),
+														Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
 		default: return 0.; // Should be recognized if happens
 		}
 	}
@@ -193,7 +193,7 @@ public class Pioneer {
 
 		// As long global goal is WF set it by default
 		// Will potentially be overridden by higher prior behaviours
-		currentState = StateType.WALL_FOLLOWING;
+		this.currentState = StateType.WALL_FOLLOWING;
 
 		//DistFront = getDistance(viewDirectType.FRONT);
 		DistLFov  = getDistance(viewDirectType.LEFTFRONT);
@@ -320,13 +320,13 @@ public class Pioneer {
 	final void update () {
 		///< This blocks until new data comes; 10Hz by default
 		this.playerclient.readAll();
+//		this.sonar.updateRanges();
+//		this.laser.updateRanges();
 	}
 	final void plan () {
 		if (DEBUG_SONAR){
-			// Wait for sonar readings
-			while (!soni.isDataReady ());
-			float[] sonarValues = soni.getData ().getRanges ();	
-			int 	sonarCount  = soni.getData().getRanges_count();
+			float[] sonarValues = this.sonar.getRanges();	
+			int 	sonarCount  = this.sonar.getCount();
 
 			System.out.println();
 			for(int i=0; i< sonarCount; i++)
@@ -360,9 +360,7 @@ public class Pioneer {
 			System.out.print(getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
 			System.out.println("\t" + "XXX" + "\t" + "XXX" + "\t" + "XXX");
 			
-			// Wait for sonar readings
-			while (!soni.isDataReady ());
-			float[] sonarValues = soni.getData ().getRanges ();		
+			float[] sonarValues = this.sonar.getRanges();		
 
 			System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
 			System.out.print(java.lang.Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
