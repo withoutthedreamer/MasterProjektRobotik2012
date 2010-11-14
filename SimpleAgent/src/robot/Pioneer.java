@@ -2,6 +2,8 @@
 
 package robot;
 
+import java.util.logging.Level;
+
 import robot.LaserUrg;
 import robot.Sonar;
 
@@ -11,19 +13,20 @@ import javaclient3.Position2DInterface;
 import javaclient3.structures.PlayerConstants;
 
 public class Pioneer {
-	PlayerClient        playerclient = null;
+	public PlayerClient playerclient = null;
 	Position2DInterface posi  = null;
 	
 	LaserUrg 			laser = null;
 	Sonar				sonar = null;
 	
-	int robotID = -1;
+	int id = -1;
 	double speed = -1.0;
 	double turnrate = -1.0;
 	double tmp_turnrate = -1.0;
 	enum StateType {
 		WALL_FOLLOWING,
-	    COLLISION_AVOIDANCE
+	    COLLISION_AVOIDANCE,
+	    WALL_SEARCHING
 	}
 	StateType currentState;
 	enum viewDirectType {
@@ -70,33 +73,43 @@ public class Pioneer {
 	final int RMIN  = 0;  /**< RIGHT min angle.      */ final int RMAX  = 65;  ///< RIGHT max angle.
 	
 	//Debugging
-	final boolean DEBUG_LASER = true;
-	final boolean DEBUG_STATE = true;
-	final boolean DEBUG_SONAR = true;
-	final boolean DEBUG_DIST  = true;
-	final boolean DEBUG_POSITION = true;
+	//final boolean DEBUG_LASER = true;
+//	final boolean DEBUG_STATE = true;
+//	final boolean DEBUG_SONAR = true;
+//	final boolean DEBUG_DIST  = true;
+	//final boolean DEBUG_POSITION = true;
 	
-//	final boolean DEBUG_LASER = false;
-//	final boolean DEBUG_STATE = false;
-//	final boolean DEBUG_SONAR = false;
-//	final boolean DEBUG_DIST  = false;
-//	final boolean DEBUG_POSITION = false;
+	final boolean DEBUG_LASER = false;
+	final boolean DEBUG_STATE = false;
+	final boolean DEBUG_SONAR = false;
+	final boolean DEBUG_DIST  = false;
+	final boolean DEBUG_POSITION = false;
 	
 	// Constructor: do all playerclient communication setup here
-	public Pioneer () {
+	public Pioneer (String name, int port, int id) {
 		try {
 			// Connect to the Player server and request access to Position and Sonar
 			// TODO singleton to manage port numbers globally (Blackboard?)
-			playerclient  = new PlayerClient ("localhost", 6665);
+			playerclient  = new PlayerClient (name, port);
+			playerclient.getLogger().setLevel(Level.FINEST);
+			System.out.println("Running playerclient with name: " + playerclient.getName());
+			this.id = id;
+			
+			posi = playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.laser    = new LaserUrg (playerclient);
 			this.sonar 	  = new Sonar (playerclient);
-			posi = playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
+//			this.laser = null;
+//			this.sonar = null;
 		} catch (PlayerException e) {
 			System.err.println ("WallFollowerExample: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 			System.exit (1);
 		}
 		playerclient.runThreaded (-1, -1);
+//		playerclient.run();
+//		playerclient.setNotThreaded();
+
+		
 	}
 		
 	/// Returns the minimum distance of the given arc.
@@ -155,27 +168,57 @@ public class Pioneer {
 	/// @param Robot view direction
 	/// @return Minimum distance of requested view Direction
 	final double getDistance( viewDirectType viewDirection )
-	{
-		float[] sonarValues = this.sonar.getRanges();
+	{		
+		float[] sonarValues = new float[16];
 		
-		// Scan safety areas for walls
-		switch (viewDirection) {
-		case LEFT      : return Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
-		case RIGHT     : return Math.min(getDistanceLas(RMIN,  RMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST);
-		case FRONT     : return Math.min(getDistanceLas(FMIN,  FMAX)            -SHAPE_DIST, Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST);
-		case RIGHTFRONT: return Math.min(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST);
-		case LEFTFRONT : return Math.min(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST);
-		case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-		case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-		case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-		case ALL       : return Math.min(getDistance(viewDirectType.LEFT),
-				Math.min(getDistance(viewDirectType.RIGHT),
-						Math.min(getDistance(viewDirectType.FRONT),
-								Math.min(getDistance(viewDirectType.BACK),
-										Math.min(getDistance(viewDirectType.RIGHTFRONT),
-												Math.min(getDistance(viewDirectType.LEFTFRONT),
-														Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
-		default: return 0.; // Should be recognized if happens
+		if (this.sonar != null) {
+			sonarValues = this.sonar.getRanges();
+		} else {
+			for (int i=0; i<16; i++) {
+				sonarValues[i] = (float)this.LPMAX;
+			}
+		}
+		if (this.laser != null) {
+			// Scan safety areas for walls
+			switch (viewDirection) {
+			case LEFT      : return Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
+			case RIGHT     : return Math.min(getDistanceLas(RMIN,  RMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST);
+			case FRONT     : return Math.min(getDistanceLas(FMIN,  FMAX)            -SHAPE_DIST, Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST);
+			case RIGHTFRONT: return Math.min(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST);
+			case LEFTFRONT : return Math.min(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST);
+			case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+			case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+			case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+			case ALL       : return Math.min(getDistance(viewDirectType.LEFT),
+					Math.min(getDistance(viewDirectType.RIGHT),
+							Math.min(getDistance(viewDirectType.FRONT),
+									Math.min(getDistance(viewDirectType.BACK),
+											Math.min(getDistance(viewDirectType.RIGHTFRONT),
+													Math.min(getDistance(viewDirectType.LEFTFRONT),
+															Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
+			default: return 0.; // Should be recognized if happens
+			}
+		} else if (this.sonar == null) {
+			return this.LPMAX;
+		} else {
+			switch (viewDirection) {
+			case LEFT      : return Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST;
+			case RIGHT     : return Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST;
+			case FRONT     : return Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST;
+			case RIGHTFRONT: return Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST;
+			case LEFTFRONT : return Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST;
+			case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+			case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+			case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+			case ALL       : return Math.min(getDistance(viewDirectType.LEFT),
+					Math.min(getDistance(viewDirectType.RIGHT),
+							Math.min(getDistance(viewDirectType.FRONT),
+									Math.min(getDistance(viewDirectType.BACK),
+											Math.min(getDistance(viewDirectType.RIGHTFRONT),
+													Math.min(getDistance(viewDirectType.LEFTFRONT),
+															Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
+			default: return 0.; // Should be recognized if happens
+			}
 		}
 	}
 	
@@ -202,31 +245,31 @@ public class Pioneer {
 
 		// do simple (left) wall following
 		//do naiv calculus for turnrate; weight dist vector
-		turnrate = java.lang.Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 );
+		turnrate = Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 );
 			
-		if (DEBUG_STATE) {
-			System.out.println("WALLFOLLOW");
-		}
-
-		// Normalize turnrate
+				// Normalize turnrate
 		//turnrate = java.lang.Math.toRadians.limit(turnrate, -java.lang.Math.toRadians(TURN_RATE), java.lang.Math.toRadians(TURN_RATE));
-		if (turnrate > java.lang.Math.toRadians(TURN_RATE)) {
-			turnrate = java.lang.Math.toRadians(TURN_RATE);
-		} else if (turnrate < -java.lang.Math.toRadians(TURN_RATE)) {
-			turnrate = -java.lang.Math.toRadians(TURN_RATE);
+		if (turnrate > Math.toRadians(TURN_RATE)) {
+			turnrate = Math.toRadians(TURN_RATE);
+		} else if (turnrate < -Math.toRadians(TURN_RATE)) {
+			turnrate = -Math.toRadians(TURN_RATE);
 		}
 
 		// Go straight if no wall is in distance (front, left and left front)
 		if (DistLFov  >= WALLLOSTDIST  &&
-		DistL     >= WALLLOSTDIST  &&
-		DistLRear >= WALLLOSTDIST     )
+			DistL     >= WALLLOSTDIST  &&
+			DistLRear >= WALLLOSTDIST     )
 		{
 			turnrate = 0;
-			this.currentState = StateType.WALL_FOLLOWING;
-			if (DEBUG_STATE) {
-				System.out.println("WALL_SEARCHING");
-			}
+			this.currentState = StateType.WALL_SEARCHING;
+//			if (DEBUG_STATE) {
+//				System.out.println("WALL_SEARCHING");
+//			}
 		}
+//		if (DEBUG_STATE) {
+//			System.out.println("Robot " + this.id + " state: " + this.currentState.toString());
+//		}
+
 		return turnrate;
 	}
 
@@ -255,20 +298,20 @@ public class Pioneer {
 		if ((rightLeftMinArray[1]  < STOP_WALLFOLLOWDIST) ||
 				(rightLeftMinArray[0] < STOP_WALLFOLLOWDIST)   )
 		{
-			currentState = StateType.COLLISION_AVOIDANCE;
+			this.currentState = StateType.COLLISION_AVOIDANCE;
 			// Turn right as long we want left wall following
-			turnrate = -java.lang.Math.toRadians(STOP_ROT);
-			if (DEBUG_STATE) {
-				System.out.println("COLLISION_AVOIDANCE");
-			}
+			this.turnrate = -Math.toRadians(STOP_ROT);
+//			if (DEBUG_STATE) {
+//				System.out.println("COLLISION_AVOIDANCE");
+//			}
 		}
 	}
 
 	/// @todo Code review
 	final double calcspeed ()
 	{
-		double tmpMinDistFront = java.lang.Math.min(getDistance(viewDirectType.LEFTFRONT), java.lang.Math.min(getDistance(viewDirectType.FRONT), getDistance(viewDirectType.RIGHTFRONT)));
-		double tmpMinDistBack  = java.lang.Math.min(getDistance(viewDirectType.LEFTREAR), java.lang.Math.min(getDistance(viewDirectType.BACK), getDistance(viewDirectType.RIGHTREAR)));
+		double tmpMinDistFront = Math.min(getDistance(viewDirectType.LEFTFRONT), Math.min(getDistance(viewDirectType.FRONT), getDistance(viewDirectType.RIGHTFRONT)));
+		double tmpMinDistBack  = Math.min(getDistance(viewDirectType.LEFTREAR), Math.min(getDistance(viewDirectType.BACK), getDistance(viewDirectType.RIGHTREAR)));
 		double speed = VEL;
 
 		if (tmpMinDistFront < WALLFOLLOWDIST) {
@@ -320,11 +363,11 @@ public class Pioneer {
 	final void readSensors () {
 		///< This blocks until new data comes; 10Hz by default
 		this.playerclient.readAll();
-		this.sonar.updateRanges();
-		this.laser.updateRanges();
+		if (this.sonar != null) { this.sonar.updateRanges(); };
+		if (this.laser != null) { this.laser.updateRanges(); };
 	}
 	final void plan () {
-		if (DEBUG_SONAR){
+		if (DEBUG_SONAR && this.sonar != null){
 			float[] sonarValues = this.sonar.getRanges();	
 			int 	sonarCount  = this.sonar.getCount();
 
@@ -349,28 +392,35 @@ public class Pioneer {
 		// Fusion of the vectors makes a smoother trajectory
 		this.turnrate = (this.tmp_turnrate + this.turnrate) / 2;
 		if (DEBUG_STATE) {
-			System.out.println("turnrate/speed/state:\t" + turnrate + "\t" + speed + "\t" + currentState);
+			System.out.println("turnrate/speed/state:\t" + turnrate + "\t" + speed + "\t" + this.currentState.toString());
 		}
 		if (DEBUG_DIST) {
-			System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
-			System.out.print(getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
-			System.out.print(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
-			System.out.print(getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
-			System.out.print(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
-			System.out.print(getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
-			System.out.println("\t" + "XXX" + "\t" + "XXX" + "\t" + "XXX");
-			
-			float[] sonarValues = this.sonar.getRanges();		
+			if (this.laser != null) {
+				System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
+				System.out.print(getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
+				System.out.print(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
+				System.out.print(getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
+				System.out.print(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
+				System.out.print(getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
+				System.out.println("\t" + "XXX" + "\t" + "XXX" + "\t" + "XXX");
+			} else {
+				System.out.println("No laser available!");
+			}
 
-			System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
-			System.out.print(java.lang.Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
-			System.out.print(java.lang.Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
-			System.out.print(java.lang.Math.min(sonarValues[3], sonarValues[4]));   System.out.print("\t");
-			System.out.print(java.lang.Math.min(sonarValues[5], sonarValues[6]));   System.out.print("\t");
-			System.out.print(java.lang.Math.min(sonarValues[7], sonarValues[8]));   System.out.print("\t");
-			System.out.print(java.lang.Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET); System.out.print("\t");
-			System.out.print(java.lang.Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET); System.out.print("\t");
-			System.out.println(java.lang.Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
+			if (this.sonar != null) {
+				float[] sonarValues = this.sonar.getRanges();		
+				System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
+				System.out.print(Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
+				System.out.print(Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
+				System.out.print(Math.min(sonarValues[3], sonarValues[4]));   System.out.print("\t");
+				System.out.print(Math.min(sonarValues[5], sonarValues[6]));   System.out.print("\t");
+				System.out.print(Math.min(sonarValues[7], sonarValues[8]));   System.out.print("\t");
+				System.out.print(Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET); System.out.print("\t");
+				System.out.print(Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET); System.out.print("\t");
+				System.out.println(Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
+			} else {
+				System.out.println("No sonar available!");
+			}
 			
 			System.out.print("Shape (l/lf/f/rf/r/rb/b/lb):\t");
 			System.out.print(getDistance(viewDirectType.LEFT)); System.out.print("\t");

@@ -14,7 +14,8 @@ public class Sonar {
 	public Sonar (PlayerClient host) {
 		try {
 			this.soni = host.requestInterfaceSonar (0, PlayerConstants.PLAYER_OPEN_MODE);
-			this.count = this.soni.getData().getRanges_count();
+			//this.count = this.soni.getData().getRanges_count();
+			this.count = 16;
 
 		} catch ( PlayerException e ) {
 			System.err.println ("Sonar: > Error connecting to Player: ");
