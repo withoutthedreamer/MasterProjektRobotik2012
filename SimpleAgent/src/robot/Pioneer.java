@@ -73,14 +73,14 @@ public class Pioneer {
 	final int RMIN  = 0;  /**< RIGHT min angle.      */ final int RMAX  = 65;  ///< RIGHT max angle.
 	
 	//Debugging
-	//final boolean DEBUG_LASER = true;
-//	final boolean DEBUG_STATE = true;
+//	final boolean DEBUG_LASER = true;
+	final boolean DEBUG_STATE = true;
 //	final boolean DEBUG_SONAR = true;
 //	final boolean DEBUG_DIST  = true;
 	//final boolean DEBUG_POSITION = true;
 	
 	final boolean DEBUG_LASER = false;
-	final boolean DEBUG_STATE = false;
+//	final boolean DEBUG_STATE = false;
 	final boolean DEBUG_SONAR = false;
 	final boolean DEBUG_DIST  = false;
 	final boolean DEBUG_POSITION = false;
@@ -106,10 +106,6 @@ public class Pioneer {
 			System.exit (1);
 		}
 		playerclient.runThreaded (-1, -1);
-//		playerclient.run();
-//		playerclient.setNotThreaded();
-
-		
 	}
 		
 	/// Returns the minimum distance of the given arc.
@@ -128,7 +124,7 @@ public class Pioneer {
 	      double sumDist     = 0.; ///< Sum of BEAMCOUNT beam's distance.
 	      double averageDist = LPMAX; ///< Average of BEAMCOUNT beam's distance.
 	      
-	      double[] laserValues = this.laser.getRanges();
+	      float[] laserValues = this.laser.getRanges();
 
 	      for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
 	        //distCurr = lp->GetRange(beamIndex);
