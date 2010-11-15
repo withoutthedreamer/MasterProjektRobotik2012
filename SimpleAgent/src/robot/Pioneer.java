@@ -22,9 +22,10 @@ public class Pioneer {
 	int id = -1;
 	double speed = -1.0;
 	double turnrate = -1.0;
-	double tmp_turnrate = -1.0;
+	//double tmp_turnrate = -1.0;
 	enum StateType {
-		WALL_FOLLOWING,
+		LWALL_FOLLOWING,
+		RWALL_FOLLOWING,
 	    COLLISION_AVOIDANCE,
 	    WALL_SEARCHING
 	}
@@ -116,43 +117,45 @@ public class Pioneer {
 	final double getDistanceLas ( int minAngle, int maxAngle ) {
 		double minDist         = LPMAX; ///< Min distance in the arc.
 	    double distCurr        = LPMAX; ///< Current distance of a laser beam
-	
-	    if ( !(minAngle<0 || maxAngle<0 || minAngle>=maxAngle || minAngle>=LMAXANGLE || maxAngle>LMAXANGLE ) ) {
 
-	      final int minBIndex = (int)(minAngle/DEGPROBEAM); ///< Beam index of min deg.
-	      final int maxBIndex = (int)(maxAngle/DEGPROBEAM); ///< Beam index of max deg.
-	      double sumDist     = 0.; ///< Sum of BEAMCOUNT beam's distance.
-	      double averageDist = LPMAX; ///< Average of BEAMCOUNT beam's distance.
-	      
-	      float[] laserValues = this.laser.getRanges();
+	    if (this.laser != null) {
+	    	if ( !(minAngle<0 || maxAngle<0 || minAngle>=maxAngle || minAngle>=LMAXANGLE || maxAngle>LMAXANGLE ) ) {
 
-	      for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
-	        //distCurr = lp->GetRange(beamIndex);
-	    	distCurr = laserValues[beamIndex];
-	        
-	        //distCurr<0.02 ? sumDist+=LPMAX : sumDist+=distCurr;
-	        if (distCurr < 0.02) {
-	        	sumDist += LPMAX;
-	        } else {
-	        	sumDist += distCurr;
-	        }
-	        //sumDist += lp->GetRange(beamIndex);
-	        if((beamIndex-minBIndex) % BEAMCOUNT == 1) { ///< On each BEAMCOUNT's beam..
-	          averageDist = sumDist/BEAMCOUNT; ///< Calculate the average distance.
-	          sumDist = 0.; ///< Reset sum of beam average distance
-	          // Calculate the minimum distance for the arc
-	          //averageDist<minDist ? minDist=averageDist : minDist;
-	          if (averageDist < minDist) {
-	        	  minDist = averageDist;
-	          }
-	        }
-	        if ( DEBUG_LASER ) {
-	        	System.out.println("beamInd: " + beamIndex
-	        	+ "\tsumDist: " + sumDist
-	        	+ "\taveDist: " + averageDist
-	        	+ "\tminDist: " + minDist);
-	        }
-	      }
+	    		final int minBIndex = (int)(minAngle/DEGPROBEAM); ///< Beam index of min deg.
+	    		final int maxBIndex = (int)(maxAngle/DEGPROBEAM); ///< Beam index of max deg.
+	    		double sumDist     = 0.; ///< Sum of BEAMCOUNT beam's distance.
+	    		double averageDist = LPMAX; ///< Average of BEAMCOUNT beam's distance.
+
+	    		float[] laserValues = this.laser.getRanges();
+
+	    		for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
+	    			//distCurr = lp->GetRange(beamIndex);
+	    			distCurr = laserValues[beamIndex];
+
+	    			//distCurr<0.02 ? sumDist+=LPMAX : sumDist+=distCurr;
+	    			if (distCurr < 0.02) {
+	    				sumDist += LPMAX;
+	    			} else {
+	    				sumDist += distCurr;
+	    			}
+	    			//sumDist += lp->GetRange(beamIndex);
+	    			if((beamIndex-minBIndex) % BEAMCOUNT == 1) { ///< On each BEAMCOUNT's beam..
+	    				averageDist = sumDist/BEAMCOUNT; ///< Calculate the average distance.
+	    				sumDist = 0.; ///< Reset sum of beam average distance
+	    				// Calculate the minimum distance for the arc
+	    				//averageDist<minDist ? minDist=averageDist : minDist;
+	    				if (averageDist < minDist) {
+	    					minDist = averageDist;
+	    				}
+	    			}
+	    			if ( DEBUG_LASER ) {
+	    				System.out.println("beamInd: " + beamIndex
+	    						+ "\tsumDist: " + sumDist
+	    						+ "\taveDist: " + averageDist
+	    						+ "\tminDist: " + minDist);
+	    			}
+	    		}
+	    	}
 	    }
 		return minDist;
 	}
@@ -174,7 +177,7 @@ public class Pioneer {
 				sonarValues[i] = (float)this.LPMAX;
 			}
 		}
-		if (this.laser != null) {
+//		if (this.laser != null) {
 			// Scan safety areas for walls
 			switch (viewDirection) {
 			case LEFT      : return Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
@@ -194,37 +197,36 @@ public class Pioneer {
 															Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
 			default: return 0.; // Should be recognized if happens
 			}
-		} else if (this.sonar == null) {
-			return this.LPMAX;
-		} else {
-			switch (viewDirection) {
-			case LEFT      : return Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST;
-			case RIGHT     : return Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST;
-			case FRONT     : return Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST;
-			case RIGHTFRONT: return Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST;
-			case LEFTFRONT : return Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST;
-			case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-			case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-			case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-			case ALL       : return Math.min(getDistance(viewDirectType.LEFT),
-					Math.min(getDistance(viewDirectType.RIGHT),
-							Math.min(getDistance(viewDirectType.FRONT),
-									Math.min(getDistance(viewDirectType.BACK),
-											Math.min(getDistance(viewDirectType.RIGHTFRONT),
-													Math.min(getDistance(viewDirectType.LEFTFRONT),
-															Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
-			default: return 0.; // Should be recognized if happens
-			}
-		}
+//		} else if (this.sonar == null) {
+//			return this.LPMAX;
+//		} else {
+//			switch (viewDirection) {
+//			case LEFT      : return Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST;
+//			case RIGHT     : return Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST;
+//			case FRONT     : return Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST;
+//			case RIGHTFRONT: return Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST;
+//			case LEFTFRONT : return Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST;
+//			case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+//			case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+//			case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+//			case ALL       : return Math.min(getDistance(viewDirectType.LEFT),
+//					Math.min(getDistance(viewDirectType.RIGHT),
+//							Math.min(getDistance(viewDirectType.FRONT),
+//									Math.min(getDistance(viewDirectType.BACK),
+//											Math.min(getDistance(viewDirectType.RIGHTFRONT),
+//													Math.min(getDistance(viewDirectType.LEFTFRONT),
+//															Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
+//			default: return 0.; // Should be recognized if happens
+//			}
+//		}
 	}
 	
 	/// Calculates the turnrate from range measurement and minimum wall follow
 	/// distance.
 	/// @param Current state of the robot.
 	/// @returns Turnrate to follow wall.
-	final double wallfollow ( StateType currentState )
+	final double wallfollow ()
 	{
-		double turnrate  = 0;
 		double DistLFov  = 0;
 		double DistL     = 0;
 		double DistLRear = 0;
@@ -232,74 +234,71 @@ public class Pioneer {
 
 		// As long global goal is WF set it by default
 		// Will potentially be overridden by higher prior behaviours
-		this.currentState = StateType.WALL_FOLLOWING;
+		this.currentState = StateType.LWALL_FOLLOWING;
 
-		//DistFront = getDistance(viewDirectType.FRONT);
 		DistLFov  = getDistance(viewDirectType.LEFTFRONT);
-		DistL     = getDistance(viewDirectType.LEFT);
-		DistLRear = getDistance(viewDirectType.LEFTREAR);
-
+		
 		// do simple (left) wall following
 		//do naiv calculus for turnrate; weight dist vector
-		turnrate = Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 );
+		this.turnrate = Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 );
 			
-				// Normalize turnrate
-		//turnrate = java.lang.Math.toRadians.limit(turnrate, -java.lang.Math.toRadians(TURN_RATE), java.lang.Math.toRadians(TURN_RATE));
-		if (turnrate > Math.toRadians(TURN_RATE)) {
-			turnrate = Math.toRadians(TURN_RATE);
-		} else if (turnrate < -Math.toRadians(TURN_RATE)) {
-			turnrate = -Math.toRadians(TURN_RATE);
+		// Normalize turnrate
+		if (this.turnrate > Math.toRadians(TURN_RATE)) {
+			this.turnrate = Math.toRadians(TURN_RATE);
+		} else if (this.turnrate < -Math.toRadians(TURN_RATE)) {
+			this.turnrate = -Math.toRadians(TURN_RATE);
 		}
 
+		// TODO implement wall searching behavior
+		DistL     = getDistance(viewDirectType.LEFT);
+		DistLRear = getDistance(viewDirectType.LEFTREAR);
 		// Go straight if no wall is in distance (front, left and left front)
 		if (DistLFov  >= WALLLOSTDIST  &&
 			DistL     >= WALLLOSTDIST  &&
 			DistLRear >= WALLLOSTDIST     )
 		{
-			turnrate = 0;
+			this.turnrate = 0.;
 			this.currentState = StateType.WALL_SEARCHING;
-//			if (DEBUG_STATE) {
-//				System.out.println("WALL_SEARCHING");
-//			}
 		}
-//		if (DEBUG_STATE) {
-//			System.out.println("Robot " + this.id + " state: " + this.currentState.toString());
-//		}
 
-		return turnrate;
+		return this.turnrate;
 	}
 
-	// Scan FOV for Walls
-	//final void getDistanceFOV (double right_min, double left_min)
-	final void getDistanceFOV (double[] rightLeftMinArray)
+//	// Scan FOV for Walls
+//	final void getDistanceFOV (double[] rightLeftMinArray)
+//	{
+//		double distLeftFront  = getDistance(viewDirectType.LEFTFRONT);
+//		double distFront      = getDistance(viewDirectType.FRONT);
+//		double distRightFront = getDistance(viewDirectType.RIGHTFRONT);
+//
+//		rightLeftMinArray[0] = (distFront + distRightFront) / 2;
+//		rightLeftMinArray[1] = (distFront + distLeftFront)  / 2;
+//	}
+
+	// Biased by left wall following
+	final double collisionAvoid ()
 	{
+		// Scan FOV for Walls
+//		double[] rightLeftMinArray = new double[2];
+//		rightLeftMinArray[1] = LPMAX; // Left
+//		rightLeftMinArray[0] = LPMAX; // Right
+//		
+//		getDistanceFOV(rightLeftMinArray);
 		double distLeftFront  = getDistance(viewDirectType.LEFTFRONT);
 		double distFront      = getDistance(viewDirectType.FRONT);
 		double distRightFront = getDistance(viewDirectType.RIGHTFRONT);
 
-		rightLeftMinArray[0] = (distFront + distRightFront) / 2;
-		rightLeftMinArray[1] = (distFront + distLeftFront)  / 2;
-	}
+		double distFrontRight = (distFront + distRightFront) / 2;
+		double distFrontLeft  = (distFront + distLeftFront)  / 2;
 
-	// Biased by left wall following
-	final void collisionAvoid ()
-	{
-		// Scan FOV for Walls
-		double[] rightLeftMinArray = new double[2];
-		rightLeftMinArray[1] = LPMAX; // Left
-		rightLeftMinArray[0] = LPMAX; // Right
-		
-		getDistanceFOV(rightLeftMinArray);
-
-		if ((rightLeftMinArray[1]  < STOP_WALLFOLLOWDIST) ||
-				(rightLeftMinArray[0] < STOP_WALLFOLLOWDIST)   )
+		if ((distFrontLeft  < STOP_WALLFOLLOWDIST) ||
+				(distFrontRight < STOP_WALLFOLLOWDIST)   )
 		{
 			this.currentState = StateType.COLLISION_AVOIDANCE;
 			// Turn right as long we want left wall following
-			this.turnrate = -Math.toRadians(STOP_ROT);
-//			if (DEBUG_STATE) {
-//				System.out.println("COLLISION_AVOIDANCE");
-//			}
+			return -Math.toRadians(STOP_ROT);
+		} else {
+			return this.turnrate;
 		}
 	}
 
@@ -322,7 +321,7 @@ public class Pioneer {
 				//speed=(VEL*(tmpMinDistBack-tmpMinDistFront))/SHAPE_DIST;
 				//tmpMinDistBack<tmpMinDistFront ? speed=(VEL*(tmpMinDistFront-tmpMinDistBack))/WALLFOLLOWDIST : speed;
 		}
-		return speed; // TODO set speed globally in robot object
+		return speed;
 	}
 
 	/// Checks if turning the robot is not causing collisions.
@@ -332,28 +331,26 @@ public class Pioneer {
 	/// set to zero)
 	/// @param Turnrate
 	/// @todo Code review
-	final double checkrotate (double turnrate)
+	final double checkrotate ()
 	{
-		if (turnrate < 0) { // Right turn
-			//getDistance(LEFTREAR)<0 ? turnrate=0 : turnrate;
-			//getDistance(RIGHT)   <0 ? turnrate=0 : turnrate;
+		double saveTurnrate = 0.;
+		
+		if (this.turnrate < 0) { // Right turn
 			if (getDistance(viewDirectType.LEFTREAR) < 0) {
-				turnrate = 0;
+				saveTurnrate = 0;
 			}
 			if (getDistance(viewDirectType.RIGHT) < 0) {
-				turnrate = 0;
+				saveTurnrate = 0;
 			}
-		} else { // Left turn
-			//getDistance(RIGHTREAR)<0 ? turnrate=0 : turnrate;
-			//getDistance(LEFT)     <0 ? turnrate=0 : turnrate;
+		} else if (this.turnrate > 0){ // Left turn
 			if (getDistance(viewDirectType.RIGHTREAR) < 0) {
-				turnrate = 0;
+				saveTurnrate = 0;
 			}
 			if (getDistance(viewDirectType.LEFT) < 0) {
-				turnrate = 0;
+				saveTurnrate = 0;
 			}
 		}
-		return turnrate;
+		return saveTurnrate;
 	}
 
 	final void readSensors () {
@@ -363,6 +360,8 @@ public class Pioneer {
 		if (this.laser != null) { this.laser.updateRanges(); };
 	}
 	final void plan () {
+		double tmp_turnrate = 0.;
+		
 		if (DEBUG_SONAR && this.sonar != null){
 			float[] sonarValues = this.sonar.getRanges();	
 			int 	sonarCount  = this.sonar.getCount();
@@ -374,21 +373,24 @@ public class Pioneer {
 
 
 		// (Left) Wall following
-		this.turnrate = wallfollow(this.currentState);
+		this.turnrate = wallfollow();
 		// Collision avoidance overrides other turnrate if neccessary!
 		// May change this.turnrate or this.currentState
-		collisionAvoid();
+		this.turnrate = collisionAvoid();
 		
 		// Set speed dependend on the wall distance
 		this.speed = calcspeed();
 
 		// Check if rotating is safe
-		this.tmp_turnrate = checkrotate(this.tmp_turnrate);
+		// tune turnrate controlling here
+		tmp_turnrate = checkrotate();
 
 		// Fusion of the vectors makes a smoother trajectory
-		this.turnrate = (this.tmp_turnrate + this.turnrate) / 2;
+//		this.turnrate = (tmp_turnrate + this.turnrate) / 2;
+		double weight = 0.5;
+		this.turnrate = weight*tmp_turnrate + (1-weight)*this.turnrate;
 		if (DEBUG_STATE) {
-			System.out.println("turnrate/speed/state:\t" + turnrate + "\t" + speed + "\t" + this.currentState.toString());
+			System.out.printf("turnrate/speed/state:\t%5.2f\t%5.2f\t%s\n", this.turnrate, this.speed, this.currentState.toString());
 		}
 		if (DEBUG_DIST) {
 			if (this.laser != null) {
