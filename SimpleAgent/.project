@@ -76,9 +76,24 @@
 			<locationURI>PARENT-1-PROJECT_LOC/stage_local/writelog.cfg</locationURI>
 		</link>
 		<link>
+			<name>src/jBlobfinder</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>src/jSpaceWanderer</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
 			<name>src/javaclient3</name>
 			<type>2</type>
 			<location>/Users/sebastian/javaplayer/java-player/javaclient3</location>
+		</link>
+		<link>
+			<name>src/jwallfollow</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
 			<name>player/bitmaps/autolab.png</name>
@@ -169,6 +184,36 @@
 			<name>player/bitmaps/tams_corr_orig_cut_q.png</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/stage_local/bitmaps/tams_corr_orig_cut_q.png</locationURI>
+		</link>
+		<link>
+			<name>src/jBlobfinder/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>src/jSpaceWanderer/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>src/jwallfollow/src</name>
+			<type>2</type>
+			<locationURI>virtual:/virtual</locationURI>
+		</link>
+		<link>
+			<name>src/jBlobfinder/src/BlobfinderExample.java</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/javaplayer/jBlobfinder/src/BlobfinderExample.java</locationURI>
+		</link>
+		<link>
+			<name>src/jSpaceWanderer/src/SpaceWandererExample.java</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/javaplayer/jSpaceWanderer/src/SpaceWandererExample.java</locationURI>
+		</link>
+		<link>
+			<name>src/jwallfollow/src/WallFollowerExample.java</name>
+			<type>1</type>
+			<locationURI>PARENT-2-PROJECT_LOC/javaplayer/jwallfollow/src/WallFollowerExample.java</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

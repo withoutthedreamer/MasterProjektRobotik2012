@@ -127,11 +127,11 @@ define pioneer_base position
   blobfinder_return 1         	# Seen by blobfinders  
   fiducial_return 1           	# Seen as "1" fiducial finders
 
-  # localization "gps"         	  
-  # localization_origin [0 0 0 0] 	# Start odometry at (0, 0, 0).
+  localization "gps"         	  
+  localization_origin [0 0 0 0] 	# Start odometry at (0, 0, 0).
 
   # alternative odometric localization with simple error model
-  localization "odom"         		# Change to "gps" to have impossibly perfect, global odometry
+  #localization "odom"         		# Change to "gps" to have impossibly perfect, global odometry
   # odom_error [ 0.05 0.05 0.1 ]   	# Odometry error or slip in X, Y and Theta
                                    	# (Uniform random distribution)   
 )

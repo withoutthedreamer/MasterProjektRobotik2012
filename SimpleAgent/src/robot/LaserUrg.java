@@ -8,14 +8,14 @@ import javaclient3.structures.PlayerConstants;
 
 public class LaserUrg {
 	
-	//protected RangerInterface	rang = null;
+//	protected RangerInterface	rang = null;
 	protected LaserInterface las = null;
 	protected float[] ranges	= null;
 	protected int count;
 	
 	public LaserUrg (PlayerClient host) {
 		try {
-			//this.rang = host.requestInterfaceRanger (0, PlayerConstants.PLAYER_OPEN_MODE);
+//			this.rang = host.requestInterfaceRanger (0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.las = host.requestInterfaceLaser(0, PlayerConstants.PLAYER_OPEN_MODE);
 			//this.count = rang.getData().getRanges_count();
 			this.count = 682;
@@ -36,5 +36,4 @@ public class LaserUrg {
 	public float[] getRanges () {
 		return this.ranges;
 	}
-
 }

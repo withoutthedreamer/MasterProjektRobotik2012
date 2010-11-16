@@ -18,6 +18,7 @@ public class Pioneer {
 	
 	LaserUrg 			laser = null;
 	Sonar				sonar = null;
+	Blobfinder			blofi = null;
 	
 	int id = -1;
 	double speed = -1.0;
@@ -75,13 +76,13 @@ public class Pioneer {
 	
 	//Debugging
 //	final boolean DEBUG_LASER = true;
-	final boolean DEBUG_STATE = true;
+//	final boolean DEBUG_STATE = true;
 //	final boolean DEBUG_SONAR = true;
 //	final boolean DEBUG_DIST  = true;
 	//final boolean DEBUG_POSITION = true;
 	
 	final boolean DEBUG_LASER = false;
-//	final boolean DEBUG_STATE = false;
+	final boolean DEBUG_STATE = false;
 	final boolean DEBUG_SONAR = false;
 	final boolean DEBUG_DIST  = false;
 	final boolean DEBUG_POSITION = false;
@@ -99,6 +100,7 @@ public class Pioneer {
 			posi = playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.laser    = new LaserUrg (playerclient);
 			this.sonar 	  = new Sonar (playerclient);
+			this.blofi    = new Blobfinder(playerclient);
 //			this.laser = null;
 //			this.sonar = null;
 		} catch (PlayerException e) {

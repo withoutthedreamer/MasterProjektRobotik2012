@@ -40,9 +40,11 @@ public class WallFollowTams  {
 
 	public static void main (String[] args) {
 		Pioneer pioneer2dx = new Pioneer("localhost", 6665, 9911);
+		Pioneer pioneer2dx_gripper = new Pioneer("localhost", 6666, 9912);
 			
 		while (true) {
 			pioneer2dx.update();
+			pioneer2dx_gripper.update();
 			try { Thread.sleep (100); } catch (Exception e) { }
 		}
 	}
