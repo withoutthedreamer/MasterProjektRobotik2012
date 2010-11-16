@@ -34,17 +34,20 @@
 /// @image html AngleDefinition.png "Calculating turning angle via the atan function"
 
 //import java.text.NumberFormat;
-import robot.Pioneer;
+import robot.*;
 
 public class WallFollowTams  {
 
 	public static void main (String[] args) {
-		Pioneer pioneer2dx = new Pioneer("localhost", 6665, 9911);
-		Pioneer pioneer2dx_gripper = new Pioneer("localhost", 6666, 9912);
+		
+//		PioneerSB pionSB = new PioneerSB("localhost", 6665, 9911);
+		PioneerLG pionLG = new PioneerLG("localhost", 6666, 9912);
 			
 		while (true) {
-			pioneer2dx.update();
-			pioneer2dx_gripper.update();
+			
+//			pionSB.update();
+			pionLG.update();
+
 			try { Thread.sleep (100); } catch (Exception e) { }
 		}
 	}

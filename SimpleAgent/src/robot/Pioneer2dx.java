@@ -1,29 +1,30 @@
-// This class represents a robot.
-// @deprecated Replaced by Pioneer2dx class
+/* Copyright Sebastian Rockel 2010
+ * Basic Pioneer 2DX class
+ */
+
 package robot;
-
-import java.util.logging.Level;
-
-import robot.LaserUrg;
-import robot.Sonar;
 
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.Position2DInterface;
 import javaclient3.structures.PlayerConstants;
 
-public class Pioneer {
+// This class represents a minimal or standard coniguration
+// of a Pioneer 2DX robot at TAMS laboratory at University Hamburg
+// informatics center
+// It can be instantiated or inherited to add other devices.
+public class Pioneer2dx {
+	// Required to every Pioneer2dx
 	public PlayerClient playerclient = null;
 	Position2DInterface posi  = null;
 	
+	// To be implemented in subclass when needed
 	LaserUrg 			laser = null;
 	Sonar				sonar = null;
-	Blobfinder			blofi = null;
 	
 	int id = -1;
 	double speed = -1.0;
 	double turnrate = -1.0;
-	//double tmp_turnrate = -1.0;
 	enum StateType {
 		LWALL_FOLLOWING,
 		RWALL_FOLLOWING,
@@ -88,27 +89,25 @@ public class Pioneer {
 	final boolean DEBUG_POSITION = false;
 	
 	// Constructor: do all playerclient communication setup here
-	public Pioneer (String name, int port, int id) {
+	public Pioneer2dx (String name, int port, int id) {
 		try {
-			// Connect to the Player server and request access to Position and Sonar
-			// TODO singleton to manage port numbers globally (Blackboard?)
-			playerclient  = new PlayerClient (name, port);
-			playerclient.getLogger().setLevel(Level.FINEST);
-			System.out.println("Running playerclient with name: " + playerclient.getName());
+			// Connect to the Player server and request access to Position
+			this.playerclient  = new PlayerClient (name, port);
+			this.playerclient.runThreaded (-1, -1);
 			this.id = id;
-			
-			posi = playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
-			this.laser    = new LaserUrg (playerclient);
-			this.sonar 	  = new Sonar (playerclient);
-			this.blofi    = new Blobfinder(playerclient);
-//			this.laser = null;
-//			this.sonar = null;
+			System.out.println("Running playerclient with id: "
+					+ this.id
+					+ " and name: "
+					+ this.playerclient.getName());
+			this.posi = this.playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
 		} catch (PlayerException e) {
-			System.err.println ("WallFollowerExample: > Error connecting to Player: ");
+			System.err.println ("Pioneer2dx: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 			System.exit (1);
 		}
-		playerclient.runThreaded (-1, -1);
+		// Has to be called in object constructor!
+		// Otherwise program will block forever
+		//playerclient.runThreaded (-1, -1);
 	}
 		
 	/// Returns the minimum distance of the given arc.
@@ -171,7 +170,7 @@ public class Pioneer {
 	final double getDistance( viewDirectType viewDirection )
 	{		
 		float[] sonarValues = new float[16];
-		
+
 		if (this.sonar != null) {
 			sonarValues = this.sonar.getRanges();
 		} else {
@@ -179,48 +178,25 @@ public class Pioneer {
 				sonarValues[i] = (float)this.LPMAX;
 			}
 		}
-//		if (this.laser != null) {
-			// Scan safety areas for walls
-			switch (viewDirection) {
-			case LEFT      : return Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
-			case RIGHT     : return Math.min(getDistanceLas(RMIN,  RMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST);
-			case FRONT     : return Math.min(getDistanceLas(FMIN,  FMAX)            -SHAPE_DIST, Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST);
-			case RIGHTFRONT: return Math.min(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST);
-			case LEFTFRONT : return Math.min(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST);
-			case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-			case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-			case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-			case ALL       : return Math.min(getDistance(viewDirectType.LEFT),
-					Math.min(getDistance(viewDirectType.RIGHT),
-							Math.min(getDistance(viewDirectType.FRONT),
-									Math.min(getDistance(viewDirectType.BACK),
-											Math.min(getDistance(viewDirectType.RIGHTFRONT),
-													Math.min(getDistance(viewDirectType.LEFTFRONT),
-															Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
-			default: return 0.; // Should be recognized if happens
-			}
-//		} else if (this.sonar == null) {
-//			return this.LPMAX;
-//		} else {
-//			switch (viewDirection) {
-//			case LEFT      : return Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST;
-//			case RIGHT     : return Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST;
-//			case FRONT     : return Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST;
-//			case RIGHTFRONT: return Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST;
-//			case LEFTFRONT : return Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST;
-//			case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-//			case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-//			case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
-//			case ALL       : return Math.min(getDistance(viewDirectType.LEFT),
-//					Math.min(getDistance(viewDirectType.RIGHT),
-//							Math.min(getDistance(viewDirectType.FRONT),
-//									Math.min(getDistance(viewDirectType.BACK),
-//											Math.min(getDistance(viewDirectType.RIGHTFRONT),
-//													Math.min(getDistance(viewDirectType.LEFTFRONT),
-//															Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
-//			default: return 0.; // Should be recognized if happens
-//			}
-//		}
+		// Scan safety areas for walls
+		switch (viewDirection) {
+		case LEFT      : return Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
+		case RIGHT     : return Math.min(getDistanceLas(RMIN,  RMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST);
+		case FRONT     : return Math.min(getDistanceLas(FMIN,  FMAX)            -SHAPE_DIST, Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST);
+		case RIGHTFRONT: return Math.min(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST);
+		case LEFTFRONT : return Math.min(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST);
+		case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+		case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+		case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; // Sorry, only sonar at rear
+		case ALL       : return Math.min(getDistance(viewDirectType.LEFT),
+				Math.min(getDistance(viewDirectType.RIGHT),
+						Math.min(getDistance(viewDirectType.FRONT),
+								Math.min(getDistance(viewDirectType.BACK),
+										Math.min(getDistance(viewDirectType.RIGHTFRONT),
+												Math.min(getDistance(viewDirectType.LEFTFRONT),
+														Math.min(getDistance(viewDirectType.LEFTREAR), getDistance(viewDirectType.RIGHTREAR) )))))));
+		default: return 0.; // Should be recognized if happens
+		}
 	}
 	
 	/// Calculates the turnrate from range measurement and minimum wall follow
@@ -266,26 +242,10 @@ public class Pioneer {
 		return this.turnrate;
 	}
 
-//	// Scan FOV for Walls
-//	final void getDistanceFOV (double[] rightLeftMinArray)
-//	{
-//		double distLeftFront  = getDistance(viewDirectType.LEFTFRONT);
-//		double distFront      = getDistance(viewDirectType.FRONT);
-//		double distRightFront = getDistance(viewDirectType.RIGHTFRONT);
-//
-//		rightLeftMinArray[0] = (distFront + distRightFront) / 2;
-//		rightLeftMinArray[1] = (distFront + distLeftFront)  / 2;
-//	}
-
 	// Biased by left wall following
 	final double collisionAvoid ()
 	{
 		// Scan FOV for Walls
-//		double[] rightLeftMinArray = new double[2];
-//		rightLeftMinArray[1] = LPMAX; // Left
-//		rightLeftMinArray[0] = LPMAX; // Right
-//		
-//		getDistanceFOV(rightLeftMinArray);
 		double distLeftFront  = getDistance(viewDirectType.LEFTFRONT);
 		double distFront      = getDistance(viewDirectType.FRONT);
 		double distRightFront = getDistance(viewDirectType.RIGHTFRONT);
@@ -447,5 +407,4 @@ public class Pioneer {
 		plan();
 		execute();
 	}
-
 }
