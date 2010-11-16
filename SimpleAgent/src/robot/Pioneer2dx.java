@@ -93,7 +93,6 @@ public class Pioneer2dx {
 		try {
 			// Connect to the Player server and request access to Position
 			this.playerclient  = new PlayerClient (name, port);
-			this.playerclient.runThreaded (-1, -1);
 			this.id = id;
 			System.out.println("Running playerclient with id: "
 					+ this.id

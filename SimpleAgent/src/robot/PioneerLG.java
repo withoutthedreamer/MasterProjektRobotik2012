@@ -10,7 +10,7 @@ final public class PioneerLG extends Pioneer2dx {
 		try {
 			this.laser 	  = new LaserUrg (this.playerclient);
 		} catch (PlayerException e) {
-			System.err.println ("PioneerSB: > Error connecting to Player: ");
+			System.err.println ("PioneerLG: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 			System.exit (1);
 		}
