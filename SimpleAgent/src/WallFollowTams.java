@@ -43,15 +43,6 @@ public class WallFollowTams  {
 		PioneerSB pionSB = new PioneerSB("localhost", 6665, 9911);
 //		PioneerSL pionSL = new PioneerSL("localhost", 6665, 9911);
 		PioneerLG pionLG = new PioneerLG("localhost", 6666, 9912);
-			
-		while (true) {
-			
-			pionSB.update();
-//			pionSL.update();
-			pionLG.update();
-
-			try { Thread.sleep (100); } catch (Exception e) { }
-		}
 	}
 	
 }

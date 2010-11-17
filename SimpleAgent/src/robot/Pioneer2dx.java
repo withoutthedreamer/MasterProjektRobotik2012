@@ -13,7 +13,8 @@ import javaclient3.structures.PlayerConstants;
 // of a Pioneer 2DX robot at TAMS laboratory at University Hamburg
 // informatics center
 // It can be instantiated or inherited to add other devices.
-public class Pioneer2dx {
+public class Pioneer2dx implements Runnable
+{
 	// Required to every Pioneer2dx
 	public PlayerClient playerclient = null;
 	Position2DInterface posi  = null;
@@ -94,11 +95,24 @@ public class Pioneer2dx {
 			// Connect to the Player server and request access to Position
 			this.playerclient  = new PlayerClient (name, port);
 			this.id = id;
-			System.out.println("Running playerclient with id: "
+			System.out.println("Running playerclient of: "
+					+ this.toString()
+					+ " with id: "
 					+ this.id
-					+ " and name: "
+					+ " in thread: "
 					+ this.playerclient.getName());
 			this.posi = this.playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
+			
+			// Automatically start own thread in constructor
+			Thread myThread = new Thread ( this );
+			myThread.start();
+			System.out.println("Running "
+					+ this.toString()
+					+ " with id: "
+					+ this.id
+					+ " in thread: "
+					+ myThread.getName());
+			
 		} catch (PlayerException e) {
 			System.err.println ("Pioneer2dx: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
@@ -107,6 +121,14 @@ public class Pioneer2dx {
 		// Has to be called in object constructor!
 		// Otherwise program will block forever
 		//playerclient.runThreaded (-1, -1);
+	}
+
+	// Define thread behavior
+	public void run() {
+		while (true) {
+			this.update();
+			try { Thread.sleep (200); } catch (Exception e) { e.printStackTrace(); }
+		}
 	}
 		
 	/// Returns the minimum distance of the given arc.
