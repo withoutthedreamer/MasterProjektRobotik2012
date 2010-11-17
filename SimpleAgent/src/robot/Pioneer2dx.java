@@ -131,23 +131,16 @@ public class Pioneer2dx implements Runnable
 	public void run() {
 		while ( ! this.thread.isInterrupted()) {
 			this.update();
-			try {
-				Thread.sleep (150);
-			} catch (InterruptedException e) {
-				this.thread.interrupt();
-//				System.out.println("Interrupted thread in sleep: " + this.thread.getName());
-			}
+			try { Thread.sleep (150); }
+			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
-		// Cleaning up
-		this.playerclient.close();
-		if ( this.playerclient.isAlive() ){
-			System.out.println("Playerclient is still alive");
-		}
-		System.out.println("Shutdown of " + this.toString() + " with id " + this.id);
 	}
 	// Shutdown robot and clean up
 	public void shutdown () {
 		this.thread.interrupt();
+		// Cleaning up
+		this.playerclient.close();
+		System.out.println("Shutdown of " + this.toString() + " with id " + this.id);
 	}
 		
 	/// Returns the minimum distance of the given arc.

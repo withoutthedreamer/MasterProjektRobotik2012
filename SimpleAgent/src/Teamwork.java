@@ -36,18 +36,21 @@
 //import java.text.NumberFormat;
 import robot.*;
 
-public class Teamwork  {
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
-	@SuppressWarnings("unused")
+public class Teamwork  {
+	
+	private static BufferedReader in = new BufferedReader(
+            new InputStreamReader(System.in));
+
 	public static void main (String[] args) {
 		try {
-			
 			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
-			
-			try { Thread.sleep (100); } catch (Exception e) { e.printStackTrace(); }
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
 
-			try { Thread.sleep (30000); } catch (Exception e) { e.printStackTrace(); }
+			// Wait until enter is pressed
+			in.readLine();
 			pionSB.shutdown();
 			pionLG.shutdown();
 			
