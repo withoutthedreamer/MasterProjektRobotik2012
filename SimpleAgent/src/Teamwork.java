@@ -36,13 +36,21 @@
 //import java.text.NumberFormat;
 import robot.*;
 
-public class WallFollowTams  {
+public class Teamwork  {
 
+	@SuppressWarnings("unused")
 	public static void main (String[] args) {
-		
-		PioneerSB pionSB = new PioneerSB("localhost", 6665, 9911);
-//		PioneerSL pionSL = new PioneerSL("localhost", 6665, 9911);
-		PioneerLG pionLG = new PioneerLG("localhost", 6666, 9912);
+		try {
+			
+			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
+			
+			try { Thread.sleep (100); } catch (Exception e) { e.printStackTrace(); }
+			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
+
+			try { Thread.sleep (30000); } catch (Exception e) { e.printStackTrace(); }
+			pionSB.shutdown();
+			pionLG.shutdown();
+			
+		} catch (Exception e) { e.printStackTrace(); }
 	}
-	
 }

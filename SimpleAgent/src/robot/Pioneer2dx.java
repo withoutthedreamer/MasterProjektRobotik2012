@@ -16,24 +16,27 @@ import javaclient3.structures.PlayerConstants;
 public class Pioneer2dx implements Runnable
 {
 	// Required to every Pioneer2dx
-	public PlayerClient playerclient = null;
-	Position2DInterface posi  = null;
+	protected  PlayerClient playerclient = null;
+	protected Position2DInterface posi  = null;
 	
 	// To be implemented in subclass when needed
-	LaserUrg 			laser = null;
-	Sonar				sonar = null;
+	protected LaserUrg 			laser = null;
+	protected Sonar				sonar = null;
 	
-	int id = -1;
-	double speed = -1.0;
-	double turnrate = -1.0;
-	enum StateType {
+	// Every class of this type has it's own thread
+	protected Thread thread = new Thread ( this );
+	
+	protected int id = -1;
+	protected double speed = -1.0;
+	protected double turnrate = -1.0;
+	protected enum StateType {
 		LWALL_FOLLOWING,
 		RWALL_FOLLOWING,
 	    COLLISION_AVOIDANCE,
 	    WALL_SEARCHING
 	}
-	StateType currentState;
-	enum viewDirectType {
+	protected StateType currentState;
+	protected enum viewDirectType {
 	   LEFT,
 	   RIGHT,
 	   FRONT,
@@ -45,36 +48,36 @@ public class Pioneer2dx implements Runnable
 	   ALL
 	}
 	// Parameters TODO shall be in own config file or superclass
-	final double VEL       = 0.3;///< Normal_advance_speed in meters per sec.
-	final double TURN_RATE = 40; ///< Max wall following turnrate in deg per sec.
+	protected final double VEL       = 0.3;///< Normal_advance_speed in meters per sec.
+	protected final double TURN_RATE = 40; ///< Max wall following turnrate in deg per sec.
 	                             /// Low values: Smoother trajectory but more
 	                             /// restricted
-	final double STOP_ROT  = 30; ///< Stop rotation speed.
+	protected final double STOP_ROT  = 30; ///< Stop rotation speed.
 	                             /// Low values increase maneuverability in narrow
 	                             /// edges, high values let the robot sometimes be
 	                             /// stuck.
-	final double TRACK_ROT =  40; /// Goal tracking rotation speed in degrees per sec.
-	final double YAW_TOLERANCE = 20;///< Yaw tolerance for ball tracking in deg
-	final double DIST_TOLERANCE = 0.5;///< Distance tolerance before stopping in meters
-	final double WALLFOLLOWDIST = 0.5; ///< Preferred wall following distance in meters.
-	final double STOP_WALLFOLLOWDIST = 0.2; ///< Stop distance in meters.
-	final double WALLLOSTDIST  = 1.5; ///< Wall attractor in meters before loosing walls.
-	final double SHAPE_DIST = 0.3; ///< Min Radius from sensor for robot shape.
+	protected final double TRACK_ROT =  40; /// Goal tracking rotation speed in degrees per sec.
+	protected final double YAW_TOLERANCE = 20;///< Yaw tolerance for ball tracking in deg
+	protected final double DIST_TOLERANCE = 0.5;///< Distance tolerance before stopping in meters
+	protected final double WALLFOLLOWDIST = 0.5; ///< Preferred wall following distance in meters.
+	protected final double STOP_WALLFOLLOWDIST = 0.2; ///< Stop distance in meters.
+	protected final double WALLLOSTDIST  = 1.5; ///< Wall attractor in meters before loosing walls.
+	protected final double SHAPE_DIST = 0.3; ///< Min Radius from sensor for robot shape.
 	// Laser ranger
-	final double LMAXANGLE = 240; ///< Laser max angle in degree
-	final int BEAMCOUNT = 2; ///< Number of laser beams taken for one average distance measurement
-	final double DEGPROBEAM   = 0.3515625; ///< 360./1024. in degree per laser beam
-	final double LPMAX     = 5.0;  ///< max laser range in meters
-	final double COS45     = 0.83867056795; ///< Cos(33);
-	final double INV_COS45 = 1.19236329284; ///< 1/COS45
-	final double DIAGOFFSET  = 0.1;  ///< Laser to sonar diagonal offset in meters.
-	final double HORZOFFSET  = 0.15; ///< Laser to sonar horizontal offset in meters.
-	final double MOUNTOFFSET = 0.1;  ///< Sonar vertical offset at back for laptop mount.
-	final int LMIN  = 175;/**< LEFT min angle.       */ final int LMAX  = 240; ///< LEFT max angle.
-	final int LFMIN = 140;/**< LEFTFRONT min angle.  */ final int LFMAX = 175; ///< LEFTFRONT max angle.
-	final int FMIN  = 100;/**< FRONT min angle.      */ final int FMAX  = 140; ///< FRONT max angle.
-	final int RFMIN = 65; /**< RIGHTFRONT min angle. */ final int RFMAX = 100; ///< RIGHTFRONT max angle.
-	final int RMIN  = 0;  /**< RIGHT min angle.      */ final int RMAX  = 65;  ///< RIGHT max angle.
+	protected final double LMAXANGLE = 240; ///< Laser max angle in degree
+	protected final int BEAMCOUNT = 2; ///< Number of laser beams taken for one average distance measurement
+	protected final double DEGPROBEAM   = 0.3515625; ///< 360./1024. in degree per laser beam
+	protected final double LPMAX     = 5.0;  ///< max laser range in meters
+	protected final double COS45     = 0.83867056795; ///< Cos(33);
+	protected final double INV_COS45 = 1.19236329284; ///< 1/COS45
+	protected final double DIAGOFFSET  = 0.1;  ///< Laser to sonar diagonal offset in meters.
+	protected final double HORZOFFSET  = 0.15; ///< Laser to sonar horizontal offset in meters.
+	protected final double MOUNTOFFSET = 0.1;  ///< Sonar vertical offset at back for laptop mount.
+	protected final int LMIN  = 175;/**< LEFT min angle.       */ protected final int LMAX  = 240; ///< LEFT max angle.
+	protected final int LFMIN = 140;/**< LEFTFRONT min angle.  */ protected final int LFMAX = 175; ///< LEFTFRONT max angle.
+	protected final int FMIN  = 100;/**< FRONT min angle.      */ protected final int FMAX  = 140; ///< FRONT max angle.
+	protected final int RFMIN = 65; /**< RIGHTFRONT min angle. */ protected final int RFMAX = 100; ///< RIGHTFRONT max angle.
+	protected final int RMIN  = 0;  /**< RIGHT min angle.      */ protected final int RMAX  = 65;  ///< RIGHT max angle.
 	
 	//Debugging
 //	final boolean DEBUG_LASER = true;
@@ -83,11 +86,11 @@ public class Pioneer2dx implements Runnable
 //	final boolean DEBUG_DIST  = true;
 	//final boolean DEBUG_POSITION = true;
 	
-	final boolean DEBUG_LASER = false;
-	final boolean DEBUG_STATE = false;
-	final boolean DEBUG_SONAR = false;
-	final boolean DEBUG_DIST  = false;
-	final boolean DEBUG_POSITION = false;
+	protected final boolean DEBUG_LASER = false;
+	protected final boolean DEBUG_STATE = false;
+	protected final boolean DEBUG_SONAR = false;
+	protected final boolean DEBUG_DIST  = false;
+	protected final boolean DEBUG_POSITION = false;
 	
 	// Constructor: do all playerclient communication setup here
 	public Pioneer2dx (String name, int port, int id) {
@@ -104,14 +107,15 @@ public class Pioneer2dx implements Runnable
 			this.posi = this.playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
 			
 			// Automatically start own thread in constructor
-			Thread myThread = new Thread ( this );
-			myThread.start();
+//			Thread myThread = new Thread ( this );
+			this.thread.start();
+			
 			System.out.println("Running "
 					+ this.toString()
 					+ " with id: "
 					+ this.id
 					+ " in thread: "
-					+ myThread.getName());
+					+ this.thread.getName());
 			
 		} catch (PlayerException e) {
 			System.err.println ("Pioneer2dx: > Error connecting to Player: ");
@@ -125,10 +129,25 @@ public class Pioneer2dx implements Runnable
 
 	// Define thread behavior
 	public void run() {
-		while (true) {
+		while ( ! this.thread.isInterrupted()) {
 			this.update();
-			try { Thread.sleep (200); } catch (Exception e) { e.printStackTrace(); }
+			try {
+				Thread.sleep (150);
+			} catch (InterruptedException e) {
+				this.thread.interrupt();
+//				System.out.println("Interrupted thread in sleep: " + this.thread.getName());
+			}
 		}
+		// Cleaning up
+		this.playerclient.close();
+		if ( this.playerclient.isAlive() ){
+			System.out.println("Playerclient is still alive");
+		}
+		System.out.println("Shutdown of " + this.toString() + " with id " + this.id);
+	}
+	// Shutdown robot and clean up
+	public void shutdown () {
+		this.thread.interrupt();
 	}
 		
 	/// Returns the minimum distance of the given arc.
@@ -136,7 +155,7 @@ public class Pioneer2dx implements Runnable
 	/// to define a minimum value per degree.
 	/// @param Range of angle (degrees)
 	/// @return Minimum distance in range
-	final double getDistanceLas ( int minAngle, int maxAngle ) {
+	protected final double getDistanceLas ( int minAngle, int maxAngle ) {
 		double minDist         = LPMAX; ///< Min distance in the arc.
 	    double distCurr        = LPMAX; ///< Current distance of a laser beam
 
@@ -188,7 +207,7 @@ public class Pioneer2dx implements Runnable
 	/// NOTE: ALL might be slow due recursion, use it only for debugging!
 	/// @param Robot view direction
 	/// @return Minimum distance of requested view Direction
-	final double getDistance( viewDirectType viewDirection )
+	protected final double getDistance( viewDirectType viewDirection )
 	{		
 		float[] sonarValues = new float[16];
 
@@ -224,7 +243,7 @@ public class Pioneer2dx implements Runnable
 	/// distance.
 	/// @param Current state of the robot.
 	/// @returns Turnrate to follow wall.
-	final double wallfollow ()
+	protected final double wallfollow ()
 	{
 		double DistLFov  = 0;
 		double DistL     = 0;
@@ -264,7 +283,7 @@ public class Pioneer2dx implements Runnable
 	}
 
 	// Biased by left wall following
-	final double collisionAvoid ()
+	protected final double collisionAvoid ()
 	{
 		// Scan FOV for Walls
 		double distLeftFront  = getDistance(viewDirectType.LEFTFRONT);
@@ -286,7 +305,7 @@ public class Pioneer2dx implements Runnable
 	}
 
 	/// @todo Code review
-	final double calcspeed ()
+	protected final double calcspeed ()
 	{
 		double tmpMinDistFront = Math.min(getDistance(viewDirectType.LEFTFRONT), Math.min(getDistance(viewDirectType.FRONT), getDistance(viewDirectType.RIGHTFRONT)));
 		double tmpMinDistBack  = Math.min(getDistance(viewDirectType.LEFTREAR), Math.min(getDistance(viewDirectType.BACK), getDistance(viewDirectType.RIGHTREAR)));
@@ -314,7 +333,7 @@ public class Pioneer2dx implements Runnable
 	/// set to zero)
 	/// @param Turnrate
 	/// @todo Code review
-	final double checkrotate ()
+	protected final double checkrotate ()
 	{
 		double saveTurnrate = 0.;
 		
@@ -336,13 +355,13 @@ public class Pioneer2dx implements Runnable
 		return saveTurnrate;
 	}
 
-	final void readSensors () {
+	protected final void readSensors () {
 		///< This blocks until new data comes; 10Hz by default
 		this.playerclient.readAll();
 		if (this.sonar != null) { this.sonar.updateRanges(); };
 		if (this.laser != null) { this.laser.updateRanges(); };
 	}
-	final void plan () {
+	protected final void plan () {
 		double tmp_turnrate = 0.;
 		
 //		if (DEBUG_SONAR && this.sonar != null){
@@ -420,10 +439,10 @@ public class Pioneer2dx implements Runnable
 	}
 
 /// Command the motors
-	final void execute() {
+	protected final void execute() {
 		this.posi.setSpeed(speed, turnrate);
 	}
-	public void update() {
+	protected void update() {
 		readSensors();
 		plan();
 		execute();

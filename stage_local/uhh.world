@@ -57,6 +57,7 @@ pioneer2dx
   platte()
   laptop()
   bobsblobfinder()
+  ranger_return 1
 )
 
 pioneer2dx
@@ -70,6 +71,28 @@ pioneer2dx
   laptop()
   bobsblobfinder()
   bobsgripper()
+  ranger_return 1
+)
+pioneer2dx
+(		  
+  # can refer to the robot by this name
+  name "r2"
+  pose [ -4 -5 0 90 ] 
+  ranger_return 1
+)
+pioneer2dx
+(		  
+  # can refer to the robot by this name
+  name "r3"
+  pose [ -1 -2 0 90 ] 
+  ranger_return 1
+)
+pioneer2dx
+(		  
+  # can refer to the robot by this name
+  name "r4"
+  pose [ -2 -2 0 90 ] 
+  ranger_return 1
 )
 
 model (
