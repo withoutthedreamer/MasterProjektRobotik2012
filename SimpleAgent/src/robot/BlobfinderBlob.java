@@ -23,7 +23,19 @@ public class BlobfinderBlob {
 	private int bottom;
 	// Range to the blob center [meters]
 	private float range;
-	
+
+	public BlobfinderBlob(int color, int area, int x, int y, int left,
+			int right, int top, int bottom, float range) {
+		this.color = color;
+		this.area = area;
+		this.x = x;
+		this.y = y;
+		this.left = left;
+		this.right = right;
+		this.top = top;
+		this.bottom = bottom;
+		this.range = range;
+	}
 	public int getId() {
 		return id;
 	}

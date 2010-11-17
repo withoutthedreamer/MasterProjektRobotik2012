@@ -13,7 +13,7 @@ import javaclient3.structures.PlayerConstants;
 // of a Pioneer 2DX robot at TAMS laboratory at University Hamburg
 // informatics center
 // It can be instantiated or inherited to add other devices.
-public class Pioneer2dx implements Runnable
+abstract class Pioneer2dx implements Runnable
 {
 	// Required to every Pioneer2dx
 	protected  PlayerClient playerclient = null;
@@ -22,6 +22,7 @@ public class Pioneer2dx implements Runnable
 	// To be implemented in subclass when needed
 	protected LaserUrg 			laser = null;
 	protected Sonar				sonar = null;
+	protected Blobfinder		blofi = null;
 	
 	// Every class of this type has it's own thread
 	protected Thread thread = new Thread ( this );
@@ -366,6 +367,9 @@ public class Pioneer2dx implements Runnable
 //				System.out.println("Sonar " + i + ": " + sonarValues[i]);
 //		}
 
+		// Look out for blobs
+		blobsearch();
+		
 		// (Left) Wall following
 		this.turnrate = wallfollow();
 		// Collision avoidance overrides other turnrate if neccessary!
@@ -431,11 +435,30 @@ public class Pioneer2dx implements Runnable
 		}
 	}
 
-/// Command the motors
+protected final void blobsearch() {
+	if (this.blofi != null) {
+		this.blofi.updateBlobs();
+		int count = this.blofi.getCount();
+		if (count > 0) {
+			for (int i=0; i<count; i++) {
+//				if (this.blofi.getBlobs().get(i).getColor() == 0xFF0000) {
+//					int x = this.blofi.getBlobs().get(i).getX();
+//					int y = this.blofi.getBlobs().get(i).getY();
+//					System.out.printf("Yehaa, found blob with color 0x%06X at (%2d,%2d)\n",
+//							0xFF0000,
+//							x, y);
+//					System.out.printf("I am at (%5.2f,%5.2f,%5.2f)\n",this.posi.getX(), this.posi.getY(), this.posi.getYaw());
+//				}
+			}
+		}
+	}
+}
+
+	/// Command the motors
 	protected final void execute() {
 		this.posi.setSpeed(speed, turnrate);
 	}
-	protected void update() {
+	protected final void update() {
 		readSensors();
 		plan();
 		execute();
