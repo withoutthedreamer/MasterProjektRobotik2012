@@ -8,8 +8,10 @@ final public class PioneerLG extends Pioneer2dx {
 	public PioneerLG(String name, int port, int id) {
 		super(name, port, id);
 		try {
-			super.laser = new LaserUrg (this.playerclient, super.id);
+			this.laser = new LaserUrg (this.playerclient, super.id);
 			this.grip   = new Gripper (this.playerclient, super.id);
+			this.grip.close();
+
 		} catch (PlayerException e) {
 			System.err.println ("PioneerLG: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
@@ -19,7 +21,9 @@ final public class PioneerLG extends Pioneer2dx {
 	}
 
 	public void shutdownDevices () {
-		super.laser.thread.interrupt();
+		this.laser.thread.interrupt();
+		while (this.laser.thread.isAlive());
 		this.grip.thread.interrupt();
+		while (this.laser.thread.isAlive());
 	}
 }

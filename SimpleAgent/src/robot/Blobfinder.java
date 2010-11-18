@@ -82,5 +82,6 @@ public class Blobfinder implements Runnable {
 		while ( ! this.thread.isInterrupted()) {
 			this.updateBlobs ();
 		}
+		System.out.println("Shutdown of " + this.toString());
 	}
 }

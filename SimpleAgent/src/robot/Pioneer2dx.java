@@ -23,6 +23,7 @@ abstract class Pioneer2dx implements Runnable
 	protected LaserUrg 			laser = null;
 	protected Sonar				sonar = null;
 	protected Blobfinder		blofi = null;
+	protected Gripper			grip  = null;
 	
 	// Every class of this type has it's own thread
 	protected Thread thread = new Thread ( this );
@@ -155,10 +156,11 @@ abstract class Pioneer2dx implements Runnable
 
 	// Shutdown robot and clean up
 	public void shutdown () {
-		this.thread.interrupt();
 		// Cleaning up
-		this.playerclient.close();
 		this.shutdownDevices();
+		this.playerclient.close();
+		this.thread.interrupt();
+		while(this.thread.isAlive());
 		System.out.println("Shutdown of " + this.toString() + " with id " + this.id);
 	}
 	

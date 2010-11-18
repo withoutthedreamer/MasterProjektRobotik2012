@@ -8,10 +8,11 @@ import javaclient3.structures.PlayerConstants;
 public class Gripper implements Runnable {
 
 	protected GripperInterface  grip  = null;
-	protected final int SLEEPTIME = 100;
+	protected final int SLEEPTIME = 1000;
 
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
+	private int state = 1;
 
 	public Gripper (PlayerClient host, int id) {
 		try {
@@ -32,16 +33,36 @@ public class Gripper implements Runnable {
 			System.exit (1);
 		}
 	}
-	protected void setGripPos () {
-		while ( ! this.grip.isDataReady() ) {
-			try { Thread.sleep (this.SLEEPTIME); }
-			catch (InterruptedException e) { this.thread.interrupt(); }
-		}
+	protected void updateGripper () {
+		while ( ! this.grip.isDataReady() );
+		this.grip.setGripper(state);
 	}
 	@Override
 	public void run() {
 		while ( ! this.thread.isInterrupted()) {
-			this.setGripPos();
+			this.updateGripper();
+			
+			try { Thread.sleep (this.SLEEPTIME); }
+			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
+		System.out.println("Shutdown of " + this.toString());
+	}
+	public void stop () {
+		// stop
+		this.state = 3;
+	}
+	public void open () {
+		// open
+		this.state = 1;
+	}
+	public void close () {
+		// close
+		this.state = 2;
+	}
+	public void lift () {
+		this.state = 4;
+	}
+	public void release () {
+		this.state = 5;
 	}
 }

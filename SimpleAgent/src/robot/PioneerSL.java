@@ -16,4 +16,12 @@ final public class PioneerSL extends Pioneer2dx {
 		}
 		this.playerclient.runThreaded (-1, -1);
 	}
+
+	@Override
+	public void shutdownDevices() {
+		this.laser.thread.interrupt();
+		while(this.laser.thread.isAlive());
+		this.sonar.thread.interrupt();
+		while(this.sonar.thread.isAlive());
+	}
 }

@@ -7,17 +7,19 @@ final public class PioneerSB extends Pioneer2dx {
 	public PioneerSB(String name, int port, int id) {
 		super(name, port, id);
 		try {
-			super.sonar   = new Sonar (super.playerclient, super.id);
-			super.blofi	  = new Blobfinder(super.playerclient, super.id);
+			this.sonar   = new Sonar (this.playerclient, this.id);
+			this.blofi	  = new Blobfinder(this.playerclient, this.id);
 		} catch (PlayerException e) {
 			System.err.println ("PioneerSB: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 			System.exit (1);
 		}
-		super.playerclient.runThreaded (-1, -1);
+		this.playerclient.runThreaded (-1, -1);
 	}
 	public void shutdownDevices () {
-		super.sonar.thread.interrupt();
-		super.blofi.thread.interrupt();
+		this.sonar.thread.interrupt();
+		while(this.sonar.thread.isAlive());
+		this.blofi.thread.interrupt();
+		while(this.blofi.thread.isAlive());
 	}
 }

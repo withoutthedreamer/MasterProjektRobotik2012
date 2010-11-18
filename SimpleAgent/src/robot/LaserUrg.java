@@ -64,5 +64,6 @@ public class LaserUrg implements Runnable{
 		while ( ! this.thread.isInterrupted()) {
 			this.updateRanges ();
 		}
+		System.out.println("Shutdown of " + this.toString());
 	}
 }

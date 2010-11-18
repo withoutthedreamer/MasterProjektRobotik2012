@@ -38,8 +38,8 @@ public class Sonar implements Runnable{
 	// Only to be called @~10Hz
 	protected void updateRanges() {
 		// Wait for sonar readings
-		while (!soni.isDataReady ()){
-			try { Thread.sleep (50); }
+		while ( ! soni.isDataReady ()){
+			try { Thread.sleep (this.SLEEPTIME); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
 		this.count = this.soni.getData().getRanges_count();
@@ -61,5 +61,6 @@ public class Sonar implements Runnable{
 		while ( ! this.thread.isInterrupted()) {
 			this.updateRanges ();
 		}
+		System.out.println("Shutdown of " + this.toString());
 	}
 }
