@@ -16,7 +16,7 @@ import javaclient3.structures.PlayerConstants;
 abstract class Pioneer2dx implements Runnable
 {
 	// Required to every Pioneer2dx
-	protected  PlayerClient playerclient = null;
+	protected PlayerClient playerclient = null;
 	protected Position2DInterface posi  = null;
 	
 	// To be implemented in subclass when needed

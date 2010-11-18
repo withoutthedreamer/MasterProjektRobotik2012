@@ -48,11 +48,13 @@ public class Teamwork  {
 		try {
 			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
+			Simulator simu   = Simulator.getInstance("localhost", 6665);
 
 			// Wait until enter is pressed
 			in.readLine();
 			pionSB.shutdown();
 			pionLG.shutdown();
+			simu.shutdown();
 			
 		} catch (Exception e) { e.printStackTrace(); }
 	}
