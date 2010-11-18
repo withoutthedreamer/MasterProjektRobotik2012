@@ -18,7 +18,7 @@ public class LaserUrg {
 //			this.rang = host.requestInterfaceRanger (0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.las = host.requestInterfaceLaser(0, PlayerConstants.PLAYER_OPEN_MODE);
 			//this.count = rang.getData().getRanges_count();
-			this.count = 682;
+//			this.count = 682;
 		} catch ( PlayerException e ) {
 			System.err.println ("LaserUrg: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
@@ -29,11 +29,18 @@ public class LaserUrg {
 	// Only to be called @~10Hz
 	public void updateRanges () {
 		// Wait for the laser readings
-		while (!las.isDataReady());
-		this.ranges = las.getData().getRanges();
+		while ( ! this.las.isDataReady() );
+		this.count = this.las.getData().getRanges_count();
+		if (this.count > 0) {
+			this.ranges = las.getData().getRanges();
+		}
 	}
 	
 	public float[] getRanges () {
 		return this.ranges;
+	}
+	
+	public int getCount () {
+		return this.count;
 	}
 }

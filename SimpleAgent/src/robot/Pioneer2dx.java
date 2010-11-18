@@ -161,7 +161,13 @@ abstract class Pioneer2dx implements Runnable
 	    		double sumDist     = 0.; ///< Sum of BEAMCOUNT beam's distance.
 	    		double averageDist = LPMAX; ///< Average of BEAMCOUNT beam's distance.
 
+	    		// Read dynamic laser data
+	    		int		laserCount  = this.laser.getCount();
 	    		float[] laserValues = this.laser.getRanges();
+	    		
+	    		// Check for beams in range TODO check usability with this on real robot
+	    		assert(minBIndex < laserCount && minBIndex >= 0);
+	    		assert(maxBIndex < laserCount && maxBIndex >= 0);
 
 	    		for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
 	    			//distCurr = lp->GetRange(beamIndex);
@@ -204,14 +210,22 @@ abstract class Pioneer2dx implements Runnable
 	protected final double getDistance( viewDirectType viewDirection )
 	{		
 		float[] sonarValues = new float[16];
+		int 	sonarCount  = 0;
 
 		if (this.sonar != null) {
 			sonarValues = this.sonar.getRanges();
-		} else {
+			sonarCount  = this.sonar.getCount();
+			// Check for dynamic sonar availability
+			for (int i=16; i>0; i--) {
+				if (i > sonarCount) { sonarValues[i-1] = (float)this.LPMAX;	}
+				else { break; }
+			}
+		} else { // NO sonar available
 			for (int i=0; i<16; i++) {
 				sonarValues[i] = (float)this.LPMAX;
 			}
 		}
+		
 		// Scan safety areas for walls
 		switch (viewDirection) {
 		case LEFT      : return Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);

@@ -47,12 +47,12 @@ public class Teamwork  {
 	public static void main (String[] args) {
 		try {
 			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
-//			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
+			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
 
 			// Wait until enter is pressed
 			in.readLine();
 			pionSB.shutdown();
-//			pionLG.shutdown();
+			pionLG.shutdown();
 			
 		} catch (Exception e) { e.printStackTrace(); }
 	}
