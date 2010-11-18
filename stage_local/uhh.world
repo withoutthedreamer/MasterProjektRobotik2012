@@ -41,13 +41,14 @@ define bobsblobfinder blobfinder
 )
 define bobsgripper gripper
 (
-  size [ 0.5 0.2 0.2 ]
-  pose [ 0.282 0 -0.2 0 ]
-  obstacle_return 0
-  laser_return 0
-  ranger_return 0
+  size [ 0.2 0.05 0.05 ]
+  pose [ 0.216 0 -0.25 0 ]
+  obstacle_return 1
+  laser_return 1
+  ranger_return 1
 )
-pioneer2dx
+#pioneer2dx
+fancypioneer2dx
 (		  
   # can refer to the robot by this name
   name "r0"
@@ -57,10 +58,13 @@ pioneer2dx
   platte()
   laptop()
   bobsblobfinder()
+
+  obstacle_return 1
+  laser_return 1
   ranger_return 1
 )
-
-pioneer2dx
+#pioneer2dx
+fancypioneer2dx
 (		  
   # can refer to the robot by this name
   name "r1"
@@ -71,6 +75,9 @@ pioneer2dx
   laptop()
   bobsblobfinder()
   bobsgripper()
+
+  obstacle_return 1
+  laser_return 1
   ranger_return 1
 )
 pioneer2dx
@@ -78,6 +85,9 @@ pioneer2dx
   # can refer to the robot by this name
   name "r2"
   pose [ -4 -5 0 90 ] 
+
+  obstacle_return 0
+  laser_return 1
   ranger_return 1
 )
 pioneer2dx
@@ -85,6 +95,9 @@ pioneer2dx
   # can refer to the robot by this name
   name "r3"
   pose [ -1 -2 0 90 ] 
+
+  obstacle_return 0
+  laser_return 1
   ranger_return 1
 )
 pioneer2dx
@@ -92,6 +105,9 @@ pioneer2dx
   # can refer to the robot by this name
   name "r4"
   pose [ -2 -2 0 90 ] 
+
+  obstacle_return 0
+  laser_return 1
   ranger_return 1
 )
 
