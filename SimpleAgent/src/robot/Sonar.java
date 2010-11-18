@@ -5,17 +5,28 @@ import javaclient3.PlayerException;
 import javaclient3.SonarInterface;
 import javaclient3.structures.PlayerConstants;
 
-public class Sonar {
-	
+public class Sonar implements Runnable{
 	protected SonarInterface soni  = null;
 	protected float[] ranges = null;
 	protected int count = 0;
+	protected final int SLEEPTIME = 100;
 	
-	public Sonar (PlayerClient host) {
+	// Every class of this type has it's own thread
+	public Thread thread = new Thread ( this );
+
+	// Host id
+	public Sonar (PlayerClient host, int id) {
 		try {
 			this.soni = host.requestInterfaceSonar (0, PlayerConstants.PLAYER_OPEN_MODE);
-			//this.count = this.soni.getData().getRanges_count();
-//			this.count = 16;
+
+			// Automatically start own thread in constructor
+			this.thread.start();
+			System.out.println("Running "
+					+ this.toString()
+					+ " in thread: "
+					+ this.thread.getName()
+					+ " of robot "
+					+ id);
 
 		} catch ( PlayerException e ) {
 			System.err.println ("Sonar: > Error connecting to Player: ");
@@ -25,9 +36,12 @@ public class Sonar {
 	}
 	
 	// Only to be called @~10Hz
-	public void updateRanges() {
+	protected void updateRanges() {
 		// Wait for sonar readings
-		while (!soni.isDataReady ());
+		while (!soni.isDataReady ()){
+			try { Thread.sleep (50); }
+			catch (InterruptedException e) { this.thread.interrupt(); }
+		}
 		this.count = this.soni.getData().getRanges_count();
 		if (this.count > 0) {
 			this.ranges = soni.getData().getRanges();
@@ -42,4 +56,10 @@ public class Sonar {
 		return this.count;
 	}
 
+	@Override
+	public void run() {
+		while ( ! this.thread.isInterrupted()) {
+			this.updateRanges ();
+		}
+	}
 }

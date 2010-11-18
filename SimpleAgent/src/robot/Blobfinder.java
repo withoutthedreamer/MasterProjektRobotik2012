@@ -8,16 +8,30 @@ import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
 
 import java.util.Vector;
 
-public class Blobfinder {
+public class Blobfinder implements Runnable {
 	protected BlobfinderInterface  bfi  = null;
 	protected int count;
 	protected int[] color = null;
 	protected Vector<BlobfinderBlob> blob = null;;
+	protected final int SLEEPTIME = 100;
 
-	public Blobfinder (PlayerClient host) {
+	// Every class of this type has it's own thread
+	public Thread thread = new Thread ( this );
+	
+	public Blobfinder (PlayerClient host, int id) {
 		try {
 			this.bfi = host.requestInterfaceBlobfinder(0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.blob = new Vector<BlobfinderBlob>();
+			
+			// Automatically start own thread in constructor
+			this.thread.start();
+			System.out.println("Running "
+					+ this.toString()
+					+ " in thread: "
+					+ this.thread.getName()
+					+ " of robot "
+					+ id);
+
 		} catch ( PlayerException e ) {
 			System.err.println ("Blobfinder: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
@@ -27,7 +41,10 @@ public class Blobfinder {
 	// Only to be called @~10Hz
 	public void updateBlobs () {
 		// Wait for the laser readings
-		while (!this.bfi.isDataReady());
+		while (!this.bfi.isDataReady()) {
+			try { Thread.sleep (this.SLEEPTIME); }
+			catch (InterruptedException e) { this.thread.interrupt(); }
+		}
 		this.count = this.bfi.getData().getBlobs_count();
 		
 		if (this.count > 0) {
@@ -59,5 +76,11 @@ public class Blobfinder {
 	}
 	public int getCount () {
 		return this.count;
+	}
+	@Override
+	public void run() {
+		while ( ! this.thread.isInterrupted()) {
+			this.updateBlobs ();
+		}
 	}
 }

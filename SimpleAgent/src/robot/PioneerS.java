@@ -7,7 +7,7 @@ final public class PioneerS extends Pioneer2dx {
 	public PioneerS(String name, int port, int id) {
 		super(name, port, id);
 		try {
-			super.sonar = new Sonar (this.playerclient);
+			super.sonar = new Sonar (this.playerclient, super.id);
 		} catch (PlayerException e) {
 			System.err.println ("PioneerS: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");

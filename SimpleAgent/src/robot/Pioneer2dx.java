@@ -74,7 +74,7 @@ abstract class Pioneer2dx implements Runnable
 	protected final double DIAGOFFSET  = 0.1;  ///< Laser to sonar diagonal offset in meters.
 	protected final double HORZOFFSET  = 0.15; ///< Laser to sonar horizontal offset in meters.
 	protected final double MOUNTOFFSET = 0.1;  ///< Sonar vertical offset at back for laptop mount.
-	protected final int LMIN  = 175;/**< LEFT min angle.       */ protected final int LMAX  = 240; ///< LEFT max angle.
+	protected final int LMIN  = 175;/**< LEFT min angle.       */ protected final int LMAX  = 239; ///< LEFT max angle.
 	protected final int LFMIN = 140;/**< LEFTFRONT min angle.  */ protected final int LFMAX = 175; ///< LEFTFRONT max angle.
 	protected final int FMIN  = 100;/**< FRONT min angle.      */ protected final int FMAX  = 140; ///< FRONT max angle.
 	protected final int RFMIN = 65; /**< RIGHTFRONT min angle. */ protected final int RFMAX = 100; ///< RIGHTFRONT max angle.
@@ -108,7 +108,6 @@ abstract class Pioneer2dx implements Runnable
 			this.posi = this.playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
 			
 			// Automatically start own thread in constructor
-//			Thread myThread = new Thread ( this );
 			this.thread.start();
 			
 			System.out.println("Running "
@@ -131,19 +130,125 @@ abstract class Pioneer2dx implements Runnable
 	// Define thread behavior
 	public void run() {
 		while ( ! this.thread.isInterrupted()) {
+			// Should not be called more than @ 10Hz
 			this.update();
-			try { Thread.sleep (150); }
+			try { Thread.sleep (100); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
 	}
+	protected final void update() {
+		// Sensor read is done asynchronous
+//		readSensors();
+		plan();
+		execute();
+	}
+	//depreciated
+	protected final void readSensors () {
+		///< This blocks until new data comes; 10Hz by default
+		// TODO consider outsourcing due to object's own refresh cycle
+		// Following call is not needed when playerclient is threaded
+//		this.playerclient.readAll();
+//		if (this.sonar != null) { this.sonar.updateRanges(); };
+//		if (this.laser != null) { this.laser.getRanges(); };
+//		if (this.blofi != null) { this.blofi.updateBlobs();  };
+	}
+
 	// Shutdown robot and clean up
 	public void shutdown () {
 		this.thread.interrupt();
 		// Cleaning up
 		this.playerclient.close();
+		this.shutdownDevices();
 		System.out.println("Shutdown of " + this.toString() + " with id " + this.id);
 	}
+	
+	public abstract void shutdownDevices();
 		
+	protected final void plan () {
+		double tmp_turnrate = 0.;
+
+		//		if (DEBUG_SONAR && this.sonar != null){
+		//			float[] sonarValues = this.sonar.getRanges();	
+		//			int 	sonarCount  = this.sonar.getCount();
+		//
+		//			System.out.println();
+		//			for(int i=0; i< sonarCount; i++)
+		//				System.out.println("Sonar " + i + ": " + sonarValues[i]);
+		//		}
+
+		// Look out for blobs
+		blobsearch();
+
+		// (Left) Wall following
+		this.turnrate = wallfollow();
+		// Collision avoidance overrides other turnrate if neccessary!
+		// May change this.turnrate or this.currentState
+		this.turnrate = collisionAvoid();
+
+		// Set speed dependend on the wall distance
+		this.speed = calcspeed();
+
+		// Check if rotating is safe
+		// tune turnrate controlling here
+		tmp_turnrate = checkrotate();
+
+		// Fusion of the vectors makes a smoother trajectory
+		//		this.turnrate = (tmp_turnrate + this.turnrate) / 2;
+		double weight = 0.5;
+		this.turnrate = weight*tmp_turnrate + (1-weight)*this.turnrate;
+		if (DEBUG_STATE) {
+			System.out.printf("turnrate/speed/state:\t%5.2f\t%5.2f\t%s\n", this.turnrate, this.speed, this.currentState.toString());
+		}
+		if (DEBUG_DIST) {
+			if (this.laser != null) {
+				System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
+				System.out.print(getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
+				System.out.print(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
+				System.out.print(getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
+				System.out.print(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
+				System.out.print(getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
+				System.out.println("\t" + "XXX" + "\t" + "XXX" + "\t" + "XXX");
+			} else {
+				System.out.println("No laser available!");
+			}
+
+			if (this.sonar != null) {
+				float[] sonarValues = this.sonar.getRanges();		
+				System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
+				System.out.print(Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
+				System.out.print(Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
+				System.out.print(Math.min(sonarValues[3], sonarValues[4]));   System.out.print("\t");
+				System.out.print(Math.min(sonarValues[5], sonarValues[6]));   System.out.print("\t");
+				System.out.print(Math.min(sonarValues[7], sonarValues[8]));   System.out.print("\t");
+				System.out.print(Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET); System.out.print("\t");
+				System.out.print(Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET); System.out.print("\t");
+				System.out.println(Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
+			} else {
+				System.out.println("No sonar available!");
+			}
+
+			System.out.print("Shape (l/lf/f/rf/r/rb/b/lb):\t");
+			System.out.print(getDistance(viewDirectType.LEFT)); System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.LEFTFRONT));  System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.FRONT));      System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.RIGHTFRONT)); System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.RIGHT));      System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.RIGHTREAR));  System.out.print("\t");
+			System.out.print(getDistance(viewDirectType.BACK));       System.out.print("\t");
+			System.out.println(getDistance(viewDirectType.LEFTREAR));
+		}
+		if (DEBUG_POSITION) {
+			System.out.print(posi.getData().getPos().getPx());	System.out.print("\t");
+			System.out.print(posi.getData().getPos().getPy());	System.out.print("\t");
+			System.out.println(java.lang.Math.toDegrees(posi.getData().getPos().getPa()));
+		}
+	}
+
+	/// Command the motors
+	protected final void execute() {
+		this.posi.setSpeed(speed, turnrate);
+	}
+
 	/// Returns the minimum distance of the given arc.
 	/// Algorithm calculates the average of BEAMCOUNT beams
 	/// to define a minimum value per degree.
@@ -165,36 +270,35 @@ abstract class Pioneer2dx implements Runnable
 	    		int		laserCount  = this.laser.getCount();
 	    		float[] laserValues = this.laser.getRanges();
 	    		
-	    		// Check for beams in range TODO check usability with this on real robot
-	    		assert(minBIndex < laserCount && minBIndex >= 0);
-	    		assert(maxBIndex < laserCount && maxBIndex >= 0);
+	    		// Consistence check for error laser readings
+	    		if (minBIndex<laserCount && maxBIndex<laserCount) {
+	    			for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
+	    				distCurr = laserValues[beamIndex];
 
-	    		for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
-	    			//distCurr = lp->GetRange(beamIndex);
-	    			distCurr = laserValues[beamIndex];
-
-	    			//distCurr<0.02 ? sumDist+=LPMAX : sumDist+=distCurr;
-	    			if (distCurr < 0.02) {
-	    				sumDist += LPMAX;
-	    			} else {
-	    				sumDist += distCurr;
-	    			}
-	    			//sumDist += lp->GetRange(beamIndex);
-	    			if((beamIndex-minBIndex) % BEAMCOUNT == 1) { ///< On each BEAMCOUNT's beam..
-	    				averageDist = sumDist/BEAMCOUNT; ///< Calculate the average distance.
-	    				sumDist = 0.; ///< Reset sum of beam average distance
-	    				// Calculate the minimum distance for the arc
-	    				//averageDist<minDist ? minDist=averageDist : minDist;
-	    				if (averageDist < minDist) {
-	    					minDist = averageDist;
+	    				if (distCurr < 0.02) { // TODO no literal here
+	    					sumDist += LPMAX;
+	    				} else {
+	    					sumDist += distCurr;
+	    				}
+	    				
+	    				if((beamIndex-minBIndex) % BEAMCOUNT == 1) { ///< On each BEAMCOUNT's beam..
+	    					averageDist = sumDist/BEAMCOUNT; ///< Calculate the average distance.
+	    					sumDist = 0.; ///< Reset sum of beam average distance
+	    					
+	    					// Calculate the minimum distance for the arc
+	    					if (averageDist < minDist) {
+	    						minDist = averageDist;
+	    					}
+	    				}
+	    				if ( DEBUG_LASER ) {
+	    					System.out.println("beamInd: " + beamIndex
+	    							+ "\tsumDist: " + sumDist
+	    							+ "\taveDist: " + averageDist
+	    							+ "\tminDist: " + minDist);
 	    				}
 	    			}
-	    			if ( DEBUG_LASER ) {
-	    				System.out.println("beamInd: " + beamIndex
-	    						+ "\tsumDist: " + sumDist
-	    						+ "\taveDist: " + averageDist
-	    						+ "\tminDist: " + minDist);
-	    			}
+	    		} else {
+	    			minDist = this.SHAPE_DIST;
 	    		}
 	    	}
 	    }
@@ -209,18 +313,27 @@ abstract class Pioneer2dx implements Runnable
 	/// @return Minimum distance of requested view Direction
 	protected final double getDistance( viewDirectType viewDirection )
 	{		
-		float[] sonarValues = new float[16];
+//		float[] sonarValues = new float[16];
+		float[] sonarValues;
 		int 	sonarCount  = 0;
 
 		if (this.sonar != null) {
 			sonarValues = this.sonar.getRanges();
 			sonarCount  = this.sonar.getCount();
-			// Check for dynamic sonar availability
-			for (int i=16; i>0; i--) {
-				if (i > sonarCount) { sonarValues[i-1] = (float)this.LPMAX;	}
-				else { break; }
+			if (sonarCount > 0) {
+				// Check for dynamic sonar availability
+				for (int i=16; i>0; i--) {
+					if (i > sonarCount) { sonarValues[i-1] = (float)this.LPMAX;	}
+					else { break; }
+				}
+			}  else { // NO sonar available
+				sonarValues = new float[16];
+				for (int i=0; i<16; i++) {
+					sonarValues[i] = (float)this.LPMAX;
+				}
 			}
 		} else { // NO sonar available
+			sonarValues = new float[16];
 			for (int i=0; i<16; i++) {
 				sonarValues[i] = (float)this.LPMAX;
 			}
@@ -363,118 +476,21 @@ abstract class Pioneer2dx implements Runnable
 		return saveTurnrate;
 	}
 
-	protected final void readSensors () {
-		///< This blocks until new data comes; 10Hz by default
-		this.playerclient.readAll();
-		if (this.sonar != null) { this.sonar.updateRanges(); };
-		if (this.laser != null) { this.laser.updateRanges(); };
-	}
-	protected final void plan () {
-		double tmp_turnrate = 0.;
-		
-//		if (DEBUG_SONAR && this.sonar != null){
-//			float[] sonarValues = this.sonar.getRanges();	
-//			int 	sonarCount  = this.sonar.getCount();
-//
-//			System.out.println();
-//			for(int i=0; i< sonarCount; i++)
-//				System.out.println("Sonar " + i + ": " + sonarValues[i]);
-//		}
-
-		// Look out for blobs
-		blobsearch();
-		
-		// (Left) Wall following
-		this.turnrate = wallfollow();
-		// Collision avoidance overrides other turnrate if neccessary!
-		// May change this.turnrate or this.currentState
-		this.turnrate = collisionAvoid();
-		
-		// Set speed dependend on the wall distance
-		this.speed = calcspeed();
-
-		// Check if rotating is safe
-		// tune turnrate controlling here
-		tmp_turnrate = checkrotate();
-
-		// Fusion of the vectors makes a smoother trajectory
-//		this.turnrate = (tmp_turnrate + this.turnrate) / 2;
-		double weight = 0.5;
-		this.turnrate = weight*tmp_turnrate + (1-weight)*this.turnrate;
-		if (DEBUG_STATE) {
-			System.out.printf("turnrate/speed/state:\t%5.2f\t%5.2f\t%s\n", this.turnrate, this.speed, this.currentState.toString());
-		}
-		if (DEBUG_DIST) {
-			if (this.laser != null) {
-				System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
-				System.out.print(getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
-				System.out.print(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
-				System.out.print(getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
-				System.out.print(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
-				System.out.print(getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
-				System.out.println("\t" + "XXX" + "\t" + "XXX" + "\t" + "XXX");
-			} else {
-				System.out.println("No laser available!");
-			}
-
-			if (this.sonar != null) {
-				float[] sonarValues = this.sonar.getRanges();		
-				System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
-				System.out.print(Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
-				System.out.print(Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
-				System.out.print(Math.min(sonarValues[3], sonarValues[4]));   System.out.print("\t");
-				System.out.print(Math.min(sonarValues[5], sonarValues[6]));   System.out.print("\t");
-				System.out.print(Math.min(sonarValues[7], sonarValues[8]));   System.out.print("\t");
-				System.out.print(Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET); System.out.print("\t");
-				System.out.print(Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET); System.out.print("\t");
-				System.out.println(Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
-			} else {
-				System.out.println("No sonar available!");
-			}
-			
-			System.out.print("Shape (l/lf/f/rf/r/rb/b/lb):\t");
-			System.out.print(getDistance(viewDirectType.LEFT)); System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.LEFTFRONT));  System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.FRONT));      System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.RIGHTFRONT)); System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.RIGHT));      System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.RIGHTREAR));  System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.BACK));       System.out.print("\t");
-			System.out.println(getDistance(viewDirectType.LEFTREAR));
-		}
-		if (DEBUG_POSITION) {
-			System.out.print(posi.getData().getPos().getPx());	System.out.print("\t");
-			System.out.print(posi.getData().getPos().getPy());	System.out.print("\t");
-			System.out.println(java.lang.Math.toDegrees(posi.getData().getPos().getPa()));
-		}
-	}
-
-protected final void blobsearch() {
+	protected final void blobsearch() {
 	if (this.blofi != null) {
-		this.blofi.updateBlobs();
 		int count = this.blofi.getCount();
 		if (count > 0) {
 			for (int i=0; i<count; i++) {
-//				if (this.blofi.getBlobs().get(i).getColor() == 0xFF0000) {
-//					int x = this.blofi.getBlobs().get(i).getX();
-//					int y = this.blofi.getBlobs().get(i).getY();
-//					System.out.printf("Yehaa, found blob with color 0x%06X at (%2d,%2d)\n",
-//							0xFF0000,
-//							x, y);
-//					System.out.printf("I am at (%5.2f,%5.2f,%5.2f)\n",this.posi.getX(), this.posi.getY(), this.posi.getYaw());
-//				}
+				//				if (this.blofi.getBlobs().get(i).getColor() == 0xFF0000) {
+				//					int x = this.blofi.getBlobs().get(i).getX();
+				//					int y = this.blofi.getBlobs().get(i).getY();
+				//					System.out.printf("Yehaa, found blob with color 0x%06X at (%2d,%2d)\n",
+				//							0xFF0000,
+				//							x, y);
+				//					System.out.printf("I am at (%5.2f,%5.2f,%5.2f)\n",this.posi.getX(), this.posi.getY(), this.posi.getYaw());
+				//				}
 			}
 		}
 	}
 }
-
-	/// Command the motors
-	protected final void execute() {
-		this.posi.setSpeed(speed, turnrate);
-	}
-	protected final void update() {
-		readSensors();
-		plan();
-		execute();
-	}
 }
