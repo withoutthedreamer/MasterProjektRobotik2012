@@ -1,6 +1,9 @@
-package robot;
+package simulator;
 
 import java.util.*;
+
+import data.Position;
+
 
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
@@ -67,10 +70,10 @@ public class Simulator implements Runnable {
 			Map.Entry me = (Map.Entry)i.next();
 			String key = (String)me.getKey();
 			Position pos = (Position)me.getValue();
-			PlayerPose pp = new PlayerPose(pos.x, pos.y, pos.yaw);
+			PlayerPose pp = new PlayerPose(pos.getX(), pos.getY(), pos.getYaw());
 			this.simu.set2DPose(key, pp);
 		}
-		try { Thread.sleep (200); }
+		try { Thread.sleep (100); }
 		catch (InterruptedException e) { this.thread.interrupt(); }
 //		}
 	}

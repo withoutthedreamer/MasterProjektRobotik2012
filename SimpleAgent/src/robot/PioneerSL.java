@@ -1,8 +1,10 @@
 package robot;
 
+import sensor.LaserUrg;
+import sensor.Sonar;
 import javaclient3.PlayerException;
 
-final public class PioneerSL extends Pioneer2dx {
+final public class PioneerSL extends Pioneer {
 
 	public PioneerSL(String name, int port, int id) {
 		super(name, port, id);

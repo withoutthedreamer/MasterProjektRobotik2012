@@ -1,23 +1,26 @@
-package robot;
+package sensor;
 
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
-import javaclient3.SonarInterface;
+//import javaclient3.RangerInterface;
+import javaclient3.LaserInterface;
 import javaclient3.structures.PlayerConstants;
 
-public class Sonar implements Runnable{
-	protected SonarInterface soni  = null;
-	protected float[] ranges = null;
-	protected int count = 0;
+public class LaserUrg implements Runnable{
+	
+//	protected RangerInterface	rang = null;
+	protected LaserInterface las = null;
+	protected float[] ranges	= null;
+	protected int count;
 	protected final int SLEEPTIME = 100;
 	
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
-
-	// Host id
-	public Sonar (PlayerClient host, int id) {
+	
+	public LaserUrg (PlayerClient host, int id) {
 		try {
-			this.soni = host.requestInterfaceSonar (0, PlayerConstants.PLAYER_OPEN_MODE);
+//			this.rang = host.requestInterfaceRanger (0, PlayerConstants.PLAYER_OPEN_MODE);
+			this.las = host.requestInterfaceLaser(0, PlayerConstants.PLAYER_OPEN_MODE);
 
 			// Automatically start own thread in constructor
 			this.thread.start();
@@ -29,30 +32,30 @@ public class Sonar implements Runnable{
 					+ id);
 
 		} catch ( PlayerException e ) {
-			System.err.println ("Sonar: > Error connecting to Player: ");
+			System.err.println ("LaserUrg: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 			System.exit (1);
 		}
 	}
-	
-	// Only to be called @~10Hz
-	protected void updateRanges() {
-		// Wait for sonar readings
-		while ( ! soni.isDataReady ()){
+	// Will check for new ranges
+	// If not yet ready will put current thread to sleep
+	protected void updateRanges () {
+		// Wait for the laser readings
+		while ( ! this.las.isDataReady() ) {
 			try { Thread.sleep (this.SLEEPTIME); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
-		this.count = this.soni.getData().getRanges_count();
+		this.count = this.las.getData().getRanges_count();
 		if (this.count > 0) {
-			this.ranges = soni.getData().getRanges();
+			this.ranges = las.getData().getRanges();
 		}
 	}
-
-	public float[] getRanges() {
-		return ranges;
+	
+	public float[] getRanges () {
+		return this.ranges;
 	}
 	
-	public int getCount() {
+	public int getCount () {
 		return this.count;
 	}
 

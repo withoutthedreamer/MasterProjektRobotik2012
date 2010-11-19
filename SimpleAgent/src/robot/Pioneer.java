@@ -4,6 +4,13 @@
 
 package robot;
 
+import data.Position;
+import data.Trackable;
+import sensor.Blobfinder;
+import sensor.Gripper;
+import sensor.LaserUrg;
+import sensor.Sonar;
+import simulator.Simulator;
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.Position2DInterface;
@@ -13,7 +20,7 @@ import javaclient3.structures.PlayerConstants;
 // of a Pioneer 2DX robot at TAMS laboratory at University Hamburg
 // informatics center
 // It can be instantiated or inherited to add other devices.
-abstract class Pioneer2dx implements Runnable
+abstract class Pioneer implements Runnable, Trackable
 {
 	// Required to every Pioneer2dx
 	protected PlayerClient playerclient = null;
@@ -95,7 +102,7 @@ abstract class Pioneer2dx implements Runnable
 	protected final boolean DEBUG_POSITION = false;
 	
 	// Constructor: do all playerclient communication setup here
-	public Pioneer2dx (String name, int port, int id) {
+	public Pioneer (String name, int port, int id) {
 		try {
 			// Connect to the Player server and request access to Position
 			this.playerclient  = new PlayerClient (name, port);
@@ -166,17 +173,18 @@ abstract class Pioneer2dx implements Runnable
 	
 	public abstract void shutdownDevices();
 		
+	@SuppressWarnings("unused")
 	protected final void plan () {
 		double tmp_turnrate = 0.;
 
-		//		if (DEBUG_SONAR && this.sonar != null){
-		//			float[] sonarValues = this.sonar.getRanges();	
-		//			int 	sonarCount  = this.sonar.getCount();
-		//
-		//			System.out.println();
-		//			for(int i=0; i< sonarCount; i++)
-		//				System.out.println("Sonar " + i + ": " + sonarValues[i]);
-		//		}
+		if (DEBUG_SONAR && this.sonar != null){
+			float[] sonarValues = this.sonar.getRanges();	
+			int 	sonarCount  = this.sonar.getCount();
+
+			System.out.println();
+			for(int i=0; i< sonarCount; i++)
+				System.out.println("Sonar " + i + ": " + sonarValues[i]);
+		}
 
 		// Look out for blobs
 		blobsearch();
@@ -249,6 +257,15 @@ abstract class Pioneer2dx implements Runnable
 	/// Command the motors
 	protected final void execute() {
 		this.posi.setSpeed(speed, turnrate);
+	}
+	/// Return robot position
+	// TODO implement Position device in own thread
+	public final Position getPosition() {
+		Position pos = new Position(
+				this.posi.getData().getPos().getPx(),
+				this.posi.getData().getPos().getPy(),
+				this.posi.getData().getPos().getPa());
+		return pos;
 	}
 
 	/// Returns the minimum distance of the given arc.
@@ -478,8 +495,9 @@ abstract class Pioneer2dx implements Runnable
 		return saveTurnrate;
 	}
 
+	@SuppressWarnings("unused")
 	protected final void blobsearch() {
-	if (this.blofi != null) {
+	if (false) { // TODO implement
 		int count = this.blofi.getCount();
 		if (count > 0) {
 			Simulator simu = Simulator.getInstance("localhost", 6665);

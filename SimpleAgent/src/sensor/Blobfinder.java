@@ -1,4 +1,4 @@
-package robot;
+package sensor;
 
 import javaclient3.BlobfinderInterface;
 import javaclient3.PlayerClient;
@@ -7,6 +7,8 @@ import javaclient3.structures.PlayerConstants;
 import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
 
 import java.util.Vector;
+
+import data.BlobfinderBlob;
 
 public class Blobfinder implements Runnable {
 	protected BlobfinderInterface  bfi  = null;

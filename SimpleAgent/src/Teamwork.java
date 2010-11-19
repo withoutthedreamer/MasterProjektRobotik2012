@@ -35,9 +35,14 @@
 
 //import java.text.NumberFormat;
 import robot.*;
+import simulator.Simulator;
+import simulator.Tracker;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Vector;
+
+import data.SimuObject;
 
 public class Teamwork  {
 	
@@ -48,12 +53,20 @@ public class Teamwork  {
 		try {
 			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
-			Simulator simu   = Simulator.getInstance("localhost", 6665);
+			Simulator simu   = Simulator.getInstance("localhost", 6675);
 
-			simu.setObject("r2", new Position(5,5,0));
+			// Define tracked objects for Tracker
+			Vector<SimuObject> simuObjs  = new Vector<SimuObject>();
+			simuObjs.add(new SimuObject("r0", pionSB));
+			simuObjs.add(new SimuObject("r1", pionLG));
+			
+			Tracker tracker  = Tracker.getInstance(simu, simuObjs);
+
+//			simu.setObject("r0", new Position(5,5,0));
 			
 			// Wait until enter is pressed
 			in.readLine();
+			tracker.shutdown();
 			pionSB.shutdown();
 			pionLG.shutdown();
 			simu.shutdown();

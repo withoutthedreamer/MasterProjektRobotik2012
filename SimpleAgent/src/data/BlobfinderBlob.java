@@ -1,4 +1,4 @@
-package robot;
+package data;
 
 public class BlobfinderBlob {
 //taken from PlayerBlobfinderBlob class

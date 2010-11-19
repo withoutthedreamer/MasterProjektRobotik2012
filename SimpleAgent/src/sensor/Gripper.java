@@ -1,4 +1,4 @@
-package robot;
+package sensor;
 
 import javaclient3.GripperInterface;
 import javaclient3.PlayerClient;
