@@ -53,7 +53,7 @@ public class Tracker implements Runnable {
 			Position pos = this.simuObjs.get(i).getObject().getPosition();
 			
 			// update the simulator
-			this.simu.setObject(id, pos);
+			this.simu.setObjectPos(id, pos);
 		}
 		
 		try { Thread.sleep (100); }

@@ -42,6 +42,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.Vector;
 
+import data.Position;
 import data.SimuObject;
 
 public class Teamwork  {
@@ -51,25 +52,24 @@ public class Teamwork  {
 
 	public static void main (String[] args) {
 		try {
-			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
+//			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
-			Simulator simu   = Simulator.getInstance("localhost", 6675);
-
-			// Define tracked objects for Tracker
-			Vector<SimuObject> simuObjs  = new Vector<SimuObject>();
-			simuObjs.add(new SimuObject("r0", pionSB));
-			simuObjs.add(new SimuObject("r1", pionLG));
-			
-			Tracker tracker  = Tracker.getInstance(simu, simuObjs);
-
-//			simu.setObject("r0", new Position(5,5,0));
+			pionLG.setGoal(new Position(-7.,-7.,0.));
+//			Simulator simu   = Simulator.getInstance("localhost", 6675);
+//
+//			// Define tracked objects for Tracker
+//			Vector<SimuObject> simuObjs  = new Vector<SimuObject>();
+//			simuObjs.add(new SimuObject("r0", pionSB));
+//			simuObjs.add(new SimuObject("r1", pionLG));
+//			
+//			Tracker tracker  = Tracker.getInstance(simu, simuObjs);
 			
 			// Wait until enter is pressed
 			in.readLine();
-			tracker.shutdown();
-			pionSB.shutdown();
+//			tracker.shutdown();
+//			pionSB.shutdown();
 			pionLG.shutdown();
-			simu.shutdown();
+//			simu.shutdown();
 			
 		} catch (Exception e) { e.printStackTrace(); }
 	}

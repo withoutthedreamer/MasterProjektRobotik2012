@@ -145,7 +145,7 @@ abstract class Pioneer implements Runnable, Trackable
 			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
 	}
-	protected final void update() {
+	protected void update() {
 		// Sensor read is done asynchronously
 		plan();
 		execute();
@@ -156,7 +156,9 @@ abstract class Pioneer implements Runnable, Trackable
 		// Cleaning up
 		this.shutdownDevices();
 		this.posi.thread.interrupt();
+		while (this.posi.thread.isAlive());
 		this.playerclient.close();
+		while (this.playerclient.isAlive());
 		this.thread.interrupt();
 		while(this.thread.isAlive());
 		System.out.println("Shutdown of " + this.toString() + " with id " + this.id);
@@ -496,13 +498,13 @@ abstract class Pioneer implements Runnable, Trackable
 			for (int i=0; i<count; i++) {
 				switch (this.blofi.getBlobs().get(i).getColor() ) {
 				case Blobfinder.BLUE:
-					simu.setObject("blue", pos);
+					simu.setObjectPos("blue", pos);
 					break;
 				case Blobfinder.GREEN:
-					simu.setObject("blue", pos);
+					simu.setObjectPos("blue", pos);
 					break;
 				case Blobfinder.RED:
-					simu.setObject("blue", pos);
+					simu.setObjectPos("blue", pos);
 					break;
 				}
 			}

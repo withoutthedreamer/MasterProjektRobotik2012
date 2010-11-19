@@ -94,9 +94,21 @@ public class Simulator implements Runnable {
 		while(this.thread.isAlive());
 		System.out.println("Shutdown of " + this.toString());
 	}
-	public void setObject(String key, Position value) {
+	public void setObjectPos(String key, Position value) {
 		objList.put(key, value);
+		this.simu.getSimulationPose2D();
 	}
+	// TODO test and make asynchronous
+//	public Position getObjectPos(String key) {
+//		simu.get2DPose (key);
+//		if (simu.isPose2DReady ()) {
+//			PlayerSimulationPose2dReq pose = simu.getSimulationPose2D ();
+//		}
+//		return new Position(
+//				pose.getPose().getPx(),
+//				pose.getPose().getPy(),
+//				pose.getPose().getPa());
+//	}
 	protected void test () {
 		this.simu.get2DPose("r3");
 		if ( simu.isPose2DReady() ) {

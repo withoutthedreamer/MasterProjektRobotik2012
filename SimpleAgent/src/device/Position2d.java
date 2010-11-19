@@ -54,7 +54,7 @@ public class Position2d implements Runnable{
 	// Only to be called @~10Hz
 	protected void update() {
 		// Wait for sonar readings
-		while ( ! posi.isDataReady ()){
+		while ( ! posi.isDataReady() ){
 			try { Thread.sleep (this.SLEEPTIME); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
 		}

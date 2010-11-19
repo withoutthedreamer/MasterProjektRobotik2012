@@ -1,17 +1,21 @@
 package robot;
 
+import data.Position;
 import device.Gripper;
 import device.LaserUrg;
+import device.Planner;
 import javaclient3.PlayerException;
 
 final public class PioneerLG extends Pioneer {
 	protected Gripper grip = null;
+	protected Planner plan = null;
 
 	public PioneerLG(String name, int port, int id) {
 		super(name, port, id);
 		try {
-			this.laser = new LaserUrg (this.playerclient, super.id);
-			this.grip   = new Gripper (this.playerclient, super.id);
+			this.laser = new LaserUrg (this.playerclient, this.id);
+			this.grip  = new Gripper (this.playerclient, this.id);
+			this.plan  = new Planner ("localhost", 6685, this.id);
 			this.grip.close();
 
 		} catch (PlayerException e) {
@@ -26,6 +30,14 @@ final public class PioneerLG extends Pioneer {
 		this.laser.thread.interrupt();
 		while (this.laser.thread.isAlive());
 		this.grip.thread.interrupt();
-		while (this.laser.thread.isAlive());
+		while (this.grip.thread.isAlive());
+		this.plan.shutdown();
+	}
+
+	protected void update () {
+	// Robot is planner controlled
+	}
+	public void setGoal(Position goal) {
+		this.plan.setGoal(goal);
 	}
 }
