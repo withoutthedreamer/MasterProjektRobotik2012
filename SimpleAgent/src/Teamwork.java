@@ -50,6 +50,8 @@ public class Teamwork  {
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
 			Simulator simu   = Simulator.getInstance("localhost", 6665);
 
+			simu.setObject("r2", new Position(5,5,0));
+			
 			// Wait until enter is pressed
 			in.readLine();
 			pionSB.shutdown();

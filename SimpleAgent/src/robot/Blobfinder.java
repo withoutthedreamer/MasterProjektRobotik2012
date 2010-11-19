@@ -14,6 +14,10 @@ public class Blobfinder implements Runnable {
 	protected int[] color = null;
 	protected Vector<BlobfinderBlob> blob = null;;
 	protected final int SLEEPTIME = 100;
+	
+	public final static int RED   = 0xFF0000;
+	public final static int GREEN = 0x00FF00;
+	public final static int BLUE  = 0x0000FF;
 
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );

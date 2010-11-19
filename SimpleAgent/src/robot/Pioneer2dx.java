@@ -482,8 +482,37 @@ abstract class Pioneer2dx implements Runnable
 	if (this.blofi != null) {
 		int count = this.blofi.getCount();
 		if (count > 0) {
+			Simulator simu = Simulator.getInstance("localhost", 6665);
+
 			for (int i=0; i<count; i++) {
-				//				if (this.blofi.getBlobs().get(i).getColor() == 0xFF0000) {
+				switch (this.blofi.getBlobs().get(i).getColor() ) {
+				case Blobfinder.BLUE:
+					simu.setObject("blue", new Position(
+							this.posi.getData().getPos().getPx()+0.5,
+							this.posi.getData().getPos().getPy(),
+							this.posi.getData().getPos().getPa()));
+					break;
+				case Blobfinder.GREEN:
+					simu.setObject("green", new Position(
+							this.posi.getData().getPos().getPx()+0.5,
+							this.posi.getData().getPos().getPy(),
+							this.posi.getData().getPos().getPa()));
+					break;
+				case Blobfinder.RED:
+					simu.setObject("red", new Position(
+							this.posi.getData().getPos().getPx()+0.5,
+							this.posi.getData().getPos().getPy(),
+							this.posi.getData().getPos().getPa()));
+					break;
+				}
+//				
+//				
+//				Simulator simu = Simulator.getInstance("localhost", 6665);
+//				simu.setObject("green", new Position(
+//						this.posi.getData().getPos().getPx()+0.5,
+//						this.posi.getData().getPos().getPy(),
+//						this.posi.getData().getPos().getPa()));
+//				//				if (this.blofi.getBlobs().get(i).getColor() == 0xFF0000) {
 				//					int x = this.blofi.getBlobs().get(i).getX();
 				//					int y = this.blofi.getBlobs().get(i).getY();
 				//					System.out.printf("Yehaa, found blob with color 0x%06X at (%2d,%2d)\n",
@@ -491,6 +520,7 @@ abstract class Pioneer2dx implements Runnable
 				//							x, y);
 				//					System.out.printf("I am at (%5.2f,%5.2f,%5.2f)\n",this.posi.getX(), this.posi.getY(), this.posi.getYaw());
 				//				}
+				
 			}
 		}
 	}

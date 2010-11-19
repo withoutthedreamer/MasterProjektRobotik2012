@@ -115,6 +115,7 @@ model (
   size [ 1 1 0.0]
   pose [ 5 -5 0 0]
   color "red"
+  name "red"
   boundary 0
   gui_move 1
   gripper_return 1
@@ -128,6 +129,7 @@ model (
   size [ 1 1 0.0]
   pose [ -5 5 0 0]
   color "green"
+  name "green"
   boundary 0
   gui_move 1
   gripper_return 1
@@ -141,6 +143,7 @@ model (
   size [ 1 1 0.0]
   pose [ 2.5 5 0 0]
   color "blue"
+  name "blue"
   boundary 0
   gui_move 1
   gripper_return 1
