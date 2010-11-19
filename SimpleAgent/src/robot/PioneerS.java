@@ -1,6 +1,6 @@
 package robot;
 
-import sensor.Sonar;
+import device.Sonar;
 import javaclient3.PlayerException;
 
 final public class PioneerS extends Pioneer {

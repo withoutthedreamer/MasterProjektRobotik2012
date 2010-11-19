@@ -6,15 +6,14 @@ package robot;
 
 import data.Position;
 import data.Trackable;
-import sensor.Blobfinder;
-import sensor.Gripper;
-import sensor.LaserUrg;
-import sensor.Sonar;
+import device.Blobfinder;
+import device.Gripper;
+import device.LaserUrg;
+import device.Position2d;
+import device.Sonar;
 import simulator.Simulator;
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
-import javaclient3.Position2DInterface;
-import javaclient3.structures.PlayerConstants;
 
 // This class represents a minimal or standard coniguration
 // of a Pioneer 2DX robot at TAMS laboratory at University Hamburg
@@ -22,9 +21,9 @@ import javaclient3.structures.PlayerConstants;
 // It can be instantiated or inherited to add other devices.
 abstract class Pioneer implements Runnable, Trackable
 {
-	// Required to every Pioneer2dx
+	// Required to every Pioneer2dx TODO outsource playerclient
 	protected PlayerClient playerclient = null;
-	protected Position2DInterface posi  = null;
+	protected Position2d          posi  = null;
 	
 	// To be implemented in subclass when needed
 	protected LaserUrg 			laser = null;
@@ -113,7 +112,9 @@ abstract class Pioneer implements Runnable, Trackable
 					+ this.id
 					+ " in thread: "
 					+ this.playerclient.getName());
-			this.posi = this.playerclient.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
+			
+			// Always needs a position device
+			this.posi = new Position2d(this.playerclient, this.id);
 			
 			// Automatically start own thread in constructor
 			this.thread.start();
@@ -126,7 +127,7 @@ abstract class Pioneer implements Runnable, Trackable
 					+ this.thread.getName());
 			
 		} catch (PlayerException e) {
-			System.err.println ("Pioneer2dx: > Error connecting to Player: ");
+			System.err.println ("Pioneer: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 			System.exit (1);
 		}
@@ -145,26 +146,16 @@ abstract class Pioneer implements Runnable, Trackable
 		}
 	}
 	protected final void update() {
-		// Sensor read is done asynchronous
-//		readSensors();
+		// Sensor read is done asynchronously
 		plan();
 		execute();
 	}
-	//depreciated
-	protected final void readSensors () {
-		///< This blocks until new data comes; 10Hz by default
-		// TODO consider outsourcing due to object's own refresh cycle
-		// Following call is not needed when playerclient is threaded
-//		this.playerclient.readAll();
-//		if (this.sonar != null) { this.sonar.updateRanges(); };
-//		if (this.laser != null) { this.laser.getRanges(); };
-//		if (this.blofi != null) { this.blofi.updateBlobs();  };
-	}
-
+	
 	// Shutdown robot and clean up
 	public void shutdown () {
 		// Cleaning up
 		this.shutdownDevices();
+		this.posi.thread.interrupt();
 		this.playerclient.close();
 		this.thread.interrupt();
 		while(this.thread.isAlive());
@@ -248,9 +239,9 @@ abstract class Pioneer implements Runnable, Trackable
 			System.out.println(getDistance(viewDirectType.LEFTREAR));
 		}
 		if (DEBUG_POSITION) {
-			System.out.print(posi.getData().getPos().getPx());	System.out.print("\t");
-			System.out.print(posi.getData().getPos().getPy());	System.out.print("\t");
-			System.out.println(java.lang.Math.toDegrees(posi.getData().getPos().getPa()));
+			System.out.print(posi.getPosition().getX());	System.out.print("\t");
+			System.out.print(posi.getPosition().getY());	System.out.print("\t");
+			System.out.println(java.lang.Math.toDegrees(posi.getPosition().getYaw()));
 		}
 	}
 
@@ -259,13 +250,8 @@ abstract class Pioneer implements Runnable, Trackable
 		this.posi.setSpeed(speed, turnrate);
 	}
 	/// Return robot position
-	// TODO implement Position device in own thread
 	public final Position getPosition() {
-		Position pos = new Position(
-				this.posi.getData().getPos().getPx(),
-				this.posi.getData().getPos().getPy(),
-				this.posi.getData().getPos().getPa());
-		return pos;
+		return this.posi.getPosition();
 	}
 
 	/// Returns the minimum distance of the given arc.
@@ -502,43 +488,23 @@ abstract class Pioneer implements Runnable, Trackable
 		if (count > 0) {
 			Simulator simu = Simulator.getInstance("localhost", 6665);
 
+			Position pos = new Position(
+					this.posi.getPosition().getX()+0.5,
+					this.posi.getPosition().getY(),
+					this.posi.getPosition().getYaw());
+
 			for (int i=0; i<count; i++) {
 				switch (this.blofi.getBlobs().get(i).getColor() ) {
 				case Blobfinder.BLUE:
-					simu.setObject("blue", new Position(
-							this.posi.getData().getPos().getPx()+0.5,
-							this.posi.getData().getPos().getPy(),
-							this.posi.getData().getPos().getPa()));
+					simu.setObject("blue", pos);
 					break;
 				case Blobfinder.GREEN:
-					simu.setObject("green", new Position(
-							this.posi.getData().getPos().getPx()+0.5,
-							this.posi.getData().getPos().getPy(),
-							this.posi.getData().getPos().getPa()));
+					simu.setObject("blue", pos);
 					break;
 				case Blobfinder.RED:
-					simu.setObject("red", new Position(
-							this.posi.getData().getPos().getPx()+0.5,
-							this.posi.getData().getPos().getPy(),
-							this.posi.getData().getPos().getPa()));
+					simu.setObject("blue", pos);
 					break;
 				}
-//				
-//				
-//				Simulator simu = Simulator.getInstance("localhost", 6665);
-//				simu.setObject("green", new Position(
-//						this.posi.getData().getPos().getPx()+0.5,
-//						this.posi.getData().getPos().getPy(),
-//						this.posi.getData().getPos().getPa()));
-//				//				if (this.blofi.getBlobs().get(i).getColor() == 0xFF0000) {
-				//					int x = this.blofi.getBlobs().get(i).getX();
-				//					int y = this.blofi.getBlobs().get(i).getY();
-				//					System.out.printf("Yehaa, found blob with color 0x%06X at (%2d,%2d)\n",
-				//							0xFF0000,
-				//							x, y);
-				//					System.out.printf("I am at (%5.2f,%5.2f,%5.2f)\n",this.posi.getX(), this.posi.getY(), this.posi.getYaw());
-				//				}
-				
 			}
 		}
 	}

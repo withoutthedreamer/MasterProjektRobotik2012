@@ -1,7 +1,7 @@
 package robot;
 
-import sensor.Blobfinder;
-import sensor.Sonar;
+import device.Blobfinder;
+import device.Sonar;
 import javaclient3.PlayerException;
 
 final public class PioneerSB extends Pioneer {

@@ -1,4 +1,4 @@
-package sensor;
+package device;
 
 import javaclient3.GripperInterface;
 import javaclient3.PlayerClient;

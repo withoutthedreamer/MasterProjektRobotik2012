@@ -1,7 +1,7 @@
 package robot;
 
-import sensor.Gripper;
-import sensor.LaserUrg;
+import device.Gripper;
+import device.LaserUrg;
 import javaclient3.PlayerException;
 
 final public class PioneerLG extends Pioneer {
