@@ -25,6 +25,8 @@ public class BlobfinderBlob {
 	private int bottom;
 	// Range to the blob center [meters]
 	private float range;
+	// Position from where last discovered
+	Position discovered = null;
 	// Colors c&p from Stage rgb.txt
 	public final static HashMap<Integer,String> colorhm = new HashMap<Integer,String>();
 	static{
@@ -113,6 +115,12 @@ public class BlobfinderBlob {
 	}
 	public void setRange(float range) {
 		this.range = range;
+	}
+	public Position getDiscovered() {
+		return discovered;
+	}
+	public void setDiscovered(Position discovered) {
+		this.discovered = discovered;
 	}
 	public String toString() {
 		return "(" +

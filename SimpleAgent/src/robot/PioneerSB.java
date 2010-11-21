@@ -31,7 +31,9 @@ final public class PioneerSB extends Pioneer {
 		int count = this.blofi.getCount();
 		if (count > 0) {
 			for (int i=0; i<count; i++) {
-				BlobfinderBlob ablob = blofi.getBlobs().get(i);	
+				BlobfinderBlob ablob = blofi.getBlobs().get(i);
+				// Seen from this position
+				ablob.setDiscovered(this.getPosition());
 				System.out.print(this.toString() + " @ " + this.getPosition().toString());
 				System.out.println(" found blob @ " + ablob.toString());
 			}
