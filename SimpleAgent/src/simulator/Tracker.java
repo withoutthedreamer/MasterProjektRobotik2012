@@ -21,7 +21,11 @@ public class Tracker implements Runnable {
 	protected Tracker(Simulator simu, Vector<SimuObject> simuObjs) {
 		try {
 			this.simu = simu;
-			this.simuObjs = simuObjs;
+			if (simuObjs == null) {
+				this.simuObjs = new Vector<SimuObject>();
+			} else {
+				this.simuObjs = simuObjs;
+			}
 			
 			// Automatically start own thread in constructor
 			this.thread.start();
@@ -46,6 +50,7 @@ public class Tracker implements Runnable {
 	}
 	
 	protected void update () {
+		if (this.simuObjs == null) { return; }
 		int count = this.simuObjs.size();
 		for (int i=0; i<count; i++) {
 			// update objects position

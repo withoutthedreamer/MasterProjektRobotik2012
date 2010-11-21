@@ -55,23 +55,19 @@ public class Teamwork  {
 //			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
 			// Testing planner
-			pionLG.setPose(new Position(-3, -5, 0));
+			pionLG.setPose(new Position(-3,-5,0));
 			pionLG.setGoal(new Position(-6,6,0));
-//			Simulator simu   = Simulator.getInstance("localhost", 6675);
-//
-//			// Define tracked objects for Tracker
-//			Vector<SimuObject> simuObjs  = new Vector<SimuObject>();
-//			simuObjs.add(new SimuObject("r0", pionSB));
-//			simuObjs.add(new SimuObject("r1", pionLG));
-//			
-//			Tracker tracker  = Tracker.getInstance(simu, simuObjs);
-			
+			// Testing Simulator
+			Simulator simu   = Simulator.getInstance("localhost", 6675);
+			Tracker tracker  = Tracker.getInstance(simu, null);
+			tracker.addObject("r1", pionLG);
+		
 			// Wait until enter is pressed
 			in.readLine();
-//			tracker.shutdown();
+			tracker.shutdown();
 //			pionSB.shutdown();
 			pionLG.shutdown();
-//			simu.shutdown();
+			simu.shutdown();
 			
 		} catch (Exception e) { e.printStackTrace(); }
 	}
