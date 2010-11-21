@@ -6,12 +6,10 @@ package robot;
 
 import data.Position;
 import data.Trackable;
-import device.Blobfinder;
 import device.Gripper;
 import device.LaserUrg;
 import device.Position2d;
 import device.Sonar;
-import simulator.Simulator;
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 
@@ -28,7 +26,6 @@ abstract class Pioneer implements Runnable, Trackable
 	// To be implemented in subclass when needed
 	protected LaserUrg 			laser = null;
 	protected Sonar				sonar = null;
-	protected Blobfinder		blofi = null;
 	protected Gripper			grip  = null;
 	
 	// Every class of this type has it's own thread
@@ -167,7 +164,7 @@ abstract class Pioneer implements Runnable, Trackable
 	public abstract void shutdownDevices();
 		
 	@SuppressWarnings("unused")
-	protected final void plan () {
+	protected void plan () {
 		double tmp_turnrate = 0.;
 
 		if (DEBUG_SONAR && this.sonar != null){
@@ -178,9 +175,6 @@ abstract class Pioneer implements Runnable, Trackable
 			for(int i=0; i< sonarCount; i++)
 				System.out.println("Sonar " + i + ": " + sonarValues[i]);
 		}
-
-		// Look out for blobs
-		blobsearch();
 
 		// (Left) Wall following
 		this.turnrate = wallfollow();
@@ -482,33 +476,4 @@ abstract class Pioneer implements Runnable, Trackable
 		}
 		return saveTurnrate;
 	}
-
-	@SuppressWarnings("unused")
-	protected final void blobsearch() {
-	if (false) { // TODO implement
-		int count = this.blofi.getCount();
-		if (count > 0) {
-			Simulator simu = Simulator.getInstance("localhost", 6665);
-
-			Position pos = new Position(
-					this.posi.getPosition().getX()+0.5,
-					this.posi.getPosition().getY(),
-					this.posi.getPosition().getYaw());
-
-			for (int i=0; i<count; i++) {
-				switch (this.blofi.getBlobs().get(i).getColor() ) {
-				case Blobfinder.BLUE:
-					simu.setObjectPos("blue", pos);
-					break;
-				case Blobfinder.GREEN:
-					simu.setObjectPos("blue", pos);
-					break;
-				case Blobfinder.RED:
-					simu.setObjectPos("blue", pos);
-					break;
-				}
-			}
-		}
-	}
-}
 }

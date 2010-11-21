@@ -1,5 +1,7 @@
 package data;
 
+import java.util.HashMap;
+
 public class BlobfinderBlob {
 //taken from PlayerBlobfinderBlob class
 	// Blob id.
@@ -23,6 +25,22 @@ public class BlobfinderBlob {
 	private int bottom;
 	// Range to the blob center [meters]
 	private float range;
+	// Colors c&p from Stage rgb.txt
+	public final static HashMap<Integer,String> colorhm = new HashMap<Integer,String>();
+	static{
+		colorhm.put(0xFF0000,"red");
+		colorhm.put(0x00FF00,"green");
+		colorhm.put(0x0000FF,"blue");
+		colorhm.put(0xFFFFF0,"ivory");
+		colorhm.put(0xFFFFFF,"white");
+		colorhm.put(0x000000,"black");
+		colorhm.put(0xBEBEBE,"gray");
+		colorhm.put(0x00FFFF,"cyan");
+		colorhm.put(0xFFD700,"gold");
+		colorhm.put(0xA52A2A,"brown");
+		colorhm.put(0xFFA500,"orange");
+		colorhm.put(0xFFC0CB,"pink");
+	}
 
 	public BlobfinderBlob(int color, int area, int x, int y, int left,
 			int right, int top, int bottom, float range) {
@@ -96,5 +114,10 @@ public class BlobfinderBlob {
 	public void setRange(float range) {
 		this.range = range;
 	}
-
+	public String toString() {
+		return "(" +
+			new Double(this.x).toString() + ","
+			+ new Double(this.y).toString() + ","
+			+ colorhm.get(this.color) + ")";
+	}
 }
