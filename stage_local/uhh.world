@@ -5,7 +5,7 @@ include "urg.inc"
 include "platte.inc"
 include "laptop.inc"
 
-resolution 0.021
+resolution 0.021 # meters per pixel
 
 # configure the GUI window
 window

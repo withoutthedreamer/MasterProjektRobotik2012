@@ -17,22 +17,21 @@ public class Planner implements Runnable {
 	protected PlannerInterface plan = null;
 	protected LocalizeInterface loci  = null;
 	protected MapInterface mapi = null;
-	protected PlayerLocalizeSetPose plsp = null;
+	protected PlayerLocalizeSetPose locPose = null;
 	protected final int SLEEPTIME = 100;
 
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
 
-	// initial values for the covariance matrix (c&p example from Player)
-	protected double cov[] = {
-			250,
-			250,
-			(Math.PI / 6.0) * (Math.PI / 6.0) * 180 / Math.PI * 3600 * 180
-					/ Math.PI * 3600 };
+	// initial values for the covariance matrix (c&p example from playernav)
+	protected double cov[] = { 0.5*0.5, 0.5*0.5, (Math.PI/6.0)*(Math.PI/6.0) };
+
 	// set the initial guessed pose for localization (AMCL)
 	protected PlayerPose goal = null;
+	protected PlayerPose pose = null;
 	protected PlayerPlannerData ppd = null;
 	private boolean isNewGoal = false;
+	private boolean isNewPose = false;
 
 	
 	// Host id
@@ -40,32 +39,35 @@ public class Planner implements Runnable {
 		try {
 			// Connect to the Player server and request access to Position
 			this.playerclient  = new PlayerClient (host, port);
+			System.out.println("Running playerclient of: "
+					+ this.toString()
+					+ " in thread: "
+					+ this.playerclient.getName());
+
 			this.mapi = this.playerclient.requestInterfaceMap(0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.loci = this.playerclient.requestInterfaceLocalize(0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.plan = this.playerclient.requestInterfacePlanner(0, PlayerConstants.PLAYER_OPEN_MODE);
 
-						System.out.println("Running "
+			System.out.println("Running "
 					+ this.toString()
 					+ " in thread: "
 					+ this.thread.getName()
 					+ " of robot "
 					+ id);
-			
+
 			// set the initial guessed pose for localization (AMCL)
-			this.plsp = new PlayerLocalizeSetPose ();
-			this.goal = new PlayerPose(-7,-7,0);
+			this.locPose = new PlayerLocalizeSetPose ();
+			
+			this.pose = new PlayerPose();
+			this.goal = new PlayerPose();
 
 			// enable motion
 			plan.setRobotMotion(1);
 
-			// set the mean values to 0,0,0
-			plsp.setMean (new PlayerPose ());
-			plsp.setCov (cov);
-			loci.setPose (plsp);
+			// set the first mean values
+			locPose.setMean (this.pose);
+			locPose.setCov (cov);
 			
-			// first goal 0 0 0
-			plan.setGoal(this.goal);
-
 			// Automatically start own thread in constructor
 			this.thread.start();
 		} catch ( PlayerException e ) {
@@ -82,22 +84,44 @@ public class Planner implements Runnable {
 	}
 	// Only to be called @~10Hz
 	protected void update () {
-		// Wait for readings
-//		while ( ! plan.isDataReady ()){
-			try { Thread.sleep (this.SLEEPTIME); }
-			catch (InterruptedException e) { this.thread.interrupt(); }
-//		}
-		// request recent planner data
-//		this.ppd = plan.getData ();
-//		System.out.println (ppd.getWaypoints_count());
+//		if (loci.isDataReady()) {
+		if ( loci.getData() != null ) {
+			if ( loci.getData().getHypoths_count() > 0 ) {
+				System.out.println("Hypothesis #: " + this.loci.getData().getHypoths_count());
+				this.pose = this.loci.getData().getHypoths()[0].getMean();
+				this.printPos(this.pose);
+			}
+		}
+		if (loci.getParticleData() != null) {
+			System.out.println("Particle #: " + this.loci.getParticleData().getParticles_count());
+		}
+		// TODO check if position is on map
+		if (plan.isDataReady()) {
+			// request recent planner data
+			this.ppd = plan.getData ();
+			System.out.println (ppd.getWaypoints_count());
+		}
 		// update goal
-//		if(isNewGoal) {
-//			isNewGoal = false;
-//			plan.setGoal(this.goal);
-//			
-//		}
+		if(isNewGoal) {
+			isNewGoal = false;
+			plan.setGoal(this.goal);
+		}
+		// update location belief
+		if(isNewPose) {
+			isNewPose = false;
+			loci.setPose (locPose);			
+		}
+		
+		try { Thread.sleep (this.SLEEPTIME); }
+		catch (InterruptedException e) { this.thread.interrupt(); }
 	}
 
+	private void printPos(PlayerPose pose2) {
+		System.out.printf("Current pos belief: (%5.2f,%5.2f,%5.2f)",
+			pose2.getPx(),
+			pose2.getPy(),
+			pose2.getPa() );
+	}
 	@Override
 	public void run() {
 		while ( ! this.thread.isInterrupted()) {
@@ -110,5 +134,11 @@ public class Planner implements Runnable {
 		this.thread.interrupt();
 		while (this.thread.isAlive());
 		System.out.println("Shutdown of " + this.toString());		
+	}
+	public void setPose(Position position) {
+		this.pose.setPx(position.getX());
+		this.pose.setPy(position.getY());
+		this.pose.setPa(position.getY());
+		this.isNewPose = true;
 	}
 }

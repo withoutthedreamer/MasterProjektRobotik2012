@@ -54,7 +54,9 @@ public class Teamwork  {
 		try {
 //			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
-			pionLG.setGoal(new Position(-7.,-7.,0.));
+			// Testing planner
+			pionLG.setPose(new Position(-3, -5, 0));
+			pionLG.setGoal(new Position(-6,6,0));
 //			Simulator simu   = Simulator.getInstance("localhost", 6675);
 //
 //			// Define tracked objects for Tracker
