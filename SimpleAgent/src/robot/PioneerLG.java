@@ -16,7 +16,6 @@ final public class PioneerLG extends Pioneer {
 			this.laser = new LaserUrg (this.playerclient, this.id);
 			this.grip  = new Gripper (this.playerclient, this.id);
 			this.plan  = new Planner (name, 6685, this.id);
-			this.grip.close();
 
 		} catch (PlayerException e) {
 			System.err.println ("PioneerLG: > Error connecting to Player: ");
