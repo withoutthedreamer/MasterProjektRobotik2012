@@ -72,6 +72,10 @@ public class Simulator implements Runnable {
 			Position pos = (Position)me.getValue();
 			PlayerPose pp = new PlayerPose(pos.getX(), pos.getY(), pos.getYaw());
 			this.simu.set2DPose(key, pp);
+//			pos = this.getObjectPos(key);
+//			if (pos != null) {
+//				System.out.println(pos.toString());
+//			}
 		}
 		try { Thread.sleep (100); }
 		catch (InterruptedException e) { this.thread.interrupt(); }
@@ -99,27 +103,17 @@ public class Simulator implements Runnable {
 		this.simu.getSimulationPose2D();
 	}
 	// TODO test and make asynchronous
-//	public Position getObjectPos(String key) {
-//		simu.get2DPose (key);
-//		if (simu.isPose2DReady ()) {
-//			PlayerSimulationPose2dReq pose = simu.getSimulationPose2D ();
-//		}
-//		return new Position(
-//				pose.getPose().getPx(),
-//				pose.getPose().getPy(),
-//				pose.getPose().getPa());
-//	}
-	protected void test () {
-		this.simu.get2DPose("r3");
+	// TODO not working yet
+	public Position getObjectPos(String key) {
+		simu.get2DPose (key);
 		if ( simu.isPose2DReady() ) {
-			PlayerSimulationPose2dReq pose = simu.getSimulationPose2D ();
-			System.out.printf ("Pose of %s: (%5.2f,%5.2f,%5.2f)\n",
+			PlayerSimulationPose2dReq pose = simu.getSimulationPose2D();
+			return new Position(
 					pose.getPose().getPx(),
 					pose.getPose().getPy(),
 					pose.getPose().getPa());
+		} else {
+			return null;
 		}
-		PlayerPose pp = new PlayerPose(7,7,0);
-		this.simu.set2DPose("r2", pp);
-//		this.simu.get2DPose("r1");
 	}
 }
