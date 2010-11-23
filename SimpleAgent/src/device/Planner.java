@@ -24,7 +24,7 @@ public class Planner implements Runnable {
 	public Thread thread = new Thread ( this );
 
 	// initial values for the covariance matrix (c&p example from playernav)
-	protected double cov[] = { 0.5*0.5, 0.5*0.5, (Math.PI/6.0)*(Math.PI/6.0) };
+	protected double cov[] = { 0.5*0.5, 0.5*0.5, (Math.PI/6.0)*(Math.PI/6.0), 0, 0, 0 };
 
 	// set the initial guessed pose for localization (AMCL)
 	protected PlayerPose goal = null;

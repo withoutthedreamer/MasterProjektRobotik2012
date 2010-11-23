@@ -1,5 +1,6 @@
 package robot;
 
+import data.Position;
 import device.Sonar;
 import javaclient3.PlayerException;
 
@@ -22,4 +23,11 @@ final public class PioneerS extends Pioneer {
 		this.sonar.thread.interrupt();
 		while(this.sonar.thread.isAlive());
 	}
+
+	@Override
+	public void setGoal(Position goal) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

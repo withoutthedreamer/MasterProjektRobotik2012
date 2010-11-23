@@ -122,6 +122,9 @@ public class BlobfinderBlob {
 	public void setDiscovered(Position discovered) {
 		this.discovered = discovered;
 	}
+	public static String getColorString(int color2) {
+		return colorhm.get(color2);
+	}
 	public String toString() {
 		return "(" +
 			new Double(this.x).toString() + ","

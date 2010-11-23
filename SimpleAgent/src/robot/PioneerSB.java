@@ -1,12 +1,16 @@
 package robot;
 
+import data.BbNote;
 import data.BlobfinderBlob;
+import data.Position;
+import device.Blackboard;
 import device.Blobfinder;
 import device.Sonar;
 import javaclient3.PlayerException;
 
 final public class PioneerSB extends Pioneer {
 	protected Blobfinder blofi = null;
+	protected Blackboard blackboard = null;
 
 	public PioneerSB(String name, int port, int id) {
 		super(name, port, id);
@@ -34,8 +38,16 @@ final public class PioneerSB extends Pioneer {
 				BlobfinderBlob ablob = blofi.getBlobs().get(i);
 				// Seen from this position
 				ablob.setDiscovered(this.getPosition());
-				System.out.print(this.toString() + " @ " + this.getPosition().toString());
-				System.out.println(" found blob @ " + ablob.toString());
+				BbNote note = new BbNote();
+				note.setGoal(new Position(-7,-7,0));
+				note.setPose(this.getPosition());
+//				note.setTrackable(tracked2);
+				if (blackboard != null) {
+					blackboard.add(BlobfinderBlob.getColorString(ablob.getColor()), note);
+				} else {
+					System.out.print(this.toString() + " @ " + this.getPosition().toString());
+					System.out.println(" found blob @ " + ablob.toString());
+				}
 			}
 		}
 	}
@@ -62,5 +74,13 @@ final public class PioneerSB extends Pioneer {
 		//		this.turnrate = (tmp_turnrate + this.turnrate) / 2;
 		double weight = 0.5;
 		this.turnrate = weight*tmp_turnrate + (1-weight)*this.turnrate;
+	}
+	@Override
+	public void setGoal(Position goal) {
+		// TODO Auto-generated method stub
+		
+	}
+	public void setBlackboard (Blackboard bb) {
+		this.blackboard = bb;
 	}
 }

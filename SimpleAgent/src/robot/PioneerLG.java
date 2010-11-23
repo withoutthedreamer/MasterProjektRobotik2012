@@ -43,4 +43,5 @@ final public class PioneerLG extends Pioneer {
 	public void setPose(Position position) {
 		this.plan.setPose(position);		
 	}
+
 }

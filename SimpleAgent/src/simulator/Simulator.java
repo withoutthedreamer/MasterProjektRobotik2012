@@ -56,8 +56,11 @@ public class Simulator implements Runnable {
 			instance = new Simulator(name, port);
 		}
 		return instance;
-		
 	}
+	public static Simulator getInstance () {
+		return instance; // whether or not it is null
+	}
+	
 	// TODO Currently only 'static' objects should be modified
 	@SuppressWarnings("rawtypes")
 	protected void update () {
@@ -72,7 +75,7 @@ public class Simulator implements Runnable {
 			Position pos = (Position)me.getValue();
 			PlayerPose pp = new PlayerPose(pos.getX(), pos.getY(), pos.getYaw());
 			this.simu.set2DPose(key, pp);
-//			pos = this.getObjectPos(key);
+			pos = this.getObjectPos(key);
 //			if (pos != null) {
 //				System.out.println(pos.toString());
 //			}
