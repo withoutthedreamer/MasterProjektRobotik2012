@@ -13,8 +13,8 @@ public class BbNote {
 	protected Trackable tracked = null;
 	protected boolean completed = false;
 	protected long lastChecked = 0;
-	protected int timeout = 3000;
-	protected double epsilon = 0.5; // meters
+	protected int timeout = 1000;
+	protected double epsilon = 1.0; // meters
 	
 	public boolean isCompleted() {
 		return completed;
@@ -62,11 +62,12 @@ public class BbNote {
 					System.out.println("Setting new goal: " + goal.toString());
 					//				if( ! tracked.getGoal().isEqualTo(goal1)){
 					//					tracked.setGoal(goal1);
-				} //else {
+				} else {
 					// Do nothing
-//					System.out.println("Goal is being processed");
-				//}
+//					System.out.println("Goal is being processed: " + tracked.getGoal().toString());
+				}
 			}
+			this.oldPose = tracked.getPosition();
 		}
 	}
 
@@ -76,7 +77,6 @@ public class BbNote {
 			Position robotpos = this.tracked.getPosition();
 			// Euclidean distance, Pythagoras
 			if (distance(robotpos, goal) < epsilon) {
-//			if ( robotpos.isEqualTo(goal)) {
 				System.out.println("Goal reached");
 				return true;
 			}
@@ -95,8 +95,8 @@ public class BbNote {
 			return true;
 		}
 		
-		if ( (this.lastChecked + timeout) <= now) {
-			this.lastChecked = now;
+		if ( (lastChecked + timeout) <= now) {
+			lastChecked = now;
 			// timeout
 			// Check for pose change
 			// get current position

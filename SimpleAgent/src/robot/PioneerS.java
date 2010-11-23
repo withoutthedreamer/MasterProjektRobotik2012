@@ -30,4 +30,10 @@ final public class PioneerS extends Pioneer {
 		
 	}
 
+	@Override
+	public Position getGoal() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

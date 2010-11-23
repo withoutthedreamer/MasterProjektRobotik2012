@@ -35,7 +35,8 @@ public class FindCollectExample {
 		
 			// Wait until enter is pressed
 			in.readLine();
-//			tracker.shutdown();
+//			tracker.shutdown()
+			blackb.shutdown();
 			pionSB.shutdown();
 			pionLG.shutdown();
 			simu.shutdown();

@@ -70,7 +70,6 @@ public class Blackboard implements Runnable {
 		while ( ! this.thread.isInterrupted()) {
 			this.update ();
 		}
-		System.out.println("Shutdown of " + this.toString());
 	}
 
 	public static Blackboard getInstance (Trackable robot) {
@@ -97,5 +96,21 @@ public class Blackboard implements Runnable {
 	}
 	public void setSimulation (Simulator simu2) {
 		simu = simu2;
+	}
+	@SuppressWarnings("rawtypes")
+	public void shutdown() {
+		// TODO debug only
+		Set set = this.notehm.entrySet();
+		Iterator i = set.iterator();
+
+		while (i.hasNext()) {
+			Map.Entry me = (Map.Entry)i.next();
+			String key = (String)me.getKey();
+			System.out.println("Still on blackboard: " + key);
+		}
+		
+		this.thread.interrupt();
+		while (this.thread.isAlive());
+		System.out.println("Shutdown of " + this.toString());		
 	}
 }

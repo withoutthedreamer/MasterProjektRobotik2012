@@ -33,4 +33,10 @@ final public class PioneerSL extends Pioneer {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public Position getGoal() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
