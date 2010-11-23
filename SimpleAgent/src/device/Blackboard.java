@@ -1,10 +1,12 @@
 package device;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
 import data.BbNote;
+import data.Position;
 import data.Trackable;
 import simulator.Simulator;
 
@@ -18,7 +20,7 @@ public class Blackboard implements Runnable {
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
 	
-	protected HashMap<String,BbNote> notehm = null;
+	protected LinkedHashMap<String,BbNote> notehm = null;
 	private static final long SLEEPTIME = 1000;
 
 	protected Blackboard(Trackable robot) {
@@ -29,7 +31,7 @@ public class Blackboard implements Runnable {
 //				// try standard config
 //				simu = Simulator.getInstance("localhost", 6665);
 //			}
-			notehm = new HashMap<String,BbNote>();
+			notehm = new LinkedHashMap<String,BbNote>();
 			collectrobot = robot;
 			// Automatically start own thread in constructor
 			this.thread.start();
@@ -48,6 +50,7 @@ public class Blackboard implements Runnable {
 		Set set = this.notehm.entrySet();
 		Iterator i = set.iterator();
 		// Track the 1st only
+		// FIFO HashMap to keep goal order
 		if(i.hasNext()) {
 			Map.Entry me = (Map.Entry)i.next();
 			String key = (String)me.getKey();
@@ -55,6 +58,10 @@ public class Blackboard implements Runnable {
 			if (note.isCompleted()) {
 				notehm.remove(key);
 				System.out.println("Removed note from BB: " + key);
+				// Set object in simulator
+				if (simu != null) {
+					simu.setObjectPos(key, new Position(-3, -5, 0));
+				}
 			} else {
 				note.update();
 //				System.out.println("Update of note : " + key);

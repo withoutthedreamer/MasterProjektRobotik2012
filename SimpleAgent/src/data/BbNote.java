@@ -14,7 +14,7 @@ public class BbNote {
 	protected boolean completed = false;
 	protected long lastChecked = 0;
 	protected int timeout = 1000;
-	protected double epsilon = 1.0; // meters
+	protected double epsilon = 0.5; // meters
 	
 	public boolean isCompleted() {
 		return completed;

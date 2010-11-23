@@ -56,17 +56,17 @@ public class Teamwork  {
 			pionLG.setPose(new Position(-3,-5,0));
 			pionLG.setGoal(new Position(-6,6,0));
 //			// Testing Simulator
-//			Simulator simu   = Simulator.getInstance("localhost", 6675);
-//			Tracker tracker  = Tracker.getInstance(simu, null);
-//			tracker.addObject("r0", pionSB);
-//			tracker.addObject("r1", pionLG);
+			Simulator simu   = Simulator.getInstance("localhost", 6675);
+			Tracker tracker  = Tracker.getInstance(simu, null);
+			tracker.addObject("r0", pionSB);
+			tracker.addObject("r1", pionLG);
 		
 			// Wait until enter is pressed
 			in.readLine();
-//			tracker.shutdown();
+			tracker.shutdown();
 			pionSB.shutdown();
 			pionLG.shutdown();
-//			simu.shutdown();
+			simu.shutdown();
 			
 		} catch (Exception e) { e.printStackTrace(); }
 	}

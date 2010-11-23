@@ -1,9 +1,11 @@
 package simulator;
 
-import java.util.*;
-
 import data.Position;
 
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.*;
 
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
@@ -18,7 +20,8 @@ public class Simulator implements Runnable {
 	protected SimulationInterface simu = null;
 	protected static Simulator instance = null;
 	
-	protected HashMap<String,Position> objList = null;
+//	protected HashMap<String,Position> objList = null;
+	protected ConcurrentHashMap<String,Position> objList = null;
 
 	// Every class of this type has it's own thread
 	protected Thread thread = new Thread ( this );
@@ -34,7 +37,7 @@ public class Simulator implements Runnable {
 					+ this.playerclient.getName());
 			
 			this.simu = this.playerclient.requestInterfaceSimulation(0, PlayerConstants.PLAYER_OPEN_MODE);
-			this.objList = new HashMap<String, Position>();
+			this.objList = new ConcurrentHashMap<String, Position>();
 			
 			// Automatically start own thread in constructor
 			this.thread.start();
@@ -65,8 +68,8 @@ public class Simulator implements Runnable {
 	@SuppressWarnings("rawtypes")
 	protected void update () {
 //		while ( ! this.simu.isDataReady() ) { // TODO debug it
-//		PlayerPose pp = new PlayerPose(7,7,0);
-//		this.simu.set2DPose(identifier, pp);
+		//		PlayerPose pp = new PlayerPose(7,7,0);
+		//		this.simu.set2DPose(identifier, pp);
 		Set set = this.objList.entrySet();
 		Iterator i = set.iterator();
 		while(i.hasNext()) {
@@ -75,14 +78,17 @@ public class Simulator implements Runnable {
 			Position pos = (Position)me.getValue();
 			PlayerPose pp = new PlayerPose(pos.getX(), pos.getY(), pos.getYaw());
 			this.simu.set2DPose(key, pp);
-			pos = this.getObjectPos(key);
-//			if (pos != null) {
-//				System.out.println(pos.toString());
-//			}
+			// TODO player not working yet
+			//			pos = this.getObjectPos(key);
+			//			if (pos != null) {
+			//				System.out.println(pos.toString());
+			//			}
+			// Unlock objects
+			this.objList.clear();
 		}
 		try { Thread.sleep (100); }
 		catch (InterruptedException e) { this.thread.interrupt(); }
-//		}
+		//		}
 	}
 
 	@Override
@@ -103,7 +109,7 @@ public class Simulator implements Runnable {
 	}
 	public void setObjectPos(String key, Position value) {
 		objList.put(key, value);
-		this.simu.getSimulationPose2D();
+//		this.simu.getSimulationPose2D();
 	}
 	// TODO test and make asynchronous
 	// TODO not working yet
