@@ -15,7 +15,7 @@ final public class PioneerLG extends Pioneer {
 		try {
 			this.laser = new LaserUrg (this.playerclient, this.id);
 			this.grip  = new Gripper (this.playerclient, this.id);
-			this.plan  = new Planner (name, 6685, this.id);
+//			this.plan  = new Planner (name, 6685, this.id);
 
 		} catch (PlayerException e) {
 			System.err.println ("PioneerLG: > Error connecting to Player: ");
@@ -30,18 +30,29 @@ final public class PioneerLG extends Pioneer {
 		while (this.laser.thread.isAlive());
 		this.grip.thread.interrupt();
 		while (this.grip.thread.isAlive());
-		this.plan.shutdown();
+		if (plan != null)
+			this.plan.shutdown();
 	}
 
 	protected void update () {
 	// Robot is planner controlled
 	}
 	public void setGoal(Position goal) {
-		this.plan.setGoal(goal);
+		if (plan != null)
+			this.plan.setGoal(goal);
 	}
 
 	public void setPose(Position position) {
-		this.plan.setPose(position);		
+		if (plan != null)
+			this.plan.setPose(position);		
+	}
+	
+	public void setPlanner(String name, int port) {
+		this.plan = new Planner (name, port, this.id);
 	}
 
+	@Override
+	public Position getGoal() {
+		return this.plan.getGoal();
+	}
 }

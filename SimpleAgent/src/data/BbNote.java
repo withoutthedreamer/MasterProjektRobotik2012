@@ -8,24 +8,22 @@ public class BbNote {
 	protected Position pose = null;
 	protected Position oldPose = null;
 
-	protected Position goal1 = null;
-	protected Position goal2 = null;
-	protected boolean isGoal1 = false;
-	protected boolean isGoal2 = false;
+	protected Position goal = null;
+	protected boolean isGoal = false;
 	protected Trackable tracked = null;
 	protected boolean completed = false;
 	protected long lastChecked = 0;
-	protected int timeout = 1000;
-	protected double epsilon = 1.;
+	protected int timeout = 3000;
+	protected double epsilon = 0.5; // meters
 	
 	public boolean isCompleted() {
 		return completed;
 	}
 
 	public BbNote() {
-		lastChecked = new Date().getTime();
+//		lastChecked = new Date().getTime();
 		// TODO test values
-		goal2 = new Position(-7,-7,0);
+//		goal2 = new Position(-7,-7,0);
 	}
 	
 	public void setPose( Position pose2 ) {
@@ -35,11 +33,11 @@ public class BbNote {
 		return this.pose;
 	}
 	public Position getGoal() {
-		return goal1;
+		return goal;
 	}
 
 	public void setGoal(Position goal) {
-		this.goal1 = goal;
+		this.goal = goal;
 	}
 
 	public void setTrackable (Trackable tracked2) {
@@ -51,56 +49,74 @@ public class BbNote {
 
 	public void update() {
 		// if there is a position, goal and something to bring you from,there..
-		if (pose != null && goal1 != null && tracked != null) {
-			if (timeout() && ! goalReached() ) {
-				tracked.setGoal(goal1);
+		if (pose != null && goal != null && tracked != null) {
+			// check if robot is already there
+			boolean goalReached = goalReached();
+			if ( goalReached ) {
+				this.completed = true;
+			} else {
+				if ( timeout() ) {
+					System.out.println("Current goal: " + tracked.getGoal().toString());
+					// Setting goal again
+					tracked.setGoal(goal);
+					System.out.println("Setting new goal: " + goal.toString());
+					//				if( ! tracked.getGoal().isEqualTo(goal1)){
+					//					tracked.setGoal(goal1);
+				} //else {
+					// Do nothing
+//					System.out.println("Goal is being processed");
+				//}
 			}
 		}
 	}
 
-	private boolean timeout() {
-		long now = new Date().getTime();
-		
-		if ( (this.lastChecked + timeout) >= now &&
-				! posChanged() ) {
-			return true;
-		} else {
-			this.lastChecked = new Date().getTime();
-			return false;
-		}
-	}
-
-	private boolean posChanged() {
-		if(distance(oldPose, tracked.getPosition()) >= epsilon) {
-			return true;
-		}
-		return false;
-	}
-
-	private double distance(Position oldPose, Position newPose) {
-		// Euclidean distance, Pythagoras
-		return Math.sqrt(
-				Math.pow(
-						Math.abs(oldPose.getY()
-								-newPose.getY()),2)
-				+ Math.pow(
-						Math.abs(oldPose.getX()
-								-newPose.getX()),2));
-	}
-
 	private boolean goalReached() {
-		if ( pose != null && goal1 != null) {
+		if ( pose != null && goal != null) {
 			// get last robot position
 			Position robotpos = this.tracked.getPosition();
 			// Euclidean distance, Pythagoras
-			if (distance(robotpos, goal1) < epsilon) {
-//				this.completed = true;
-				// set goal for basket
-				this.pose = this.goal2;
+			if (distance(robotpos, goal) < epsilon) {
+//			if ( robotpos.isEqualTo(goal)) {
+				System.out.println("Goal reached");
+				return true;
+			}
+		}
+		//		System.out.println("Goal not reached yet");
+		return false;
+	}
+
+	private boolean timeout() {
+		// get current time
+		long now = new Date().getTime();
+
+		// 1st time then timeout
+		if (lastChecked == 0) {
+			lastChecked = now;
+			return true;
+		}
+		
+		if ( (this.lastChecked + timeout) <= now) {
+			this.lastChecked = now;
+			// timeout
+			// Check for pose change
+			// get current position
+			Position curPos = tracked.getPosition();
+			if (curPos.isEqualTo(oldPose)) {
+				// no progress done: timeout
+				System.out.println("Timeout");
 				return true;
 			}
 		}
 		return false;
 	}
-
+	private double distance(Position oldPose, Position newPose) {
+			// Euclidean distance, Pythagoras
+			return Math.sqrt(
+					Math.pow(
+							Math.abs(oldPose.getY()
+									-newPose.getY()),2)
+					+ Math.pow(
+							Math.abs(oldPose.getX()
+									-newPose.getX()),2));
+	}	
 }

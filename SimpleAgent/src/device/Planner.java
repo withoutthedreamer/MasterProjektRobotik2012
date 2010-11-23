@@ -33,7 +33,6 @@ public class Planner implements Runnable {
 	private boolean isNewGoal = false;
 	private boolean isNewPose = false;
 
-	
 	// Host id
 	public Planner (String host, int port, int id) {
 		try {
@@ -81,6 +80,12 @@ public class Planner implements Runnable {
 		this.goal.setPy(goal.getY());
 		this.goal.setPa(goal.getYaw());
 		isNewGoal = true;
+	}
+	public Position getGoal() {
+		return new Position(
+				this.goal.getPx(),
+				this.goal.getPx(),
+				this.goal.getPa());
 	}
 	// Only to be called @~10Hz
 	protected void update () {

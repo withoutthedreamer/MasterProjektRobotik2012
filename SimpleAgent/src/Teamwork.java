@@ -51,6 +51,7 @@ public class Teamwork  {
 		try {
 			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
+			pionLG.setPlanner("localhost", 6685);
 			// Testing planner
 			pionLG.setPose(new Position(-3,-5,0));
 			pionLG.setGoal(new Position(-6,6,0));

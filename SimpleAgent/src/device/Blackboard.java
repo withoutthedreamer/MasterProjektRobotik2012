@@ -24,11 +24,12 @@ public class Blackboard implements Runnable {
 	protected Blackboard(Trackable robot) {
 		try {
 			// Assume there is already one simulation
-			simu = Simulator.getInstance();
-			if(simu == null) {
-				// try standard config
-				simu = Simulator.getInstance("localhost", 6665);
-			}
+//			simu = Simulator.getInstance();
+//			if(simu == null) {
+//				// try standard config
+//				simu = Simulator.getInstance("localhost", 6665);
+//			}
+			notehm = new HashMap<String,BbNote>();
 			collectrobot = robot;
 			// Automatically start own thread in constructor
 			this.thread.start();
@@ -53,8 +54,10 @@ public class Blackboard implements Runnable {
 			BbNote note = (BbNote)me.getValue();
 			if (note.isCompleted()) {
 				notehm.remove(key);
+				System.out.println("Removed note from BB: " + key);
 			} else {
 				note.update();
+//				System.out.println("Update of note : " + key);
 			}
 		}
 
@@ -81,11 +84,18 @@ public class Blackboard implements Runnable {
 		return instance;
 	}
 	public void add(String key, BbNote note) {
-		// TODO for testing only
-		note.setTrackable(collectrobot);
-		this.notehm.put(key, note);
+		if ( notehm.get(key) == null ) {
+			// TODO for testing only
+			note.setTrackable(collectrobot);
+			this.notehm.put(key, note);
+			System.out.println("BB: added note " + key);
+		}
+//		System.out.println("Added note: " + key + "\t" + note.getPose() + "\t" + note.getGoal());
 	}
 	public BbNote get(String key) {
 		return this.notehm.get(key);
+	}
+	public void setSimulation (Simulator simu2) {
+		simu = simu2;
 	}
 }

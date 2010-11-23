@@ -6,6 +6,8 @@ public class Position {
 	protected double x  = 0.;
 	protected double y  = 0.;
 	protected double yaw= 0.;
+	protected final static double epsilonPos = 0.01;
+	protected final static double epsilonRot = Math.toRadians(0.1);
 	
 	public Position(double x, double y, double yaw) {
 		this.x  = x;
@@ -44,5 +46,15 @@ public class Position {
 	}
 	public String toString() {
 		return String.format("(%5.2f,%5.2f,%3.0f)",this.x, this.y, Math.toDegrees(this.yaw));
+	}
+	public boolean isEqualTo(Position pose){
+		if (pose != null) {
+			if ((Math.abs(x   - pose.getX())   < epsilonPos) &&
+					(Math.abs(y   - pose.getY())   < epsilonPos) &&
+					(Math.abs(yaw - pose.getYaw()) < epsilonRot)   ) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

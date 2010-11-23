@@ -39,7 +39,7 @@ final public class PioneerSB extends Pioneer {
 				// Seen from this position
 				ablob.setDiscovered(this.getPosition());
 				BbNote note = new BbNote();
-				note.setGoal(new Position(-7,-7,0));
+				note.setGoal(this.getPosition());
 				note.setPose(this.getPosition());
 //				note.setTrackable(tracked2);
 				if (blackboard != null) {
@@ -82,5 +82,10 @@ final public class PioneerSB extends Pioneer {
 	}
 	public void setBlackboard (Blackboard bb) {
 		this.blackboard = bb;
+	}
+	@Override
+	public Position getGoal() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

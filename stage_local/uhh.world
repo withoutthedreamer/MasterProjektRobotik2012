@@ -31,8 +31,8 @@ define bobsblobfinder blobfinder
 (
   colors_count 3
   colors [ "red" "green" "blue" ]
-  #fov 1.047196667 # 60 degrees = pi/3 radians
-  range 5
+  fov 1.047196667 # 60 degrees = pi/3 radians
+  range 1
   #range_max 5
   # camera parameters
   #image [160 120]		#resolution
@@ -89,6 +89,7 @@ pioneer2dx
   obstacle_return 0
   laser_return 1
   ranger_return 1
+  blob_return 0
 )
 pioneer2dx
 (		  
@@ -99,6 +100,7 @@ pioneer2dx
   obstacle_return 0
   laser_return 1
   ranger_return 1
+  blob_return 0
 )
 pioneer2dx
 (		  
@@ -109,10 +111,11 @@ pioneer2dx
   obstacle_return 0
   laser_return 1
   ranger_return 1
+  blob_return 0
 )
 
 model (
-  size [ 1 1 0.0]
+  size [ 0.3 0.3 0.0]
   pose [ 5 -5 0 0]
   color "red"
   name "red"
@@ -126,7 +129,7 @@ model (
 )
 
 model (
-  size [ 1 1 0.0]
+  size [ 0.3 0.3 0.0]
   pose [ -5 5 0 0]
   color "green"
   name "green"
@@ -140,7 +143,7 @@ model (
 )
 
 model (
-  size [ 1 1 0.0]
+  size [ 0.3 0.3 0.0]
   pose [ 2.5 5 0 0]
   color "blue"
   name "blue"
