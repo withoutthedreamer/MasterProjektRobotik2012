@@ -21,7 +21,7 @@ public class Blackboard implements Runnable {
 	public Thread thread = new Thread ( this );
 	
 	protected LinkedHashMap<String,BbNote> notehm = null;
-	private static final long SLEEPTIME = 1000;
+	private static final long SLEEPTIME = 500;
 
 	protected Blackboard(Trackable robot) {
 		try {
