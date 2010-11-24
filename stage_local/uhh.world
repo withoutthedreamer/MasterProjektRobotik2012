@@ -24,7 +24,7 @@ floorplan
   size [16.000 16.000 0.800]
   pose [0 0 0 0]
   bitmap "bitmaps/tams_corr_orig_cut_q.png"
-  blob_return 0
+  blob_return 1
 )
 
 define bobsblobfinder blobfinder
@@ -62,6 +62,7 @@ fancypioneer2dx
   obstacle_return 1
   laser_return 1
   ranger_return 1
+  blob_return 0
 )
 #pioneer2dx
 fancypioneer2dx
@@ -79,6 +80,7 @@ fancypioneer2dx
   obstacle_return 1
   laser_return 1
   ranger_return 1
+  blob_return 0
 )
 pioneer2dx
 (		  

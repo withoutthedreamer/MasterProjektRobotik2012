@@ -58,13 +58,15 @@ public class Position2d implements Runnable{
 			try { Thread.sleep (this.SLEEPTIME); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
-		// Request current position
-		this.pos = new Position(
-				this.posi.getData().getPos().getPx(),
-				this.posi.getData().getPos().getPy(),
-				this.posi.getData().getPos().getPa() );
-		// Set new speed
-		this.posi.setSpeed(this.speed, this.turnrate);
+		if(posi.getData() != null) { // TODO should not happen
+			// Request current position
+			this.pos = new Position(
+					this.posi.getData().getPos().getPx(),
+					this.posi.getData().getPos().getPy(),
+					this.posi.getData().getPos().getPa() );
+			// Set new speed
+			this.posi.setSpeed(this.speed, this.turnrate);
+		}
 	}
 
 	@Override
