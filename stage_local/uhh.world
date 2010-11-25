@@ -30,7 +30,7 @@ floorplan
 define bobsblobfinder blobfinder
 (
   colors_count 3
-  colors [ "red" "green" "blue" ]
+  colors [ "red" "green" "black" ]
   fov 1.047196667 # 60 degrees = pi/3 radians
   range 1
   #range_max 5
@@ -147,8 +147,8 @@ model (
 model (
   size [ 0.3 0.3 0.0]
   pose [ 2.5 7 0 0]
-  color "blue"
-  name "blue"
+  color "black"
+  name "black"
   boundary 0
   gui_move 1
   gripper_return 1
