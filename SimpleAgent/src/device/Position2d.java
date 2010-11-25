@@ -64,9 +64,9 @@ public class Position2d implements Runnable{
 					this.posi.getData().getPos().getPx(),
 					this.posi.getData().getPos().getPy(),
 					this.posi.getData().getPos().getPa() );
-			// Set new speed
-			this.posi.setSpeed(this.speed, this.turnrate);
 		}
+		// Set new speed
+		this.posi.setSpeed(this.speed, this.turnrate);
 	}
 
 	@Override
