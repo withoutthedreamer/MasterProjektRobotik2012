@@ -246,7 +246,7 @@ abstract class Pioneer implements Runnable, Trackable
 		this.posi.setSpeed(speed, turnrate);
 	}
 	/// Return robot position
-	public final Position getPosition() {
+	public Position getPosition() {
 		return this.posi.getPosition();
 	}
 

@@ -2,9 +2,13 @@ package data;
 
 import java.util.Date;
 
+import simulator.Simulator;
+
 // Blackboard note object
 public class BbNote {
 
+	protected static Simulator simu = null;
+	protected String key = "";
 	protected Position pose = null;
 	protected Position oldPose = null;
 
@@ -54,14 +58,21 @@ public class BbNote {
 			boolean goalReached = goalReached();
 			if ( goalReached ) {
 				this.completed = true;
+				// Set object in simulator
+				if (simu != null && key != "") {
+					simu.setObjectPos(key, new Position(-3, -5, 0));
+					System.out.println("Setting " + key + "back");
+				}
 			} else {
 				if ( timeout() ) {
 					System.out.println("Current goal: " + tracked.getGoal().toString());
+					if ( ! tracked.getGoal().isEqualTo(goal)) {
 					// Setting goal again
 					tracked.setGoal(goal);
 					System.out.println("Setting new goal: " + goal.toString());
 					//				if( ! tracked.getGoal().isEqualTo(goal1)){
 					//					tracked.setGoal(goal1);
+					}
 				} else {
 					// Do nothing
 //					System.out.println("Goal is being processed: " + tracked.getGoal().toString());
@@ -76,7 +87,8 @@ public class BbNote {
 			// get last robot position
 			Position robotpos = this.tracked.getPosition();
 			// Euclidean distance, Pythagoras
-			if (distance(robotpos, goal) < epsilon) {
+//			if (distance(robotpos, goal) < epsilon) {
+			if (robotpos.distanceTo(goal) < epsilon) {
 				System.out.println("Goal reached");
 				return true;
 			}
@@ -109,14 +121,18 @@ public class BbNote {
 		}
 		return false;
 	}
-	private double distance(Position oldPose, Position newPose) {
-			// Euclidean distance, Pythagoras
-			return Math.sqrt(
-					Math.pow(
-							Math.abs(oldPose.getY()
-									-newPose.getY()),2)
-					+ Math.pow(
-							Math.abs(oldPose.getX()
-									-newPose.getX()),2));
+//	private double distance(Position oldPose, Position newPose) {
+//			// Euclidean distance, Pythagoras
+//			return Math.sqrt(
+//					Math.pow(
+//							Math.abs(oldPose.getY()
+//									-newPose.getY()),2)
+//					+ Math.pow(
+//							Math.abs(oldPose.getX()
+//									-newPose.getX()),2));
+//	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}	
 }

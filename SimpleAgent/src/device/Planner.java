@@ -146,4 +146,7 @@ public class Planner implements Runnable {
 		this.pose.setPa(position.getY());
 		this.isNewPose = true;
 	}
+	public Position getPose() {
+		return new Position(pose.getPx(),pose.getPy(),pose.getPa());
+	}
 }

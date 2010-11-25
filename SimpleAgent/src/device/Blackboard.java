@@ -24,12 +24,6 @@ public class Blackboard implements Runnable {
 
 	protected Blackboard(Trackable robot) {
 		try {
-			// Assume there is already one simulation
-//			simu = Simulator.getInstance();
-//			if(simu == null) {
-//				// try standard config
-//				simu = Simulator.getInstance("localhost", 6665);
-//			}
 			notehm = new LinkedHashMap<String,BbNote>();
 			collectrobot = robot;
 			// Automatically start own thread in constructor
@@ -46,6 +40,11 @@ public class Blackboard implements Runnable {
 	}
 	@SuppressWarnings("rawtypes")
 	public void update () {
+		if (notehm.containsKey("gohome")) {
+			// remove to be inserted at the end of FIFO
+			notehm.remove("gohome");
+		}
+		
 		Set set = this.notehm.entrySet();
 		Iterator i = set.iterator();
 		// Track the 1st only
@@ -56,17 +55,25 @@ public class Blackboard implements Runnable {
 			BbNote note = (BbNote)me.getValue();
 			if (note.isCompleted()) {
 				notehm.remove(key);
-				System.out.println("Removed note from BB: " + key);
-				// Set object in simulator
-				if (simu != null) {
-					simu.setObjectPos(key, new Position(-3, -5, 0));
-				}
+				System.out.println("Removed note from BB: " + key); 
 			} else {
 				note.update();
 //				System.out.println("Update of note : " + key);
 			}
-		}
-
+		} else {
+			Position robotPose = collectrobot.getPosition();
+			if (robotPose != null) {
+				if ( robotPose.distanceTo(new Position(-3,-5,0)) > 1 ) {
+					// Always have gohome target
+					BbNote gohome = new BbNote();
+					gohome.setPose(robotPose);
+					gohome.setGoal(new Position(-3,-5,0));
+					gohome.setTrackable(collectrobot);
+					notehm.put("gohome", gohome);
+					System.out.println("Added gohome target");
+				}
+			}
+		}		
 		try { Thread.sleep (SLEEPTIME); }
 		catch (InterruptedException e) { this.thread.interrupt(); }
 	}
@@ -92,6 +99,7 @@ public class Blackboard implements Runnable {
 		if ( notehm.get(key) == null ) {
 			// TODO for testing only
 			note.setTrackable(collectrobot);
+			note.setKey(key);
 			this.notehm.put(key, note);
 			System.out.println("BB: added note " + key);
 		}

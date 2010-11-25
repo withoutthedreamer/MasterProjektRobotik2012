@@ -42,17 +42,23 @@ final public class PioneerLG extends Pioneer {
 			this.plan.setGoal(goal);
 	}
 
-	public void setPose(Position position) {
+	@Override
+	public Position getGoal() {
+		return this.plan.getGoal();
+	}
+
+	public final void setPosition(Position position) {
 		if (plan != null)
 			this.plan.setPose(position);		
 	}
 	
-	public void setPlanner(String name, int port) {
-		this.plan = new Planner (name, port, this.id);
+	/// Return robot position
+	public final Position getPosition() {
+//		return this.plan.getPose(); // TODO why not working
+		return this.posi.getPosition();
 	}
 
-	@Override
-	public Position getGoal() {
-		return this.plan.getGoal();
+	public void setPlanner(String name, int port) {
+		this.plan = new Planner (name, port, this.id);
 	}
 }

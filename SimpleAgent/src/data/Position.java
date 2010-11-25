@@ -50,11 +50,24 @@ public class Position {
 	public boolean isEqualTo(Position pose){
 		if (pose != null) {
 			if ((Math.abs(x   - pose.getX())   < epsilonPos) &&
-					(Math.abs(y   - pose.getY())   < epsilonPos) &&
-					(Math.abs(yaw - pose.getYaw()) < epsilonRot)   ) {
+				(Math.abs(y   - pose.getY())   < epsilonPos) &&
+				(Math.abs(yaw - pose.getYaw()) < epsilonRot)   ) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	public double distanceTo(Position position) {
+		if (position != null) {
+			// Euclidean distance, Pythagoras
+			return Math.sqrt(
+					Math.pow(
+						Math.abs(y-position.getY()),2)
+					+ Math.pow(
+						Math.abs(x-position.getX()),2));
+		} else {
+			return -1;
+		}
 	}
 }

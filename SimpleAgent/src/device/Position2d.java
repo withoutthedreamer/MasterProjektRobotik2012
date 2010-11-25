@@ -5,6 +5,7 @@ import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.Position2DInterface;
 import javaclient3.structures.PlayerConstants;
+import javaclient3.structures.position2d.PlayerPosition2dData;
 
 public class Position2d implements Runnable{
 	protected Position2DInterface posi  = null;
@@ -58,12 +59,12 @@ public class Position2d implements Runnable{
 			try { Thread.sleep (this.SLEEPTIME); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
-		if(posi.getData() != null) { // TODO should not happen
-			// Request current position
-			this.pos = new Position(
-					this.posi.getData().getPos().getPx(),
-					this.posi.getData().getPos().getPy(),
-					this.posi.getData().getPos().getPa() );
+		// Request current position
+		PlayerPosition2dData poseData = posi.getData();
+		if(poseData != null) { // TODO should not happen
+			this.pos = new Position(poseData.getPos().getPx(),
+					poseData.getPos().getPy(),
+					poseData.getPos().getPa());
 		}
 		// Set new speed
 		this.posi.setSpeed(this.speed, this.turnrate);

@@ -20,7 +20,7 @@ public class FindCollectExample {
 			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
 			pionLG.setPlanner("localhost", 6685);
-			pionLG.setPose(new Position(-3,-5,Math.toRadians(90)));
+			pionLG.setPosition(new Position(-3,-5,Math.toRadians(90)));
 			// Task synchronization
 			Blackboard blackb= Blackboard.getInstance(pionLG);
 			// wants to write notes

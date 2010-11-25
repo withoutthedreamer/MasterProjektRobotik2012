@@ -53,7 +53,7 @@ public class Teamwork  {
 			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
 			pionLG.setPlanner("localhost", 6685);
 			// Testing planner
-			pionLG.setPose(new Position(-3,-5,0));
+			pionLG.setPosition(new Position(-3,-5,0));
 			pionLG.setGoal(new Position(-6,6,0));
 //			// Testing Simulator
 			Simulator simu   = Simulator.getInstance("localhost", 6675);
