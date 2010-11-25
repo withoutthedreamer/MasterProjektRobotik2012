@@ -84,7 +84,7 @@ public class Planner implements Runnable {
 	public Position getGoal() {
 		return new Position(
 				this.goal.getPx(),
-				this.goal.getPx(),
+				this.goal.getPy(),
 				this.goal.getPa());
 	}
 	// Only to be called @~10Hz

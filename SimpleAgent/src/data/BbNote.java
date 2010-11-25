@@ -7,7 +7,7 @@ import simulator.Simulator;
 // Blackboard note object
 public class BbNote {
 
-	protected static Simulator simu = null;
+	protected Simulator simu = null;
 	protected String key = "";
 	protected Position pose = null;
 	protected Position oldPose = null;
@@ -66,13 +66,13 @@ public class BbNote {
 			} else {
 				if ( timeout() ) {
 					System.out.println("Current goal: " + tracked.getGoal().toString());
-					if ( ! tracked.getGoal().isEqualTo(goal)) {
+//					if ( tracked.getGoal().isEqualTo(goal)) {
 					// Setting goal again
 					tracked.setGoal(goal);
 					System.out.println("Setting new goal: " + goal.toString());
 					//				if( ! tracked.getGoal().isEqualTo(goal1)){
 					//					tracked.setGoal(goal1);
-					}
+//					}
 				} else {
 					// Do nothing
 //					System.out.println("Goal is being processed: " + tracked.getGoal().toString());
@@ -134,5 +134,9 @@ public class BbNote {
 
 	public void setKey(String key) {
 		this.key = key;
+	}
+
+	public void setSimu(Simulator simu) {
+		this.simu = simu;
 	}	
 }

@@ -40,11 +40,6 @@ public class Blackboard implements Runnable {
 	}
 	@SuppressWarnings("rawtypes")
 	public void update () {
-		if (notehm.containsKey("gohome")) {
-			// remove to be inserted at the end of FIFO
-			notehm.remove("gohome");
-		}
-		
 		Set set = this.notehm.entrySet();
 		Iterator i = set.iterator();
 		// Track the 1st only
@@ -100,8 +95,15 @@ public class Blackboard implements Runnable {
 			// TODO for testing only
 			note.setTrackable(collectrobot);
 			note.setKey(key);
+			note.setSimu(simu);
 			this.notehm.put(key, note);
 			System.out.println("BB: added note " + key);
+			
+		}
+		// remove idle task
+		if (notehm.containsKey("gohome")) {
+			// remove to be inserted at the end of FIFO
+			notehm.remove("gohome");
 		}
 //		System.out.println("Added note: " + key + "\t" + note.getPose() + "\t" + note.getGoal());
 	}
