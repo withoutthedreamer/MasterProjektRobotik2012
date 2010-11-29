@@ -61,7 +61,7 @@ public class Position2d implements Runnable{
 		}
 		// Request current position
 		PlayerPosition2dData poseData = posi.getData();
-		if(poseData != null) { // TODO should not happen
+		if(poseData != null && poseData.getPos() != null) { // TODO should not happen
 			this.pos = new Position(poseData.getPos().getPx(),
 					poseData.getPos().getPy(),
 					poseData.getPos().getPa());
