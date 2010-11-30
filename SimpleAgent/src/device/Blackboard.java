@@ -56,16 +56,19 @@ public class Blackboard implements Runnable {
 //				System.out.println("Update of note : " + key);
 			}
 		} else {
-			Position robotPose = collectrobot.getPosition();
-			if (robotPose != null) {
-				if ( robotPose.distanceTo(new Position(-3,-5,0)) > 1 ) {
-					// Always have gohome target
-					BbNote gohome = new BbNote();
-					gohome.setPose(robotPose);
-					gohome.setGoal(new Position(-3,-5,0));
-					gohome.setTrackable(collectrobot);
-					notehm.put("gohome", gohome);
-					System.out.println("Added gohome target");
+			// check if already there
+			if (collectrobot.getPosition().distanceTo(new Position(-3,-5,0)) < 1) {
+				Position robotPose = collectrobot.getPosition();
+				if (robotPose != null) {
+					if ( robotPose.distanceTo(new Position(-3,-5,0)) > 1 ) {
+						// Always have gohome target
+						BbNote gohome = new BbNote();
+						gohome.setPose(robotPose);
+						gohome.setGoal(new Position(-3,-5,0));
+						gohome.setTrackable(collectrobot);
+						notehm.put("gohome", gohome);
+						System.out.println("Added gohome target");
+					}
 				}
 			}
 		}		
@@ -91,7 +94,7 @@ public class Blackboard implements Runnable {
 		return instance;
 	}
 	public void add(String key, BbNote note) {
-		if ( notehm.get(key) == null ) {
+		if ( notehm.containsKey(key) == false ) {
 			// TODO for testing only
 			note.setTrackable(collectrobot);
 			note.setKey(key);
