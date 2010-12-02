@@ -1,3 +1,4 @@
+package usecase;
 /*
  *  Player Java Client 2 - Javaclient2Test.java
  *  Copyright (C) 2006 Radu Bogdan Rusu
