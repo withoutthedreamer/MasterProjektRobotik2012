@@ -15,6 +15,8 @@ public class Ranger implements Runnable {
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
 
+	public Ranger () {};
+	
 	public Ranger (PlayerClient host, int id) {
 		try {
 			this.rang = host.requestInterfaceRanger (0, PlayerConstants.PLAYER_OPEN_MODE);
@@ -38,7 +40,11 @@ public class Ranger implements Runnable {
 	// If not yet ready will put current thread to sleep
 	protected void update() {
 		// Wait for the laser readings
-		if ( rang.isDataReady() ) {
+//		if ( rang.isDataReady() ) {
+		while ( ! rang.isDataReady() ) {
+			try { Thread.sleep (this.SLEEPTIME); }
+			catch (InterruptedException e) { this.thread.interrupt(); }
+		}
 			//				System.out.println("Laser data ready");
 			if(rang.getData() != null) {
 				this.count = rang.getData().getRanges_count();
@@ -48,9 +54,9 @@ public class Ranger implements Runnable {
 				this.ranges = rang.getData().getRanges();
 			}
 		}
-		try { Thread.sleep (this.SLEEPTIME); }
-		catch (InterruptedException e) { this.thread.interrupt(); }
-	}
+//		try { Thread.sleep (this.SLEEPTIME); }
+//		catch (InterruptedException e) { this.thread.interrupt(); }
+//	}
 
 	public double[] getRanges () {
 		return this.ranges;

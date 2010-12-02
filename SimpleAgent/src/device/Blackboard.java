@@ -57,17 +57,19 @@ public class Blackboard implements Runnable {
 			}
 		} else {
 			// check if already there
-			if (collectrobot.getPosition().distanceTo(new Position(-3,-5,0)) < 1) {
-				Position robotPose = collectrobot.getPosition();
-				if (robotPose != null) {
-					if ( robotPose.distanceTo(new Position(-3,-5,0)) > 1 ) {
-						// Always have gohome target
-						BbNote gohome = new BbNote();
-						gohome.setPose(robotPose);
-						gohome.setGoal(new Position(-3,-5,0));
-						gohome.setTrackable(collectrobot);
-						notehm.put("gohome", gohome);
-						System.out.println("Added gohome target");
+			if (collectrobot.getPosition() != null) {
+				if (collectrobot.getPosition().distanceTo(new Position(-3,-5,0)) < 1) {
+					Position robotPose = collectrobot.getPosition();
+					if (robotPose != null) {
+						if ( robotPose.distanceTo(new Position(-3,-5,0)) > 1 ) {
+							// Always have gohome target
+							BbNote gohome = new BbNote();
+							gohome.setPose(robotPose);
+							gohome.setGoal(new Position(-3,-5,0));
+							gohome.setTrackable(collectrobot);
+							notehm.put("gohome", gohome);
+							System.out.println("Added gohome target");
+						}
 					}
 				}
 			}

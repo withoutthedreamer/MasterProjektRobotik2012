@@ -2,8 +2,8 @@ package robot;
 
 import data.Position;
 import device.Gripper;
-import device.LaserUrg;
 import device.Planner;
+import device.RangerLaser;
 import javaclient3.PlayerException;
 
 final public class PioneerLG extends Pioneer {
@@ -13,7 +13,7 @@ final public class PioneerLG extends Pioneer {
 	public PioneerLG(String name, int port, int id) {
 		super(name, port, id);
 		try {
-			this.laser = new LaserUrg (this.playerclient, this.id);
+			this.laser = new RangerLaser (this.playerclient, this.id);
 			this.grip  = new Gripper (this.playerclient, this.id);
 //			this.plan  = new Planner (name, 6685, this.id);
 
