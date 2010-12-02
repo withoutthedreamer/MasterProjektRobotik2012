@@ -6,10 +6,11 @@ import device.Planner;
 import device.RangerLaser;
 import javaclient3.PlayerException;
 
-final public class PioneerLG extends Pioneer {
+public class PioneerLG extends Pioneer {
 	protected Gripper grip = null;
 	protected Planner plan = null;
 
+	public PioneerLG(){}
 	public PioneerLG(String name, int port, int id) {
 		super(name, port, id);
 		try {

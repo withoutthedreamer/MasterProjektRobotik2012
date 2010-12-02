@@ -10,7 +10,7 @@ public class Ranger implements Runnable {
 	protected RangerInterface rang = null;
 	protected double[] ranges	= null;
 	protected int count;
-	protected final int SLEEPTIME = 100;
+	protected final static int SLEEPTIME = 100;
 
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
@@ -41,22 +41,22 @@ public class Ranger implements Runnable {
 	protected void update() {
 		// Wait for the laser readings
 //		if ( rang.isDataReady() ) {
-		while ( ! rang.isDataReady() ) {
-			try { Thread.sleep (this.SLEEPTIME); }
-			catch (InterruptedException e) { this.thread.interrupt(); }
-		}
-			//				System.out.println("Laser data ready");
-			if(rang.getData() != null) {
-				this.count = rang.getData().getRanges_count();
-				//					System.out.println("Count: " + count);
-			}
-			if (this.count > 0) {
-				this.ranges = rang.getData().getRanges();
-			}
-		}
-//		try { Thread.sleep (this.SLEEPTIME); }
-//		catch (InterruptedException e) { this.thread.interrupt(); }
-//	}
+////		while ( ! rang.isDataReady() ) {
+////			try { Thread.sleep (this.SLEEPTIME); }
+////			catch (InterruptedException e) { this.thread.interrupt(); }
+////		}
+//			//				System.out.println("Laser data ready");
+//			if(rang.getData() != null) {
+//				this.count = rang.getData().getRanges_count();
+//				//					System.out.println("Count: " + count);
+//			}
+//			if (this.count > 0) {
+//				this.ranges = rang.getData().getRanges();
+//			}
+//		}
+		try { Thread.sleep (SLEEPTIME); }
+		catch (InterruptedException e) { thread.interrupt(); }
+	}
 
 	public double[] getRanges () {
 		return this.ranges;
@@ -68,7 +68,7 @@ public class Ranger implements Runnable {
 
 	@Override
 	public void run() {
-		while ( ! this.thread.isInterrupted()) {
+		while ( ! thread.isInterrupted()) {
 			this.update();
 		}
 		System.out.println("Shutdown of " + this.toString());

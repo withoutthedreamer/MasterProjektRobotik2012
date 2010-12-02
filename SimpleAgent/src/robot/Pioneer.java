@@ -90,7 +90,8 @@ abstract class Pioneer implements Runnable, Trackable
 	protected static boolean isDebugSonar = false;
 	protected static boolean isDebugDistance = false;
 	protected static boolean isDebugPosition = false;
-	
+
+	public Pioneer(){}
 	// Constructor: do all playerclient communication setup here
 	public Pioneer (String name, int port, int id) {
 		try {
@@ -289,10 +290,11 @@ abstract class Pioneer implements Runnable, Trackable
 	    					}
 	    				}
 	    				if ( isDebugLaser ) {
-	    					System.out.println("beamInd: " + beamIndex
-	    							+ "\tsumDist: " + sumDist
-	    							+ "\taveDist: " + averageDist
-	    							+ "\tminDist: " + minDist);
+	    					System.out.printf("beamInd: %3d\tsumDist: %5.2f\taveDist: %5.2f\tminDist: %5.2f\n",
+	    							beamIndex,
+	    							sumDist,
+	    							averageDist,
+	    							minDist);
 	    				}
 	    			}
 	    		} else {

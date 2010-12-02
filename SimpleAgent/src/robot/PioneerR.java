@@ -2,18 +2,15 @@ package robot;
 
 import javaclient3.PlayerException;
 import data.Position;
-import device.RangerLaser;
+import device.Ranger;
 
-public class PioneerL extends Pioneer {
-
-	public PioneerL() {
-		// TODO Auto-generated constructor stub
-	}
-
-	public PioneerL(String name, int port, int id) {
+public class PioneerR extends Pioneer {
+	
+	public PioneerR(String name, int port, int id) {
 		super(name, port, id);
 		try {
-			this.laser = new RangerLaser (this.playerclient, this.id);
+			laser = new Ranger(this.playerclient, this.id);
+//			Pioneer.isDebugDistance = true;
 
 		} catch (PlayerException e) {
 			System.err.println ("PioneerL: > Error connecting to Player: ");
@@ -23,10 +20,20 @@ public class PioneerL extends Pioneer {
 		super.playerclient.runThreaded (-1, -1);
 	}
 
+	public void shutdownDevices () {
+//		laser.thread.interrupt();
+//		while (laser.thread.isAlive());
+	}
+
+	/// Return robot position
+	public final Position getPosition() {
+		return null;
+	}
+
 	@Override
 	public void setGoal(Position goal) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
@@ -34,11 +41,7 @@ public class PioneerL extends Pioneer {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public void shutdownDevices() {
-		this.laser.thread.interrupt();
-		while (this.laser.thread.isAlive());
+	public void update() {
+		// do nothing
 	}
-
 }
