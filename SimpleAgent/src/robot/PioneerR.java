@@ -21,8 +21,8 @@ public class PioneerR extends Pioneer {
 	}
 
 	public void shutdownDevices () {
-//		laser.thread.interrupt();
-//		while (laser.thread.isAlive());
+		laser.thread.interrupt();
+		while (laser.thread.isAlive());
 	}
 
 	/// Return robot position
@@ -41,7 +41,7 @@ public class PioneerR extends Pioneer {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	public void update() {
-		// do nothing
-	}
+//	public void update() {
+//		// do nothing
+//	}
 }
