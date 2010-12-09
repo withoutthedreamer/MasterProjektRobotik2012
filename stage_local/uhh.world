@@ -69,10 +69,10 @@ fancypioneer2dx
   name "r1"
   pose [ -3 -5 0 90 ] 
 
-  urg_ranger()
+  laser240()
   platte()
   laptop()
-  bobsgripper()
+  #bobsgripper()
 
   obstacle_return 1
   ranger_return 1
