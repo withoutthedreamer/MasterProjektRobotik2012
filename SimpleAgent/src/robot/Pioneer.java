@@ -7,8 +7,8 @@ package robot;
 import data.Position;
 import data.Trackable;
 import device.Gripper;
-import device.LaserUrg;
 import device.Position2d;
+import device.Ranger;
 import device.Sonar;
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
@@ -24,7 +24,7 @@ abstract class Pioneer implements Runnable, Trackable
 	protected Position2d          posi  = null;
 	
 	// To be implemented in subclass when needed
-	protected LaserUrg 			laser = null;
+	protected Ranger 			laser = null;
 	protected Sonar				sonar = null;
 	protected Gripper			grip  = null;
 	
@@ -85,18 +85,13 @@ abstract class Pioneer implements Runnable, Trackable
 	protected final int RMIN  = 0;  /**< RIGHT min angle.      */ protected final int RMAX  = 65;  ///< RIGHT max angle.
 	
 	//Debugging
-//	final boolean DEBUG_LASER = true;
-//	final boolean DEBUG_STATE = true;
-//	final boolean DEBUG_SONAR = true;
-//	final boolean DEBUG_DIST  = true;
-	//final boolean DEBUG_POSITION = true;
-	
-	protected final boolean DEBUG_LASER = false;
-	protected final boolean DEBUG_STATE = false;
-	protected final boolean DEBUG_SONAR = false;
-	protected final boolean DEBUG_DIST  = false;
-	protected final boolean DEBUG_POSITION = false;
-	
+	protected static boolean isDebugLaser = false;
+	protected static boolean isDebugState = false;
+	protected static boolean isDebugSonar = false;
+	protected static boolean isDebugDistance = false;
+	protected static boolean isDebugPosition = false;
+
+	public Pioneer(){}
 	// Constructor: do all playerclient communication setup here
 	public Pioneer (String name, int port, int id) {
 		try {
@@ -163,11 +158,10 @@ abstract class Pioneer implements Runnable, Trackable
 	
 	public abstract void shutdownDevices();
 		
-	@SuppressWarnings("unused")
 	protected void plan () {
 		double tmp_turnrate = 0.;
 
-		if (DEBUG_SONAR && this.sonar != null){
+		if (isDebugSonar && this.sonar != null){
 			float[] sonarValues = this.sonar.getRanges();	
 			int 	sonarCount  = this.sonar.getCount();
 
@@ -193,18 +187,18 @@ abstract class Pioneer implements Runnable, Trackable
 		//		this.turnrate = (tmp_turnrate + this.turnrate) / 2;
 		double weight = 0.5;
 		this.turnrate = weight*tmp_turnrate + (1-weight)*this.turnrate;
-		if (DEBUG_STATE) {
+		if (isDebugState) {
 			System.out.printf("turnrate/speed/state:\t%5.2f\t%5.2f\t%s\n", this.turnrate, this.speed, this.currentState.toString());
 		}
-		if (DEBUG_DIST) {
+		if (isDebugDistance) {
 			if (this.laser != null) {
 				System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
-				System.out.print(getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
-				System.out.print(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
-				System.out.print(getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
-				System.out.print(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
-				System.out.print(getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
-				System.out.println("\t" + "XXX" + "\t" + "XXX" + "\t" + "XXX");
+				System.out.printf("%5.2f", getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
+				System.out.printf("%5.2f", getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
+				System.out.printf("%5.2f", getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
+				System.out.printf("%5.2f", getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
+				System.out.printf("%5.2f", getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
+				System.out.println("\t" + " XXXX" + "\t" + " XXXX" + "\t" + " XXXX");
 			} else {
 				System.out.println("No laser available!");
 			}
@@ -212,32 +206,36 @@ abstract class Pioneer implements Runnable, Trackable
 			if (this.sonar != null) {
 				float[] sonarValues = this.sonar.getRanges();		
 				System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
-				System.out.print(Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
-				System.out.print(Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
-				System.out.print(Math.min(sonarValues[3], sonarValues[4]));   System.out.print("\t");
-				System.out.print(Math.min(sonarValues[5], sonarValues[6]));   System.out.print("\t");
-				System.out.print(Math.min(sonarValues[7], sonarValues[8]));   System.out.print("\t");
-				System.out.print(Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET); System.out.print("\t");
-				System.out.print(Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET); System.out.print("\t");
-				System.out.println(Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
+				System.out.printf("%5.2f", Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
+				System.out.printf("%5.2f", Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
+				System.out.printf("%5.2f", Math.min(sonarValues[3], sonarValues[4]));   System.out.print("\t");
+				System.out.printf("%5.2f", Math.min(sonarValues[5], sonarValues[6]));   System.out.print("\t");
+				System.out.printf("%5.2f", Math.min(sonarValues[7], sonarValues[8]));   System.out.print("\t");
+				System.out.printf("%5.2f", Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET); System.out.print("\t");
+				System.out.printf("%5.2f", Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET); System.out.print("\t");
+				System.out.printf("%5.2f\n", Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
 			} else {
 				System.out.println("No sonar available!");
 			}
 
 			System.out.print("Shape (l/lf/f/rf/r/rb/b/lb):\t");
-			System.out.print(getDistance(viewDirectType.LEFT)); System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.LEFTFRONT));  System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.FRONT));      System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.RIGHTFRONT)); System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.RIGHT));      System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.RIGHTREAR));  System.out.print("\t");
-			System.out.print(getDistance(viewDirectType.BACK));       System.out.print("\t");
-			System.out.println(getDistance(viewDirectType.LEFTREAR));
+			System.out.printf("%5.2f", getDistance(viewDirectType.LEFT)); System.out.print("\t");
+			System.out.printf("%5.2f", getDistance(viewDirectType.LEFTFRONT));  System.out.print("\t");
+			System.out.printf("%5.2f", getDistance(viewDirectType.FRONT));      System.out.print("\t");
+			System.out.printf("%5.2f", getDistance(viewDirectType.RIGHTFRONT)); System.out.print("\t");
+			System.out.printf("%5.2f", getDistance(viewDirectType.RIGHT));      System.out.print("\t");
+			System.out.printf("%5.2f", getDistance(viewDirectType.RIGHTREAR));  System.out.print("\t");
+			System.out.printf("%5.2f", getDistance(viewDirectType.BACK));       System.out.print("\t");
+			System.out.printf("%5.2f\n", getDistance(viewDirectType.LEFTREAR));
 		}
-		if (DEBUG_POSITION) {
-			System.out.print(posi.getPosition().getX());	System.out.print("\t");
-			System.out.print(posi.getPosition().getY());	System.out.print("\t");
-			System.out.println(java.lang.Math.toDegrees(posi.getPosition().getYaw()));
+		if (isDebugPosition) {
+			if (posi != null) {
+				System.out.printf("%5.2f", posi.getPosition().getX());	System.out.print("\t");
+				System.out.printf("%5.2f", posi.getPosition().getY());	System.out.print("\t");
+				System.out.printf("%5.2f\n", java.lang.Math.toDegrees(posi.getPosition().getYaw()));
+			} else {
+				System.out.println("No position available!");
+			}
 		}
 	}
 
@@ -269,7 +267,7 @@ abstract class Pioneer implements Runnable, Trackable
 
 	    		// Read dynamic laser data
 	    		int		laserCount  = this.laser.getCount();
-	    		float[] laserValues = this.laser.getRanges();
+	    		double[] laserValues = this.laser.getRanges();
 	    		
 	    		// Consistence check for error laser readings
 	    		if (minBIndex<laserCount && maxBIndex<laserCount) {
@@ -291,11 +289,12 @@ abstract class Pioneer implements Runnable, Trackable
 	    						minDist = averageDist;
 	    					}
 	    				}
-	    				if ( DEBUG_LASER ) {
-	    					System.out.println("beamInd: " + beamIndex
-	    							+ "\tsumDist: " + sumDist
-	    							+ "\taveDist: " + averageDist
-	    							+ "\tminDist: " + minDist);
+	    				if ( isDebugLaser ) {
+	    					System.out.printf("beamInd: %3d\tsumDist: %5.2f\taveDist: %5.2f\tminDist: %5.2f\n",
+	    							beamIndex,
+	    							sumDist,
+	    							averageDist,
+	    							minDist);
 	    				}
 	    			}
 	    		} else {

@@ -16,6 +16,6 @@
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jibx-run.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/xmlpull_1_1_4.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/xpp3.jar"/>
-	<classpathentry kind="lib" path="/Users/sebastian/Downloads/velocity-tools-2.0/lib/velocity-1.6.2.jar"/>
+	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/velocity-1.6.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

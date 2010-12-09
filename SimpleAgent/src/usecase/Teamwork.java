@@ -1,3 +1,4 @@
+package usecase;
 /// @file wallfollowing.cpp
 /// @author Sebastian Rockel
 ///
