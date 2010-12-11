@@ -1,7 +1,7 @@
 # Project world file
 include "pioneer.inc"
 include "map.inc"
-include "urg.inc"
+include "urgr.inc"
 include "platte.inc"
 include "laptop.inc"
 
@@ -59,13 +59,11 @@ fancypioneer2dx
   name "r0"
   pose [ -6 -5 0 90 ] 
 
-  urg_laser()
   platte()
   laptop()
   bobsblobfinder()
 
   obstacle_return 1
-  laser_return 1
   ranger_return 1
   blob_return 0
 )
@@ -76,89 +74,87 @@ fancypioneer2dx
   name "r1"
   pose [ -3 -5 0 90 ] 
 
-  urg_laser()
+  laser240()
   platte()
   laptop()
-  bobsblobfinder()
-  bobsgripper()
+  #bobsgripper()
 
   obstacle_return 1
-  laser_return 1
   ranger_return 1
   blob_return 0
 )
-pioneer2dx
-(		  
-  # can refer to the robot by this name
-  name "r2"
-  pose [ -4 -5 0 90 ] 
+#pioneer2dx
+#(		  
+  ## can refer to the robot by this name
+  #name "r2"
+  #pose [ -4 -5 0 90 ] 
 
-  obstacle_return 0
-  laser_return 1
-  ranger_return 1
-  blob_return 0
-)
-pioneer2dx
-(		  
-  # can refer to the robot by this name
-  name "r3"
-  pose [ -1 -2 0 90 ] 
+  #obstacle_return 0
+  #laser_return 1
+  #ranger_return 1
+  #blob_return 0
+#)
+#pioneer2dx
+#(		  
+  ## can refer to the robot by this name
+  #name "r3"
+  #pose [ -1 -2 0 90 ] 
 
-  obstacle_return 0
-  laser_return 1
-  ranger_return 1
-  blob_return 0
-)
-pioneer2dx
-(		  
-  # can refer to the robot by this name
-  name "r4"
-  pose [ -2 -2 0 90 ] 
+  #obstacle_return 0
+  #laser_return 1
+  #ranger_return 1
+  #blob_return 0
+#)
+#pioneer2dx
+#(		  
+  ## can refer to the robot by this name
+  #name "r4"
+  #pose [ -2 -2 0 90 ] 
 
-  obstacle_return 0
-  laser_return 1
-  ranger_return 1
-  blob_return 0
-)
+  #obstacle_return 0
+  #laser_return 1
+  #ranger_return 1
+  #blob_return 0
+#)
 
-model (
-  size [ 0.3 0.3 0.0]
-  pose [ 7 -5 0 0]
-  color "red"
-  name "red"
-  boundary 0
-  gui_move 1
-  gripper_return 1
-  obstacle_return 0
-  laser_return 0
-  ranger_return 0
-  blob_return 1
-)
+#model (
+  #size [ 0.3 0.3 0.0]
+  #pose [ 7 -5 0 0]
+  #color "red"
+  #name "red"
+  #boundary 0
+  #gui_move 1
+  #gripper_return 1
+  #obstacle_return 0
+  #laser_return 0
+  #ranger_return 0
+  #blob_return 1
+#)
 
-model (
-  size [ 0.3 0.3 0.0]
-  pose [ -7 5 0 0]
-  color "green"
-  name "green"
-  boundary 0
-  gui_move 1
-  gripper_return 1
-  obstacle_return 0
-  laser_return 0
-  ranger_return 0
-  blob_return 1
-)
+#model (
+  #size [ 0.3 0.3 0.0]
+  #pose [ -7 5 0 0]
+  #color "green"
+  #name "green"
+  #boundary 0
+  #gui_move 1
+  #gripper_return 1
+  #obstacle_return 0
+  #laser_return 0
+  #ranger_return 0
+  #blob_return 1
+#)
 
-model (
-  size [ 0.3 0.3 0.0]
-  pose [ 2.5 7 0 0]
-  color "black"
-  name "black"
-  boundary 0
-  gui_move 1
-  gripper_return 1
-  obstacle_return 0
-  laser_return 0
-  ranger_return 0
-  blob_return 1
-)
+#model (
+  #size [ 0.3 0.3 0.0]
+  #pose [ 2.5 7 0 0]
+  #color "black"
+  #name "black"
+  #boundary 0
+  #gui_move 1
+  #gripper_return 1
+  #obstacle_return 0
+  #laser_return 0
+  #ranger_return 0
+  #blob_return 1
+#)
