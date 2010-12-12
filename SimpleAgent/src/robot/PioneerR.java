@@ -9,7 +9,7 @@ public class PioneerR extends Pioneer {
 	public PioneerR(String name, int port, int id) {
 		super(name, port, id);
 		try {
-			laser = new Ranger(this.playerclient, this.id);
+			laser = new Ranger(this.playerclient, this.id, 1);
 //			Pioneer.isDebugDistance = true;
 
 		} catch (PlayerException e) {
