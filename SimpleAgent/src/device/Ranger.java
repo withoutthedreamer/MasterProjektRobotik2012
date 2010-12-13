@@ -39,23 +39,12 @@ public class Ranger implements Runnable {
 	// Will check for new ranges
 	// If not yet ready will put current thread to sleep
 	protected void update() {
-		// Wait for the laser readings
-//		if ( rang.isDataReady() ) {
-		while ( ! rang.isDataReady() ); //{
-////			try { Thread.sleep (this.SLEEPTIME); }
-////			catch (InterruptedException e) { this.thread.interrupt(); }
-////		}
-//			//				System.out.println("Laser data ready");
-//			if(rang.getData() != null) {
-				this.count = rang.getData().getRanges_count();
-//				//					System.out.println("Count: " + count);
-//			}
-//			if (this.count > 0) {
-				this.ranges = rang.getData().getRanges();
-//			}
-//		}
-		try { Thread.sleep (SLEEPTIME); }
-		catch (InterruptedException e) { thread.interrupt(); }
+		if ( ! rang.isDataReady() ) {
+			try { Thread.sleep (SLEEPTIME); }
+			catch (InterruptedException e) { this.thread.interrupt(); }
+		}
+		this.count = rang.getData().getRanges_count();
+		this.ranges = rang.getData().getRanges();
 	}
 
 	public double[] getRanges () {
