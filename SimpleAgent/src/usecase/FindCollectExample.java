@@ -1,11 +1,11 @@
 package usecase;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import robot.PioneerLG;
-import robot.PioneerSB;
+import robot.PioneerRG;
+import robot.PioneerRsB;
 import simulator.Simulator;
-import simulator.Tracker;
 import data.Position;
 import device.Blackboard;
 
@@ -15,17 +15,18 @@ public class FindCollectExample {
             new InputStreamReader(System.in));
 
 	
-	@SuppressWarnings("unused")
 	public static void main (String[] args) {
 		try {
-			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
-			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
-			pionLG.setPlanner("localhost", 6685);
-			pionLG.setPosition(new Position(-3,-5,Math.toRadians(90)));
+//			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
+			PioneerRsB pionRsB = new PioneerRsB("localhost", 6665, 0);
+//			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
+			PioneerRG pionRG = new PioneerRG("localhost", 6666, 1);
+			pionRG.setPlanner("localhost", 6685);
+			pionRG.setPosition(new Position(-3,-5,Math.toRadians(90)));
 			// Task synchronization
-			Blackboard blackb= Blackboard.getInstance(pionLG);
+			Blackboard blackb= Blackboard.getInstance(pionRG);
 			// wants to write notes
-			pionSB.setBlackboard(blackb);
+			pionRsB.setBlackboard(blackb);
 			
 			// for modifying world
 			Simulator simu   = Simulator.getInstance("localhost", 6665);
@@ -38,8 +39,8 @@ public class FindCollectExample {
 			in.readLine();
 //			tracker.shutdown()
 			blackb.shutdown();
-			pionSB.shutdown();
-			pionLG.shutdown();
+			pionRsB.shutdown();
+			pionRG.shutdown();
 			simu.shutdown();
 			
 		} catch (Exception e) { e.printStackTrace(); }

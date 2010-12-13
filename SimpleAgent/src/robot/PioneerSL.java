@@ -2,7 +2,7 @@ package robot;
 
 import data.Position;
 import device.RangerLaser;
-import device.Sonar;
+import device.RangerSonar;
 import javaclient3.PlayerException;
 
 final public class PioneerSL extends Pioneer {
@@ -11,7 +11,7 @@ final public class PioneerSL extends Pioneer {
 		super(name, port, id);
 		try {
 			this.laser    = new RangerLaser (this.playerclient, super.id);
-			this.sonar 	  = new Sonar (this.playerclient, super.id);
+			this.sonar 	  = new RangerSonar (this.playerclient, super.id);
 		} catch (PlayerException e) {
 			System.err.println ("PioneerSL: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");

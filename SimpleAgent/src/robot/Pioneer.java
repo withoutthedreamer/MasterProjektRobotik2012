@@ -9,7 +9,6 @@ import data.Trackable;
 import device.Gripper;
 import device.Position2d;
 import device.Ranger;
-import device.Sonar;
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 
@@ -24,9 +23,9 @@ abstract class Pioneer implements Runnable, Trackable
 	protected Position2d          posi  = null;
 	
 	// To be implemented in subclass when needed
-	protected Ranger 			laser = null;
-	protected Sonar				sonar = null;
-	protected Gripper			grip  = null;
+	protected Ranger  laser = null;
+	protected Ranger  sonar = null;
+	protected Gripper grip  = null;
 	
 	// Every class of this type has it's own thread
 	protected Thread thread = new Thread ( this );
@@ -34,14 +33,14 @@ abstract class Pioneer implements Runnable, Trackable
 	protected int id = -1;
 	protected double speed = -1.0;
 	protected double turnrate = -1.0;
-	protected enum StateType {
+	protected enum StateType { // TODO static ?
 		LWALL_FOLLOWING,
 		RWALL_FOLLOWING,
 	    COLLISION_AVOIDANCE,
 	    WALL_SEARCHING
 	}
 	protected StateType currentState;
-	protected enum viewDirectType {
+	protected enum viewDirectType { // TODO static?
 	   LEFT,
 	   RIGHT,
 	   FRONT,
@@ -162,7 +161,7 @@ abstract class Pioneer implements Runnable, Trackable
 		double tmp_turnrate = 0.;
 
 		if (isDebugSonar && this.sonar != null){
-			float[] sonarValues = this.sonar.getRanges();	
+			double[] sonarValues = this.sonar.getRanges();	
 			int 	sonarCount  = this.sonar.getCount();
 
 			System.out.println();
@@ -204,7 +203,7 @@ abstract class Pioneer implements Runnable, Trackable
 			}
 
 			if (this.sonar != null) {
-				float[] sonarValues = this.sonar.getRanges();		
+				double[] sonarValues = this.sonar.getRanges();		
 				System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
 				System.out.printf("%5.2f", Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
 				System.out.printf("%5.2f", Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
@@ -314,7 +313,7 @@ abstract class Pioneer implements Runnable, Trackable
 	protected final double getDistance( viewDirectType viewDirection )
 	{		
 //		float[] sonarValues = new float[16];
-		float[] sonarValues;
+		double[] sonarValues;
 		int 	sonarCount  = 0;
 
 		if (this.sonar != null) {
@@ -327,13 +326,13 @@ abstract class Pioneer implements Runnable, Trackable
 					else { break; }
 				}
 			}  else { // NO sonar available
-				sonarValues = new float[16];
+				sonarValues = new double[16];
 				for (int i=0; i<16; i++) {
 					sonarValues[i] = (float)this.LPMAX;
 				}
 			}
 		} else { // NO sonar available
-			sonarValues = new float[16];
+			sonarValues = new double[16];
 			for (int i=0; i<16; i++) {
 				sonarValues[i] = (float)this.LPMAX;
 			}

@@ -55,19 +55,20 @@ public class Position2d implements Runnable{
 	// Only to be called @~10Hz
 	protected void update() {
 		// Wait for sonar readings
-		while ( ! posi.isDataReady() ){
+		if ( ! posi.isDataReady() ){
 			try { Thread.sleep (this.SLEEPTIME); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
+		} else {
+			// Request current position
+			PlayerPosition2dData poseData = posi.getData();
+//			if(poseData != null && poseData.getPos() != null) { // TODO should not happen
+				pos = new Position(poseData.getPos().getPx(),
+						poseData.getPos().getPy(),
+						poseData.getPos().getPa());
+//			}
+			// Set new speed
+			this.posi.setSpeed(this.speed, this.turnrate);
 		}
-		// Request current position
-		PlayerPosition2dData poseData = posi.getData();
-		if(poseData != null && poseData.getPos() != null) { // TODO should not happen
-			this.pos = new Position(poseData.getPos().getPx(),
-					poseData.getPos().getPy(),
-					poseData.getPos().getPa());
-		}
-		// Set new speed
-		this.posi.setSpeed(this.speed, this.turnrate);
 	}
 
 	@Override

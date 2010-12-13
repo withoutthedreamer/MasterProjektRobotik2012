@@ -1,22 +1,23 @@
 package robot;
 
+import javaclient3.PlayerException;
 import data.BbNote;
 import data.BlobfinderBlob;
 import data.Position;
 import device.Blackboard;
 import device.Blobfinder;
-import device.RangerSonar;
-import javaclient3.PlayerException;
+import device.Ranger;
 
-final public class PioneerSB extends Pioneer {
+public class PioneerRsB extends Pioneer {
+	
 	protected Blobfinder blofi = null;
 	protected Blackboard blackboard = null;
 
-	public PioneerSB(String name, int port, int id) {
+	public PioneerRsB(String name, int port, int id) {
 		super(name, port, id);
 		try {
-			this.sonar = new RangerSonar (this.playerclient, this.id);
-			this.blofi = new Blobfinder(this.playerclient, this.id);
+			sonar = new Ranger(this.playerclient, this.id, 0);
+			blofi = new Blobfinder(this.playerclient, this.id);
 		} catch (PlayerException e) {
 			System.err.println ("PioneerSB: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
@@ -58,7 +59,7 @@ final public class PioneerSB extends Pioneer {
 		double tmp_turnrate = 0.;
 
 		blobsearch();
-		
+
 		// (Left) Wall following
 		this.turnrate = wallfollow();
 		// Collision avoidance overrides other turnrate if neccessary!
@@ -80,7 +81,7 @@ final public class PioneerSB extends Pioneer {
 	@Override
 	public void setGoal(Position goal) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	public void setBlackboard (Blackboard bb) {
 		this.blackboard = bb;

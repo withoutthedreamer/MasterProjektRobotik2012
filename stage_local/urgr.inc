@@ -4,13 +4,14 @@ define laser240 ranger
     range [ 0.02 5.6 ]
     fov 240.0
     samples 682
+    #watts 2.0
+    color_rgba [ 0 0 1 0.15 ]
   )
 
   # generic model properties
-  color "blue"
-  size [ 0.1 0.1 0.1 ]	
-  pose [ 0.13 0 0 0 ]
-
-  #watts 2.0
-  #color_rgba [ 0 1 0 0.15 ]
+  model (
+    color "blue"
+    size [ 0.05 0.05 0.1 ]	
+    pose [ 0.13 0 -0.2 0 ]
+  )
 )

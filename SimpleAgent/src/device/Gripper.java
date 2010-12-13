@@ -12,7 +12,14 @@ public class Gripper implements Runnable {
 
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
-	private int state = 1;
+	private int goalState = 1;
+	private int curState = 0;
+	
+	protected static enum stateType {
+		OPEN,
+		CLOSE,
+		ERROR
+	}
 
 	public Gripper (PlayerClient host, int id) {
 		try {
@@ -34,35 +41,48 @@ public class Gripper implements Runnable {
 		}
 	}
 	protected void updateGripper () {
-		while ( ! this.grip.isDataReady() );
-		this.grip.setGripper(state);
+		if ( ! grip.isDataReady() ) {			
+			try { Thread.sleep (this.SLEEPTIME); }
+			catch (InterruptedException e) { this.thread.interrupt(); }
+		} else {
+			curState = grip.getData().getState();
+			grip.setGripper(goalState);
+		}
 	}
 	@Override
 	public void run() {
 		while ( ! this.thread.isInterrupted()) {
 			this.updateGripper();
-			
-			try { Thread.sleep (this.SLEEPTIME); }
-			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
 		System.out.println("Shutdown of " + this.toString());
 	}
 	public void stop () {
 		// stop
-		this.state = 3;
+		this.goalState = 3;
 	}
 	public void open () {
 		// open
-		this.state = 1;
+		this.goalState = 1;
 	}
 	public void close () {
 		// close
-		this.state = 2;
+		this.goalState = 2;
 	}
 	public void lift () {
-		this.state = 4;
+		this.goalState = 4;
 	}
 	public void release () {
-		this.state = 5;
+		this.goalState = 5;
+	}
+	// Taken from player gripper IF doc
+	public stateType getState() {
+		stateType state = stateType.ERROR;
+		
+		switch (curState) {
+			case 1:  state = stateType.OPEN;  break;
+			case 2:  state = stateType.CLOSE; break;
+			default: state = stateType.ERROR; break;
+		}
+		return state;
 	}
 }

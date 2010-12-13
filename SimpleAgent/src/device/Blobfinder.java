@@ -47,6 +47,7 @@ public class Blobfinder implements Runnable {
 			try { Thread.sleep (this.SLEEPTIME); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
 		}
+		// TODO else case
 		this.count = this.bfi.getData().getBlobs_count();
 		
 		if (this.count > 0) {

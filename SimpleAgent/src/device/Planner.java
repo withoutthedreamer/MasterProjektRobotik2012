@@ -89,16 +89,17 @@ public class Planner implements Runnable {
 	}
 	// Only to be called @~10Hz
 	protected void update () {
-//		if (loci.isDataReady()) {
-		if ( loci.getData() != null ) {
-			if ( loci.getData().getHypoths_count() > 0 ) {
-				System.out.println("Hypothesis #: " + this.loci.getData().getHypoths_count());
-				this.pose = this.loci.getData().getHypoths()[0].getMean();
-				this.printPos(this.pose);
+		if (loci.isDataReady()) {
+			if ( loci.getData() != null ) {
+				if ( loci.getData().getHypoths_count() > 0 ) {
+					System.out.println("Hypothesis #: " + this.loci.getData().getHypoths_count());
+					this.pose = this.loci.getData().getHypoths()[0].getMean();
+					this.printPos(this.pose);
+				}
 			}
-		}
-		if (loci.getParticleData() != null) {
-			System.out.println("Particle #: " + this.loci.getParticleData().getParticles_count());
+			if (loci.getParticleData() != null) {
+				System.out.println("Particle #: " + this.loci.getParticleData().getParticles_count());
+			}
 		}
 		// TODO check if position is on map
 		if (plan.isDataReady()) {
@@ -116,9 +117,10 @@ public class Planner implements Runnable {
 			isNewPose = false;
 			loci.setPose (locPose);			
 		}
-		
+
 		try { Thread.sleep (this.SLEEPTIME); }
 		catch (InterruptedException e) { this.thread.interrupt(); }
+
 	}
 
 	private void printPos(PlayerPose pose2) {

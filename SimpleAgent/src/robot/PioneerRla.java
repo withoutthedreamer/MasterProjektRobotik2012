@@ -4,9 +4,9 @@ import javaclient3.PlayerException;
 import data.Position;
 import device.Ranger;
 
-public class PioneerR extends Pioneer {
+public class PioneerRla extends Pioneer {
 	
-	public PioneerR(String name, int port, int id) {
+	public PioneerRla(String name, int port, int id) {
 		super(name, port, id);
 		try {
 			laser = new Ranger(this.playerclient, this.id, 1);

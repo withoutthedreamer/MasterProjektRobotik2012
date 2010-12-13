@@ -42,23 +42,24 @@ public class Ranger implements Runnable {
 		if ( ! rang.isDataReady() ) {
 			try { Thread.sleep (SLEEPTIME); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
+		} else {
+			count = rang.getData().getRanges_count();
+			ranges = rang.getData().getRanges();
 		}
-		this.count = rang.getData().getRanges_count();
-		this.ranges = rang.getData().getRanges();
 	}
 
 	public double[] getRanges () {
-		return this.ranges;
+		return ranges;
 	}
 
 	public int getCount () {
-		return this.count;
+		return count;
 	}
 
 	@Override
 	public void run() {
 		while ( ! thread.isInterrupted()) {
-			this.update();
+			update();
 		}
 		System.out.println("Shutdown of " + this.toString());
 	}
