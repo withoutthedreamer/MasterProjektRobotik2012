@@ -170,20 +170,5 @@
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/stage_local/bitmaps/tams_corr_orig_cut_q.png</locationURI>
 		</link>
-		<link>
-			<name>src/jadex/base</name>
-			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/jadexplayer/jadex/sources/jadex-platform-base/src/main/java/jadex/base</locationURI>
-		</link>
-		<link>
-			<name>src/jadex/bdi</name>
-			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/jadexplayer/jadex/sources/jadex-applications-bdi/src/main/java/jadex/bdi</locationURI>
-		</link>
-		<link>
-			<name>src/jadex/bridge</name>
-			<type>2</type>
-			<locationURI>PARENT-2-PROJECT_LOC/jadexplayer/jadex/sources/jadex-bridge/src/main/java/jadex/bridge</locationURI>
-		</link>
 	</linkedResources>
 </projectDescription>
