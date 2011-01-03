@@ -1,4 +1,4 @@
-package agent;
+package com.rockel.app;
 
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
