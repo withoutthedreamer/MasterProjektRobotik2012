@@ -12,24 +12,21 @@ public class ExploreAgent extends MicroAgent
   public void executeBody()
   {
     System.out.println(getArgument("welcome text"));
-    waitFor(2000, new Runnable()
+    waitFor(2000, new IComponentStep()
     {			
-      public void run()
-      {
-        System.out.println("Good bye world.");
-        killAgent();
-      }
+     	public Object execute(IInternalAccess arg0) {
+    		System.out.println("Good bye world.");
+            killAgent();
+            return null;
+    	}
     });
   }
-	
+
   public static MicroAgentMetaInfo getMetaInfo()
   {
-    return new MicroAgentMetaInfo("This agent prints out a hello message.", 
-      new String[]{"c1", "c2"}, 
-      new IArgument[]
-      {
-        new Argument("welcome text", "This parameter is the text printed by the agent.", 
-        "String", "Hello world, this is a Jadex micro agent."),	
-      }, null, null);
+	  return new MicroAgentMetaInfo("This agent prints out a hello message.", 
+			  null, new IArgument[]{
+			  new Argument("welcome text", "This parameter is the text printed by the agent.", "String", "Hello world, this is a Jadex micro agent."),	
+	  }, null);
   }
 }
