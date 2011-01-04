@@ -1,6 +1,7 @@
 package robot;
 
 import data.Position;
+import device.Gripper;
 import device.Ranger;
 
 import javaclient3.PlayerException;
@@ -12,8 +13,12 @@ final public class PioneerRR extends Pioneer {
 		try {
 			this.laser    = new Ranger (this.playerclient, super.id, 1);
 			this.sonar 	  = new Ranger (this.playerclient, super.id, 0);
+			this.grip	  = new Gripper(this.playerclient, super.id);
+//			grip.lift();
+			System.err.println ("Gripper state: " + grip.getState() );
+			
 		} catch (PlayerException e) {
-			System.err.println ("PioneerSL: > Error connecting to Player: ");
+			System.err.println ("PioneerRR: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 			System.exit (1);
 		}
@@ -26,6 +31,8 @@ final public class PioneerRR extends Pioneer {
 		while(this.laser.thread.isAlive());
 		this.sonar.thread.interrupt();
 		while(this.sonar.thread.isAlive());
+		this.grip.thread.interrupt();
+		while(this.grip.thread.isAlive());
 	}
 
 	@Override
