@@ -16,7 +16,7 @@
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-applications-bpmn-2.0-rc6.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-applications-gpmn-2.0-rc6.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-applications-micro-2.0-rc6.jar"/>
-	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-bridge-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-bridge-2.0-rc6.jar" sourcepath="/jadex/jadex-bridge"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-commons-2.0-rc6.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-javaparser-2.0-rc6.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-kernel-application-2.0-rc6.jar"/>
@@ -25,7 +25,7 @@
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-kernel-bdibpmn-2.0-rc6.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-kernel-bpmn-2.0-rc6.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-kernel-gpmn-2.0-rc6.jar"/>
-	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-kernel-micro-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-kernel-micro-2.0-rc6.jar" sourcepath="/jadex/jadex-kernel-micro"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-nuggets-2.0-rc6.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-platform-base-2.0-rc6.jar"/>
 	<classpathentry kind="lib" path="/Users/sebastian/jadexplayer/jadex/lib/jadex-platform-standalone-2.0-rc6.jar"/>

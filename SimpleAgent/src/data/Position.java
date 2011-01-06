@@ -1,6 +1,7 @@
 package data;
 
 // Represents a 2D position in the simulator
+// @param x, y, yaw aboslute coordinates and degrees
 public class Position {
 
 	protected double x  = 0.;
