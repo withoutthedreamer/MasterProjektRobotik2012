@@ -1,19 +1,18 @@
 package jadex;
 
-import robot.PioneerRsB;
-import jadex.bridge.Argument;
-import jadex.bridge.IArgument;
-import jadex.micro.MicroAgent;
-import jadex.micro.MicroAgentMetaInfo;
+import robot.*;
+import jadex.bridge.*;
+import jadex.micro.*;
 
 public class ExploreAgent extends MicroAgent {
+	
+	MessageAgent msgAgent = new MessageAgent();
 	PioneerRsB pionRsB = null;
 
-	public void agentCreated(){}
-
-	public void executeBody()
+	public void agentCreated()
 	{
 		System.out.println(getArgument("Starting up explore agent.."));
+		msgAgent.getMessageService().tell("ExploreAgent", "Starting up..");
 		try {
 			pionRsB = new PioneerRsB("localhost", 6665, 1);
 //			pionRG.setPlanner("localhost", 6685);
@@ -25,11 +24,14 @@ public class ExploreAgent extends MicroAgent {
 			killAgent();
 		}
 	}
+	public void executeBody()
+	{
+	}
 	public void agentKilled()
 	{
+		msgAgent.getMessageService().tell("ExploreAgent", "Shutting down..");
 		pionRsB.shutdown();
 	}
-
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
 		return new MicroAgentMetaInfo("This agent starts up the Explorer agent.", 

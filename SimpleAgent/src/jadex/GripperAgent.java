@@ -9,13 +9,13 @@ import jadex.micro.MicroAgentMetaInfo;
 
 public class GripperAgent extends MicroAgent
 {
+	MessageAgent msgAgent = new MessageAgent();
 	PioneerRG pionRG = null;
 
-	public void agentCreated(){}
-
-	public void executeBody()
+	public void agentCreated()
 	{
 		System.out.println(getArgument("Starting up gripper agent.."));
+		msgAgent.getMessageService().tell("ExploreAgent", "Starting up..");
 		try {
 			pionRG = new PioneerRG("localhost", 6666, 1);
 			pionRG.setPlanner("localhost", 6685);
@@ -26,8 +26,12 @@ public class GripperAgent extends MicroAgent
 			killAgent();
 		}
 	}
+	public void executeBody()
+	{
+	}
 	public void agentKilled()
 	{
+		msgAgent.getMessageService().tell("ExploreAgent", "Shutting down..");
 		pionRG.shutdown();
 	}
 

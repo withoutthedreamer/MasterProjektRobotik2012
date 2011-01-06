@@ -1,7 +1,9 @@
 package data;
 
-// Represents a 2D position in the simulator
-// @param x, y, yaw aboslute coordinates and degrees
+/**
+ * Represents a 2D position in the simulator
+ * @author sebastian
+ */
 public class Position {
 
 	protected double x  = 0.;
@@ -9,13 +11,19 @@ public class Position {
 	protected double yaw= 0.;
 	protected final static double epsilonPos = 0.01;
 	protected final static double epsilonRot = Math.toRadians(0.1);
-	
+
+	/**
+	 * Constructor creates a Position
+	 * @param x X coordinate.
+	 * @param y Y coordinate.
+	 * @param yaw Orientation in degrees.
+	 */
 	public Position(double x, double y, double yaw) {
 		this.x  = x;
 		this.y  = y;
 		this.yaw= yaw;
 	}
-	
+
 	public void setPosition (Position pos) {
 		this.x = pos.getX();
 		this.y = pos.getY();
