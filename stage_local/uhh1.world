@@ -24,7 +24,7 @@ window
 floorplan
 (
   #size [86.016 22.428 0.800]
-  size [50 15 0.800]
+  size [50 13 0.800]
   pose [0 0 0 0]
   bitmap "bitmaps/tams_compl_red.png"
   blob_return 1
