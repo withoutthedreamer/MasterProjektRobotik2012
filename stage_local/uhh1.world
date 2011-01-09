@@ -60,7 +60,7 @@ fancypioneer2dx
 (		  
   # can refer to the robot by this name
   name "r0"
-  pose [ -6 -5 0 90 ] 
+  pose [ -19 2 0 90 ] 
 
   platte()
   laptop()

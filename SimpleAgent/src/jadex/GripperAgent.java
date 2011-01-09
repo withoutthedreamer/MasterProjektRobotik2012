@@ -4,6 +4,8 @@ import robot.PioneerRG;
 import data.Position;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
+import jadex.bridge.IComponentStep;
+import jadex.bridge.IInternalAccess;
 import jadex.micro.MicroAgent;
 import jadex.micro.MicroAgentMetaInfo;
 
@@ -32,6 +34,20 @@ public class GripperAgent extends MicroAgent
 	}
 	public void executeBody()
 	{
+		final IComponentStep step = new IComponentStep()
+		{			
+			public Object execute(IInternalAccess args)
+			{
+				data.Position curPos = pionRG.getPosition();
+				ms.tell("GripperAgent", curPos.toString());
+//				ms.tell("GripperAgent", "test");
+
+				waitFor(2000, this);
+				
+				return null;
+			}
+		};
+		waitFor(2000,step);
 	}
 	public void agentKilled()
 	{

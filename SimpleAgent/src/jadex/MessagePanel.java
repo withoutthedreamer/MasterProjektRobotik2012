@@ -47,7 +47,7 @@ public class MessagePanel extends JPanel
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				MessageAgent ca = (MessageAgent)ia;
+				ConsoleAgent ca = (ConsoleAgent)ia;
 				ca.getMessageService().addChangeListener(new IChangeListener()
 				{
 					public void changeOccurred(ChangeEvent event)
@@ -76,7 +76,7 @@ public class MessagePanel extends JPanel
 				{
 					public Object execute(IInternalAccess ia)
 					{
-						MessageAgent ca = (MessageAgent)ia;
+						ConsoleAgent ca = (ConsoleAgent)ia;
 						ca.getMessageService().tell(""+agent.getComponentIdentifier(), tf.getText());
 						tf.setText("");
 						return null;

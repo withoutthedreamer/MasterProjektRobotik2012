@@ -11,7 +11,7 @@ import javax.swing.SwingUtilities;
 /**
  *  Message micro agent. 
  */
-public class MessageAgent extends MicroAgent
+public class ConsoleAgent extends MicroAgent
 {
 	//-------- attributes --------
 	
