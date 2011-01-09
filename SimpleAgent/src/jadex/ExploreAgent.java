@@ -6,13 +6,18 @@ import jadex.micro.*;
 
 public class ExploreAgent extends MicroAgent {
 	
-	MessageAgent msgAgent = new MessageAgent();
+	/** The message service. */
+	protected MessageService ms;
+
 	PioneerRsB pionRsB = null;
 
 	public void agentCreated()
 	{
-		System.out.println(getArgument("Starting up explore agent.."));
-		msgAgent.getMessageService().tell("ExploreAgent", "Starting up..");
+//		System.out.println(getArgument("Starting up explore agent.."));
+		ms = new MessageService(getExternalAccess());
+		addDirectService(ms);
+		ms.tell("ExploreAgent", "Starting up..");
+
 		try {
 			pionRsB = new PioneerRsB("localhost", 6665, 1);
 //			pionRG.setPlanner("localhost", 6685);
@@ -29,7 +34,7 @@ public class ExploreAgent extends MicroAgent {
 	}
 	public void agentKilled()
 	{
-		msgAgent.getMessageService().tell("ExploreAgent", "Shutting down..");
+		ms.tell("ExploreAgent", "Shutting down..");
 		pionRsB.shutdown();
 	}
 	public static MicroAgentMetaInfo getMetaInfo()

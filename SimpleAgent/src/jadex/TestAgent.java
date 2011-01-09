@@ -1,19 +1,16 @@
 package jadex;
 
+import javax.swing.SwingUtilities;
+
 import jadex.bridge.IArgument;
 import jadex.commons.SUtil;
 import jadex.micro.IMicroExternalAccess;
 import jadex.micro.MicroAgent;
 import jadex.micro.MicroAgentMetaInfo;
 
-import javax.swing.SwingUtilities;
+public class TestAgent extends MicroAgent {
 
-/**
- *  Message micro agent. 
- */
-public class MessageAgent extends MicroAgent
-{
-	//-------- attributes --------
+//-------- attributes --------
 	
 	/** The message service. */
 	protected MessageService ms;
@@ -27,13 +24,7 @@ public class MessageAgent extends MicroAgent
 	{
 		ms = new MessageService(getExternalAccess());
 		addDirectService(ms);
-		SwingUtilities.invokeLater(new Runnable()
-		{
-			public void run()
-			{
-				MessagePanel.createGui((IMicroExternalAccess)getExternalAccess());
-			}
-		});
+		ms.tell("TestAgent", "msg from testagent");
 	}
 	
 	/**
@@ -51,7 +42,7 @@ public class MessageAgent extends MicroAgent
 	 */
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
-		return new MicroAgentMetaInfo("This agent offers a helpline for getting information about missing persons.", null, 
+		return new MicroAgentMetaInfo("This agent sends a test message", null, 
 			new IArgument[]{}//new Argument("infos", "Initial information records.", "InformationEntry[]")}
 			, null, null, SUtil.createHashMap(new String[]{"componentviewer.viewerclass"}, new Object[]{"jadex.micro.examples.chat.ChatPanel"}),
 			null, new Class[]{IMessageService.class});
