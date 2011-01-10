@@ -1,5 +1,6 @@
 package jadex;
 
+import core.OSCommand;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.micro.MicroAgent;
@@ -19,12 +20,10 @@ public class SimulationAgent extends MicroAgent {
 		addDirectService(ms);
 		ms.tell("SimulationAgent", "Starting up..");
 
+		startSimu = new OSCommand(playerCmd);
     }
 	public void executeBody()
 	{
-		//			ms.tell("SimulationAgent", OSCommand.run("/usr/local/bin/player ~/robotcolla/SimpleAgent/player/uhh1"));
-		startSimu = new OSCommand(playerCmd);
-//			System.out.print("SimulationAgent" + OSCommand.run(playerCmd));
 	}
 	public void agentKilled()
 	{

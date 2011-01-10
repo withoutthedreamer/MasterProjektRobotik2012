@@ -1,4 +1,4 @@
-package jadex;
+package core;
 
 import java.io.*;
 

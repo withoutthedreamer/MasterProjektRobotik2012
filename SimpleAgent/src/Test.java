@@ -1,6 +1,7 @@
 import java.io.IOException;
 
-import jadex.OSCommand;
+import core.OSCommand;
+
 
 
 public class Test {

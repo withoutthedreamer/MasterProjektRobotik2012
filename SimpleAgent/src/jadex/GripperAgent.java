@@ -1,5 +1,6 @@
 package jadex;
 
+import core.OSCommand;
 import robot.PioneerRG;
 import data.Position;
 import jadex.bridge.Argument;
@@ -16,12 +17,18 @@ public class GripperAgent extends MicroAgent
 
 	PioneerRG pionRG = null;
 
+	protected String[] playerCmd={"/usr/local/bin/player","-p 6685","/Users/sebastian/robotcolla/SimpleAgent/player/planner2.cfg"};
+	protected OSCommand startPlanner = null;
+
 	public void agentCreated()
 	{
 //		System.out.println(getArgument("Starting up gripper agent.."));
 		ms = new MessageService(getExternalAccess());
 		addDirectService(ms);
 		ms.tell("GripperAgent", "Starting up..");
+
+		startPlanner = new OSCommand(playerCmd);
+
 		try {
 			pionRG = new PioneerRG("localhost", 6666, 1);
 			pionRG.setPlanner("localhost", 6685);
@@ -53,6 +60,7 @@ public class GripperAgent extends MicroAgent
 	{
 		ms.tell("GripperAgent", "Shutting down..");
 		pionRG.shutdown();
+		startPlanner.terminate();
 	}
 
 	public static MicroAgentMetaInfo getMetaInfo()
