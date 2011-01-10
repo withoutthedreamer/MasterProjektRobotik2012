@@ -5,6 +5,7 @@ import java.io.*;
 public class OSCommand implements Runnable{
 	
 	protected String[] command = null;
+	protected Process process = null;
 	
 	// Every class of this type has it's own thread
 	protected Thread thread = new Thread ( this );
@@ -19,14 +20,16 @@ public class OSCommand implements Runnable{
 		StringBuffer result = new StringBuffer();
 		String s = null;
 		try {
-			Process p = Runtime.getRuntime().exec(cmd);
-			BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			while ( (s = in.readLine()) != null) {
+			process = Runtime.getRuntime().exec(cmd);
+			BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			while ( (s = in.readLine()) != null ) {
 				result.append(s);
 			}
 			in.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			// TODO Nicer way to kill a process would be much appreciated
+			// Do nothing here because exception occures regularly when process is orderly terminated
+			// e.printStackTrace();
 		}
 		return result.toString();
 	}
@@ -36,10 +39,7 @@ public class OSCommand implements Runnable{
 		exec(command);
 	}
 	public void terminate() {
-		// TODO get process id
-		String [] killCmd = {"/usr/bin/killall", "player"};
-		exec(killCmd);
-		thread.interrupt();
-//		while(thread.isAlive());
+		// TODO return command result
+		process.destroy();
 	}
 }

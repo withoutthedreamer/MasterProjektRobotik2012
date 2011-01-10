@@ -1,10 +1,9 @@
 package jadex;
 
-import javax.swing.SwingUtilities;
+import java.lang.management.ManagementFactory;
 
 import jadex.bridge.IArgument;
 import jadex.commons.SUtil;
-import jadex.micro.IMicroExternalAccess;
 import jadex.micro.MicroAgent;
 import jadex.micro.MicroAgentMetaInfo;
 
@@ -24,7 +23,8 @@ public class TestAgent extends MicroAgent {
 	{
 		ms = new MessageService(getExternalAccess());
 		addDirectService(ms);
-		ms.tell("TestAgent", "msg from testagent");
+//		ms.tell("TestAgent", "msg from testagent");
+		ms.tell(ManagementFactory.getRuntimeMXBean().getName(), "msg from testagent");
 	}
 	
 	/**

@@ -18,12 +18,19 @@ public class Test {
 //		System.err.println(OSCommand.run(testCmd));
 		OSCommand testCmd = new OSCommand(playerCmd);
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		testCmd.terminate();
+//		while(true);
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 

@@ -1,8 +1,5 @@
 package jadex;
 
-import java.io.IOException;
-
-import robot.PioneerRsB;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.micro.MicroAgent;
@@ -13,11 +10,11 @@ public class SimulationAgent extends MicroAgent {
 	/** The message service. */
 	protected MessageService ms;
 
-	PioneerRsB pionRsB = null;
+	protected String[] playerCmd={"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/uhh1.cfg"};
+	protected OSCommand startSimu = null;
 
 	public void agentCreated()
 	{
-//		System.out.println(getArgument("Starting up explore agent.."));
 		ms = new MessageService(getExternalAccess());
 		addDirectService(ms);
 		ms.tell("SimulationAgent", "Starting up..");
@@ -25,19 +22,14 @@ public class SimulationAgent extends MicroAgent {
     }
 	public void executeBody()
 	{
-		try {
-			String[] playerCmd={"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/uhh1.cfg"};
-
-//			ms.tell("SimulationAgent", OSCommand.run("/usr/local/bin/player ~/robotcolla/SimpleAgent/player/uhh1"));
-			System.out.print("SimulationAgent" + OSCommand.run(playerCmd));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//			ms.tell("SimulationAgent", OSCommand.run("/usr/local/bin/player ~/robotcolla/SimpleAgent/player/uhh1"));
+		startSimu = new OSCommand(playerCmd);
+//			System.out.print("SimulationAgent" + OSCommand.run(playerCmd));
 	}
 	public void agentKilled()
 	{
 		ms.tell("SimulationAgent", "Shutting down..");
+		startSimu.terminate();
 //		pionRsB.shutdown();
 	}
 	public static MicroAgentMetaInfo getMetaInfo()
