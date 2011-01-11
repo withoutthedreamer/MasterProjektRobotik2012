@@ -120,7 +120,7 @@ abstract class Pioneer implements Runnable, Trackable
 		} catch (PlayerException e) {
 			System.err.println ("Pioneer: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			throw new Exception();
+			throw new IllegalStateException();
 //			System.exit (1);
 		}
 		// Has to be called in object constructor!

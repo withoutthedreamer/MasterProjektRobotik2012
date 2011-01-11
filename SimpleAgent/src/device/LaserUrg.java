@@ -35,6 +35,7 @@ public class LaserUrg implements Runnable{
 			System.err.println ("LaserUrg: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
+			throw new IllegalStateException();
 		}
 	}
 	// Will check for new ranges

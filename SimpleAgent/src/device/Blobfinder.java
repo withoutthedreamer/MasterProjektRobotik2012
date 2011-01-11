@@ -38,6 +38,7 @@ public class Blobfinder implements Runnable {
 			System.err.println ("Blobfinder: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
+			throw new IllegalStateException();
 		}
 	}
 	// Only to be called @~10Hz

@@ -35,9 +35,7 @@ public class GripperAgent extends MicroAgent
 			// Planner
 			pionRG.setPosition(new Position(-28, 3, 90));
 		} catch (Exception e) {
-			if(startPlanner.isRunning() == true) {
-				startPlanner.terminate();
-			}
+			startPlanner.terminate();
 			e.printStackTrace();
 //			killAgent();
 		}
@@ -67,9 +65,7 @@ public class GripperAgent extends MicroAgent
 		if (pionRG != null) {
 			pionRG.shutdown();
 		}
-		if (startPlanner.isRunning() == true) {
-			startPlanner.terminate();
-		}
+		startPlanner.terminate();
 	}
 
 	public static MicroAgentMetaInfo getMetaInfo()

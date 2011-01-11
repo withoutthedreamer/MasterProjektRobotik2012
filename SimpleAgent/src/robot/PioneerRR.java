@@ -21,7 +21,7 @@ final public class PioneerRR extends Pioneer {
 			System.err.println ("PioneerRR: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
-			throw new Exception();
+			throw new IllegalStateException();
 		}
 		this.playerclient.runThreaded (-1, -1);
 	}

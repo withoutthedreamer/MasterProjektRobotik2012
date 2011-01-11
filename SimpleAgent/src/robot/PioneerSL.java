@@ -16,7 +16,7 @@ final public class PioneerSL extends Pioneer {
 			System.err.println ("PioneerSL: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
-			throw new Exception();
+			throw new IllegalStateException();
 		}
 		this.playerclient.runThreaded (-1, -1);
 	}

@@ -22,7 +22,7 @@ public class PioneerRsB extends Pioneer {
 			System.err.println ("PioneerSB: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
-			throw new Exception();
+			throw new IllegalStateException();
 		}
 		this.playerclient.runThreaded (-1, -1);
 	}

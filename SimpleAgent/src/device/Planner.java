@@ -73,6 +73,7 @@ public class Planner implements Runnable {
 			System.err.println ("Planner: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
+			throw new IllegalStateException();
 		}
 	}
 	public void setGoal (Position goal) {

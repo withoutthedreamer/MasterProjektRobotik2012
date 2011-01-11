@@ -34,6 +34,7 @@ public class Ranger implements Runnable {
 			System.err.println ("Ranger: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
+			throw new IllegalStateException();
 		}
 	}
 	// Will check for new ranges

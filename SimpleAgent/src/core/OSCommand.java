@@ -45,7 +45,9 @@ public class OSCommand implements Runnable{
 	}
 	public void terminate() {
 		// TODO return command result
-		process.destroy();
+		if (process != null) {
+			process.destroy();
+		}
 	}
 	public boolean isRunning () {
 		return isRunning;

@@ -27,6 +27,7 @@ public class RangerLaser extends Ranger {
 			System.err.println ("RangerLaser: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
+			throw new IllegalStateException();
 		}
 	}
 	// Will check for new ranges
