@@ -6,7 +6,7 @@ import device.Ranger;
 
 public class PioneerRso extends Pioneer {
 
-	public PioneerRso(String name, int port, int id) {
+	public PioneerRso(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
 			sonar = new Ranger(this.playerclient, this.id, 0);
@@ -14,7 +14,8 @@ public class PioneerRso extends Pioneer {
 		} catch (PlayerException e) {
 			System.err.println ("PioneerL: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
+			throw new Exception();
 		}
 		super.playerclient.runThreaded (-1, -1);
 	}

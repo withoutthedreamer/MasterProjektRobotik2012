@@ -31,7 +31,7 @@ public class Sonar implements Runnable{
 		} catch ( PlayerException e ) {
 			System.err.println ("Sonar: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
 		}
 	}
 	

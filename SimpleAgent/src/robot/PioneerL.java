@@ -10,7 +10,7 @@ public class PioneerL extends Pioneer {
 		// TODO Auto-generated constructor stub
 	}
 
-	public PioneerL(String name, int port, int id) {
+	public PioneerL(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
 			this.laser = new RangerLaser (this.playerclient, this.id);
@@ -18,7 +18,8 @@ public class PioneerL extends Pioneer {
 		} catch (PlayerException e) {
 			System.err.println ("PioneerL: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
+			throw new Exception();
 		}
 		super.playerclient.runThreaded (-1, -1);
 	}

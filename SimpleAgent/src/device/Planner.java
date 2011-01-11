@@ -72,7 +72,7 @@ public class Planner implements Runnable {
 		} catch ( PlayerException e ) {
 			System.err.println ("Planner: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
 		}
 	}
 	public void setGoal (Position goal) {

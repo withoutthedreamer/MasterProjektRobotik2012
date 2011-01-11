@@ -92,7 +92,7 @@ abstract class Pioneer implements Runnable, Trackable
 
 	public Pioneer(){}
 	// Constructor: do all playerclient communication setup here
-	public Pioneer (String name, int port, int id) {
+	public Pioneer (String name, int port, int id) throws Exception {
 		try {
 			// Connect to the Player server and request access to Position
 			this.playerclient  = new PlayerClient (name, port);
@@ -120,7 +120,8 @@ abstract class Pioneer implements Runnable, Trackable
 		} catch (PlayerException e) {
 			System.err.println ("Pioneer: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+			throw new Exception();
+//			System.exit (1);
 		}
 		// Has to be called in object constructor!
 		// Otherwise program will block forever

@@ -14,9 +14,9 @@ public class ExploreAgent extends MicroAgent {
 	public void agentCreated()
 	{
 //		System.out.println(getArgument("Starting up explore agent.."));
-		ms = new MessageService(getExternalAccess());
-		addDirectService(ms);
-		ms.tell("ExploreAgent", "Starting up..");
+//		ms = new MessageService(getExternalAccess());
+//		addDirectService(ms);
+//		ms.tell("ExploreAgent", "Starting up..");
 
 		try {
 			pionRsB = new PioneerRsB("localhost", 6665, 1);
@@ -26,16 +26,21 @@ public class ExploreAgent extends MicroAgent {
 		} catch (Exception e) {
 			// TODO why just JCC crashes here?
 			e.printStackTrace();
-			killAgent();
+//			killAgent();
 		}
 	}
 	public void executeBody()
 	{
+		if (pionRsB == null) {
+			killAgent();
+		}
 	}
 	public void agentKilled()
 	{
-		ms.tell("ExploreAgent", "Shutting down..");
-		pionRsB.shutdown();
+//		ms.tell("ExploreAgent", "Shutting down..");
+		if (pionRsB != null) {
+			pionRsB.shutdown();
+		}
 	}
 	public static MicroAgentMetaInfo getMetaInfo()
 	{

@@ -9,6 +9,8 @@ public class OSCommand implements Runnable{
 	
 	// Every class of this type has it's own thread
 	protected Thread thread = new Thread ( this );
+	
+	protected boolean isRunning = false;
 
 	public OSCommand (String[] cmd) {
 		command = cmd;
@@ -20,7 +22,9 @@ public class OSCommand implements Runnable{
 		StringBuffer result = new StringBuffer();
 //		String s = null;
 		try {
+			isRunning = true;
 			process = Runtime.getRuntime().exec(cmd);
+			isRunning = false;
 			// Process console output handling
 //			BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
 //			while ( (s = in.readLine()) != null ) {
@@ -42,5 +46,8 @@ public class OSCommand implements Runnable{
 	public void terminate() {
 		// TODO return command result
 		process.destroy();
+	}
+	public boolean isRunning () {
+		return isRunning;
 	}
 }

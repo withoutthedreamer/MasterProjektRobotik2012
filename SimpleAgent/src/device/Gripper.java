@@ -37,7 +37,7 @@ public class Gripper implements Runnable {
 		} catch ( PlayerException e ) {
 			System.err.println ("Blobfinder: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
 		}
 	}
 	protected void updateGripper () {

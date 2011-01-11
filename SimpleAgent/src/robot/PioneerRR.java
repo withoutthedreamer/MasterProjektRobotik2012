@@ -8,7 +8,7 @@ import javaclient3.PlayerException;
 
 final public class PioneerRR extends Pioneer {
 
-	public PioneerRR(String name, int port, int id) {
+	public PioneerRR(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
 			this.laser    = new Ranger (this.playerclient, super.id, 1);
@@ -20,7 +20,8 @@ final public class PioneerRR extends Pioneer {
 		} catch (PlayerException e) {
 			System.err.println ("PioneerRR: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
+			throw new Exception();
 		}
 		this.playerclient.runThreaded (-1, -1);
 	}

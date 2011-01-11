@@ -10,7 +10,7 @@ import device.Ranger;
 public class PioneerRG extends Pioneer {
 	protected Planner plan = null;
 	
-	public PioneerRG(String name, int port, int id) {
+	public PioneerRG(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
 			laser = new Ranger(this.playerclient, this.id, 1);
@@ -19,7 +19,8 @@ public class PioneerRG extends Pioneer {
 		} catch (PlayerException e) {
 			System.err.println ("PioneerRG: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
+			throw new Exception();
 		}
 		super.playerclient.runThreaded (-1, -1);
 	}

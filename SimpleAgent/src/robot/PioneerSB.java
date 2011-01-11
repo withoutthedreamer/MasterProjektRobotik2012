@@ -12,7 +12,7 @@ final public class PioneerSB extends Pioneer {
 	protected Blobfinder blofi = null;
 	protected Blackboard blackboard = null;
 
-	public PioneerSB(String name, int port, int id) {
+	public PioneerSB(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
 			this.sonar = new RangerSonar (this.playerclient, this.id);
@@ -20,7 +20,8 @@ final public class PioneerSB extends Pioneer {
 		} catch (PlayerException e) {
 			System.err.println ("PioneerSB: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
+			throw new Exception();
 		}
 		this.playerclient.runThreaded (-1, -1);
 	}

@@ -23,9 +23,9 @@ public class GripperAgent extends MicroAgent
 	public void agentCreated()
 	{
 //		System.out.println(getArgument("Starting up gripper agent.."));
-		ms = new MessageService(getExternalAccess());
-		addDirectService(ms);
-		ms.tell("GripperAgent", "Starting up..");
+//		ms = new MessageService(getExternalAccess());
+//		addDirectService(ms);
+//		ms.tell("GripperAgent", "Starting up..");
 
 		startPlanner = new OSCommand(playerCmd);
 
@@ -35,19 +35,24 @@ public class GripperAgent extends MicroAgent
 			// Planner
 			pionRG.setPosition(new Position(-28, 3, 90));
 		} catch (Exception e) {
-			startPlanner.terminate();
+			if(startPlanner.isRunning() == true) {
+				startPlanner.terminate();
+			}
 			e.printStackTrace();
-			killAgent();
+//			killAgent();
 		}
 	}
 	public void executeBody()
 	{
+		if (pionRG == null) {
+			killAgent();
+		}
 		final IComponentStep step = new IComponentStep()
 		{			
 			public Object execute(IInternalAccess args)
 			{
 				data.Position curPos = pionRG.getPosition();
-				ms.tell("GripperAgent", curPos.toString());
+//				ms.tell("GripperAgent", curPos.toString());
 //				ms.tell("GripperAgent", "test");
 
 				waitFor(2000, this);
@@ -58,9 +63,13 @@ public class GripperAgent extends MicroAgent
 	}
 	public void agentKilled()
 	{
-		ms.tell("GripperAgent", "Shutting down..");
-		pionRG.shutdown();
-		startPlanner.terminate();
+//		ms.tell("GripperAgent", "Shutting down..");
+		if (pionRG != null) {
+			pionRG.shutdown();
+		}
+		if (startPlanner.isRunning() == true) {
+			startPlanner.terminate();
+		}
 	}
 
 	public static MicroAgentMetaInfo getMetaInfo()

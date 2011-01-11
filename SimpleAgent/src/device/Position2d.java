@@ -34,7 +34,7 @@ public class Position2d implements Runnable{
 		} catch ( PlayerException e ) {
 			System.err.println ("Position: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
 		}
 	}
 	public Position getPosition() {
