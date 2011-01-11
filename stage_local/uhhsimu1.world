@@ -1,0 +1,94 @@
+# Project world file
+include "pioneer.inc"
+include "map.inc"
+include "urgr.inc"
+include "platte.inc"
+include "laptop.inc"
+
+resolution 0.05 # meters per pixel
+
+# configure the GUI window
+window
+(
+  size [ 1024.0 400.0 ]
+  scale 20.0             # pixels per meter
+  center [ 0  0 ]
+  rotate [ 0  0 ]
+  			
+  show_data 1              # 1=on 0=off
+)
+
+# load an environment bitmap
+floorplan
+(
+  size [50 13 0.800]
+  pose [0 0 0 0]
+  bitmap "bitmaps/tams_compl_red.png"
+
+  obstacle_return 1
+)
+
+#pioneer2dx
+fancypioneer2dx
+(		  
+  # can refer to the robot by this name
+  name "r0"
+  pose [ 0 8 0 90 ] 
+
+  laser240()
+  platte()
+  laptop()
+
+  obstacle_return 0
+  ranger_return 1
+)
+#pioneer2dx
+fancypioneer2dx
+(		  
+  # can refer to the robot by this name
+  name "r1"
+  pose [ -2 8 0 90 ] 
+  #pose [ -28 3 0 90 ] 
+
+  laser240()
+  platte()
+  laptop()
+
+  obstacle_return 0
+  ranger_return 1
+)
+pioneer2dx
+(		  
+  # can refer to the robot by this name
+  name "r2"
+  pose [ -4 8 0 90 ] 
+
+  laser240()
+  platte()
+  laptop()
+
+  obstacle_return 0
+  ranger_return 1
+)
+#pioneer2dx
+#(		  
+  ## can refer to the robot by this name
+  #name "r3"
+  #pose [ -1 -2 0 90 ] 
+
+  #obstacle_return 0
+  #laser_return 1
+  #ranger_return 1
+  #blob_return 0
+#)
+#pioneer2dx
+#(		  
+  ## can refer to the robot by this name
+  #name "r4"
+  #pose [ -2 -2 0 90 ] 
+
+  #obstacle_return 0
+  #laser_return 1
+  #ranger_return 1
+  #blob_return 0
+#)

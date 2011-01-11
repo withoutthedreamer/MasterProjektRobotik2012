@@ -35,6 +35,7 @@ public class GripperAgent extends MicroAgent
 			// Planner
 			pionRG.setPosition(new Position(-28, 3, 90));
 		} catch (Exception e) {
+			startPlanner.terminate();
 			e.printStackTrace();
 			killAgent();
 		}
@@ -50,11 +51,10 @@ public class GripperAgent extends MicroAgent
 //				ms.tell("GripperAgent", "test");
 
 				waitFor(2000, this);
-				
 				return null;
 			}
 		};
-		waitFor(2000,step);
+		waitForTick(step);
 	}
 	public void agentKilled()
 	{

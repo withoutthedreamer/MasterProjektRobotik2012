@@ -18,14 +18,15 @@ public class OSCommand implements Runnable{
 
 	public String exec (String[] cmd) {
 		StringBuffer result = new StringBuffer();
-		String s = null;
+//		String s = null;
 		try {
 			process = Runtime.getRuntime().exec(cmd);
-			BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
-			while ( (s = in.readLine()) != null ) {
-				result.append(s);
-			}
-			in.close();
+			// Process console output handling
+//			BufferedReader in = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//			while ( (s = in.readLine()) != null ) {
+//				result.append(s);
+//			}
+//			in.close();
 		} catch (IOException e) {
 			// TODO Nicer way to kill a process would be much appreciated
 			// Do nothing here because exception occures regularly when process is orderly terminated

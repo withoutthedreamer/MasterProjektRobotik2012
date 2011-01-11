@@ -7,7 +7,12 @@ import data.SimuObject;
 import data.Trackable;
 
 import javaclient3.PlayerException;
-
+/**
+ * Keeps position of simulator and outside objects in sync.
+ * Singleton.
+ * @author sebastian
+ *
+ */
 public class Tracker implements Runnable {
 
 	protected Simulator simu = null;
@@ -17,7 +22,11 @@ public class Tracker implements Runnable {
 	// Every class of this type has it's own thread
 	protected Thread thread = new Thread ( this );
 
-	// Singleton
+	/**
+	 * Creates the Tracker.
+	 * @param simu Simulator that contains objects to be updated.
+	 * @param simuObjs Vector of objects to be followed.
+	 */
 	protected Tracker(Simulator simu, Vector<SimuObject> simuObjs) {
 		try {
 			this.simu = simu;
@@ -42,6 +51,12 @@ public class Tracker implements Runnable {
 		}
 	}
 
+	/**
+	 * Returns a Singleton instance of the tracker.
+	 * @param simu Simulator that contains objects to be updated.
+	 * @param simuObjs Vector of objects to be followed.
+	 * @return Instace of the tracker
+	 */
 	public static Tracker getInstance (Simulator simu, Vector<SimuObject> simuObjs) {
 		if (instance == null) {
 			instance = new Tracker(simu, simuObjs);

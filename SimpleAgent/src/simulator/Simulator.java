@@ -14,6 +14,11 @@ import javaclient3.structures.PlayerConstants;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.simulation.PlayerSimulationPose2dReq;
 
+/**
+ * Stage Gui to draw online robot(s) position
+ * @author sebastian
+ *
+ */
 public class Simulator implements Runnable {
 	
 	protected PlayerClient playerclient = null;
@@ -50,16 +55,25 @@ public class Simulator implements Runnable {
 		} catch (PlayerException e) {
 			System.err.println ("Simulator: > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-			System.exit (1);
+//			System.exit (1);
 		}
 	}
-	
+	/**
+	 * Returns a Singleton instance of the Gui
+	 * @param name Host name (or IP) of the player server. 
+	 * @param port Port of the player server.
+	 * @return Gui instance.
+	 */
 	public static Simulator getInstance (String name, int port) {
 		if (instance == null) {
 			instance = new Simulator(name, port);
 		}
 		return instance;
 	}
+	/**
+	 * Returns null if no Gui instance is instantiated.
+	 * @return null or Gui instance.
+	 */
 	public static Simulator getInstance () {
 		return instance; // whether or not it is null
 	}
@@ -99,7 +113,9 @@ public class Simulator implements Runnable {
 			this.update();
 		}
 	}
-	// Shutdown simulator and clean up
+	/**
+	 * Shutdown Gui and clean up
+	 */
 	public void shutdown () {
 		// Cleaning up
 		this.playerclient.close();
@@ -107,10 +123,20 @@ public class Simulator implements Runnable {
 		while(this.thread.isAlive());
 		System.out.println("Shutdown of " + this.toString());
 	}
+	/**
+	 * Set a Gui object's position 
+	 * @param key The Stage object id (usually set by the 'name' tag in the world file).
+	 * @param value The new Position of that object.
+	 */
 	public void setObjectPos(String key, Position value) {
 		objList.put(key, value);
 //		this.simu.getSimulationPose2D();
 	}
+	/**
+	 * Returns the last known object Position.
+	 * @param key The Stage object id (usually set by the 'name' tag in the world file).
+	 * @return Last known Position.
+	 */
 	// TODO test and make asynchronous
 	// TODO not working yet
 	public Position getObjectPos(String key) {
