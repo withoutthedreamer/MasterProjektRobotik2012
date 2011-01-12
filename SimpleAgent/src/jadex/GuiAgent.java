@@ -15,7 +15,7 @@ import jadex.micro.MicroAgentMetaInfo;
 
 public class GuiAgent extends MicroAgent {
 
-	protected String[] start={"/usr/local/bin/player","-p 6600","/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg"};
+	protected final String[] start={"/usr/local/bin/player","-p 6600","/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg"};
 	protected OSCommand player = null;
 	// API to the simulator (gui)
 	protected Simulator simu = null;
@@ -27,7 +27,10 @@ public class GuiAgent extends MicroAgent {
 
 	public void agentCreated()
 	{
-		player = new OSCommand(start); // Wait some time to let it start
+		// Get the Gui argument, if any
+		String[] path = {(String)getArgument("command path"),null};
+		player = new OSCommand(path);
+
 //		tracker = Tracker.getInstance(simu, null);
 		
 //		PioneerRR[] pionRRList = new PioneerRR[3];
@@ -81,7 +84,8 @@ public class GuiAgent extends MicroAgent {
 	{
 		return new MicroAgentMetaInfo("This agent starts up the gui.", 
 				null, new IArgument[]{
-				new Argument("welcome text", "This parameter is the argument given to the agent.", "String", "Hello world, this is a Jadex micro agent."),	
+				new Argument("command path", "This parameter is the argument given to the agent.", "String", 
+					"/usr/local/bin/player -p 6600 /Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg"),	
 		}, null);
 	}
 }

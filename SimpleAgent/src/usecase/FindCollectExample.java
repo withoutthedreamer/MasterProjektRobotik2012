@@ -18,30 +18,33 @@ public class FindCollectExample {
 	public static void main (String[] args) {
 		try {
 //			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
-			PioneerRsB pionRsB = new PioneerRsB("localhost", 6665, 0);
+//			PioneerRsB pionRsB = new PioneerRsB("localhost", 6665, 0);
 //			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
 			PioneerRG pionRG = new PioneerRG("localhost", 6666, 1);
 			pionRG.setPlanner("localhost", 6685);
-			pionRG.setPosition(new Position(-3,-5,Math.toRadians(90)));
+			pionRG.setPosition(new Position(-16,3,Math.toRadians(90)));
 			// Task synchronization
-			Blackboard blackb= Blackboard.getInstance(pionRG);
+//			Blackboard blackb= Blackboard.getInstance(pionRG);
 			// wants to write notes
-			pionRsB.setBlackboard(blackb);
+//			pionRsB.setBlackboard(blackb);
 			
 			// for modifying world
-			Simulator simu   = Simulator.getInstance("localhost", 6665);
-			blackb.setSimulation(simu);
+//			Simulator simu   = Simulator.getInstance("localhost", 6665);
+//			blackb.setSimulation(simu);
 //			Tracker tracker  = Tracker.getInstance(simu, null);
 //			tracker.addObject("r0", pionSB);
 //			tracker.addObject("r1", pionLG);
-		
+			while (true) {
+				Thread.sleep(1000);
+				System.out.println(pionRG.getPosition().toString());
+			}
 			// Wait until enter is pressed
-			in.readLine();
+//			in.readLine();
 //			tracker.shutdown()
-			blackb.shutdown();
-			pionRsB.shutdown();
-			pionRG.shutdown();
-			simu.shutdown();
+//			blackb.shutdown();
+//			pionRsB.shutdown();
+//			pionRG.shutdown();
+//			simu.shutdown();
 			
 		} catch (Exception e) { e.printStackTrace(); }
 	}

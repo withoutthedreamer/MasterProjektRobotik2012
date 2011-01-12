@@ -46,7 +46,7 @@ public class ExploreAgent extends MicroAgent {
 	{
 		return new MicroAgentMetaInfo("This agent starts up the Explorer agent.", 
 				null, new IArgument[]{
-				new Argument("welcome text", "This parameter is the argument given to the agent.", "String", "Hello world, this is a Jadex micro agent."),	
+				null,	
 		}, null);
 	}
 }

@@ -49,13 +49,16 @@ public class PioneerRG extends Pioneer {
 
 	public final void setPosition(Position position) {
 		if (plan != null)
-			this.plan.setPose(position);		
+			this.plan.setPose(position);
+//		if (posi != null)
+//			this.posi.setPosition(position);
 	}
 
 	/// Return robot position
 	public final Position getPosition() {
 		//			return this.plan.getPose(); // TODO why not working
-		return this.posi.getPosition();
+//		return this.posi.getPosition();
+		return this.plan.getPose();
 	}
 
 	public void setPlanner(String name, int port) {

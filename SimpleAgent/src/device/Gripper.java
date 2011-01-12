@@ -47,7 +47,7 @@ public class Gripper implements Runnable {
 			catch (InterruptedException e) { this.thread.interrupt(); }
 		} else {
 			curState = grip.getData().getState();
-			grip.setGripper(goalState);
+//			grip.setGripper(goalState);
 		}
 	}
 	@Override
