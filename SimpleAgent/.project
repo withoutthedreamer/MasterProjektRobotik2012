@@ -76,11 +76,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/stage_local/writelog.cfg</locationURI>
 		</link>
 		<link>
-			<name>src/javaclient3</name>
-			<type>2</type>
-			<location>/Users/sebastian/javaplayer/java-player/javaclient3</location>
-		</link>
-		<link>
 			<name>player/bitmaps/autolab.png</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/stage_local/bitmaps/autolab.png</locationURI>
