@@ -6,20 +6,10 @@ import device.Ranger;
 public class PioneerRla extends Pioneer {
 	
 	public PioneerRla(String name, int port, int id) throws IllegalStateException {
-		
-		super(name, port, id);
-		
-		try {
-			laser = new Ranger(roboClient, id, 1);
 
-		} catch (Exception e) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-			throw new IllegalStateException();
-		}
+		super(name, port, id);
+
+		laser = new Ranger(roboClient, id, 1);
 	}
 
 	protected void shutdownDevices () {

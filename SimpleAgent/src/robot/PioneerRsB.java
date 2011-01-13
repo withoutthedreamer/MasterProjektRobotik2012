@@ -12,20 +12,12 @@ public class PioneerRsB extends PioneerRso {
 	protected Blackboard blackboard = null;
 
 	public PioneerRsB(String name, int port, int id) throws IllegalStateException {
-		
+
 		super(name, port, id);
-		
-		try {
-			blofi = new Blobfinder(roboClient, this.id);
-		} catch (Exception e) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-			throw new IllegalStateException();
-		}
+
+		blofi = new Blobfinder(roboClient, this.id);
 	}
+	
 	protected void shutdownDevices () {
 		super.shutdownDevices();
 		this.blofi.thread.interrupt();

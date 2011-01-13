@@ -4,6 +4,7 @@
  */
 package robot;
 
+import core.Logger;
 import data.Position;
 import data.Trackable;
 import device.Position2d;
@@ -102,14 +103,9 @@ class Pioneer implements Runnable, Trackable
 
 		this.id = id;
 
-		try {
-			// Added standard devices
-			roboClient = new RobotClient (name, port, id);
-			posi = new Position2d(roboClient.getClient(), id);
-		} catch (Exception e) {
-//			e.printStackTrace();
-			throw new IllegalStateException();
-		}
+		// Added standard devices
+		roboClient = new RobotClient (name, port, id);
+		posi = new Position2d(roboClient.getClient(), id);
 	}
 
 	// Define thread behavior
@@ -131,12 +127,7 @@ class Pioneer implements Runnable, Trackable
 	}
 	public void runThreaded() {
 		thread.start();
-		System.out.println("Running "
-				+ this.toString()
-				+ " of robot "
-				+ this.id
-				+ " in thread "
-				+ this.thread.getName());
+		Logger.logActivity(false, "Running", this.toString(), this.id, thread.getName());
 	}
 	
 	// Shutdown robot and clean up
@@ -148,13 +139,9 @@ class Pioneer implements Runnable, Trackable
 		roboClient.shutdown();
 		this.thread.interrupt();
 		while(this.thread.isAlive());
-		System.out.println("Shutdown of "
-				+ this.toString() 
-				+ " of robot "
-				+ this.id
-				+ " in thread "
-				+ this.thread.getName());
+		Logger.logActivity(false, "Shutdown", this.toString(), this.id, thread.getName());
 	}
+		
 	/**
 	 * To be implemented by subclasses.
 	 * When they have additional devices.

@@ -9,23 +9,13 @@ final public class PioneerRR extends PioneerRso {
 	Gripper grip = null;
 
 	public PioneerRR(String name, int port, int id) throws IllegalStateException {
-		
+
 		super(name, port, id);
-		
-		try {
-			laser = new Ranger (roboClient, super.id, 1);
-			grip = new Gripper(roboClient, super.id);
-			
-			System.out.println ("Gripper state: " + grip.getState() );
-			
-		} catch (Exception e) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-			throw new IllegalStateException();
-		}
+
+		laser = new Ranger (roboClient, super.id, 1);
+		grip = new Gripper(roboClient, super.id);
+
+		System.out.println ("Gripper state: " + grip.getState() );
 	}
 
 	protected void shutdownDevices() {

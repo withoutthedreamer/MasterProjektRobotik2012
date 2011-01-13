@@ -21,7 +21,7 @@ public class FindCollectExample {
 //			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
 			PioneerRsB pionRsB = new PioneerRsB("localhost", 6665, 0);
 //			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
-			PioneerRG pionRG = new PioneerRG("localhost", 6666, 1);
+			PioneerRG pionRG = new PioneerRG("localhost", 6667, 1);
 //			pionRG.setPlanner("localhost", 6685);
 			pionRG.setPosition(new Position(-16,3,Math.toRadians(90)));
 			pionRG.runThreaded();

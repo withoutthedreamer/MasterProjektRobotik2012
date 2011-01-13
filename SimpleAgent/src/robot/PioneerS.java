@@ -6,19 +6,10 @@ import device.RangerSonar;
 public class PioneerS extends Pioneer {
 
 	public PioneerS(String name, int port, int id) throws IllegalStateException {
-		
+
 		super(name, port, id);
-		
-		try {
-			sonar = new RangerSonar (roboClient, id);
-		} catch (Exception e) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-			throw new IllegalStateException();
-		}
+
+		sonar = new RangerSonar (roboClient, id);
 	}
 
 	protected void shutdownDevices() {

@@ -1,5 +1,6 @@
 package device;
 
+import core.Logger;
 import javaclient3.LaserInterface;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
@@ -9,25 +10,18 @@ public class RangerLaser extends Ranger {
 	protected LaserInterface las = null;
 	protected float[] lasRanges = null;
 		
-	public RangerLaser (RobotClient roboClient, int id) {
+	public RangerLaser (RobotClient roboClient, int id) throws IllegalStateException {
+		super(id);
 		try {
 			las = roboClient.getClient().requestInterfaceLaser(0, PlayerConstants.PLAYER_OPEN_MODE);
 
 			// Automatically start own thread in constructor
 			thread.start();
-			System.out.println("Running "
-					+ this.toString()
-					+ " in thread: "
-					+ this.thread.getName()
-					+ " of robot "
-					+ id);
+			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 
 		} catch ( PlayerException e ) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
+//			System.err.println ("    [ " + e.toString() + " ]");
+			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
 			throw new IllegalStateException();
 		}
 	}

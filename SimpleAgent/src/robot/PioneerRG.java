@@ -7,23 +7,13 @@ import device.Planner;
 public class PioneerRG extends PioneerRla {
 	protected Planner plan = null;
 	protected Gripper grip = null;
-	
-	public PioneerRG(String name, int port, int id) throws IllegalStateException {
-		
-		super(name, port, id);
-		
-		try {
-			grip = new Gripper (roboClient, id);
-			plan = new Planner (name, (port+1), id);
 
-		} catch (Exception e) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-			throw new IllegalStateException();
-		}
+	public PioneerRG(String name, int port, int id) throws IllegalStateException {
+
+		super(name, port, id);
+
+		grip = new Gripper (roboClient, id);
+		plan = new Planner (name, (port+1), id);
 	}
 
 	protected void shutdownDevices () {

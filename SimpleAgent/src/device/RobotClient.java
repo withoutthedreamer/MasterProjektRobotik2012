@@ -1,5 +1,6 @@
 package device;
 
+import core.Logger;
 import data.Position;
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
@@ -11,7 +12,7 @@ import javaclient3.PlayerException;
  * @author sebastian
  *
  */
-public class RobotClient {
+public class RobotClient extends Device {
 
 	// Required to every player robot
 	protected PlayerClient playerclient = null;
@@ -31,28 +32,21 @@ public class RobotClient {
 	 */
 	public RobotClient (String name, int port, int clientId) throws IllegalStateException
 	{
+		super(clientId);
 		try {
 			id = clientId;
 
 			// Connect to the Player server and request access to Position
 			playerclient  = new PlayerClient (name, port);
-			System.out.println("Running playerclient of "
-					+ this.toString()
-					+ " of robot "
-					+ id
-					+ " in  "
-					+ playerclient.getName());
+			Logger.logActivity(false, "Running", this.toString(), id, null);
 
 			// Always needs a position device
 //			posi = new Position2d(playerclient, id);
 
 		} catch (PlayerException e) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-			throw new IllegalStateException();
+//			System.err.println ("    [ " + e.toString() + " ]");
+			Logger.logActivity(true, "Connecting", this.toString(), id, null);
+//			throw new IllegalStateException();
 		}
 	}
 	/**
@@ -64,10 +58,7 @@ public class RobotClient {
 //		while (this.posi.thread.isAlive());
 		this.playerclient.close();
 		while (this.playerclient.isAlive());
-		System.out.println("Shutdown playerclient of robot "
-				+ id
-				+ " in "
-				+ playerclient.getName());
+		Logger.logActivity(false, "Shutdown", this.toString(), id, null);
 	}
 	/**
 	 * 
@@ -84,48 +75,5 @@ public class RobotClient {
 	 */
 	public void runThreaded() {
 		playerclient.runThreaded (-1, -1);
-	}
-	/**
-	 * Returns robot speed.
-	 * @return Last known speed of the robot (m/s).
-	 */
-//	public double getSpeed() {
-//		return posi.getSpeed();
-//	}
-//	/**
-//	 * Set new speed of the robot (m/s).
-//	 * @param speed New speed of the robot.
-//	 */
-//	public void setSpeed(double speed) {
-//		posi.setSpeed(speed);
-//	}
-//	/**
-//	 * Returns robot turnrate.
-//	 * @return Last known robot turnrate (rad/s).
-//	 */
-//	public double getTurnrate() {
-//		return posi.getTurnrate();
-//	}
-//	/**
-//	 * Set new turnrate of the robot (rad/s).
-//	 * @param turnrate New turnrate of the robot.
-//	 */
-//	public void setTurnrate(double turnrate) {
-//		posi.setTurnrate(turnrate);
-//	}
-//	/**
-//	 * Returns robot last known Position.
-//	 * The Position is based on the robots odometry device.
-//	 * @return @ref Position of current odometry values.
-//	 */
-//	public Position getOdometry() {
-//		return posi.getPosition();
-//	}
-//	/**
-//	 * Set new odometry values of the robot odometry device.
-//	 * @param odometry New @ref Position of odometry device.
-//	 */
-//	public void setOdometry(Position odometry) {
-//		posi.setPosition(odometry);
-//	}	
+	}	
 }

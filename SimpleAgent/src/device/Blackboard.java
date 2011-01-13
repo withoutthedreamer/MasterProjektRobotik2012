@@ -4,13 +4,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import core.Logger;
+
 import data.BbNote;
 import data.Position;
 import data.Trackable;
 import simulator.Simulator;
 
 
-public class Blackboard implements Runnable {
+public class Blackboard extends Device implements Runnable {
 	
 	protected static Blackboard instance = null;
 	protected static Simulator simu = null;
@@ -23,15 +25,14 @@ public class Blackboard implements Runnable {
 	private static final long SLEEPTIME = 500;
 
 	protected Blackboard(Trackable robot) {
+		super(-1);
 		try {
 			notehm = new LinkedHashMap<String,BbNote>();
 			collectrobot = robot;
 			// Automatically start own thread in constructor
-			this.thread.start();
-			System.out.println("Running "
-					+ this.toString()
-					+ " in thread: "
-					+ this.thread.getName());
+			thread.start();
+
+			Logger.logActivity(false, "Running", this.toString(), -1, thread.getName());
 
 		} catch ( Exception e ) {
 			e.printStackTrace();
@@ -132,9 +133,7 @@ public class Blackboard implements Runnable {
 		
 		this.thread.interrupt();
 		while (this.thread.isAlive());
-		System.out.println("Shutdown of "
-				+ this.toString()
-				+ " in "
-				+ thread.getName());		
+
+		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
 	}
 }

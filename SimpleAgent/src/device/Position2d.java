@@ -1,5 +1,6 @@
 package device;
 
+import core.Logger;
 import data.Position;
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
@@ -13,7 +14,7 @@ import javaclient3.structures.position2d.PlayerPosition2dData;
  * @author sebastian
  *
  */
-public class Position2d implements Runnable{
+public class Position2d extends Device implements Runnable{
 	protected Position2DInterface posi  = null;
 	protected Position pos = null;
 	protected final int SLEEPTIME = 100;
@@ -23,11 +24,7 @@ public class Position2d implements Runnable{
 	private double speed = 0.;
 	private double turnrate = 0.;
 	private Position setOdometry = null;
-	/**
-	 * Robot id binding this device
-	 */
-	private int id = -1;
-	
+		
 	/**
 	 * Constructor creating 2 Position2d device.
 	 * @param host Name of the host running the player server.
@@ -35,27 +32,18 @@ public class Position2d implements Runnable{
 	 */
 	// Host id
 	public Position2d (PlayerClient host, int id) {
+		super(id);
 		try {
 			this.posi = host.requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.id = id;
 
 			// Automatically start own thread in constructor
 			this.thread.start();
-
-			System.out.println("Running "
-					+ this.toString()
-					+ " of robot "
-					+ this.id
-					+ " in thread "
-					+ this.thread.getName());
+			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 
 		} catch ( PlayerException e ) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
+//			System.err.println ("    [ " + e.toString() + " ]");
+			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
 			throw new IllegalStateException();
 		}
 	}
@@ -89,15 +77,10 @@ public class Position2d implements Runnable{
 	}
 	@Override
 	public void run() {
-		while ( ! this.thread.isInterrupted()) {
+		while ( ! thread.isInterrupted()) {
 			this.update ();
 		}
-		System.out.println("Shutdown of "
-				+ this.toString()
-				+ " of robot "
-				+ id 
-				+ " in thread "
-				+ this.thread.getName());
+		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
 	}
 	/**
 	 * 

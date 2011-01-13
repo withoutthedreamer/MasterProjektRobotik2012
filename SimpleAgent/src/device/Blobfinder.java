@@ -7,9 +7,11 @@ import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
 
 import java.util.Vector;
 
+import core.Logger;
+
 import data.BlobfinderBlob;
 
-public class Blobfinder implements Runnable {
+public class Blobfinder extends Device implements Runnable {
 	protected BlobfinderInterface  bfi  = null;
 	protected int count = 0;
 	protected int[] color = null;
@@ -20,30 +22,24 @@ public class Blobfinder implements Runnable {
 	public Thread thread = new Thread ( this );
 	
 	public Blobfinder (RobotClient roboClient, int id) {
+		super(id);
 		try {
-			this.bfi = roboClient.getClient().requestInterfaceBlobfinder(0, PlayerConstants.PLAYER_OPEN_MODE);
-			this.blobs = new Vector<BlobfinderBlob>();
+			bfi = roboClient.getClient().requestInterfaceBlobfinder(0, PlayerConstants.PLAYER_OPEN_MODE);
+			blobs = new Vector<BlobfinderBlob>();
 			
 			// Automatically start own thread in constructor
-			this.thread.start();
-			System.out.println("Running "
-					+ this.toString()
-					+ " in  "
-					+ thread.getName()
-					+ " of robot "
-					+ id);
+			thread.start();
+			
+			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 
 		} catch ( PlayerException e ) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
+//			System.err.println ("    [ " + e.toString() + " ]");
+			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
 			throw new IllegalStateException();
 		}
 	}
 	// Only to be called @~10Hz
-	public void update () {
+	protected void update () {
 		// Wait for the laser readings
 		while (!this.bfi.isDataReady()) {
 			try { Thread.sleep (this.SLEEPTIME); }
@@ -87,6 +83,6 @@ public class Blobfinder implements Runnable {
 		while ( ! this.thread.isInterrupted()) {
 			this.update ();
 		}
-		System.out.println("Shutdown of " + this.toString());
+		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
 	}
 }

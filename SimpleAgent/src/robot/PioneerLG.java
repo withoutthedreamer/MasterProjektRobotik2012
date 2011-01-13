@@ -11,20 +11,10 @@ public class PioneerLG extends PioneerL {
 	public PioneerLG(String name, int port, int id) throws IllegalStateException {
 		
 		super(name, port, id);
-		
-		try {
-			grip  = new Gripper (roboClient, id);
-			// Take the next port
-			plan  = new Planner (name, port+1, this.id);
 
-		} catch (Exception e) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-			throw new IllegalStateException();
-		}
+		grip  = new Gripper (roboClient, id);
+		// Take the next port
+		plan  = new Planner (name, port+1, this.id);
 	}
 
 	protected void shutdownDevices () {

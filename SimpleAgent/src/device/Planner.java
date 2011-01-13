@@ -1,5 +1,6 @@
 package device;
 
+import core.Logger;
 import data.Position;
 import javaclient3.LocalizeInterface;
 import javaclient3.MapInterface;
@@ -11,7 +12,7 @@ import javaclient3.structures.PlayerPose;
 import javaclient3.structures.localize.PlayerLocalizeSetPose;
 import javaclient3.structures.planner.PlayerPlannerData;
 
-public class Planner implements Runnable {
+public class Planner extends Device implements Runnable {
 	// Planner is running its own Player server
 	protected PlayerClient playerclient = null;
 	protected PlannerInterface plan = null;
@@ -35,24 +36,15 @@ public class Planner implements Runnable {
 
 	// Host id
 	public Planner (String host, int port, int id) {
+		super(id);
 		try {
 			// Connect to the Player server and request access to Position
 			playerclient  = new PlayerClient (host, port);
-			System.out.println("Running playerclient of: "
-					+ this.toString()
-					+ " in "
-					+ this.playerclient.getName());
+			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 
 			mapi = this.playerclient.requestInterfaceMap(0, PlayerConstants.PLAYER_OPEN_MODE);
 			loci = this.playerclient.requestInterfaceLocalize(0, PlayerConstants.PLAYER_OPEN_MODE);
 			plan = this.playerclient.requestInterfacePlanner(0, PlayerConstants.PLAYER_OPEN_MODE);
-
-			System.out.println("Running "
-					+ this.toString()
-					+ " in "
-					+ thread.getName()
-					+ " of robot "
-					+ id);
 
 			// set the initial guessed pose for localization (AMCL)
 			this.locPose = new PlayerLocalizeSetPose ();
@@ -70,11 +62,8 @@ public class Planner implements Runnable {
 			// Automatically start own thread in constructor
 			this.thread.start();
 		} catch ( PlayerException e ) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
+//			System.err.println ("    [ " + e.toString() + " ]");
+			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
 			throw new IllegalStateException();
 		}
 	}
@@ -86,9 +75,9 @@ public class Planner implements Runnable {
 	}
 	public Position getGoal() {
 		return new Position(
-				this.goal.getPx(),
-				this.goal.getPy(),
-				this.goal.getPa());
+				goal.getPx(),
+				goal.getPy(),
+				goal.getPa());
 	}
 	// Only to be called @~10Hz
 	protected void update () {
@@ -143,10 +132,7 @@ public class Planner implements Runnable {
 		while (this.playerclient.isAlive());
 		this.thread.interrupt();
 		while (this.thread.isAlive());
-		System.out.println("Shutdown of "
-				+ this.toString()
-				+ " in "
-				+ thread.getName());		
+		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
 	}
 	public void setPose(Position position) {
 		this.pose.setPx(position.getX());

@@ -1,10 +1,11 @@
 package device;
 
+import core.Logger;
 import javaclient3.PlayerException;
 import javaclient3.RangerInterface;
 import javaclient3.structures.PlayerConstants;
 
-public class Ranger implements Runnable {
+public class Ranger extends Device implements Runnable {
 
 	protected RangerInterface rang = null;
 	protected double[] ranges	= null;
@@ -14,28 +15,21 @@ public class Ranger implements Runnable {
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
 
-	public Ranger () {};
-
+	protected Ranger (int id) {
+		super(id);
+	}
 	public Ranger (RobotClient roboClient, int id, int device) {
+		super(id);
 		try {
 			rang = roboClient.getClient().requestInterfaceRanger(device, PlayerConstants.PLAYER_OPEN_MODE);
 			
 			// Automatically start own thread in constructor
 			this.thread.start();
-			
-			System.out.println("Running "
-					+ this.toString()
-					+ " in "
-					+ thread.getName()
-					+ " of robot "
-					+ id);
+			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 
 		} catch ( PlayerException e ) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
+//			System.err.println ("    [ " + e.toString() + " ]");
+			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
 			throw new IllegalStateException();
 		}
 	}
@@ -66,9 +60,6 @@ public class Ranger implements Runnable {
 		while ( ! thread.isInterrupted()) {
 			update();
 		}
-		System.out.println("Shutdown of "
-				+ this.toString()
-				+ " in "
-				+ thread.getName());
+		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
 	}
 }

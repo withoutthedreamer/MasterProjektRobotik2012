@@ -1,10 +1,11 @@
 package device;
 
+import core.Logger;
 import javaclient3.GripperInterface;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
 
-public class Gripper implements Runnable {
+public class Gripper extends Device implements Runnable {
 
 	protected GripperInterface  grip  = null;
 	protected final int SLEEPTIME = 1000;
@@ -22,28 +23,22 @@ public class Gripper implements Runnable {
 	}
 
 	public Gripper(RobotClient roboClient, int id) {
+		super(id);
 		try {
 			grip = roboClient.getClient().requestInterfaceGripper(0, PlayerConstants.PLAYER_OPEN_MODE);
 
 			// Automatically start own thread in constructor
 			this.thread.start();
-			System.out.println("Running "
-					+ this.toString()
-					+ " in "
-					+ this.thread.getName()
-					+ " of robot "
-					+ id);
+			
+			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 
 		} catch ( PlayerException e ) {
-			System.err.println (this.toString()
-					+ " of robot "
-					+ id
-					+ ": > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
+//			System.err.println ("    [ " + e.toString() + " ]");
+			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
 			throw new IllegalStateException();
 		}
 	}
-	protected void updateGripper () {
+	protected void update () {
 		if ( ! grip.isDataReady() ) {			
 			try { Thread.sleep (this.SLEEPTIME); }
 			catch (InterruptedException e) { this.thread.interrupt(); }
@@ -55,12 +50,9 @@ public class Gripper implements Runnable {
 	@Override
 	public void run() {
 		while ( ! this.thread.isInterrupted()) {
-			this.updateGripper();
+			this.update();
 		}
-		System.out.println("Shutdown of "
-				+ this.toString()
-				+ " in "
-				+ thread.getName());
+		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
 	}
 	public void stop () {
 		// stop
