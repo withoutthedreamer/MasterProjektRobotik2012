@@ -15,7 +15,7 @@ public class RobotClient {
 
 	// Required to every player robot
 	protected PlayerClient playerclient = null;
-	protected Position2d posi = null;
+//	protected Position2d posi = null;
 	protected int id = -1;
 	
 	protected double speed = 0.;
@@ -29,7 +29,7 @@ public class RobotClient {
 	 * @param clientId Robot id.
 	 * @throws Exception
 	 */
-	public RobotClient (String name, int port, int clientId) throws Exception
+	public RobotClient (String name, int port, int clientId) throws IllegalStateException
 	{
 		try {
 			id = clientId;
@@ -44,7 +44,7 @@ public class RobotClient {
 					+ playerclient.getName());
 
 			// Always needs a position device
-			posi = new Position2d(playerclient, id);
+//			posi = new Position2d(playerclient, id);
 
 		} catch (PlayerException e) {
 			System.err.println (this.toString()
@@ -60,8 +60,8 @@ public class RobotClient {
 	 */
 	public void shutdown () {
 		// Cleaning up
-		this.posi.thread.interrupt();
-		while (this.posi.thread.isAlive());
+//		this.posi.thread.interrupt();
+//		while (this.posi.thread.isAlive());
 		this.playerclient.close();
 		while (this.playerclient.isAlive());
 		System.out.println("Shutdown playerclient of robot "
@@ -89,43 +89,43 @@ public class RobotClient {
 	 * Returns robot speed.
 	 * @return Last known speed of the robot (m/s).
 	 */
-	public double getSpeed() {
-		return posi.getSpeed();
-	}
-	/**
-	 * Set new speed of the robot (m/s).
-	 * @param speed New speed of the robot.
-	 */
-	public void setSpeed(double speed) {
-		posi.setSpeed(speed);
-	}
-	/**
-	 * Returns robot turnrate.
-	 * @return Last known robot turnrate (rad/s).
-	 */
-	public double getTurnrate() {
-		return posi.getTurnrate();
-	}
-	/**
-	 * Set new turnrate of the robot (rad/s).
-	 * @param turnrate New turnrate of the robot.
-	 */
-	public void setTurnrate(double turnrate) {
-		posi.setTurnrate(turnrate);
-	}
-	/**
-	 * Returns robot last known Position.
-	 * The Position is based on the robots odometry device.
-	 * @return @ref Position of current odometry values.
-	 */
-	public Position getOdometry() {
-		return posi.getPosition();
-	}
-	/**
-	 * Set new odometry values of the robot odometry device.
-	 * @param odometry New @ref Position of odometry device.
-	 */
-	public void setOdometry(Position odometry) {
-		posi.setPosition(odometry);
-	}	
+//	public double getSpeed() {
+//		return posi.getSpeed();
+//	}
+//	/**
+//	 * Set new speed of the robot (m/s).
+//	 * @param speed New speed of the robot.
+//	 */
+//	public void setSpeed(double speed) {
+//		posi.setSpeed(speed);
+//	}
+//	/**
+//	 * Returns robot turnrate.
+//	 * @return Last known robot turnrate (rad/s).
+//	 */
+//	public double getTurnrate() {
+//		return posi.getTurnrate();
+//	}
+//	/**
+//	 * Set new turnrate of the robot (rad/s).
+//	 * @param turnrate New turnrate of the robot.
+//	 */
+//	public void setTurnrate(double turnrate) {
+//		posi.setTurnrate(turnrate);
+//	}
+//	/**
+//	 * Returns robot last known Position.
+//	 * The Position is based on the robots odometry device.
+//	 * @return @ref Position of current odometry values.
+//	 */
+//	public Position getOdometry() {
+//		return posi.getPosition();
+//	}
+//	/**
+//	 * Set new odometry values of the robot odometry device.
+//	 * @param odometry New @ref Position of odometry device.
+//	 */
+//	public void setOdometry(Position odometry) {
+//		posi.setPosition(odometry);
+//	}	
 }

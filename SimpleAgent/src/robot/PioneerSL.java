@@ -2,30 +2,27 @@ package robot;
 
 import data.Position;
 import device.RangerLaser;
-import device.RangerSonar;
-import javaclient3.PlayerException;
 
-final public class PioneerSL extends Pioneer {
+public class PioneerSL extends PioneerS {
 
-	public PioneerSL(String name, int port, int id) throws Exception {
+	public PioneerSL(String name, int port, int id) throws IllegalStateException {
+		
 		super(name, port, id);
+		
 		try {
-			this.laser    = new RangerLaser (roboClient, super.id);
-			this.sonar 	  = new RangerSonar (roboClient, super.id);
-		} catch (PlayerException e) {
+			laser = new RangerLaser (roboClient, id);
+		} catch (Exception e) {
 			System.err.println (this.toString()
 					+ " of robot "
 					+ id
 					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
-//		this.playerclient.runThreaded (-1, -1);
 	}
 
-	@Override
-	public void shutdownDevices() {
+	protected void shutdownDevices() {
+		super.shutdownDevices();
 		this.laser.thread.interrupt();
 		while(this.laser.thread.isAlive());
 		this.sonar.thread.interrupt();

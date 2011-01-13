@@ -37,15 +37,15 @@ public class Planner implements Runnable {
 	public Planner (String host, int port, int id) {
 		try {
 			// Connect to the Player server and request access to Position
-			this.playerclient  = new PlayerClient (host, port);
+			playerclient  = new PlayerClient (host, port);
 			System.out.println("Running playerclient of: "
 					+ this.toString()
-					+ " in thread: "
+					+ " in "
 					+ this.playerclient.getName());
 
-			this.mapi = this.playerclient.requestInterfaceMap(0, PlayerConstants.PLAYER_OPEN_MODE);
-			this.loci = this.playerclient.requestInterfaceLocalize(0, PlayerConstants.PLAYER_OPEN_MODE);
-			this.plan = this.playerclient.requestInterfacePlanner(0, PlayerConstants.PLAYER_OPEN_MODE);
+			mapi = this.playerclient.requestInterfaceMap(0, PlayerConstants.PLAYER_OPEN_MODE);
+			loci = this.playerclient.requestInterfaceLocalize(0, PlayerConstants.PLAYER_OPEN_MODE);
+			plan = this.playerclient.requestInterfacePlanner(0, PlayerConstants.PLAYER_OPEN_MODE);
 
 			System.out.println("Running "
 					+ this.toString()
@@ -75,7 +75,6 @@ public class Planner implements Runnable {
 					+ id
 					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
 	}

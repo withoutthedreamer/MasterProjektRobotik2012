@@ -6,6 +6,7 @@ package robot;
 
 import data.Position;
 import data.Trackable;
+import device.Position2d;
 import device.Ranger;
 import device.RobotClient;
 
@@ -20,6 +21,7 @@ import device.RobotClient;
 class Pioneer implements Runnable, Trackable
 {
 	protected RobotClient roboClient = null;
+	protected Position2d posi = null;
 	
 	// To be implemented in subclass when needed
 	protected Ranger  laser = null;
@@ -96,26 +98,25 @@ class Pioneer implements Runnable, Trackable
 	/**
 	 * This constructor has to be overwritten in any subclasses!
 	 */
-	public Pioneer (String name, int port, int id) throws Exception {
+	public Pioneer (String name, int port, int id) throws IllegalStateException {
 
-		roboClient = new RobotClient (name, port, id);
-		// This call has to be always after the last device request! 
-//		roboClient.runThreaded();
 		this.id = id;
 
-		// Automatically start own thread in constructor
-		thread.start();
-
-		System.out.println("Running "
-				+ this.toString()
-				+ " of robot "
-				+ this.id
-				+ " in thread "
-				+ this.thread.getName());
+		try {
+			// Added standard devices
+			roboClient = new RobotClient (name, port, id);
+			posi = new Position2d(roboClient.getClient(), id);
+		} catch (Exception e) {
+//			e.printStackTrace();
+			throw new IllegalStateException();
+		}
 	}
 
 	// Define thread behavior
 	public void run() {
+		
+		roboClient.runThreaded();
+		
 		while ( ! thread.isInterrupted()) {
 			// Should not be called more than @ 10Hz
 			this.update();
@@ -128,11 +129,22 @@ class Pioneer implements Runnable, Trackable
 		plan();
 		execute();
 	}
+	public void runThreaded() {
+		thread.start();
+		System.out.println("Running "
+				+ this.toString()
+				+ " of robot "
+				+ this.id
+				+ " in thread "
+				+ this.thread.getName());
+	}
 	
 	// Shutdown robot and clean up
 	public void shutdown () {
 		// Cleaning up
-		this.shutdownDevices();
+		shutdownDevices();
+		posi.thread.interrupt();
+		while (posi.thread.isAlive());
 		roboClient.shutdown();
 		this.thread.interrupt();
 		while(this.thread.isAlive());
@@ -143,7 +155,10 @@ class Pioneer implements Runnable, Trackable
 				+ " in thread "
 				+ this.thread.getName());
 	}
-	
+	/**
+	 * To be implemented by subclasses.
+	 * When they have additional devices.
+	 */
 	protected void shutdownDevices(){};
 		
 	protected void plan () {
@@ -217,9 +232,9 @@ class Pioneer implements Runnable, Trackable
 			System.out.printf("%5.2f\n", getDistance(viewDirectType.LEFTREAR));
 		}
 		if (isDebugPosition) {
-			System.out.printf("%5.2f", roboClient.getOdometry().getX());	System.out.print("\t");
-			System.out.printf("%5.2f", roboClient.getOdometry().getY());	System.out.print("\t");
-			System.out.printf("%5.2f\n", java.lang.Math.toDegrees(roboClient.getOdometry().getYaw()));
+			System.out.printf("%5.2f", posi.getPosition().getX());	System.out.print("\t");
+			System.out.printf("%5.2f", posi.getPosition().getY());	System.out.print("\t");
+			System.out.printf("%5.2f\n", java.lang.Math.toDegrees(posi.getPosition().getYaw()));
 		}
 	}
 
@@ -227,14 +242,14 @@ class Pioneer implements Runnable, Trackable
 	 * Command the motors
 	 */
 	protected final void execute() {
-		roboClient.setSpeed(speed);
-		roboClient.setTurnrate(turnrate);
+		posi.setSpeed(speed);
+		posi.setTurnrate(turnrate);
 	}
 	/**
 	 * Return robot position
 	 */
 	public Position getPosition() {
-		return roboClient.getOdometry();
+		return posi.getPosition();
 	}
 
 	/**

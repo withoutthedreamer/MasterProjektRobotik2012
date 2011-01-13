@@ -34,7 +34,7 @@ public class GripperAgent extends MicroAgent
 
 		try {
 			pionRG = new PioneerRG("localhost", 6666, 1);
-			pionRG.setPlanner("localhost", 6685);
+//			pionRG.setPlanner("localhost", 6685);
 			// Planner
 			pionRG.setPosition(new Position(-28, 3, 90));
 		} catch (Exception e) {

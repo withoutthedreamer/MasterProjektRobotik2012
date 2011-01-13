@@ -1,24 +1,23 @@
 package robot;
 
-import javaclient3.PlayerException;
 import data.BbNote;
 import data.BlobfinderBlob;
 import data.Position;
 import device.Blackboard;
 import device.Blobfinder;
-import device.Ranger;
 
-public class PioneerRsB extends Pioneer {
+public class PioneerRsB extends PioneerRso {
 	
 	protected Blobfinder blofi = null;
 	protected Blackboard blackboard = null;
 
-	public PioneerRsB(String name, int port, int id) throws Exception {
+	public PioneerRsB(String name, int port, int id) throws IllegalStateException {
+		
 		super(name, port, id);
+		
 		try {
-			sonar = new Ranger(roboClient, this.id, 0);
 			blofi = new Blobfinder(roboClient, this.id);
-		} catch (PlayerException e) {
+		} catch (Exception e) {
 			System.err.println (this.toString()
 					+ " of robot "
 					+ id
@@ -26,12 +25,9 @@ public class PioneerRsB extends Pioneer {
 			System.err.println ("    [ " + e.toString() + " ]");
 			throw new IllegalStateException();
 		}
-//		this.playerclient.runThreaded (-1, -1);
-		roboClient.runThreaded();
 	}
-	public void shutdownDevices () {
-		this.sonar.thread.interrupt();
-		while(this.sonar.thread.isAlive());
+	protected void shutdownDevices () {
+		super.shutdownDevices();
 		this.blofi.thread.interrupt();
 		while(this.blofi.thread.isAlive());
 	}

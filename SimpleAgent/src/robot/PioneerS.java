@@ -2,15 +2,16 @@ package robot;
 
 import data.Position;
 import device.RangerSonar;
-import javaclient3.PlayerException;
 
-final public class PioneerS extends Pioneer {
+public class PioneerS extends Pioneer {
 
-	public PioneerS(String name, int port, int id) throws Exception {
+	public PioneerS(String name, int port, int id) throws IllegalStateException {
+		
 		super(name, port, id);
+		
 		try {
-			this.sonar = new RangerSonar (roboClient, super.id);
-		} catch (PlayerException e) {
+			sonar = new RangerSonar (roboClient, id);
+		} catch (Exception e) {
 			System.err.println (this.toString()
 					+ " of robot "
 					+ id
@@ -18,11 +19,10 @@ final public class PioneerS extends Pioneer {
 			System.err.println ("    [ " + e.toString() + " ]");
 			throw new IllegalStateException();
 		}
-//		super.playerclient.runThreaded (-1, -1);
 	}
 
-	@Override
-	public void shutdownDevices() {
+	protected void shutdownDevices() {
+		super.shutdownDevices();
 		this.sonar.thread.interrupt();
 		while(this.sonar.thread.isAlive());
 	}

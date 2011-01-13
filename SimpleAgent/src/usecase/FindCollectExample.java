@@ -1,6 +1,7 @@
 package usecase;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 
 import robot.PioneerRG;
@@ -21,8 +22,10 @@ public class FindCollectExample {
 			PioneerRsB pionRsB = new PioneerRsB("localhost", 6665, 0);
 //			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
 			PioneerRG pionRG = new PioneerRG("localhost", 6666, 1);
-			pionRG.setPlanner("localhost", 6685);
+//			pionRG.setPlanner("localhost", 6685);
 			pionRG.setPosition(new Position(-16,3,Math.toRadians(90)));
+			pionRG.runThreaded();
+			pionRsB.runThreaded();
 			// Task synchronization
 //			Blackboard blackb= Blackboard.getInstance(pionRG);
 			// wants to write notes
@@ -39,13 +42,21 @@ public class FindCollectExample {
 //				System.out.println(pionRG.getPosition().toString());
 //			}
 			// Wait until enter is pressed
-			in.readLine();
+			try {
+				in.readLine();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 //			tracker.shutdown()
 //			blackb.shutdown();
 			pionRsB.shutdown();
 			pionRG.shutdown();
 //			simu.shutdown();
 			
-		} catch (Exception e) { e.printStackTrace(); }
+		} catch (Exception e) {
+//			e.printStackTrace();
+			System.err.println("Exit with errors");
+		}
 	}
 }

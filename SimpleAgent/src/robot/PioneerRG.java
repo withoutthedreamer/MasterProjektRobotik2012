@@ -1,23 +1,22 @@
 package robot;
 
-import javaclient3.PlayerException;
 import data.Position;
 import device.Gripper;
 import device.Planner;
-import device.Ranger;
 
-
-public class PioneerRG extends Pioneer {
+public class PioneerRG extends PioneerRla {
 	protected Planner plan = null;
 	protected Gripper grip = null;
 	
-	public PioneerRG(String name, int port, int id) throws Exception {
+	public PioneerRG(String name, int port, int id) throws IllegalStateException {
+		
 		super(name, port, id);
+		
 		try {
-			laser = new Ranger(roboClient, id, 1);
-			grip  = new Gripper (roboClient, id);
+			grip = new Gripper (roboClient, id);
+			plan = new Planner (name, (port+1), id);
 
-		} catch (PlayerException e) {
+		} catch (Exception e) {
 			System.err.println (this.toString()
 					+ " of robot "
 					+ id
@@ -25,12 +24,10 @@ public class PioneerRG extends Pioneer {
 			System.err.println ("    [ " + e.toString() + " ]");
 			throw new IllegalStateException();
 		}
-		roboClient.runThreaded();
 	}
 
-	public void shutdownDevices () {
-		laser.thread.interrupt();
-		while (laser.thread.isAlive());
+	protected void shutdownDevices () {
+		super.shutdownDevices();
 		grip.thread.interrupt();
 		while (grip.thread.isAlive());
 		if (plan != null)
@@ -64,7 +61,7 @@ public class PioneerRG extends Pioneer {
 		return this.plan.getPose();
 	}
 
-	public void setPlanner(String name, int port) {
-		this.plan = new Planner (name, port, this.id);
-	}
+//	public void setPlanner(String name, int port) {
+//		plan = new Planner (name, port, id);
+//	}
 }

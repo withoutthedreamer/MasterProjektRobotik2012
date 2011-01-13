@@ -1,36 +1,35 @@
 package robot;
 
-import javaclient3.PlayerException;
 import data.Position;
 import device.Ranger;
 
 public class PioneerRla extends Pioneer {
 	
-	public PioneerRla(String name, int port, int id) throws Exception {
+	public PioneerRla(String name, int port, int id) throws IllegalStateException {
+		
 		super(name, port, id);
+		
 		try {
 			laser = new Ranger(roboClient, id, 1);
-//			Pioneer.isDebugDistance = true;
 
-		} catch (PlayerException e) {
+		} catch (Exception e) {
 			System.err.println (this.toString()
 					+ " of robot "
 					+ id
 					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
-//		super.playerclient.runThreaded (-1, -1);
 	}
 
-	public void shutdownDevices () {
+	protected void shutdownDevices () {
+		super.shutdownDevices();
 		laser.thread.interrupt();
 		while (laser.thread.isAlive());
 	}
 
 	/// Return robot position
-	public final Position getPosition() {
+	public Position getPosition() {
 		return null;
 	}
 

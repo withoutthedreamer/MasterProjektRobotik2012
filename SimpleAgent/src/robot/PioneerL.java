@@ -1,20 +1,18 @@
 package robot;
 
-import javaclient3.PlayerException;
 import data.Position;
 import device.RangerLaser;
-import device.RobotClient;
 
 public class PioneerL extends Pioneer {
 
-	public PioneerL(String name, int port, int id) throws Exception {
+	public PioneerL(String name, int port, int id) throws IllegalStateException {
 		
-		roboClient = new RobotClient(name, port, id);
+		super(name, port, id);
 		
 		try {
 			laser = new RangerLaser (roboClient, id);
 
-		} catch (PlayerException e) {
+		} catch (Exception e) {
 			System.err.println (this.toString()
 					+ " of robot "
 					+ id
@@ -22,7 +20,6 @@ public class PioneerL extends Pioneer {
 			System.err.println ("    [ " + e.toString() + " ]");
 			throw new IllegalStateException();
 		}
-		roboClient.runThreaded();
 	}
 
 	@Override
@@ -37,8 +34,8 @@ public class PioneerL extends Pioneer {
 		return null;
 	}
 
-	@Override
-	public void shutdownDevices() {
+	protected void shutdownDevices() {
+		super.shutdownDevices();
 		this.laser.thread.interrupt();
 		while (this.laser.thread.isAlive());
 	}
