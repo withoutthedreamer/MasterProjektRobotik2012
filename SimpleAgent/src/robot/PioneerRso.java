@@ -9,15 +9,18 @@ public class PioneerRso extends Pioneer {
 	public PioneerRso(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
-			sonar = new Ranger(this.playerclient, this.id, 0);
+			sonar = new Ranger(roboClient, this.id, 0);
 
 		} catch (PlayerException e) {
-			System.err.println ("PioneerL: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
 			throw new IllegalStateException();
 		}
-		super.playerclient.runThreaded (-1, -1);
+//		super.playerclient.runThreaded (-1, -1);
 	}
 
 	public void shutdownDevices () {

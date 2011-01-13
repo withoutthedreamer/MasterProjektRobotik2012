@@ -9,20 +9,23 @@ import device.Ranger;
 
 public class PioneerRG extends Pioneer {
 	protected Planner plan = null;
+	protected Gripper grip = null;
 	
 	public PioneerRG(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
-			laser = new Ranger(this.playerclient, this.id, 1);
-			grip  = new Gripper (this.playerclient, this.id);
+			laser = new Ranger(roboClient, id, 1);
+			grip  = new Gripper (roboClient, id);
 
 		} catch (PlayerException e) {
-			System.err.println ("PioneerRG: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
-		super.playerclient.runThreaded (-1, -1);
+		roboClient.runThreaded();
 	}
 
 	public void shutdownDevices () {

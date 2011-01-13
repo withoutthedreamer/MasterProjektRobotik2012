@@ -49,8 +49,8 @@ public class Planner implements Runnable {
 
 			System.out.println("Running "
 					+ this.toString()
-					+ " in thread: "
-					+ this.thread.getName()
+					+ " in "
+					+ thread.getName()
 					+ " of robot "
 					+ id);
 
@@ -70,7 +70,10 @@ public class Planner implements Runnable {
 			// Automatically start own thread in constructor
 			this.thread.start();
 		} catch ( PlayerException e ) {
-			System.err.println ("Planner: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
 			throw new IllegalStateException();
@@ -141,7 +144,10 @@ public class Planner implements Runnable {
 		while (this.playerclient.isAlive());
 		this.thread.interrupt();
 		while (this.thread.isAlive());
-		System.out.println("Shutdown of " + this.toString());		
+		System.out.println("Shutdown of "
+				+ this.toString()
+				+ " in "
+				+ thread.getName());		
 	}
 	public void setPose(Position position) {
 		this.pose.setPx(position.getX());

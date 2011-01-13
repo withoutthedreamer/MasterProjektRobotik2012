@@ -16,15 +16,18 @@ public class PioneerRsB extends Pioneer {
 	public PioneerRsB(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
-			sonar = new Ranger(this.playerclient, this.id, 0);
-			blofi = new Blobfinder(this.playerclient, this.id);
+			sonar = new Ranger(roboClient, this.id, 0);
+			blofi = new Blobfinder(roboClient, this.id);
 		} catch (PlayerException e) {
-			System.err.println ("PioneerSB: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
-		this.playerclient.runThreaded (-1, -1);
+//		this.playerclient.runThreaded (-1, -1);
+		roboClient.runThreaded();
 	}
 	public void shutdownDevices () {
 		this.sonar.thread.interrupt();

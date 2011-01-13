@@ -10,15 +10,18 @@ final public class PioneerSL extends Pioneer {
 	public PioneerSL(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
-			this.laser    = new RangerLaser (this.playerclient, super.id);
-			this.sonar 	  = new RangerSonar (this.playerclient, super.id);
+			this.laser    = new RangerLaser (roboClient, super.id);
+			this.sonar 	  = new RangerSonar (roboClient, super.id);
 		} catch (PlayerException e) {
-			System.err.println ("PioneerSL: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
 			throw new IllegalStateException();
 		}
-		this.playerclient.runThreaded (-1, -1);
+//		this.playerclient.runThreaded (-1, -1);
 	}
 
 	@Override

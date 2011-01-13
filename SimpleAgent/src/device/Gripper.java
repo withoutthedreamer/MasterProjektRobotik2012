@@ -1,7 +1,6 @@
 package device;
 
 import javaclient3.GripperInterface;
-import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
 
@@ -12,6 +11,7 @@ public class Gripper implements Runnable {
 
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
+	@SuppressWarnings("unused")
 	private int goalState = 1;
 	private int curState = 0;
 	
@@ -21,23 +21,25 @@ public class Gripper implements Runnable {
 		ERROR
 	}
 
-	public Gripper (PlayerClient host, int id) {
+	public Gripper(RobotClient roboClient, int id) {
 		try {
-			this.grip  = host.requestInterfaceGripper(0, PlayerConstants.PLAYER_OPEN_MODE);
-			
+			grip = roboClient.getClient().requestInterfaceGripper(0, PlayerConstants.PLAYER_OPEN_MODE);
+
 			// Automatically start own thread in constructor
 			this.thread.start();
 			System.out.println("Running "
 					+ this.toString()
-					+ " in thread: "
+					+ " in "
 					+ this.thread.getName()
 					+ " of robot "
 					+ id);
 
 		} catch ( PlayerException e ) {
-			System.err.println ("Blobfinder: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
 	}
@@ -55,7 +57,10 @@ public class Gripper implements Runnable {
 		while ( ! this.thread.isInterrupted()) {
 			this.updateGripper();
 		}
-		System.out.println("Shutdown of " + this.toString());
+		System.out.println("Shutdown of "
+				+ this.toString()
+				+ " in "
+				+ thread.getName());
 	}
 	public void stop () {
 		// stop

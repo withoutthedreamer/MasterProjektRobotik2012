@@ -3,25 +3,26 @@ package robot;
 import javaclient3.PlayerException;
 import data.Position;
 import device.RangerLaser;
+import device.RobotClient;
 
 public class PioneerL extends Pioneer {
 
-	public PioneerL() {
-		// TODO Auto-generated constructor stub
-	}
-
 	public PioneerL(String name, int port, int id) throws Exception {
-		super(name, port, id);
+		
+		roboClient = new RobotClient(name, port, id);
+		
 		try {
-			this.laser = new RangerLaser (this.playerclient, this.id);
+			laser = new RangerLaser (roboClient, id);
 
 		} catch (PlayerException e) {
-			System.err.println ("PioneerL: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
-		super.playerclient.runThreaded (-1, -1);
+		roboClient.runThreaded();
 	}
 
 	@Override

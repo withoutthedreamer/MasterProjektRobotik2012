@@ -1,5 +1,6 @@
 import java.io.IOException;
 
+import robot.PioneerRR;
 import simulator.Simulator;
 
 import core.OSCommand;
@@ -15,31 +16,9 @@ public class Test {
 	 */
 	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
-//		System.out.println("SimulationAgent" + OSCommand.run("ls -l"));
-//		String[] playerCmd={"/usr/bin/nohup","/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/uhh1.cfg","&"};
-////		System.out.println(OSCommand.run(playerCmd));
-////		System.err.println(OSCommand.run(playerCmd));
-////		String[] testCmd={"open","/Applications/Chess.app"};
-////		System.err.println(OSCommand.run(testCmd));
-//		OSCommand testCmd = new OSCommand(playerCmd);
-//		try {
-//			Thread.sleep(4000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		testCmd.terminate();
-////		while(true);
-//		try {
-//			Thread.sleep(4000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		Simulator simu = Simulator.getInstance("localhost", 6600);
-		RobotClient roboClient1 = null;
+		PioneerRR pionRR = null;
 		try {
-			roboClient1 = new RobotClient("localhost",6665,0);
+			pionRR = new PioneerRR("localhost", 6666, 1);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -50,8 +29,7 @@ public class Test {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		roboClient1.shutdown();
-
+		pionRR.shutdown();
 	}
 
 }

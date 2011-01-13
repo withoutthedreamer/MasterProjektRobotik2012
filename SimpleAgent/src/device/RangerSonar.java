@@ -1,6 +1,5 @@
 package device;
 
-import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.SonarInterface;
 import javaclient3.structures.PlayerConstants;
@@ -10,23 +9,26 @@ public class RangerSonar extends Ranger {
 	protected SonarInterface soni  = null;
 	protected float[] sonRanges = null;
 
-	public RangerSonar(PlayerClient host, int id) {
+	public RangerSonar(RobotClient roboClient, int id) {
 		try {
-			soni = host.requestInterfaceSonar(0, PlayerConstants.PLAYER_OPEN_MODE);
+			soni = roboClient.getClient().requestInterfaceSonar(0, PlayerConstants.PLAYER_OPEN_MODE);
 
 			// Automatically start own thread in constructor
 			this.thread.start();
+			
 			System.out.println("Running "
 					+ this.toString()
-					+ " in thread: "
+					+ " in  "
 					+ this.thread.getName()
 					+ " of robot "
 					+ id);
 
 		} catch ( PlayerException e ) {
-			System.err.println ("RangerLaser: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
 	}
@@ -42,6 +44,17 @@ public class RangerSonar extends Ranger {
 		if (count > 0) {
 			sonRanges = soni.getData().getRanges();
 		}
+	}
+
+	@Override
+	public void run() {
+		while ( ! this.thread.isInterrupted()) {
+			this.update();
+		}
+		System.out.println("Shutdown of "
+				+ this.toString()
+				+ " in "
+				+ thread.getName());
 	}
 
 	public double[] getRanges () {

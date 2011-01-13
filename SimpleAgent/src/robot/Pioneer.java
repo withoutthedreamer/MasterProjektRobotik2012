@@ -1,31 +1,30 @@
-/* Copyright Sebastian Rockel 2010
+/**
+ * Copyright Sebastian Rockel 2010
  * Basic Pioneer 2DX class
  */
-
 package robot;
 
 import data.Position;
 import data.Trackable;
-import device.Gripper;
-import device.Position2d;
 import device.Ranger;
-import javaclient3.PlayerClient;
-import javaclient3.PlayerException;
+import device.RobotClient;
 
-// This class represents a minimal or standard coniguration
-// of a Pioneer 2DX robot at TAMS laboratory at University Hamburg
-// informatics center
-// It can be instantiated or inherited to add other devices.
-abstract class Pioneer implements Runnable, Trackable
+/**
+ * This class represents a minimal or standard coniguration
+ * of a Pioneer 2DX robot at TAMS laboratory at University Hamburg
+ * informatics center
+ * It can be instantiated or inherited to add other devices.
+ * @author sebastian
+ *
+ */
+class Pioneer implements Runnable, Trackable
 {
-	// Required to every Pioneer2dx TODO outsource playerclient
-	protected PlayerClient playerclient = null;
-	protected Position2d          posi  = null;
+	protected RobotClient roboClient = null;
 	
 	// To be implemented in subclass when needed
 	protected Ranger  laser = null;
 	protected Ranger  sonar = null;
-	protected Gripper grip  = null;
+//	protected Gripper grip  = null;
 	
 	// Every class of this type has it's own thread
 	protected Thread thread = new Thread ( this );
@@ -90,51 +89,38 @@ abstract class Pioneer implements Runnable, Trackable
 	protected static boolean isDebugDistance = false;
 	protected static boolean isDebugPosition = false;
 
+	/**
+	 * Default constructor
+	 */
 	public Pioneer(){}
-	// Constructor: do all playerclient communication setup here
+	/**
+	 * This constructor has to be overwritten in any subclasses!
+	 */
 	public Pioneer (String name, int port, int id) throws Exception {
-		try {
-			// Connect to the Player server and request access to Position
-			this.playerclient  = new PlayerClient (name, port);
-			this.id = id;
-			System.out.println("Running playerclient of: "
-					+ this.toString()
-					+ " with id: "
-					+ this.id
-					+ " in thread: "
-					+ this.playerclient.getName());
-			
-			// Always needs a position device
-			this.posi = new Position2d(this.playerclient, this.id);
-			
-			// Automatically start own thread in constructor
-			this.thread.start();
-			
-			System.out.println("Running "
-					+ this.toString()
-					+ " with id: "
-					+ this.id
-					+ " in thread: "
-					+ this.thread.getName());
-			
-		} catch (PlayerException e) {
-			System.err.println ("Pioneer: > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-			throw new IllegalStateException();
-//			System.exit (1);
-		}
-		// Has to be called in object constructor!
-		// Otherwise program will block forever
-		//playerclient.runThreaded (-1, -1);
+
+		roboClient = new RobotClient (name, port, id);
+		// This call has to be always after the last device request! 
+//		roboClient.runThreaded();
+		this.id = id;
+
+		// Automatically start own thread in constructor
+		thread.start();
+
+		System.out.println("Running "
+				+ this.toString()
+				+ " of robot "
+				+ this.id
+				+ " in thread "
+				+ this.thread.getName());
 	}
 
 	// Define thread behavior
 	public void run() {
-		while ( ! this.thread.isInterrupted()) {
+		while ( ! thread.isInterrupted()) {
 			// Should not be called more than @ 10Hz
 			this.update();
 			try { Thread.sleep (100); }
-			catch (InterruptedException e) { this.thread.interrupt(); }
+			catch (InterruptedException e) { thread.interrupt(); }
 		}
 	}
 	protected void update() {
@@ -147,16 +133,18 @@ abstract class Pioneer implements Runnable, Trackable
 	public void shutdown () {
 		// Cleaning up
 		this.shutdownDevices();
-		this.posi.thread.interrupt();
-		while (this.posi.thread.isAlive());
-		this.playerclient.close();
-		while (this.playerclient.isAlive());
+		roboClient.shutdown();
 		this.thread.interrupt();
 		while(this.thread.isAlive());
-		System.out.println("Shutdown of " + this.toString() + " with id " + this.id);
+		System.out.println("Shutdown of "
+				+ this.toString() 
+				+ " of robot "
+				+ this.id
+				+ " in thread "
+				+ this.thread.getName());
 	}
 	
-	public abstract void shutdownDevices();
+	protected void shutdownDevices(){};
 		
 	protected void plan () {
 		double tmp_turnrate = 0.;
@@ -229,30 +217,34 @@ abstract class Pioneer implements Runnable, Trackable
 			System.out.printf("%5.2f\n", getDistance(viewDirectType.LEFTREAR));
 		}
 		if (isDebugPosition) {
-			if (posi != null) {
-				System.out.printf("%5.2f", posi.getPosition().getX());	System.out.print("\t");
-				System.out.printf("%5.2f", posi.getPosition().getY());	System.out.print("\t");
-				System.out.printf("%5.2f\n", java.lang.Math.toDegrees(posi.getPosition().getYaw()));
-			} else {
-				System.out.println("No position available!");
-			}
+			System.out.printf("%5.2f", roboClient.getOdometry().getX());	System.out.print("\t");
+			System.out.printf("%5.2f", roboClient.getOdometry().getY());	System.out.print("\t");
+			System.out.printf("%5.2f\n", java.lang.Math.toDegrees(roboClient.getOdometry().getYaw()));
 		}
 	}
 
-	/// Command the motors
+	/**
+	 * Command the motors
+	 */
 	protected final void execute() {
-		this.posi.setSpeed(speed, turnrate);
+		roboClient.setSpeed(speed);
+		roboClient.setTurnrate(turnrate);
 	}
-	/// Return robot position
+	/**
+	 * Return robot position
+	 */
 	public Position getPosition() {
-		return this.posi.getPosition();
+		return roboClient.getOdometry();
 	}
 
-	/// Returns the minimum distance of the given arc.
-	/// Algorithm calculates the average of BEAMCOUNT beams
-	/// to define a minimum value per degree.
-	/// @param Range of angle (degrees)
-	/// @return Minimum distance in range
+	/**
+	 * Returns the minimum distance of the given arc.
+	 * Algorithm calculates the average of BEAMCOUNT beams
+	 * to define a minimum value per degree.
+	 * @param minAngle Minimum angle to check (degree).
+	 * @param maxAngle Maximum angle to check (degree).
+	 * @return Minimum distance in range.
+	 */
 	protected final double getDistanceLas ( int minAngle, int maxAngle ) {
 		double minDist         = LPMAX; ///< Min distance in the arc.
 	    double distCurr        = LPMAX; ///< Current distance of a laser beam
@@ -305,15 +297,16 @@ abstract class Pioneer implements Runnable, Trackable
 		return minDist;
 	}
 
-	/// Returns the minimum distance of the given view direction.
-	/// Robot shape shall be considered here by weighted SHAPE_DIST.
-	/// Derived arcs, sonars and weights from graphic "PioneerShape.fig".
-	/// NOTE: ALL might be slow due recursion, use it only for debugging!
-	/// @param Robot view direction
-	/// @return Minimum distance of requested view Direction
+	/**
+	 * Returns the minimum distance of the given view direction.
+	 * Robot shape shall be considered here by weighted SHAPE_DIST.
+	 * Derived arcs, sonars and weights from graphic "PioneerShape.fig".
+	 * NOTE: ALL might be slow due recursion, use it only for debugging!
+	 * @param viewDirection Robot view direction
+	 * @return Minimum distance of requested view Direction.
+	 */
 	protected final double getDistance( viewDirectType viewDirection )
 	{		
-//		float[] sonarValues = new float[16];
 		double[] sonarValues;
 		int 	sonarCount  = 0;
 
@@ -360,16 +353,16 @@ abstract class Pioneer implements Runnable, Trackable
 		}
 	}
 	
-	/// Calculates the turnrate from range measurement and minimum wall follow
-	/// distance.
-	/// @param Current state of the robot.
-	/// @returns Turnrate to follow wall.
+	/**
+	 * Calculates the turnrate from range measurement and minimum wall follow
+	 * distance.
+	 * @return Turnrate to follow wall.
+	 */
 	protected final double wallfollow ()
 	{
 		double DistLFov  = 0;
 		double DistL     = 0;
 		double DistLRear = 0;
-		//double DistFront = 0;
 
 		// As long global goal is WF set it by default
 		// Will potentially be overridden by higher prior behaviours
@@ -403,7 +396,9 @@ abstract class Pioneer implements Runnable, Trackable
 		return this.turnrate;
 	}
 
-	// Biased by left wall following
+	/**
+	 * Biased by left wall following
+	 */
 	protected final double collisionAvoid ()
 	{
 		// Scan FOV for Walls
@@ -425,7 +420,7 @@ abstract class Pioneer implements Runnable, Trackable
 		}
 	}
 
-	/// @todo Code review
+	// TODO Code review
 	protected final double calcspeed ()
 	{
 		double tmpMinDistFront = Math.min(getDistance(viewDirectType.LEFTFRONT), Math.min(getDistance(viewDirectType.FRONT), getDistance(viewDirectType.RIGHTFRONT)));
@@ -447,13 +442,15 @@ abstract class Pioneer implements Runnable, Trackable
 		return speed;
 	}
 
-	/// Checks if turning the robot is not causing collisions.
-	/// Implements more or less a rotation policy which decides depending on
-	/// obstacles at the 4 robot edge surounding spots
-	/// To not interfere to heavy to overall behaviour turnrate is only inverted (or
-	/// set to zero)
-	/// @param Turnrate
-	/// @todo Code review
+	/**
+	 * Checks if turning the robot is not causing collisions.
+	 * Implements more or less a rotation policy which decides depending on
+	 * obstacles at the 4 robot edge surounding spots
+	 * To not interfere to heavy to overall behaviour turnrate is only inverted (or
+	 * set to zero)
+	 * @return Safe turnrate.
+	 */
+	// TODO Code review
 	protected final double checkrotate ()
 	{
 		double saveTurnrate = 0.;
@@ -474,5 +471,11 @@ abstract class Pioneer implements Runnable, Trackable
 			}
 		}
 		return saveTurnrate;
+	}
+	@Override
+	public void setGoal(Position goal) {}
+	@Override
+	public Position getGoal() {
+		return null;
 	}
 }

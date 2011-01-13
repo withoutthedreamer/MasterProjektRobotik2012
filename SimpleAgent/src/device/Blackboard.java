@@ -35,7 +35,7 @@ public class Blackboard implements Runnable {
 
 		} catch ( Exception e ) {
 			e.printStackTrace();
-			System.exit (1);
+			throw new IllegalStateException();
 		}
 	}
 	@SuppressWarnings("rawtypes")
@@ -132,6 +132,9 @@ public class Blackboard implements Runnable {
 		
 		this.thread.interrupt();
 		while (this.thread.isAlive());
-		System.out.println("Shutdown of " + this.toString());		
+		System.out.println("Shutdown of "
+				+ this.toString()
+				+ " in "
+				+ thread.getName());		
 	}
 }

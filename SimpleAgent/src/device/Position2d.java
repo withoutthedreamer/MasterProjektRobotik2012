@@ -50,7 +50,10 @@ public class Position2d implements Runnable{
 					+ this.thread.getName());
 
 		} catch ( PlayerException e ) {
-			System.err.println ("Position: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 //			System.exit (1);
 			throw new IllegalStateException();

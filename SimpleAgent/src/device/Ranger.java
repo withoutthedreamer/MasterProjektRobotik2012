@@ -1,6 +1,5 @@
 package device;
 
-import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.RangerInterface;
 import javaclient3.structures.PlayerConstants;
@@ -16,29 +15,34 @@ public class Ranger implements Runnable {
 	public Thread thread = new Thread ( this );
 
 	public Ranger () {};
-	
-	public Ranger (PlayerClient host, int id, int device) {
-		try {
-			this.rang = host.requestInterfaceRanger (device, PlayerConstants.PLAYER_OPEN_MODE);
 
+	public Ranger (RobotClient roboClient, int id, int device) {
+		try {
+			rang = roboClient.getClient().requestInterfaceRanger(device, PlayerConstants.PLAYER_OPEN_MODE);
+			
 			// Automatically start own thread in constructor
 			this.thread.start();
+			
 			System.out.println("Running "
 					+ this.toString()
-					+ " in thread: "
-					+ this.thread.getName()
+					+ " in "
+					+ thread.getName()
 					+ " of robot "
 					+ id);
 
 		} catch ( PlayerException e ) {
-			System.err.println ("Ranger: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
 	}
-	// Will check for new ranges
-	// If not yet ready will put current thread to sleep
+	/**
+	 * Will check for new ranges
+	 * If not yet ready will put current thread to sleep
+	 */
 	protected void update() {
 		if ( ! rang.isDataReady() ) {
 			try { Thread.sleep (SLEEPTIME); }
@@ -62,6 +66,9 @@ public class Ranger implements Runnable {
 		while ( ! thread.isInterrupted()) {
 			update();
 		}
-		System.out.println("Shutdown of " + this.toString());
+		System.out.println("Shutdown of "
+				+ this.toString()
+				+ " in "
+				+ thread.getName());
 	}
 }

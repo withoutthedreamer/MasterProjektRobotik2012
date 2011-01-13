@@ -32,27 +32,28 @@ public class RobotClient {
 	public RobotClient (String name, int port, int clientId) throws Exception
 	{
 		try {
+			id = clientId;
+
 			// Connect to the Player server and request access to Position
 			playerclient  = new PlayerClient (name, port);
-			id = clientId;
 			System.out.println("Running playerclient of "
 					+ this.toString()
 					+ " of robot "
 					+ id
-					+ " in thread "
+					+ " in  "
 					+ playerclient.getName());
 
 			// Always needs a position device
 			posi = new Position2d(playerclient, id);
 
 		} catch (PlayerException e) {
-			System.err.println ("Pioneer: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
 			throw new IllegalStateException();
 		}
-		// Has to be called in object constructor!
-		// Otherwise program will block forever
-		playerclient.runThreaded (-1, -1);
 	}
 	/**
 	 * Shutdown robot client and clean up
@@ -67,6 +68,22 @@ public class RobotClient {
 				+ id
 				+ " in "
 				+ playerclient.getName());
+	}
+	/**
+	 * 
+	 * @return PlayerClient API
+	 */
+	public PlayerClient getClient() {
+		return playerclient;
+	}
+	/**
+	 * Start PlayerClient thread.
+	 * Has to be called in object constructor!
+     * Otherwise program will block forever
+		 * This call has to be after all device requests!
+	 */
+	public void runThreaded() {
+		playerclient.runThreaded (-1, -1);
 	}
 	/**
 	 * Returns robot speed.

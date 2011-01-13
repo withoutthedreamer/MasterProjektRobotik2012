@@ -9,14 +9,16 @@ final public class PioneerS extends Pioneer {
 	public PioneerS(String name, int port, int id) throws Exception {
 		super(name, port, id);
 		try {
-			this.sonar = new RangerSonar (this.playerclient, super.id);
+			this.sonar = new RangerSonar (roboClient, super.id);
 		} catch (PlayerException e) {
-			System.err.println ("PioneerS: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
-		super.playerclient.runThreaded (-1, -1);
+//		super.playerclient.runThreaded (-1, -1);
 	}
 
 	@Override

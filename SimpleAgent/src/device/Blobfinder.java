@@ -1,7 +1,6 @@
 package device;
 
 import javaclient3.BlobfinderInterface;
-import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
 import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
@@ -20,24 +19,26 @@ public class Blobfinder implements Runnable {
 	// Every class of this type has it's own thread
 	public Thread thread = new Thread ( this );
 	
-	public Blobfinder (PlayerClient host, int id) {
+	public Blobfinder (RobotClient roboClient, int id) {
 		try {
-			this.bfi = host.requestInterfaceBlobfinder(0, PlayerConstants.PLAYER_OPEN_MODE);
+			this.bfi = roboClient.getClient().requestInterfaceBlobfinder(0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.blobs = new Vector<BlobfinderBlob>();
 			
 			// Automatically start own thread in constructor
 			this.thread.start();
 			System.out.println("Running "
 					+ this.toString()
-					+ " in thread: "
-					+ this.thread.getName()
+					+ " in  "
+					+ thread.getName()
 					+ " of robot "
 					+ id);
 
 		} catch ( PlayerException e ) {
-			System.err.println ("Blobfinder: > Error connecting to Player: ");
+			System.err.println (this.toString()
+					+ " of robot "
+					+ id
+					+ ": > Error connecting to Player: ");
 			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
 			throw new IllegalStateException();
 		}
 	}
