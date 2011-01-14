@@ -10,7 +10,7 @@ public class GripperAgent extends PlayerAgent
 
 	PioneerRG pion = null;
 	Position curPos = null;
-	
+	//TODO start planner
 	@Override
 	protected void agentStarted () {
 		try {

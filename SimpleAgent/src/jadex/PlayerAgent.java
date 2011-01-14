@@ -14,6 +14,8 @@ public class PlayerAgent extends MicroAgent {
 	public void agentCreated()
 	{
 		Logger.logActivity(false, "running", this.toString(), port, Thread.currentThread().getName());
+		
+		port = ((Integer)getArgument("player port")).intValue();
 
 		agentStarted();
 
@@ -21,7 +23,7 @@ public class PlayerAgent extends MicroAgent {
 			// Get the Gui argument, if any
 			String[] command = {
 					((String)getArgument("player path")),
-					new String("-p ").concat( String.valueOf(((Integer)getArgument("player port")).intValue()) ),
+					new String("-p ").concat( String.valueOf(port) ),
 					((String)getArgument("player config"))
 			};
 

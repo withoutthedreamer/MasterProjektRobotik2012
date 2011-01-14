@@ -62,7 +62,7 @@ public class Planner extends Device implements Runnable {
 			// Automatically start own thread in constructor
 			this.thread.start();
 		} catch ( PlayerException e ) {
-//			System.err.println ("    [ " + e.toString() + " ]");
+			System.err.println ("    [ " + e.toString() + " ]");
 			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
 			throw new IllegalStateException();
 		}
