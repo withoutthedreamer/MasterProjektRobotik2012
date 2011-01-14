@@ -18,10 +18,13 @@ public class PioneerRG extends PioneerRla {
 
 	protected void shutdownDevices () {
 		super.shutdownDevices();
-		grip.thread.interrupt();
-		while (grip.thread.isAlive());
-		if (plan != null)
+		if (grip != null) {
+			grip.thread.interrupt();
+			while (grip.thread.isAlive());
+		}
+		if (plan != null) {
 			plan.shutdown();
+		}
 	}
 
 	protected void update () {

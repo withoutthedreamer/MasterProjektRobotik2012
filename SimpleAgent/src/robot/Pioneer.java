@@ -81,6 +81,7 @@ public class Pioneer implements Runnable, Trackable
 	protected final int FMIN  = 100;/**< FRONT min angle.      */ protected final int FMAX  = 140; ///< FRONT max angle.
 	protected final int RFMIN = 65; /**< RIGHTFRONT min angle. */ protected final int RFMAX = 100; ///< RIGHTFRONT max angle.
 	protected final int RMIN  = 0;  /**< RIGHT min angle.      */ protected final int RMAX  = 65;  ///< RIGHT max angle.
+	protected boolean isRunning = false;
 	
 	//Debugging
 	protected static boolean isDebugLaser = false;
@@ -109,6 +110,7 @@ public class Pioneer implements Runnable, Trackable
 	public void run() {
 		
 		roboClient.runThreaded();
+		isRunning = true;
 		
 		while ( ! thread.isInterrupted()) {
 			// Should not be called more than @ 10Hz
@@ -131,12 +133,20 @@ public class Pioneer implements Runnable, Trackable
 	public void shutdown () {
 		// Cleaning up
 		shutdownDevices();
-		posi.thread.interrupt();
-		while (posi.thread.isAlive());
-		roboClient.shutdown();
+		if (posi != null) {
+			posi.thread.interrupt();
+			while (posi.thread.isAlive());
+		}
+		if (roboClient != null) {
+			roboClient.shutdown();
+		}
 		this.thread.interrupt();
 		while(this.thread.isAlive());
+		isRunning = false;
 		Logger.logActivity(false, "Shutdown", this.toString(), this.id, thread.getName());
+	}
+	public boolean isRunning(){
+		return isRunning;
 	}
 		
 	/**

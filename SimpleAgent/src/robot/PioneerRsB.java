@@ -20,8 +20,10 @@ public class PioneerRsB extends PioneerRso {
 	
 	protected void shutdownDevices () {
 		super.shutdownDevices();
-		this.blofi.thread.interrupt();
-		while(this.blofi.thread.isAlive());
+		if (blofi != null) {
+			blofi.thread.interrupt();
+			while(this.blofi.thread.isAlive());
+		}
 	}
 	protected final void blobsearch() {
 		if (this.blofi == null ) { return; }

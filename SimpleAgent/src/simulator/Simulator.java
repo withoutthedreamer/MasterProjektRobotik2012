@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
 
+import core.Logger;
+
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.SimulationInterface;
@@ -53,9 +55,8 @@ public class Simulator implements Runnable {
 					+ this.thread.getName());
 			
 		} catch (PlayerException e) {
-			System.err.println ("Simulator: > Error connecting to Player: ");
-			System.err.println ("    [ " + e.toString() + " ]");
-//			System.exit (1);
+			Logger.logActivity(true, "Connecting", this.toString(), -1, thread.getName());
+//			System.err.println ("    [ " + e.toString() + " ]");
 		}
 	}
 	/**
@@ -118,8 +119,10 @@ public class Simulator implements Runnable {
 	 */
 	public void shutdown () {
 		// Cleaning up
-		this.playerclient.close();
-		this.thread.interrupt();
+		if (playerclient != null) {
+			playerclient.close();
+		}
+		thread.interrupt();
 		while(this.thread.isAlive());
 		System.out.println("Shutdown of " + this.toString());
 	}

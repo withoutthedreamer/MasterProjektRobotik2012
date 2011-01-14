@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	<H3> The Ping Scenario </H3>
+	
+	Starts pinging agents and agents to be ping'd. 
+-->
+<applicationtype xmlns="http://jadex.sourceforge.net/jadex-application"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-application
+						http://jadex.sourceforge.net/jadex-application-2.0.xsd"
+	name="uhh" package="jadex">
+	
+	<arguments><argument name="playerPath"> "/usr/local/bin/player" </argument><argument name="playerPort">6665</argument></arguments>
+	<componenttypes>
+		<componenttype name="Simulation" filename="jadex/SimulationAgent.class" master="true"/>
+		<componenttype name="Explore" filename="jadex/ExploreAgent.class" master="true"></componenttype>
+	</componenttypes>
+	
+	<applications>
+		<application name="Wallfollow">
+			<components>
+				<component type="Simulation" name="Simulation" >
+					<arguments>
+						<argument name="requires player"> true </argument>
+						
+						
+						
+
+					<argument name="player path">$args.playerPath</argument><argument name="player port">$args.playerPort</argument><argument name="player config">"/Users/sebastian/robotcolla/SimpleAgent/player/uhh.cfg"</argument></arguments>
+				 </component>
+				<component type="Explore" name="Explore" >
+				<arguments>
+						<argument name="requires player">false</argument>
+						
+
+					</arguments></component>
+			</components>
+		</application>
+	<application name="FindAndCollect">
+			<components>
+				<component type="Simulation" name="Simulation">
+					<arguments>
+						<argument name="requires player"> true </argument>
+						
+						
+						
+
+					<argument name="player path">$args.playerPath</argument><argument name="player port">$args.playerPort</argument><argument name="player config">"/Users/sebastian/robotcolla/SimpleAgent/player/uhh1.cfg"</argument></arguments>
+				 </component>
+				<component type="Explore" name="Explore">
+				<arguments>
+						<argument name="requires player">false</argument>
+						
+
+					</arguments></component>
+			</components>
+		</application></applications>
+	
+</applicationtype>
