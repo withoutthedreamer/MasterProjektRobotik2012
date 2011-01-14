@@ -40,13 +40,10 @@ public class RobotClient extends Device {
 			playerclient  = new PlayerClient (name, port);
 			Logger.logActivity(false, "Running", this.toString(), id, null);
 
-			// Always needs a position device
-//			posi = new Position2d(playerclient, id);
-
 		} catch (PlayerException e) {
 //			System.err.println ("    [ " + e.toString() + " ]");
 			Logger.logActivity(true, "Connecting", this.toString(), id, null);
-//			throw new IllegalStateException();
+			throw new IllegalStateException();
 		}
 	}
 	/**

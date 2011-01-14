@@ -10,13 +10,14 @@ import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.bridge.IComponentStep;
 import jadex.bridge.IInternalAccess;
-import jadex.micro.MicroAgent;
 import jadex.micro.MicroAgentMetaInfo;
 
-public class GuiAgent extends MicroAgent {
+public class ViewAgent extends PlayerAgent {
 
-	protected final String[] start={"/usr/local/bin/player","-p 6600","/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg"};
-	protected OSCommand player = null;
+	protected static String[] playerCmd={"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg"};
+	protected OSCommand startPlayer = null;
+	protected static String port = "6600";
+	
 	// API to the simulator (gui)
 	protected Simulator simu = null;
 	protected Vector<SimuObject> simuObjs = null;
@@ -25,12 +26,8 @@ public class GuiAgent extends MicroAgent {
 	// Max count of robots in gui
 	protected final static int robotCount = 3;
 
-	public void agentCreated()
+	public void agentStarted()
 	{
-		// Get the Gui argument, if any
-		String[] path = {(String)getArgument("command path"),null};
-		player = new OSCommand(path);
-
 //		tracker = Tracker.getInstance(simu, null);
 		
 //		PioneerRR[] pionRRList = new PioneerRR[3];
@@ -40,7 +37,7 @@ public class GuiAgent extends MicroAgent {
 //		}
 	}
 
-	public void executeBody()
+	public void agentBody()
 	{		
 		waitFor(2000, new IComponentStep()
 		{
@@ -75,17 +72,20 @@ public class GuiAgent extends MicroAgent {
 		waitForTick(step);
 	}
 
-	public void agentKilled() {
+	public void agentTerminated() {
 		simu.shutdown();
-		player.terminate();
 	}
 
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
-		return new MicroAgentMetaInfo("This agent starts up the gui.", 
+		return new MicroAgentMetaInfo("This agent starts up the Explorer agent.", 
 				null, new IArgument[]{
-				new Argument("command path", "This parameter is the argument given to the agent.", "String", 
-					"/usr/local/bin/player -p 6600 /Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg"),	
+				new Argument("player path", "This parameter is the argument given to the agent.", "String", 
+						playerCmd[0]),	
+				new Argument("player port", "This parameter is the argument given to the agent.", "int", 
+						port),	
+				new Argument("player config", "This parameter is the argument given to the agent.", "String",
+						playerCmd[1])
 		}, null);
 	}
 }

@@ -2,6 +2,7 @@ package jadex;
 
 import java.lang.management.ManagementFactory;
 
+import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.commons.SUtil;
 import jadex.micro.MicroAgent;
@@ -42,10 +43,11 @@ public class TestAgent extends MicroAgent {
 	 */
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
-		return new MicroAgentMetaInfo("This agent sends a test message", null, 
-			new IArgument[]{}//new Argument("infos", "Initial information records.", "InformationEntry[]")}
-			, null, null, SUtil.createHashMap(new String[]{"componentviewer.viewerclass"}, new Object[]{"jadex.micro.examples.chat.ChatPanel"}),
-			null, new Class[]{IMessageService.class});
+		return new MicroAgentMetaInfo("This agent starts up the Explorer agent.", 
+				null, new IArgument[]{
+				new Argument("player path", "This parameter is the argument given to the agent.", "String", 
+						"test"),	
+			}, null);
 	}
 
 }

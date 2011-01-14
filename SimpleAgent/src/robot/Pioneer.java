@@ -4,12 +4,9 @@
  */
 package robot;
 
-import core.Logger;
-import data.Position;
-import data.Trackable;
-import device.Position2d;
-import device.Ranger;
-import device.RobotClient;
+import core.*;
+import data.*;
+import device.*;
 
 /**
  * This class represents a minimal or standard coniguration
@@ -19,7 +16,7 @@ import device.RobotClient;
  * @author sebastian
  *
  */
-class Pioneer implements Runnable, Trackable
+public class Pioneer implements Runnable, Trackable
 {
 	protected RobotClient roboClient = null;
 	protected Position2d posi = null;
@@ -479,5 +476,7 @@ class Pioneer implements Runnable, Trackable
 	@Override
 	public Position getGoal() {
 		return null;
+	}
+	public void setPosition(Position position) {		
 	}
 }
