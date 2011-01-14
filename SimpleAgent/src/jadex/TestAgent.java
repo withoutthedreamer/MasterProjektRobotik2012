@@ -4,7 +4,6 @@ import java.lang.management.ManagementFactory;
 
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
-import jadex.commons.SUtil;
 import jadex.micro.MicroAgent;
 import jadex.micro.MicroAgentMetaInfo;
 

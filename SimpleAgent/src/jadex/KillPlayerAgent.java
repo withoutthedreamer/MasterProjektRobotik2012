@@ -35,12 +35,14 @@ public class KillPlayerAgent extends MicroAgent {
 	
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
-		return new MicroAgentMetaInfo("This agent kills all 'player' instances on this host and exits.", 
-				null, new IArgument[]{
-				new Argument("killall path", "This parameter is the argument given to the agent.", "String", 
-						killCmd[0]),	
-				new Argument("process name", "This parameter is the argument given to the agent.", "String",
-						killCmd[1])
-		}, null);
+		Argument[] args = {
+				new Argument("killall path", "dummy", "String"),
+				new Argument("process name", "dummy", "String")};
+
+		args[0].setDefaultValue(killCmd[0]);
+		args[2].setDefaultValue(killCmd[1]);
+		
+		return new MicroAgentMetaInfo("This agent kills all 'player' instances on this host and exits.",
+				null, new IArgument[]{args[0], args[1], args[2]}, null);
 	}
 }

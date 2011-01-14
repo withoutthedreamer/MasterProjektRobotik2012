@@ -9,21 +9,23 @@ public class PlayerAgent extends MicroAgent {
 	
 	protected static String[] playerCmd={"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/planner2.cfg"};
 	protected OSCommand startPlayer = null;
-	protected static String port = "6665";
+	protected static int port = 6665;
 
 	public void agentCreated()
 	{
-		Logger.logActivity(false, "running", this.toString(), -1, Thread.currentThread().getName());
+		Logger.logActivity(false, "running", this.toString(), port, Thread.currentThread().getName());
 
 		agentStarted();
 
 		// Get the Gui argument, if any
 		String[] command = {
-			(String)getArgument("player path"),
-			new String("-p ").concat( (String)getArgument("player port") ),
-			(String)getArgument("player config")
+			((String)getArgument("player path")),
+			new String("-p ").concat( String.valueOf(((Integer)getArgument("player port")).intValue()) ),
+			((String)getArgument("player config"))
 		};
-		startPlayer = new OSCommand(command);
+		if (command[0] != "") {
+			startPlayer = new OSCommand(command);
+		}
 			}
 	protected void agentStarted () {};
 		
@@ -38,20 +40,21 @@ public class PlayerAgent extends MicroAgent {
 		agentTerminated();
 		
 		startPlayer.terminate();
-		Logger.logActivity(false, "Termination", this.toString(), Integer.parseInt(port), Thread.currentThread().getName());
+		Logger.logActivity(false, "Termination", this.toString(), port, Thread.currentThread().getName());
 	}
 	protected void agentTerminated () {};
 	
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
-		return new MicroAgentMetaInfo("This agent starts up the Explorer agent.", 
-				null, new IArgument[]{
-				new Argument("player path", "This parameter is the argument given to the agent.", "String", 
-						playerCmd[0]),	
-				new Argument("player port", "This parameter is the argument given to the agent.", "int", 
-						port),	
-				new Argument("player config", "This parameter is the argument given to the agent.", "String",
-						playerCmd[1])
-		}, null);
+		Argument[] args = {
+				new Argument("player path", "dummy", "String"),
+				new Argument("player port", "dummy", "Integer", new Integer(port)),	
+				new Argument("player config", "dummy", "String")};
+		
+		args[0].setDefaultValue(playerCmd[0]);
+		args[2].setDefaultValue(playerCmd[1]);
+		
+		return new MicroAgentMetaInfo("This agent starts up a Player agent.", 
+				null, new IArgument[]{args[0], args[1], args[2]}, null);
 	}
 }

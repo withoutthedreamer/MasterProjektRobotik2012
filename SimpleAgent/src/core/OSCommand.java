@@ -14,11 +14,15 @@ public class OSCommand implements Runnable{
 	private boolean isTerminated = false;
 
 	public OSCommand (String[] cmd) {
-		command = cmd;
-		// Automatically start own thread in constructor
-		thread.start();
-		
-		Logger.logActivity(false, "Running", this.toString(), -1, thread.getName());
+		if (cmd != null) {
+			command = cmd;
+			// Automatically start own thread in constructor
+			thread.start();
+
+			Logger.logActivity(false, "Running", this.toString(), -1, thread.getName());
+		} else {
+			Logger.logActivity(true, "Null command", this.toString(), -1, thread.getName());
+		}
 	}
 
 	public String exec (String[] cmd) {
