@@ -16,7 +16,7 @@ public class Position {
 	 * Constructor creates a Position
 	 * @param x X coordinate.
 	 * @param y Y coordinate.
-	 * @param yaw Orientation in degrees.
+	 * @param yaw Orientation in radians.
 	 */
 	public Position(double x, double y, double yaw) {
 		this.x  = x;

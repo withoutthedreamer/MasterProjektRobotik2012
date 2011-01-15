@@ -14,6 +14,8 @@ public class PioneerRG extends PioneerRla {
 
 		grip = new Gripper (roboClient, id);
 		plan = new Planner (name, (port+1), id);
+		
+		plan.runThreaded();
 	}
 
 	protected void shutdownDevices () {
@@ -32,26 +34,26 @@ public class PioneerRG extends PioneerRla {
 	}
 	public void setGoal(Position goal) {
 		if (plan != null)
-			this.plan.setGoal(goal);
+			plan.setGoal(goal);
 	}
 
 	@Override
 	public Position getGoal() {
-		return this.plan.getGoal();
+		return plan.getGoal();
 	}
 
-	public final void setPosition(Position position) {
+	public void setPosition(Position position) {
 		if (plan != null)
-			this.plan.setPose(position);
-//		if (posi != null)
-//			this.posi.setPosition(position);
+			plan.setPose(position);
+		if (posi != null)
+			posi.setPosition(position);
 	}
 
 	/// Return robot position
-	public final Position getPosition() {
+	public Position getPosition() {
 		//			return this.plan.getPose(); // TODO why not working
 //		return this.posi.getPosition();
-		return this.plan.getPose();
+		return plan.getPose();
 	}
 
 //	public void setPlanner(String name, int port) {
