@@ -1,12 +1,24 @@
 package jadex;
 
+import jadex.bridge.Argument;
+import jadex.bridge.IArgument;
+import jadex.micro.MicroAgentMetaInfo;
+
 /**
  * Generic agent class for PlayerStage requirements
  * @author sebastian
  *
  */
 public class SimulationAgent extends PlayerAgent {
-
-	protected static String[] playerCmd = {"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/uhh1.cfg"};
 	
+	public static MicroAgentMetaInfo getMetaInfo()
+	{
+		IArgument[] args = {
+				new Argument("requires player", "dummy", "Boolean", new Boolean(true)),
+				new Argument("player path", "dummy", "String", playerPath),
+				new Argument("player port", "dummy", "Integer", new Integer(port)),	
+				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/uhh1.cfg")};
+		
+		return new MicroAgentMetaInfo("This agent starts up a Player agent.", null, args, null);
+	}
 }

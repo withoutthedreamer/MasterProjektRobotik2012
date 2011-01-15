@@ -7,7 +7,7 @@ import jadex.micro.*;
 
 public class PlayerAgent extends MicroAgent {
 	
-	protected static String[] playerCmd={"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/uhh1.cfg"};
+	protected static String playerPath="/usr/local/bin/player";
 	protected OSCommand startPlayer = null;
 	protected static int port = 6665;
 
@@ -16,8 +16,6 @@ public class PlayerAgent extends MicroAgent {
 		Logger.logActivity(false, "running", this.toString(), port, Thread.currentThread().getName());
 		
 		port = ((Integer)getArgument("player port")).intValue();
-
-		agentStarted();
 
 		if ((Boolean)getArgument("requires player") == true) {
 			// Get the Gui argument, if any
@@ -31,36 +29,32 @@ public class PlayerAgent extends MicroAgent {
 		}
 	}
 
-	protected void agentStarted () {};
+//	protected void agentStarted () {};
 
 	public void executeBody()
 	{	
 		// TODO no blocking
-		agentBody();
+//		agentBody();
 //		if (startPlayer != null) {
 //			startPlayer.waitFor();
 //		}
 	}
-	protected void agentBody () {};
 	
 	public void agentKilled()
 	{
-		agentTerminated();
 		if (startPlayer != null) {
 			startPlayer.terminate();
 		}
 		Logger.logActivity(false, "Termination", this.toString(), port, Thread.currentThread().getName());
 	}
-	protected void agentTerminated () {};
 	
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
-		Argument[] args = {
-			new Argument("requires player", "dummy", "Boolean", new Boolean(false)),
-			new Argument("player path", "dummy", "String", playerCmd[0]),
-			new Argument("player port", "dummy", "Integer", new Integer(port)),	
-			new Argument("player config", "dummy", "String", playerCmd[1])
-		};
+		IArgument[] args = {
+				new Argument("requires player", "dummy", "Boolean", new Boolean(false)),
+				new Argument("player path", "dummy", "String", playerPath),
+				new Argument("player port", "dummy", "Integer", new Integer(port)),	
+				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/uhh1.cfg")};
 		
 		return new MicroAgentMetaInfo("This agent starts up a Player agent.", null, args, null);
 	}

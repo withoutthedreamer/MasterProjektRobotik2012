@@ -7,7 +7,6 @@ import jadex.micro.*;
 
 public class KillPlayerAgent extends MicroAgent {
 	
-	protected static String[] killCmd={"/usr/bin/killall","player"};
 	protected OSCommand stopPlayer = null;
 
 	public void agentCreated()
@@ -36,10 +35,9 @@ public class KillPlayerAgent extends MicroAgent {
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
 		Argument[] args = {
-				new Argument("killall path", "dummy", "String", killCmd[0]),
-				new Argument("process name", "dummy", "String", killCmd[1])};
+				new Argument("killall path", "dummy", "String", "/usr/bin/killall"),
+				new Argument("process name", "dummy", "String", "player")};
 		
-		return new MicroAgentMetaInfo("This agent kills all 'player' instances on this host and exits.",
-				null, args, null);
+		return new MicroAgentMetaInfo("This agent kills all 'player' instances on this host and exits.", null, args, null);
 	}
 }

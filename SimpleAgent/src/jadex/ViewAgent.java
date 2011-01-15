@@ -6,12 +6,14 @@ import simulator.Simulator;
 import core.OSCommand;
 import data.Position;
 import data.SimuObject;
+import jadex.bridge.Argument;
+import jadex.bridge.IArgument;
 import jadex.bridge.IComponentStep;
 import jadex.bridge.IInternalAccess;
+import jadex.micro.MicroAgentMetaInfo;
 
 public class ViewAgent extends PlayerAgent {
 
-	protected static String[] playerCmd={"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg"};
 	protected OSCommand startPlayer = null;
 	protected static String port = "6600";
 	
@@ -23,8 +25,10 @@ public class ViewAgent extends PlayerAgent {
 	// Max count of robots in gui
 	protected final static int robotCount = 3;
 
-	public void agentStarted()
+	@Override
+	public void agentCreated()
 	{
+		super.agentCreated();
 //		tracker = Tracker.getInstance(simu, null);
 		
 //		PioneerRR[] pionRRList = new PioneerRR[3];
@@ -34,8 +38,11 @@ public class ViewAgent extends PlayerAgent {
 //		}
 	}
 
-	public void agentBody()
-	{		
+	@Override
+	public void executeBody()
+	{
+		super.executeBody();
+		
 		waitFor(2000, new IComponentStep()
 		{
 			public Object execute(IInternalAccess args)
@@ -68,8 +75,20 @@ public class ViewAgent extends PlayerAgent {
 		};
 		waitForTick(step);
 	}
-
-	public void agentTerminated() {
+	@Override
+	public void agentKilled() {
+		
 		simu.shutdown();
+		super.agentKilled();
+	}
+	public static MicroAgentMetaInfo getMetaInfo()
+	{
+		IArgument[] args = {
+				new Argument("requires player", "dummy", "Boolean", new Boolean(true)),
+				new Argument("player path", "dummy", "String", playerPath),
+				new Argument("player port", "dummy", "Integer", new Integer(port)),	
+				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg")};
+		
+		return new MicroAgentMetaInfo("This agent starts up a Player agent.", null, args, null);
 	}
 }
