@@ -16,8 +16,8 @@ public class RangerLaser extends Ranger {
 			las = roboClient.getClient().requestInterfaceLaser(0, PlayerConstants.PLAYER_OPEN_MODE);
 
 			// Automatically start own thread in constructor
-			thread.start();
-			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
+//			thread.start();
+//			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
@@ -25,13 +25,20 @@ public class RangerLaser extends Ranger {
 			throw new IllegalStateException();
 		}
 	}
+	public RangerLaser(RobotClient roboClient, Device device) {
+		this(roboClient,device.getHost());
+		host = device.getHost();
+		name = device.getName();
+		deviceNumber = device.getDeviceNumber();
+		port = device.getPort();
+	}
 	// Will check for new ranges
 	// If not yet ready will put current thread to sleep
 	protected void update() {
 		// Wait for the laser readings
 		while ( ! las.isDataReady() ) {
-			try { Thread.sleep (SLEEPTIME); }
-			catch (InterruptedException e) { thread.interrupt(); }
+//			try { Thread.sleep (SLEEPTIME); }
+//			catch (InterruptedException e) { thread.interrupt(); }
 		}
 		count = las.getData().getRanges_count();
 		if (count > 0) {

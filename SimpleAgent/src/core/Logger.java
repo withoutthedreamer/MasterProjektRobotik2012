@@ -14,7 +14,7 @@ public class Logger {
 		} else {
 			threadName = thread;
 		}
-		String logMsg = event + " of " + objName + " of robot " + otherId + " in " + threadName;
+		String logMsg = event + " of " + objName + " of device " + otherId + " in " + threadName;
 
 		if (isError == true) {
 			System.err.println(logMsg);

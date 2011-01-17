@@ -1,36 +1,42 @@
 package usecase;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
-import robot.PioneerRR;
-import simulator.Simulator;
-
-import core.OSCommand;
+import robot.Pioneer;
 import device.RobotClient;
 
 
 
 public class Test {
 
+	private static BufferedReader in = new BufferedReader(
+            new InputStreamReader(System.in));
 	/**
 	 * @param args
 	 * @throws IOException 
 	 */
-	@SuppressWarnings("unused")
 	public static void main(String[] args) throws IOException {
-		PioneerRR pionRR = null;
+		Pioneer pion = null;
+		RobotClient roboClient = null;
 		try {
-			pionRR = new PioneerRR("localhost", 6666, 1);
+			roboClient = new RobotClient("localhost", 6665);
+			pion = new Pioneer(roboClient);
+			roboClient.runThreaded();
+			pion.runThreaded();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
+			in.readLine();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		pionRR.shutdown();
+		pion.shutdown();
+		roboClient.shutdown();
 	}
 
 }
