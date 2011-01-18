@@ -5,6 +5,10 @@
 package robot;
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import core.Logger;
 
 import data.*;
 import device.*;
@@ -19,15 +23,14 @@ import device.*;
  */
 public class Pioneer extends Device implements Trackable, IPioneer
 {
-//	protected RobotClient[] roboClientList = null;
-	protected RobotClient roboClient = null;
-//	Device[] deviceList = null;
-	protected Position2d posi = null;
-
-	// To be implemented in subclass when needed
-	protected Ranger laser = null;
-	protected Ranger sonar = null;
-
+	// Standard devices
+	Position2d posi = null;
+	Ranger laser = null;
+	Ranger sonar = null;
+	Planner planner = null;
+	Gripper gripper = null;
+	Blobfinder bloFi = null;
+	
 	int id = -1;
 	double speed = -1.0;
 	double turnrate = -1.0;
@@ -44,8 +47,33 @@ public class Pioneer extends Device implements Trackable, IPioneer
 	//	public Pioneer (String name, int port, int id) throws IllegalStateException {
 	public Pioneer (RobotClient roboClient) throws IllegalStateException {
 
-		if (roboClient != null) {
-			Iterator<Device> devIt = roboClient.getDeviceIterator();
+		// Get the available devices
+//		deviceList = roboClient.getDeviceList();
+		
+		// Make the devices available
+		connectDevices(roboClient.getDeviceList());
+	}
+	/**
+	 * It is possible to give this robot more devices by passing an
+	 * RobotClient object which includes new devices.
+	 * The new devices will be added to the internal device list.
+	 * @param roboClient @ref RobotClient object containing new devices
+	 */
+	public void addDevices (RobotClient roboClient) {
+		if (roboClient != null)
+			connectDevices(roboClient.getDeviceList());
+	}
+	
+	/**
+	 * Initiate standard variables to this robot for the devices
+	 * Note that if there are duplicate devices in the list
+	 * always the last one of the same device code will be chosen!
+	 * @param deviceList 
+	 */
+	void connectDevices (ConcurrentLinkedQueue<Device> deviceList) {
+		
+		if (deviceList != null) {
+			Iterator<Device> devIt = deviceList.iterator();
 
 			if (devIt != null) {
 				while (devIt.hasNext()) {
@@ -55,18 +83,9 @@ public class Pioneer extends Device implements Trackable, IPioneer
 					{
 					case IDevice.DEVICE_POSITION2D_CODE :
 						posi = (Position2d) dev; break;
-//						posi = new Position2d(roboClient, id); break;
-						//						addToDeviceList(new Position2d(roboClient, id)); break;
-
-						//					case DeviceCode.DEVICE_BLOBFINDER_CODE : 
-						//						addToDeviceList( new Blobfinder(roboClient, id)); break;
-						//	
-						//					case DeviceCode.DEVICE_GRIPPER_CODE : 
-						//						addToDeviceList( new Gripper(roboClient, id)); break;
 
 					case IDevice.DEVICE_RANGER_CODE : 
-						int devId = dev.getDeviceNumber();
-						if (devId == 0) {
+						if (dev.getDeviceNumber() == 0) {
 							sonar = (Ranger) dev; break;
 						} else {
 							laser = (Ranger) dev; break;
@@ -78,12 +97,14 @@ public class Pioneer extends Device implements Trackable, IPioneer
 					case IDevice.DEVICE_LASER_CODE : 
 						laser = (RangerLaser) dev; break;
 
-						//					case DeviceCode.DEVICE_LOCALIZE_CODE : break;
-						//	
-						//					case DeviceCode.DEVICE_SIMULATION_CODE : break; 
-						//	
-						//					case DeviceCode.DEVICE_PLANNER_CODE : 
-						//						addToDeviceList( new Planner(roboClient, id)); break;
+					case IDevice.DEVICE_PLANNER_CODE :
+						planner = (Planner) dev; break;
+							
+					case IDevice.DEVICE_BLOBFINDER_CODE :
+						bloFi = (Blobfinder) dev; break;
+	
+					case IDevice.DEVICE_GRIPPER_CODE : 
+						gripper = (Gripper) dev; break;
 
 					default: break;
 					}
@@ -92,12 +113,13 @@ public class Pioneer extends Device implements Trackable, IPioneer
 		}
 	}
 
-	//	@Override
-	//	public void runThreaded () {
-	//		isRunning = true;
-	////		Logger.logActivity(false, "Running", this.toString(), this.id, thread.getName());
-	//		super.runThreaded();
-	//	}
+//		@Override
+//		public void runThreaded () {
+//	//		isRunning = true;
+//			Logger.logActivity(false, "Running", this.toString(), this.id, thread.getName());
+//	//		super.runThreaded();
+//			thread.start();
+//		}
 	@Override
 	protected void update() {
 		// Sensor read is done asynchronously
@@ -105,20 +127,20 @@ public class Pioneer extends Device implements Trackable, IPioneer
 		execute();
 	}
 
-	// Shutdown robot and clean up
-	//	@Override
-	//	public void shutdown () {
-	//		// Cleaning up
-	////		thread.interrupt();
-	////		while(this.thread.isAlive());
-	//		isRunning = false;
-	////		Logger.logActivity(false, "Shutdown", this.toString(), this.id, thread.getName());
-	//		super.shutdown();
-	//		
-	//	}
-	//	public boolean isRunning(){
-	//		return isRunning;
-	//	}
+	//	 Shutdown robot and clean up
+//	@Override
+//	public void shutdown () {
+//		Logger.logActivity(false, "Shutdown", this.toString(), this.id, thread.getName());
+//		// Cleaning up
+//		thread.interrupt();
+//		////		while(this.thread.isAlive());
+//		//		isRunning = false;
+//		//		super.shutdown();
+//		//		
+//		//	}
+//		//	public boolean isRunning(){
+//		//		return isRunning;
+//	}
 
 	/**
 	 * To be implemented by subclasses.

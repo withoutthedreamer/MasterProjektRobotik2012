@@ -1,7 +1,10 @@
 package device;
 
+//import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
+//import java.util.LinkedList;
+//import java.util.List;
+import java.util.concurrent.*;
 
 import core.Logger;
 
@@ -10,7 +13,8 @@ public class Device implements IDevice, Runnable {
 	
 //	List<Device> deviceList = null;
 //	private LinkedHashMap<String[],Device> deviceList = null;
-	LinkedList<Device> deviceList = null;
+//	protected List<Device> deviceList = null;
+	protected ConcurrentLinkedQueue<Device> deviceList = null;
 	
 	int name = -1;
 	int host = 0;
@@ -18,12 +22,13 @@ public class Device implements IDevice, Runnable {
 	int deviceNumber = 0;
 	
 	// Every class of this type has it's own thread
-	Thread thread = new Thread ( this );
+	protected Thread thread = new Thread ( this );
 
 	long SLEEPTIME = 100;
 	
 	public Device() {
-		deviceList = new LinkedList<Device>();
+//		deviceList = Collections.synchronizedList( new LinkedList<Device>() );
+		deviceList = new ConcurrentLinkedQueue<Device>();
 	}
 	
 	protected Device (int identifier) {
@@ -93,25 +98,28 @@ public class Device implements IDevice, Runnable {
 	protected void update() {
 	}
 
-	public void runThreaded() {
+	public synchronized void runThreaded() {
 		// Start all devices
 		if (deviceList.size() > 0) {
 			Iterator<Device> deviceIterator = deviceList.iterator();
 			while (deviceIterator.hasNext()) {
 				Device device = deviceIterator.next();
 				
-//				Logger.logActivity(false, "Running", device.toString(), device.getName(), device.thread.getName());
-
 				// Start device
 				device.runThreaded();
+				while (device.thread.isAlive() == false);
 			}
 		}
+		
 		thread.start();
+		while (thread.isAlive() == false);
 		Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 	}
 
-	public void shutdown() {
+	public synchronized void shutdown() {
 		thread.interrupt();
+		while (thread.isAlive());
+		
 		// Stop all devices
 		if (deviceList.size() > 0) {
 			Iterator<Device> deviceIterator = deviceList.iterator();
@@ -123,6 +131,7 @@ public class Device implements IDevice, Runnable {
 				// Stop device
 //				device.shutdown();
 				device.thread.interrupt();
+				while (device.thread.isAlive());
 			}
 			// empty device list
 			deviceList.clear();
@@ -135,11 +144,12 @@ public class Device implements IDevice, Runnable {
 	 * Returns a list of devices that this robot client provides
 	 * @return Device list
 	 */
-	public final Device[] getDeviceList() {	
-		return (Device[]) deviceList.toArray();
+//	public final Device[] getDeviceList() {
+	public final ConcurrentLinkedQueue<Device> getDeviceList() {
+		return deviceList;
 	}
 	
-	public final void addToDeviceList(Device dev) {
+	public synchronized final void addToDeviceList(Device dev) {
 
 		// Check if it has other devices linked
 		Iterator<Device> iter = dev.getDeviceIterator(); 

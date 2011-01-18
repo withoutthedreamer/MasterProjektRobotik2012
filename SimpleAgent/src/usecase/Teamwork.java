@@ -51,7 +51,7 @@ public class Teamwork  {
 	public static void main (String[] args) {
 		try {
 			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
-			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
+			GripperRobot pionLG = new GripperRobot("localhost", 6666, 1);
 			pionLG.setPlanner("localhost", 6685);
 			// Testing planner
 			pionLG.setPosition(new Position(-3,-5,0));

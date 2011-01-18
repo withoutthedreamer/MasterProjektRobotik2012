@@ -82,6 +82,7 @@ public class RobotClient extends Device {
 		//		Logger.logActivity(false, "Shutdown", this.toString(), id, null);
 //		this.thread.interrupt();
 		// Note RobotClient must not be in the list of devices!
+		// Let shutdown all devices in list and this thread
 		super.shutdown();
 		playerClient.close();
 	}
@@ -107,7 +108,8 @@ public class RobotClient extends Device {
 						switch (name)
 						{
 						case IDevice.DEVICE_POSITION2D_CODE :
-							dev = new Position2d(this, new Device(name, hosts, port, Indes)); break;
+							if (Indes == 0)
+								dev = new Position2d(this, new Device(name, hosts, port, Indes)); break;
 							//						addToDeviceList(new Position2d(roboClient, id)); break;
 	
 						case IDevice.DEVICE_RANGER_CODE : 
@@ -165,12 +167,12 @@ public class RobotClient extends Device {
 	 * Otherwise program will block forever
 	 * This call has to be after all device requests!
 	 */
-		@Override
-		public void runThreaded() {
-			super.runThreaded();
-			// Start player thread
-//			playerClient.runThreaded (-1, -1);
-		}	
+//		@Override
+//		public void runThreaded() {
+//			super.runThreaded();
+//			// Start player thread
+////			playerClient.runThreaded (-1, -1);
+//		}	
 	@Override
 	protected void update() {
 //		if (thread.isInterrupted() != true) {
