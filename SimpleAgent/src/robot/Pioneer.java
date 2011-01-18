@@ -21,6 +21,7 @@ import device.*;
 public class Pioneer extends Device implements Trackable, IPioneer
 {
 	// Standard devices
+	// TODO dynamic array
 	Position2d posi = null;
 	Ranger laser = null;
 	Ranger sonar = null;
@@ -50,16 +51,16 @@ public class Pioneer extends Device implements Trackable, IPioneer
 		// Make the devices available
 		connectDevices(roboClient.getDeviceList());
 	}
-	/**
-	 * It is possible to give this robot more devices by passing an
-	 * RobotClient object which includes new devices.
-	 * The new devices will be added to the internal device list.
-	 * @param roboClient @ref RobotClient object containing new devices
-	 */
-	public void addDevices (RobotClient roboClient) {
-		if (roboClient != null)
-			connectDevices(roboClient.getDeviceList());
-	}
+//	/**
+//	 * It is possible to give this robot more devices by passing an
+//	 * RobotClient object which includes new devices.
+//	 * The new devices will be added to the internal device list.
+//	 * @param roboClient @ref RobotClient object containing new devices
+//	 */
+//	public void addDevices (RobotClient roboClient) {
+//		if (roboClient != null)
+//			connectDevices(roboClient.getDeviceList());
+//	}
 	
 	/**
 	 * Initiate standard variables to this robot for the devices

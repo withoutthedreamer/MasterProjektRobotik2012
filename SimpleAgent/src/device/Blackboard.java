@@ -25,7 +25,7 @@ public class Blackboard extends Device {
 	long SLEEPTIME = 500;
 
 	protected Blackboard(Trackable robot) {
-		super(-1);
+//		super(-1);
 		try {
 			notehm = new LinkedHashMap<String,BbNote>();
 			collectrobot = robot;

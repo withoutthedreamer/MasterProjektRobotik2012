@@ -27,10 +27,12 @@ public class FindCollectExample {
 			explorer.runThreaded();
 			
 			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
-			gripDevices2.runThreaded();
+//			gripDevices2.runThreaded();
+			gripDevices.addDevicesOf(gripDevices2);
+			gripDevices2 = null;
 			
 			GripperRobot gripper = new GripperRobot(gripDevices);
-			gripper.addDevices(gripDevices2);
+//			gripper.addDevices(gripDevices2);
 			gripper.runThreaded();
 			
 			gripper.setPosition(new Position(-16,3,Math.toRadians(90)));
@@ -65,7 +67,7 @@ public class FindCollectExample {
 			
 			gripper.shutdown();
 			gripDevices.shutdown();
-			gripDevices2.shutdown();
+//			gripDevices2.shutdown();
 
 //			simu.shutdown();
 			

@@ -22,7 +22,7 @@ public class Blobfinder extends Device {
 //	public Thread thread = new Thread ( this );
 	
 	public Blobfinder (RobotClient roboClient, int id) {
-		super(id);
+//		super(id);
 		try {
 			bfi = roboClient.getClient().requestInterfaceBlobfinder(0, PlayerConstants.PLAYER_OPEN_MODE);
 			blobs = new Vector<BlobfinderBlob>();

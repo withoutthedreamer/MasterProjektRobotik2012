@@ -16,10 +16,10 @@ public class Ranger extends Device {
 //	public Thread thread = new Thread ( this );
 
 	protected Ranger (int id) {
-		super(id);
+//		super(id);
 	}
 	public Ranger (RobotClient roboClient, int id, int device) {
-		super(id);
+//		super(id);
 		try {
 			rang = roboClient.getClient().requestInterfaceRanger(device, PlayerConstants.PLAYER_OPEN_MODE);
 			

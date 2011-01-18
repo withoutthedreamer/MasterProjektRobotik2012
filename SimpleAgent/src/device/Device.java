@@ -30,56 +30,73 @@ public class Device implements IDevice, Runnable {
 //		deviceList = Collections.synchronizedList( new LinkedList<Device>() );
 		deviceList = new ConcurrentLinkedQueue<Device>();
 	}
-	
-	protected Device (int identifier) {
-		this();
-		id = identifier;
-	}
+	//	protected Device (int identifier) {
+	//		this();
+	//		id = identifier;
+	//	}
+	//	/**
+	//	 * Add one device to internal device list
+	//	 * @param deviceToAdd
+	//	 */
+	//	public Device (Device deviceToAdd) {
+	//		this();
+	//		if (deviceToAdd != null) {
+	////			deviceList.put(deviceToAdd.getId(), deviceToAdd);
+	//			addToDeviceList(deviceToAdd);
+	//		}
+	//	}
+	//	/**
+	//	 * Add a device list to internal device list
+	//	 * @param deviceListToAdd
+	//	 */
+	//	public Device (Device[] deviceListToAdd) {
+	//		this();
+	//		// Take id from first device on list
+	////		this(deviceListToAdd[0].getId());
+	//		// Add devices to device list
+	//		if (deviceListToAdd != null) {
+	//			for (int i=0; i<deviceListToAdd.length; i++) { 
+	////				deviceList.put(deviceListToAdd[i].getId(), deviceListToAdd[i]);
+	//				addToDeviceList(deviceListToAdd[i]);
+	//			}
+	//		}
+	//	}
+	//	// TODO check if really needed
+	//	public Device (int name, int host, int port) {
+	//		this.name = name;
+	//		this.host = host;
+	//		this.port = port;
+	//	}
 	/**
-	 * Add one device to internal device list
-	 * @param deviceToAdd
+	 * This constructor is used to create a data device object
+	 * and has no internal devicelist or thread
 	 */
-	public Device (Device deviceToAdd) {
-		this();
-		if (deviceToAdd != null) {
-//			deviceList.put(deviceToAdd.getId(), deviceToAdd);
-			addToDeviceList(deviceToAdd);
-		}
-	}
-	/**
-	 * Add a device list to internal device list
-	 * @param deviceListToAdd
-	 */
-	public Device (Device[] deviceListToAdd) {
-		this();
-		// Take id from first device on list
-//		this(deviceListToAdd[0].getId());
-		// Add devices to device list
-		if (deviceListToAdd != null) {
-			for (int i=0; i<deviceListToAdd.length; i++) { 
-//				deviceList.put(deviceListToAdd[i].getId(), deviceListToAdd[i]);
-				addToDeviceList(deviceListToAdd[i]);
-			}
-		}
-	}
-	// TODO check if really needed
-	public Device (int name, int host, int port) {
+	public Device (int name, int host, int port, int devNum) {
 		this.name = name;
 		this.host = host;
 		this.port = port;
+		deviceNumber = devNum;
 	}
-	public Device (int name, int host, int port, int devNum) {
-		this(name,host,port);
-		this.deviceNumber = devNum;
-	}
-//	public void setId(int id) {
-//		this.id = id;
-//	}
 	/**
-	 * A device is uniquely represented by its host, port and name
-	 * @return String list representing the id
+	 * Adds all devices of the given device (if any and without itself)
+	 * to the internal device list of this device.
+	 * @param yad A device containing other devices.
 	 */
-	// TODO check if needed
+	public void addDevicesOf ( Device yad ) {
+		if (yad != null && deviceList != null) {
+			Iterator<Device> devIt = yad.getDeviceIterator();
+			while (devIt.hasNext()) {
+				deviceList.add(devIt.next());
+			}
+		}
+	}
+	////	public void setId(int id) {
+	//		this.id = id;
+	//	}
+//	/**
+//	 * A device is uniquely represented by its host, port and name
+//	 * @return String list representing the id
+//	 */
 //	public String[] getId() {
 //		return new String[] {host, new Integer(port).toString(), new Integer(name).toString()};
 //	}

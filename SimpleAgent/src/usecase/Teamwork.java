@@ -54,16 +54,17 @@ public class Teamwork  {
 			explDevices.runThreaded();
 			
 			RobotClient gripDevices = new RobotClient("localhost", 6667);
+			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
+			gripDevices.addDevicesOf(gripDevices2);
+			gripDevices2 = null;
 			gripDevices.runThreaded();
 
-			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
-			gripDevices2.runThreaded();
 			
 			ExploreRobot explorer = new ExploreRobot(explDevices);
 			explorer.runThreaded();
 			
 			GripperRobot gripper = new GripperRobot(gripDevices);
-			gripper.addDevices(gripDevices2);
+//			gripper.addDevices(gripDevices2);
 			gripper.runThreaded();
 			
 			gripper.setPosition(new Position(-16,3,Math.toRadians(90)));
@@ -86,7 +87,7 @@ public class Teamwork  {
 			
 			gripper.shutdown();
 			gripDevices.shutdown();
-			gripDevices2.shutdown();
+//			gripDevices2.shutdown();
 
 			simu.shutdown();
 			

@@ -23,7 +23,7 @@ public class Gripper extends Device {
 	}
 
 	public Gripper(RobotClient roboClient, int id) {
-		super(id);
+//		super(id);
 		try {
 			grip = roboClient.getClient().requestInterfaceGripper(0, PlayerConstants.PLAYER_OPEN_MODE);
 

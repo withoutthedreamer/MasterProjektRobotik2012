@@ -32,7 +32,7 @@ public class Position2d extends Device {
 	 */
 	// Host id
 	public Position2d (RobotClient roboClient, int id) {
-		super(id);
+//		super(id);
 		try {
 			posi = roboClient.getClient().requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
 			this.id = id;

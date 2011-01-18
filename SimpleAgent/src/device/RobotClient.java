@@ -59,12 +59,12 @@ public class RobotClient extends Device {
 		}
 	}
 
-	// TODO check if needed
-	public RobotClient (String name, int port, int clientId) throws IllegalStateException
-	{
-		//		super(clientId);
-		this(name,port);
-	}
+//	// TODO check if needed
+//	public RobotClient (String name, int port, int clientId) throws IllegalStateException
+//	{
+//		//		super(clientId);
+//		this(name,port);
+//	}
 	//	public void addRobotClient(RobotClient aRoboClient) {
 	//		// Add new robo client to device list
 	//		addToDeviceList(aRoboClient);
