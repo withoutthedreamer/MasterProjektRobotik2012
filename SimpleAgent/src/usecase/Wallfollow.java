@@ -37,7 +37,9 @@ package usecase;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-import robot.PioneerRR;
+import robot.Pioneer;
+
+import device.RobotClient;
 
 public class Wallfollow {
 
@@ -46,11 +48,17 @@ public class Wallfollow {
 
 	public static void main (String[] args) {
 		try {
-			PioneerRR pionRR = new PioneerRR("localhost", 6665, 1);
+			RobotClient roboClient = new RobotClient("localhost", 6667);
+			roboClient.runThreaded();
+			
+			Pioneer pion = new Pioneer(roboClient);
+			pion.runThreaded();
 			
 			// Wait until enter is pressed
 			in.readLine();
-			pionRR.shutdown();
+			
+			pion.shutdown();
+			roboClient.shutdown();
 			
 		} catch (Exception e) { e.printStackTrace(); }
 	}

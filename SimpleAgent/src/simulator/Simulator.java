@@ -34,6 +34,7 @@ public class Simulator implements Runnable {
 	protected Thread thread = new Thread ( this );
 
 	// Singleton
+	// TODO change to new interface
 	protected Simulator(String name, int port) {
 		try {
 			// Connect to the Player server and request access to Position

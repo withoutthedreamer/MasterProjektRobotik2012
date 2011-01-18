@@ -5,10 +5,7 @@
 package robot;
 
 import java.util.Iterator;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-
-import core.Logger;
 
 import data.*;
 import device.*;

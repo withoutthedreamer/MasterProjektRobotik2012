@@ -2,34 +2,24 @@ package robot;
 
 import data.BbNote;
 import data.BlobfinderBlob;
-import data.Position;
 import device.Blackboard;
-import device.Blobfinder;
+import device.RobotClient;
 
-public class PioneerSB extends PioneerS {
-	protected Blobfinder blofi = null;
+public class ExploreRobot extends Pioneer {
+	
 	protected Blackboard blackboard = null;
 
-	public PioneerSB(String name, int port, int id) throws IllegalStateException {
-
-		super(name, port, id);
-
-		blofi = new Blobfinder(roboClient, this.id);
+	public ExploreRobot(RobotClient roboClient)
+	{
+		super(roboClient);
 	}
-	
-	protected void shutdownDevices () {
-		super.shutdownDevices();
-		this.blofi.thread.interrupt();
-		while(this.blofi.thread.isAlive());
-	}
-	
 	protected final void blobsearch() {
-		if (this.blofi == null ) { return; }
-		int count = this.blofi.getCount();
+		if (this.bloFi == null ) { return; }
+		int count = this.bloFi.getCount();
 		if (count > 0) {
 			for (int i=0; i<count; i++) {
-				if (blofi.getBlobs().capacity() > i) {
-					BlobfinderBlob ablob = blofi.getBlobs().get(i);
+				if (bloFi.getBlobs().capacity() > i) {
+					BlobfinderBlob ablob = bloFi.getBlobs().get(i);
 					// Seen from this position
 					ablob.setDiscovered(this.getPosition());
 					BbNote note = new BbNote();
@@ -51,7 +41,7 @@ public class PioneerSB extends PioneerS {
 		double tmp_turnrate = 0.;
 
 		blobsearch();
-		
+
 		// (Left) Wall following
 		this.turnrate = wallfollow();
 		// Collision avoidance overrides other turnrate if neccessary!
@@ -70,17 +60,9 @@ public class PioneerSB extends PioneerS {
 		double weight = 0.5;
 		this.turnrate = weight*tmp_turnrate + (1-weight)*this.turnrate;
 	}
-	@Override
-	public void setGoal(Position goal) {
-		// TODO Auto-generated method stub
-		
-	}
-	public void setBlackboard (Blackboard bb) {
-		this.blackboard = bb;
-	}
-	@Override
-	public Position getGoal() {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public void setBlackboard (Blackboard bb)
+	{
+		blackboard = bb;
 	}
 }

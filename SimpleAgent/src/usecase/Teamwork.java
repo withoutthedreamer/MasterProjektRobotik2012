@@ -38,11 +38,11 @@ package usecase;
 import robot.*;
 import simulator.*;
 import data.Position;
+import device.RobotClient;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
-@SuppressWarnings("unused")
 public class Teamwork  {
 	
 	private static BufferedReader in = new BufferedReader(
@@ -50,23 +50,44 @@ public class Teamwork  {
 
 	public static void main (String[] args) {
 		try {
-			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
-			GripperRobot pionLG = new GripperRobot("localhost", 6666, 1);
-			pionLG.setPlanner("localhost", 6685);
+			RobotClient explDevices = new RobotClient("localhost", 6665);
+			explDevices.runThreaded();
+			
+			RobotClient gripDevices = new RobotClient("localhost", 6667);
+			gripDevices.runThreaded();
+
+			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
+			gripDevices2.runThreaded();
+			
+			ExploreRobot explorer = new ExploreRobot(explDevices);
+			explorer.runThreaded();
+			
+			GripperRobot gripper = new GripperRobot(gripDevices);
+			gripper.addDevices(gripDevices2);
+			gripper.runThreaded();
+			
+			gripper.setPosition(new Position(-16,3,Math.toRadians(90)));
+
 			// Testing planner
-			pionLG.setPosition(new Position(-3,-5,0));
-			pionLG.setGoal(new Position(-6,6,0));
+			gripper.setPosition(new Position(-3,-5,0));
+			gripper.setGoal(new Position(-6,6,0));
 //			// Testing Simulator
 			Simulator simu   = Simulator.getInstance("localhost", 6675);
 			Tracker tracker  = Tracker.getInstance(simu, null);
-			tracker.addObject("r0", pionSB);
-			tracker.addObject("r1", pionLG);
+			tracker.addObject("r0", explorer);
+			tracker.addObject("r1", gripper);
 		
 			// Wait until enter is pressed
 			in.readLine();
 			tracker.shutdown();
-			pionSB.shutdown();
-			pionLG.shutdown();
+			
+			explorer.shutdown();
+			explDevices.shutdown();
+			
+			gripper.shutdown();
+			gripDevices.shutdown();
+			gripDevices2.shutdown();
+
 			simu.shutdown();
 			
 		} catch (Exception e) { e.printStackTrace(); }
