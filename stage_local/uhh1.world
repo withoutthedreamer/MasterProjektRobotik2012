@@ -2,6 +2,7 @@
 include "pioneer.inc"
 include "map.inc"
 include "urgr.inc"
+#include "utm30lx.inc"
 include "platte.inc"
 include "laptop.inc"
 
@@ -79,6 +80,7 @@ fancypioneer2dx
   #pose [ -28 3 0 90 ] 
 
   laser240()
+  #utm30lx()
   platte()
   laptop()
   bobsgripper()
