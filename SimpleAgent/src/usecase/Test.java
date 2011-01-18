@@ -21,9 +21,9 @@ public class Test {
 		Pioneer pion = null;
 		RobotClient roboClient = null;
 		try {
-			roboClient = new RobotClient("localhost", 6665);
-			pion = new Pioneer(roboClient);
+			roboClient = new RobotClient("localhost", 6667);
 			roboClient.runThreaded();
+			pion = new Pioneer(roboClient);
 			pion.runThreaded();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

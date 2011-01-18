@@ -95,7 +95,7 @@ public class Device implements IDevice, Runnable {
 
 	public void runThreaded() {
 		// Start all devices
-		if (deviceList != null) {
+		if (deviceList.size() > 0) {
 			Iterator<Device> deviceIterator = deviceList.iterator();
 			while (deviceIterator.hasNext()) {
 				Device device = deviceIterator.next();
@@ -111,8 +111,9 @@ public class Device implements IDevice, Runnable {
 	}
 
 	public void shutdown() {
+		thread.interrupt();
 		// Stop all devices
-		if (deviceList != null) {
+		if (deviceList.size() > 0) {
 			Iterator<Device> deviceIterator = deviceList.iterator();
 			while (deviceIterator.hasNext()) {
 				Device device = deviceIterator.next();
@@ -128,7 +129,6 @@ public class Device implements IDevice, Runnable {
 //			deviceList = null;
 		}
 //		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
-		thread.interrupt();
 		//		while (thread.isAlive());
 	}
 	/**

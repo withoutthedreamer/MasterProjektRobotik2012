@@ -64,6 +64,14 @@ public class Pioneer extends Device implements Trackable, IPioneer
 						//					case DeviceCode.DEVICE_GRIPPER_CODE : 
 						//						addToDeviceList( new Gripper(roboClient, id)); break;
 
+					case IDevice.DEVICE_RANGER_CODE : 
+						int devId = dev.getDeviceNumber();
+						if (devId == 0) {
+							sonar = (Ranger) dev; break;
+						} else {
+							laser = (Ranger) dev; break;
+						}
+
 					case IDevice.DEVICE_SONAR_CODE : 
 						sonar = (RangerSonar) dev; break;
 
@@ -76,14 +84,6 @@ public class Pioneer extends Device implements Trackable, IPioneer
 						//	
 						//					case DeviceCode.DEVICE_PLANNER_CODE : 
 						//						addToDeviceList( new Planner(roboClient, id)); break;
-
-					case IDevice.DEVICE_RANGER_CODE : 
-						int devId = dev.getDeviceNumber();
-						if (devId == 0) {
-							sonar = (Ranger) dev; break;
-						} else {
-							laser = (Ranger) dev; break;
-						}
 
 					default: break;
 					}

@@ -14,8 +14,8 @@ import javaclient3.structures.position2d.PlayerPosition2dData;
  *
  */
 public class Position2d extends Device {
-	protected Position2DInterface posi  = null;
-	protected Position pos = null;
+	Position2DInterface posi  = null;
+	Position pos = null;
 //	protected final int SLEEPTIME = 100;
 	
 	// Every class of this type has it's own thread
@@ -119,14 +119,15 @@ public class Position2d extends Device {
 	 * @param speed New robot speed (m/s).
 	 */
 	public void setSpeed (double speed) {
-		this.speed = speed;
 		isNewSpeed = true;
+		this.speed = speed;
 	}
 	/**
 	 * 
 	 * @param turnrate New robot turnrate (rad/s).
 	 */
 	public void setTurnrate (double turnrate) {
+		isNewSpeed = true;
 		this.turnrate = turnrate;
 	}
 	/**
