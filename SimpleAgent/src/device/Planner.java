@@ -3,15 +3,15 @@ package device;
 import core.Logger;
 import data.Position;
 import javaclient3.PlannerInterface;
-import javaclient3.PlayerClient;
+//import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.planner.PlayerPlannerData;
 
-public class Planner extends Device implements Runnable {
+public class Planner extends Device {
 	// Planner is running its own Player server
-	protected PlayerClient playerclient = null;
+//	protected PlayerClient playerclient = null;
 	protected PlannerInterface plan = null;
 //	protected LocalizeInterface loci  = null;
 //	protected MapInterface mapi = null;
@@ -19,7 +19,7 @@ public class Planner extends Device implements Runnable {
 	protected final int SLEEPTIME = 100;
 
 	// Every class of this type has it's own thread
-	public Thread thread = new Thread ( this );
+//	public Thread thread = new Thread ( this );
 
 	// initial values for the covariance matrix (c&p example from playernav)
 //	protected double cov[] = { 0.5*0.5, 0.5*0.5, (Math.PI/6.0)*(Math.PI/6.0), 0, 0, 0 };
@@ -34,15 +34,15 @@ public class Planner extends Device implements Runnable {
 	private Position curPosition;
 
 	// Host id
-	public Planner (String host, int port, int id) {
-		super(id);
+//	public Planner (String host, int port, int id) {
+	public Planner (RobotClient roboClient, int id) {
 		try {
 			// Connect to the Player server and request access to Position
-			playerclient  = new PlayerClient (host, port);
+//			playerclient  = new PlayerClient (host, port);
 
 //			mapi = playerclient.requestInterfaceMap(0, PlayerConstants.PLAYER_OPEN_MODE);
 //			loci = playerclient.requestInterfaceLocalize(0, PlayerConstants.PLAYER_OPEN_MODE);
-			plan = playerclient.requestInterfacePlanner(0, PlayerConstants.PLAYER_OPEN_MODE);
+			plan = roboClient.getClient().requestInterfacePlanner(0, PlayerConstants.PLAYER_OPEN_MODE);
 
 			// set the initial guessed pose for localization (AMCL)
 //			locPose = new PlayerLocalizeSetPose ();
@@ -59,11 +59,21 @@ public class Planner extends Device implements Runnable {
 			// enable motion
 			plan.setRobotMotion(1);
 
+			// Add itself to the device list
+//			deviceList.put("planner", this);
+
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
 			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
 			throw new IllegalStateException();
 		}
+	}
+	public Planner(RobotClient roboClient, Device device) {
+		this(roboClient,device.getHost());
+		host = device.getHost();
+		name = device.getName();
+		deviceNumber = device.getDeviceNumber();
+		port = device.getPort();
 	}
 	public void setGoal (Position newGoal) {
 //		goal.setPx(newGoal.getX());
@@ -123,8 +133,8 @@ public class Planner extends Device implements Runnable {
 					goal.getYaw()));
 		}
 		
-		try { Thread.sleep (this.SLEEPTIME); }
-		catch (InterruptedException e) { thread.interrupt(); }
+//		try { Thread.sleep (this.SLEEPTIME); }
+//		catch (InterruptedException e) { thread.interrupt(); }
 
 	}
 
@@ -135,25 +145,25 @@ public class Planner extends Device implements Runnable {
 //			pose2.getPa() );
 //	}
 	
-	public void runThreaded() {
-		playerclient.runThreaded (-1, -1);
-		thread.start();
-		Logger.logActivity(false, "Running", this.toString(), this.id, thread.getName());
-	}
+//	public void runThreaded() {
+//		playerclient.runThreaded (-1, -1);
+//		thread.start();
+//		Logger.logActivity(false, "Running", this.toString(), this.id, thread.getName());
+//	}
 
-	@Override
-	public void run() {
-		while ( ! thread.isInterrupted()) {
-			update();
-		}
-	}
-	public void shutdown() {
-		playerclient.close();
-		while (playerclient.isAlive());
-		thread.interrupt();
-		while (this.thread.isAlive());
-		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
-	}
+//	@Override
+//	public void run() {
+//		while ( ! thread.isInterrupted()) {
+//			update();
+//		}
+//	}
+//	public void shutdown() {
+//		playerclient.close();
+//		while (playerclient.isAlive());
+//		thread.interrupt();
+//		while (this.thread.isAlive());
+//		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
+//	}
 	public synchronized void setPose(Position position) {
 //		this.pose.setPx(position.getX());
 //		this.pose.setPy(position.getY());

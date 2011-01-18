@@ -4,7 +4,9 @@
  */
 package robot;
 
-import core.*;
+import java.util.Iterator;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
 import data.*;
 import device.*;
 
@@ -16,79 +18,21 @@ import device.*;
  * @author sebastian
  *
  */
-public class Pioneer implements Runnable, Trackable
+public class Pioneer extends Device implements Trackable, IPioneer
 {
-	protected RobotClient roboClient = null;
-	protected Position2d posi = null;
+	// Standard devices
+	Position2d posi = null;
+	Ranger laser = null;
+	Ranger sonar = null;
+	Planner planner = null;
+	Gripper gripper = null;
+	Blobfinder bloFi = null;
 	
-	// To be implemented in subclass when needed
-	protected Ranger  laser = null;
-	protected Ranger  sonar = null;
-//	protected Gripper grip  = null;
-	
-	// Every class of this type has it's own thread
-	protected Thread thread = new Thread ( this );
-	
-	protected int id = -1;
-	protected double speed = -1.0;
-	protected double turnrate = -1.0;
-	protected enum StateType { // TODO static ?
-		LWALL_FOLLOWING,
-		RWALL_FOLLOWING,
-	    COLLISION_AVOIDANCE,
-	    WALL_SEARCHING
-	}
-	protected StateType currentState;
-	protected enum viewDirectType { // TODO static?
-	   LEFT,
-	   RIGHT,
-	   FRONT,
-	   BACK,
-	   LEFTFRONT,
-	   RIGHTFRONT,
-	   LEFTREAR,
-	   RIGHTREAR,
-	   ALL
-	}
-	// Parameters TODO shall be in own config file or superclass
-	protected final double VEL       = 0.3;///< Normal_advance_speed in meters per sec.
-	protected final double TURN_RATE = 40; ///< Max wall following turnrate in deg per sec.
-	                             /// Low values: Smoother trajectory but more
-	                             /// restricted
-	protected final double STOP_ROT  = 30; ///< Stop rotation speed.
-	                             /// Low values increase maneuverability in narrow
-	                             /// edges, high values let the robot sometimes be
-	                             /// stuck.
-	protected final double TRACK_ROT =  40; /// Goal tracking rotation speed in degrees per sec.
-	protected final double YAW_TOLERANCE = 20;///< Yaw tolerance for ball tracking in deg
-	protected final double DIST_TOLERANCE = 0.5;///< Distance tolerance before stopping in meters
-	protected final double WALLFOLLOWDIST = 0.5; ///< Preferred wall following distance in meters.
-	protected final double STOP_WALLFOLLOWDIST = 0.2; ///< Stop distance in meters.
-	protected final double WALLLOSTDIST  = 1.5; ///< Wall attractor in meters before loosing walls.
-	protected final double SHAPE_DIST = 0.3; ///< Min Radius from sensor for robot shape.
-	// Laser ranger
-	protected final double LMAXANGLE = 240; ///< Laser max angle in degree
-	protected final int BEAMCOUNT = 2; ///< Number of laser beams taken for one average distance measurement
-	protected final double DEGPROBEAM   = 0.3515625; ///< 360./1024. in degree per laser beam
-	protected final double LPMAX     = 5.0;  ///< max laser range in meters
-	protected final double COS45     = 0.83867056795; ///< Cos(33);
-	protected final double INV_COS45 = 1.19236329284; ///< 1/COS45
-	protected final double DIAGOFFSET  = 0.1;  ///< Laser to sonar diagonal offset in meters.
-	protected final double HORZOFFSET  = 0.15; ///< Laser to sonar horizontal offset in meters.
-	protected final double MOUNTOFFSET = 0.1;  ///< Sonar vertical offset at back for laptop mount.
-	protected final int LMIN  = 175;/**< LEFT min angle.       */ protected final int LMAX  = 239; ///< LEFT max angle.
-	protected final int LFMIN = 140;/**< LEFTFRONT min angle.  */ protected final int LFMAX = 175; ///< LEFTFRONT max angle.
-	protected final int FMIN  = 100;/**< FRONT min angle.      */ protected final int FMAX  = 140; ///< FRONT max angle.
-	protected final int RFMIN = 65; /**< RIGHTFRONT min angle. */ protected final int RFMAX = 100; ///< RIGHTFRONT max angle.
-	protected final int RMIN  = 0;  /**< RIGHT min angle.      */ protected final int RMAX  = 65;  ///< RIGHT max angle.
-	protected boolean isRunning = false;
-	
-	//Debugging
-	protected static boolean isDebugLaser = false;
-	protected static boolean isDebugState = false;
-	protected static boolean isDebugSonar = false;
-	protected static boolean isDebugDistance = false;
-	protected static boolean isDebugPosition = false;
+	int id = -1;
+	double speed = -1.0;
+	double turnrate = -1.0;
+
+	StateType currentState;
 
 	/**
 	 * Default constructor
@@ -97,64 +41,111 @@ public class Pioneer implements Runnable, Trackable
 	/**
 	 * This constructor has to be overwritten in any subclasses!
 	 */
-	public Pioneer (String name, int port, int id) throws IllegalStateException {
+	//	public Pioneer (String name, int port, int id) throws IllegalStateException {
+	public Pioneer (RobotClient roboClient) throws IllegalStateException {
 
-		this.id = id;
-
-		// Added standard devices
-		roboClient = new RobotClient (name, port, id);
-		posi = new Position2d(roboClient.getClient(), id);
+		// Get the available devices
+//		deviceList = roboClient.getDeviceList();
+		
+		// Make the devices available
+		connectDevices(roboClient.getDeviceList());
 	}
+	/**
+	 * It is possible to give this robot more devices by passing an
+	 * RobotClient object which includes new devices.
+	 * The new devices will be added to the internal device list.
+	 * @param roboClient @ref RobotClient object containing new devices
+	 */
+	public void addDevices (RobotClient roboClient) {
+		if (roboClient != null)
+			connectDevices(roboClient.getDeviceList());
+	}
+	
+	/**
+	 * Initiate standard variables to this robot for the devices
+	 * Note that if there are duplicate devices in the list
+	 * always the last one of the same device code will be chosen!
+	 * @param deviceList 
+	 */
+	void connectDevices (ConcurrentLinkedQueue<Device> deviceList) {
+		
+		if (deviceList != null) {
+			Iterator<Device> devIt = deviceList.iterator();
 
-	// Define thread behavior
-	public void run() {
-		
-		roboClient.runThreaded();
-		isRunning = true;
-		
-		while ( ! thread.isInterrupted()) {
-			// Should not be called more than @ 10Hz
-			this.update();
-			try { Thread.sleep (100); }
-			catch (InterruptedException e) { thread.interrupt(); }
+			if (devIt != null) {
+				while (devIt.hasNext()) {
+					Device dev = devIt.next();
+
+					switch (dev.getName())
+					{
+					case IDevice.DEVICE_POSITION2D_CODE :
+						posi = (Position2d) dev; break;
+
+					case IDevice.DEVICE_RANGER_CODE : 
+						if (dev.getDeviceNumber() == 0) {
+							sonar = (Ranger) dev; break;
+						} else {
+							laser = (Ranger) dev; break;
+						}
+
+					case IDevice.DEVICE_SONAR_CODE : 
+						sonar = (RangerSonar) dev; break;
+
+					case IDevice.DEVICE_LASER_CODE : 
+						laser = (RangerLaser) dev; break;
+
+					case IDevice.DEVICE_PLANNER_CODE :
+						planner = (Planner) dev; break;
+							
+					case IDevice.DEVICE_BLOBFINDER_CODE :
+						bloFi = (Blobfinder) dev; break;
+	
+					case IDevice.DEVICE_GRIPPER_CODE : 
+						gripper = (Gripper) dev; break;
+
+					default: break;
+					}
+				}
+			}
 		}
 	}
+
+//		@Override
+//		public void runThreaded () {
+//	//		isRunning = true;
+//			Logger.logActivity(false, "Running", this.toString(), this.id, thread.getName());
+//	//		super.runThreaded();
+//			thread.start();
+//		}
+	@Override
 	protected void update() {
 		// Sensor read is done asynchronously
 		plan();
 		execute();
 	}
-	public void runThreaded() {
-		thread.start();
-		Logger.logActivity(false, "Running", this.toString(), this.id, thread.getName());
-	}
-	
-	// Shutdown robot and clean up
-	public void shutdown () {
-		// Cleaning up
-		shutdownDevices();
-		if (posi != null) {
-			posi.thread.interrupt();
-			while (posi.thread.isAlive());
-		}
-		if (roboClient != null) {
-			roboClient.shutdown();
-		}
-		this.thread.interrupt();
-		while(this.thread.isAlive());
-		isRunning = false;
-		Logger.logActivity(false, "Shutdown", this.toString(), this.id, thread.getName());
-	}
-	public boolean isRunning(){
-		return isRunning;
-	}
-		
+
+	//	 Shutdown robot and clean up
+//	@Override
+//	public void shutdown () {
+//		Logger.logActivity(false, "Shutdown", this.toString(), this.id, thread.getName());
+//		// Cleaning up
+//		thread.interrupt();
+//		////		while(this.thread.isAlive());
+//		//		isRunning = false;
+//		//		super.shutdown();
+//		//		
+//		//	}
+//		//	public boolean isRunning(){
+//		//		return isRunning;
+//	}
+
 	/**
 	 * To be implemented by subclasses.
 	 * When they have additional devices.
 	 */
-	protected void shutdownDevices(){};
-		
+	//	protected void shutdownDevices(){};
+
+	@SuppressWarnings("unused")
 	protected void plan () {
 		double tmp_turnrate = 0.;
 
@@ -168,13 +159,13 @@ public class Pioneer implements Runnable, Trackable
 		}
 
 		// (Left) Wall following
-		this.turnrate = wallfollow();
+		turnrate = wallfollow();
 		// Collision avoidance overrides other turnrate if neccessary!
 		// May change this.turnrate or this.currentState
-		this.turnrate = collisionAvoid();
+		turnrate = collisionAvoid();
 
 		// Set speed dependend on the wall distance
-		this.speed = calcspeed();
+		speed = calcspeed();
 
 		// Check if rotating is safe
 		// tune turnrate controlling here
@@ -236,8 +227,10 @@ public class Pioneer implements Runnable, Trackable
 	 * Command the motors
 	 */
 	protected final void execute() {
-		posi.setSpeed(speed);
-		posi.setTurnrate(turnrate);
+		if (posi != null) {
+			posi.setSpeed(speed);
+			posi.setTurnrate(turnrate);
+		}
 	}
 	/**
 	 * Return robot position
@@ -256,53 +249,53 @@ public class Pioneer implements Runnable, Trackable
 	 */
 	protected final double getDistanceLas ( int minAngle, int maxAngle ) {
 		double minDist         = LPMAX; ///< Min distance in the arc.
-	    double distCurr        = LPMAX; ///< Current distance of a laser beam
+		double distCurr        = LPMAX; ///< Current distance of a laser beam
 
-	    if (this.laser != null) {
-	    	if ( !(minAngle<0 || maxAngle<0 || minAngle>=maxAngle || minAngle>=LMAXANGLE || maxAngle>LMAXANGLE ) ) {
+		if (laser != null) {
+			if ( !(minAngle<0 || maxAngle<0 || minAngle>=maxAngle || minAngle>=LMAXANGLE || maxAngle>LMAXANGLE ) ) {
 
-	    		final int minBIndex = (int)(minAngle/DEGPROBEAM); ///< Beam index of min deg.
-	    		final int maxBIndex = (int)(maxAngle/DEGPROBEAM); ///< Beam index of max deg.
-	    		double sumDist     = 0.; ///< Sum of BEAMCOUNT beam's distance.
-	    		double averageDist = LPMAX; ///< Average of BEAMCOUNT beam's distance.
+				final int minBIndex = (int)(minAngle/DEGPROBEAM); ///< Beam index of min deg.
+				final int maxBIndex = (int)(maxAngle/DEGPROBEAM); ///< Beam index of max deg.
+				double sumDist     = 0.; ///< Sum of BEAMCOUNT beam's distance.
+				double averageDist = LPMAX; ///< Average of BEAMCOUNT beam's distance.
 
-	    		// Read dynamic laser data
-	    		int		laserCount  = this.laser.getCount();
-	    		double[] laserValues = this.laser.getRanges();
-	    		
-	    		// Consistence check for error laser readings
-	    		if (minBIndex<laserCount && maxBIndex<laserCount) {
-	    			for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
-	    				distCurr = laserValues[beamIndex];
+				// Read dynamic laser data
+				int		laserCount  = laser.getCount();
+				double[] laserValues = laser.getRanges();
 
-	    				if (distCurr < 0.02) { // TODO no literal here
-	    					sumDist += LPMAX;
-	    				} else {
-	    					sumDist += distCurr;
-	    				}
-	    				
-	    				if((beamIndex-minBIndex) % BEAMCOUNT == 1) { ///< On each BEAMCOUNT's beam..
-	    					averageDist = sumDist/BEAMCOUNT; ///< Calculate the average distance.
-	    					sumDist = 0.; ///< Reset sum of beam average distance
-	    					
-	    					// Calculate the minimum distance for the arc
-	    					if (averageDist < minDist) {
-	    						minDist = averageDist;
-	    					}
-	    				}
-	    				if ( isDebugLaser ) {
-	    					System.out.printf("beamInd: %3d\tsumDist: %5.2f\taveDist: %5.2f\tminDist: %5.2f\n",
-	    							beamIndex,
-	    							sumDist,
-	    							averageDist,
-	    							minDist);
-	    				}
-	    			}
-	    		} else {
-	    			minDist = this.SHAPE_DIST;
-	    		}
-	    	}
-	    }
+				// Consistence check for error laser readings
+				if (minBIndex<laserCount && maxBIndex<laserCount) {
+					for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
+						distCurr = laserValues[beamIndex];
+
+						if (distCurr < 0.02) { // TODO no literal here
+							sumDist += LPMAX;
+						} else {
+							sumDist += distCurr;
+						}
+
+						if((beamIndex-minBIndex) % BEAMCOUNT == 1) { ///< On each BEAMCOUNT's beam..
+							averageDist = sumDist/BEAMCOUNT; ///< Calculate the average distance.
+							sumDist = 0.; ///< Reset sum of beam average distance
+
+							// Calculate the minimum distance for the arc
+							if (averageDist < minDist) {
+								minDist = averageDist;
+							}
+						}
+						if ( isDebugLaser ) {
+							System.out.printf("beamInd: %3d\tsumDist: %5.2f\taveDist: %5.2f\tminDist: %5.2f\n",
+									beamIndex,
+									sumDist,
+									averageDist,
+									minDist);
+						}
+					}
+				} else {
+					minDist = SHAPE_DIST;
+				}
+			}
+		}
 		return minDist;
 	}
 
@@ -319,28 +312,28 @@ public class Pioneer implements Runnable, Trackable
 		double[] sonarValues;
 		int 	sonarCount  = 0;
 
-		if (this.sonar != null) {
-			sonarValues = this.sonar.getRanges();
-			sonarCount  = this.sonar.getCount();
+		if (sonar != null) {
+			sonarValues = sonar.getRanges();
+			sonarCount  = sonar.getCount();
 			if (sonarCount > 0) {
 				// Check for dynamic sonar availability
 				for (int i=16; i>0; i--) {
-					if (i > sonarCount) { sonarValues[i-1] = (float)this.LPMAX;	}
+					if (i > sonarCount) { sonarValues[i-1] = (float)LPMAX;	}
 					else { break; }
 				}
 			}  else { // NO sonar available
 				sonarValues = new double[16];
 				for (int i=0; i<16; i++) {
-					sonarValues[i] = (float)this.LPMAX;
+					sonarValues[i] = (float)LPMAX;
 				}
 			}
 		} else { // NO sonar available
 			sonarValues = new double[16];
 			for (int i=0; i<16; i++) {
-				sonarValues[i] = (float)this.LPMAX;
+				sonarValues[i] = (float)LPMAX;
 			}
 		}
-		
+
 		// Scan safety areas for walls
 		switch (viewDirection) {
 		case LEFT      : return Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
@@ -361,7 +354,7 @@ public class Pioneer implements Runnable, Trackable
 		default: return 0.; // Should be recognized if happens
 		}
 	}
-	
+
 	/**
 	 * Calculates the turnrate from range measurement and minimum wall follow
 	 * distance.
@@ -375,19 +368,19 @@ public class Pioneer implements Runnable, Trackable
 
 		// As long global goal is WF set it by default
 		// Will potentially be overridden by higher prior behaviours
-		this.currentState = StateType.LWALL_FOLLOWING;
+		currentState = StateType.LWALL_FOLLOWING;
 
 		DistLFov  = getDistance(viewDirectType.LEFTFRONT);
-		
+
 		// do simple (left) wall following
 		//do naiv calculus for turnrate; weight dist vector
-		this.turnrate = Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 );
-			
+		turnrate = Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 );
+
 		// Normalize turnrate
-		if (this.turnrate > Math.toRadians(TURN_RATE)) {
-			this.turnrate = Math.toRadians(TURN_RATE);
+		if (turnrate > Math.toRadians(TURN_RATE)) {
+			turnrate = Math.toRadians(TURN_RATE);
 		} else if (this.turnrate < -Math.toRadians(TURN_RATE)) {
-			this.turnrate = -Math.toRadians(TURN_RATE);
+			turnrate = -Math.toRadians(TURN_RATE);
 		}
 
 		// TODO implement wall searching behavior
@@ -395,14 +388,14 @@ public class Pioneer implements Runnable, Trackable
 		DistLRear = getDistance(viewDirectType.LEFTREAR);
 		// Go straight if no wall is in distance (front, left and left front)
 		if (DistLFov  >= WALLLOSTDIST  &&
-			DistL     >= WALLLOSTDIST  &&
-			DistLRear >= WALLLOSTDIST     )
+		DistL     >= WALLLOSTDIST  &&
+		DistLRear >= WALLLOSTDIST     )
 		{
-			this.turnrate = 0.;
-			this.currentState = StateType.WALL_SEARCHING;
+			turnrate = 0.;
+			currentState = StateType.WALL_SEARCHING;
 		}
 
-		return this.turnrate;
+		return turnrate;
 	}
 
 	/**
@@ -421,11 +414,11 @@ public class Pioneer implements Runnable, Trackable
 		if ((distFrontLeft  < STOP_WALLFOLLOWDIST) ||
 				(distFrontRight < STOP_WALLFOLLOWDIST)   )
 		{
-			this.currentState = StateType.COLLISION_AVOIDANCE;
+			currentState = StateType.COLLISION_AVOIDANCE;
 			// Turn right as long we want left wall following
 			return -Math.toRadians(STOP_ROT);
 		} else {
-			return this.turnrate;
+			return turnrate;
 		}
 	}
 
@@ -445,8 +438,8 @@ public class Pioneer implements Runnable, Trackable
 				if (tmpMinDistBack < tmpMinDistFront){
 					speed = (VEL*tmpMinDistFront)/(tmpMinDistFront+tmpMinDistBack);
 				}
-				//speed=(VEL*(tmpMinDistBack-tmpMinDistFront))/SHAPE_DIST;
-				//tmpMinDistBack<tmpMinDistFront ? speed=(VEL*(tmpMinDistFront-tmpMinDistBack))/WALLFOLLOWDIST : speed;
+			//speed=(VEL*(tmpMinDistBack-tmpMinDistFront))/SHAPE_DIST;
+			//tmpMinDistBack<tmpMinDistFront ? speed=(VEL*(tmpMinDistFront-tmpMinDistBack))/WALLFOLLOWDIST : speed;
 		}
 		return speed;
 	}
@@ -463,15 +456,15 @@ public class Pioneer implements Runnable, Trackable
 	protected final double checkrotate ()
 	{
 		double saveTurnrate = 0.;
-		
-		if (this.turnrate < 0) { // Right turn
+
+		if (turnrate < 0) { // Right turn
 			if (getDistance(viewDirectType.LEFTREAR) < 0) {
 				saveTurnrate = 0;
 			}
 			if (getDistance(viewDirectType.RIGHT) < 0) {
 				saveTurnrate = 0;
 			}
-		} else if (this.turnrate > 0){ // Left turn
+		} else if (turnrate > 0){ // Left turn
 			if (getDistance(viewDirectType.RIGHTREAR) < 0) {
 				saveTurnrate = 0;
 			}

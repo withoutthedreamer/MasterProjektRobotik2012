@@ -4,11 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import robot.PioneerRG;
-import robot.PioneerRsB;
-import simulator.Simulator;
+import robot.ExploreRobot;
+import robot.GripperRobot;
 import data.Position;
-import device.Blackboard;
+import device.RobotClient;
 
 public class FindCollectExample {
 
@@ -18,14 +17,24 @@ public class FindCollectExample {
 	
 	public static void main (String[] args) {
 		try {
-//			PioneerSB pionSB = new PioneerSB("localhost", 6665, 0);
-			PioneerRsB pionRsB = new PioneerRsB("localhost", 6665, 0);
-//			PioneerLG pionLG = new PioneerLG("localhost", 6666, 1);
-			PioneerRG pionRG = new PioneerRG("localhost", 6667, 1);
-//			pionRG.setPlanner("localhost", 6685);
-			pionRG.setPosition(new Position(-16,3,Math.toRadians(90)));
-			pionRG.runThreaded();
-			pionRsB.runThreaded();
+			RobotClient explDevices = new RobotClient("localhost", 6665);
+			explDevices.runThreaded();
+			
+			RobotClient gripDevices = new RobotClient("localhost", 6667);
+			gripDevices.runThreaded();
+			
+			ExploreRobot explorer = new ExploreRobot(explDevices);
+			explorer.runThreaded();
+			
+			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
+			gripDevices2.runThreaded();
+			
+			GripperRobot gripper = new GripperRobot(gripDevices);
+			gripper.addDevices(gripDevices2);
+			gripper.runThreaded();
+			
+			gripper.setPosition(new Position(-16,3,Math.toRadians(90)));
+			
 			// Task synchronization
 //			Blackboard blackb= Blackboard.getInstance(pionRG);
 			// wants to write notes
@@ -50,8 +59,14 @@ public class FindCollectExample {
 			}
 //			tracker.shutdown()
 //			blackb.shutdown();
-			pionRsB.shutdown();
-			pionRG.shutdown();
+			
+			explorer.shutdown();
+			explDevices.shutdown();
+			
+			gripper.shutdown();
+			gripDevices.shutdown();
+			gripDevices2.shutdown();
+
 //			simu.shutdown();
 			
 		} catch (Exception e) {

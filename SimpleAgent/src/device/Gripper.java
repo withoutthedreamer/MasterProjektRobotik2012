@@ -5,13 +5,13 @@ import javaclient3.GripperInterface;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
 
-public class Gripper extends Device implements Runnable {
+public class Gripper extends Device {
 
 	protected GripperInterface  grip  = null;
 	protected final int SLEEPTIME = 1000;
 
 	// Every class of this type has it's own thread
-	public Thread thread = new Thread ( this );
+//	public Thread thread = new Thread ( this );
 	@SuppressWarnings("unused")
 	private int goalState = 1;
 	private int curState = 0;
@@ -28,9 +28,9 @@ public class Gripper extends Device implements Runnable {
 			grip = roboClient.getClient().requestInterfaceGripper(0, PlayerConstants.PLAYER_OPEN_MODE);
 
 			// Automatically start own thread in constructor
-			this.thread.start();
+//			this.thread.start();
 			
-			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
+//			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
@@ -38,22 +38,29 @@ public class Gripper extends Device implements Runnable {
 			throw new IllegalStateException();
 		}
 	}
+	public Gripper(RobotClient roboClient, Device device) {
+		this(roboClient,device.getHost());
+		host = device.getHost();
+		name = device.getName();
+		deviceNumber = device.getDeviceNumber();
+		port = device.getPort();
+	}
 	protected void update () {
 		if ( ! grip.isDataReady() ) {			
-			try { Thread.sleep (this.SLEEPTIME); }
-			catch (InterruptedException e) { this.thread.interrupt(); }
+//			try { Thread.sleep (this.SLEEPTIME); }
+//			catch (InterruptedException e) { this.thread.interrupt(); }
 		} else {
 			curState = grip.getData().getState();
 //			grip.setGripper(goalState);
 		}
 	}
-	@Override
-	public void run() {
-		while ( ! this.thread.isInterrupted()) {
-			this.update();
-		}
-		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
-	}
+//	@Override
+//	public void run() {
+//		while ( ! this.thread.isInterrupted()) {
+//			this.update();
+//		}
+//		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
+//	}
 	public void stop () {
 		// stop
 		this.goalState = 3;

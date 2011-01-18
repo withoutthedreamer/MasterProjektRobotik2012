@@ -3,13 +3,15 @@ package jadex;
 import jadex.bridge.*;
 import jadex.micro.MicroAgentMetaInfo;
 import data.Position;
-import robot.PioneerRG;
+import device.RobotClient;
+import robot.GripperRobot;
 
 public class GripperAgent extends PlayerAgent
 {
-	protected final static String[] playerCmd={"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/planner2.cfg"};
+//	protected final static String[] playerCmd={"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/planner2.cfg"};
 
-	PioneerRG pion = null;
+	RobotClient devices = null;
+	GripperRobot gripper = null;
 	Position curPos = null;
 	//TODO start planner
 	@Override
@@ -17,9 +19,12 @@ public class GripperAgent extends PlayerAgent
 	{
 		super.agentCreated();
 		try {
-			pion = new PioneerRG("localhost", port, 1);
-			pion.runThreaded();
-			pion.setPosition(new Position(-28, 3, 90));
+			devices = new RobotClient("localhost", port);
+			devices.runThreaded();
+			
+			gripper = new GripperRobot(devices);
+			gripper.runThreaded();
+			gripper.setPosition(new Position(-28, 3, 90));
 		} catch (Exception e) {
 //			e.printStackTrace();
 		}
@@ -29,7 +34,7 @@ public class GripperAgent extends PlayerAgent
 	public void executeBody()
 	{
 		super.executeBody();
-		if (pion == null) {
+		if (gripper == null) {
 			killAgent();
 		}
 
@@ -37,7 +42,7 @@ public class GripperAgent extends PlayerAgent
 		{			
 			public Object execute(IInternalAccess args)
 			{
-				curPos = pion.getPosition();
+				curPos = gripper.getPosition();
 
 				waitFor(1000, this);
 				return null;

@@ -1,20 +1,24 @@
 package jadex;
 
+import device.RobotClient;
 import jadex.bridge.*;
 import jadex.micro.MicroAgentMetaInfo;
 import robot.*;
 
 public class ExploreAgent extends PlayerAgent {
 	
-	PioneerRsB pion = null;
+	ExploreRobot explorer = null;
+	RobotClient devices = null;
 
 	@Override
 	public void agentCreated()
 	{
 		super.agentCreated();
 		try {
-			pion = new PioneerRsB("localhost", port, 1);
-			pion.runThreaded();
+			devices = new RobotClient("localhost", port);
+			devices.runThreaded();
+			explorer = new ExploreRobot(devices);
+			explorer.runThreaded();
 		} catch (Exception e) {
 //			e.printStackTrace();
 		}
@@ -23,7 +27,7 @@ public class ExploreAgent extends PlayerAgent {
 	public void executeBody()
 	{
 		super.executeBody();
-		if (pion == null) {
+		if (explorer == null) {
 			killAgent();
 		}
 		// TODO no blocking
@@ -33,6 +37,8 @@ public class ExploreAgent extends PlayerAgent {
 	public void agentKilled() {
 		
 		super.agentKilled();
+		explorer.shutdown();
+		devices.shutdown();
 	}
 	public static MicroAgentMetaInfo getMetaInfo()
 	{

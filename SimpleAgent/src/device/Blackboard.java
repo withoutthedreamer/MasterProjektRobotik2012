@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import core.Logger;
+//import core.Logger;
 
 import data.BbNote;
 import data.Position;
@@ -12,17 +12,17 @@ import data.Trackable;
 import simulator.Simulator;
 
 
-public class Blackboard extends Device implements Runnable {
+public class Blackboard extends Device {
 	
 	protected static Blackboard instance = null;
 	protected static Simulator simu = null;
 	protected Trackable collectrobot = null;
 
 	// Every class of this type has it's own thread
-	public Thread thread = new Thread ( this );
+//	public Thread thread = new Thread ( this );
 	
 	protected LinkedHashMap<String,BbNote> notehm = null;
-	private static final long SLEEPTIME = 500;
+	long SLEEPTIME = 500;
 
 	protected Blackboard(Trackable robot) {
 		super(-1);
@@ -30,9 +30,9 @@ public class Blackboard extends Device implements Runnable {
 			notehm = new LinkedHashMap<String,BbNote>();
 			collectrobot = robot;
 			// Automatically start own thread in constructor
-			thread.start();
+//			thread.start();
 
-			Logger.logActivity(false, "Running", this.toString(), -1, thread.getName());
+//			Logger.logActivity(false, "Running", this.toString(), -1, thread.getName());
 
 		} catch ( Exception e ) {
 			e.printStackTrace();
@@ -75,16 +75,16 @@ public class Blackboard extends Device implements Runnable {
 				}
 			}
 		}		
-		try { Thread.sleep (SLEEPTIME); }
-		catch (InterruptedException e) { this.thread.interrupt(); }
+//		try { Thread.sleep (SLEEPTIME); }
+//		catch (InterruptedException e) { this.thread.interrupt(); }
 	}
 	
-	@Override
-	public void run() {
-		while ( ! this.thread.isInterrupted()) {
-			this.update ();
-		}
-	}
+//	@Override
+//	public void run() {
+//		while ( ! this.thread.isInterrupted()) {
+//			this.update ();
+//		}
+//	}
 
 	public static Blackboard getInstance (Trackable robot) {
 		if (instance == null) {
@@ -120,6 +120,7 @@ public class Blackboard extends Device implements Runnable {
 		simu = simu2;
 	}
 	@SuppressWarnings("rawtypes")
+	@Override
 	public void shutdown() {
 		// TODO debug only
 		Set set = this.notehm.entrySet();
@@ -130,10 +131,10 @@ public class Blackboard extends Device implements Runnable {
 			String key = (String)me.getKey();
 			System.out.println("Still on blackboard: " + key);
 		}
-		
-		this.thread.interrupt();
-		while (this.thread.isAlive());
+		super.shutdown();
+//		this.thread.interrupt();
+//		while (this.thread.isAlive());
 
-		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
+//		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
 	}
 }
