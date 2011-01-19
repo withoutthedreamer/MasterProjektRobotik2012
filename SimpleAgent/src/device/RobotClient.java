@@ -19,11 +19,6 @@ public class RobotClient extends Device {
 	// Required to every player robot
 	protected PlayerClient playerClient = null;
 
-	// player device list
-	//	LinkedList<Device> roboDevList = null;
-
-	protected int id = -1;
-
 	/**
 	 * Constructor for a RobotClient.
 	 * @param host The host name where the server is to connect to.
@@ -33,7 +28,8 @@ public class RobotClient extends Device {
 	 */
 	public RobotClient (String host, int port) throws IllegalStateException
 	{
-		try {
+		try
+		{
 			this.host = host;
 			this.port = port;
 			// Connect to the Player server
@@ -42,35 +38,17 @@ public class RobotClient extends Device {
 			// TODO check this
         	updateDeviceList();
 			playerClient.setNotThreaded();
-			//			roboDevList = new LinkedList<Device>();
-
-			//			playerClient.readAll();
-			// Fill the device list of this device
-			//			while (playerClient.isReadyPDDList() != true);
+			
 			// Get the devices available
 			playerClient.requestDataDeliveryMode(PlayerConstants.PLAYER_DATAMODE_PULL);
-			// Read and print (on screen) all available devices
-//			playerClient.requestDeviceList();
-//            playerClient.readAll ();
-//            if (playerClient.isReadyPDDList()) {
-//            }
-
-		} catch (PlayerException e) {
-			Logger.logActivity(true, "Connecting", this.toString(), id, null);
+		}
+		catch (PlayerException e)
+		{
+			Logger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
 	}
 
-//	// TODO check if needed
-//	public RobotClient (String name, int port, int clientId) throws IllegalStateException
-//	{
-//		//		super(clientId);
-//		this(name,port);
-//	}
-	//	public void addRobotClient(RobotClient aRoboClient) {
-	//		// Add new robo client to device list
-	//		addToDeviceList(aRoboClient);
-	//	}
 	/**
 	 * Shutdown robot client and clean up
 	 */
@@ -106,6 +84,7 @@ public class RobotClient extends Device {
 //					int hosts = pDevListAddr[i].getHost();
 					int Indes = pDevListAddr[i].getIndex();
 					// port will be taken from this object's field
+					// host will be taken from this object's field
 					// TODO instantiate Devices here
 					Device dev = null;
 					switch (name)
@@ -158,27 +137,9 @@ public class RobotClient extends Device {
 	public PlayerClient getClient() {
 		return playerClient;
 	}
-	/**
-	 * Start PlayerClient thread.
-	 * Has to be called in object constructor!
-	 * Otherwise program will block forever
-	 * This call has to be after all device requests!
-	 */
-//		@Override
-//		public void runThreaded() {
-//			super.runThreaded();
-//			// Start player thread
-////			playerClient.runThreaded (-1, -1);
-//		}	
 	@Override
 	protected void update() {
-//		if (thread.isInterrupted() != true) {
-//			playerClient.readAll();
-//		}
 		playerClient.requestData();
 		playerClient.readAll();
-//		if (this.deviceList.size() < 1) {
-//			updateDeviceList();
-//		}
 	}
 }

@@ -8,12 +8,8 @@ import java.util.concurrent.*;
 
 import core.Logger;
 
-public class Device implements IDevice, Runnable {
-//	int id = -1;
-	
-//	List<Device> deviceList = null;
-//	private LinkedHashMap<String[],Device> deviceList = null;
-//	protected List<Device> deviceList = null;
+public class Device implements IDevice, Runnable
+{
 	protected ConcurrentLinkedQueue<Device> deviceList = null;
 	
 	int name = -1;
@@ -27,46 +23,8 @@ public class Device implements IDevice, Runnable {
 	long SLEEPTIME = 100;
 	
 	public Device() {
-//		deviceList = Collections.synchronizedList( new LinkedList<Device>() );
 		deviceList = new ConcurrentLinkedQueue<Device>();
 	}
-	//	protected Device (int identifier) {
-	//		this();
-	//		id = identifier;
-	//	}
-	//	/**
-	//	 * Add one device to internal device list
-	//	 * @param deviceToAdd
-	//	 */
-	//	public Device (Device deviceToAdd) {
-	//		this();
-	//		if (deviceToAdd != null) {
-	////			deviceList.put(deviceToAdd.getId(), deviceToAdd);
-	//			addToDeviceList(deviceToAdd);
-	//		}
-	//	}
-	//	/**
-	//	 * Add a device list to internal device list
-	//	 * @param deviceListToAdd
-	//	 */
-	//	public Device (Device[] deviceListToAdd) {
-	//		this();
-	//		// Take id from first device on list
-	////		this(deviceListToAdd[0].getId());
-	//		// Add devices to device list
-	//		if (deviceListToAdd != null) {
-	//			for (int i=0; i<deviceListToAdd.length; i++) { 
-	////				deviceList.put(deviceListToAdd[i].getId(), deviceListToAdd[i]);
-	//				addToDeviceList(deviceListToAdd[i]);
-	//			}
-	//		}
-	//	}
-	//	// TODO check if really needed
-	//	public Device (int name, int host, int port) {
-	//		this.name = name;
-	//		this.host = host;
-	//		this.port = port;
-	//	}
 	/**
 	 * This constructor is used to create a data device object
 	 * and has no internal devicelist or thread
@@ -108,16 +66,6 @@ public class Device implements IDevice, Runnable {
 			}
 		}
 	}
-	////	public void setId(int id) {
-	//		this.id = id;
-	//	}
-//	/**
-//	 * A device is uniquely represented by its host, port and name
-//	 * @return String list representing the id
-//	 */
-//	public String[] getId() {
-//		return new String[] {host, new Integer(port).toString(), new Integer(name).toString()};
-//	}
 	@Override
 	public void run() {
 		while ( ! thread.isInterrupted()) {
@@ -125,7 +73,6 @@ public class Device implements IDevice, Runnable {
 			try { Thread.sleep ( SLEEPTIME ); }
 			catch (InterruptedException e) { thread.interrupt(); }
 		}
-//		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
 		Logger.logDeviceActivity(false, "Shutdown", this);
 	}
 	/**
@@ -149,7 +96,6 @@ public class Device implements IDevice, Runnable {
 		
 		thread.start();
 		while (thread.isAlive() == false);
-//		Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
 		Logger.logDeviceActivity(false, "Running", this);
 	}
 
@@ -162,11 +108,8 @@ public class Device implements IDevice, Runnable {
 			Iterator<Device> deviceIterator = deviceList.iterator();
 			while (deviceIterator.hasNext()) {
 				Device device = deviceIterator.next();
-
-//				Logger.logActivity(false, "Shutdown", device.toString(), device.getName(), device.thread.getName());
 				
 				// Stop device
-//				device.shutdown();
 				device.thread.interrupt();
 				while (device.thread.isAlive());
 			}
@@ -174,14 +117,11 @@ public class Device implements IDevice, Runnable {
 			deviceList.clear();
 //			deviceList = null;
 		}
-//		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
-		//		while (thread.isAlive());
 	}
 	/**
 	 * Returns a list of devices that this robot client provides
 	 * @return Device list
 	 */
-//	public final Device[] getDeviceList() {
 	public final ConcurrentLinkedQueue<Device> getDeviceList() {
 		return deviceList;
 	}

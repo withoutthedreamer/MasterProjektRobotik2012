@@ -4,8 +4,8 @@ import core.Logger;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
 
-public class PlayerDevice extends Device {
-	
+public class PlayerDevice extends Device
+{
 	javaclient3.PlayerDevice device = null;
 
 	public PlayerDevice (RobotClient roboClient, Device device) {

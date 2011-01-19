@@ -5,6 +5,7 @@ import javaclient3.structures.PlayerConstants;
 public interface IDevice {
 	// Current interface code assignment
 	// This has to be i sync with the PlayerConstants definition!!
+	// TODO as enum
 	public final short DEVICE_NULL_CODE         = PlayerConstants.PLAYER_NULL_CODE;        // /dev/null analogue
     public final short DEVICE_DEVICE_CODE       = PlayerConstants.PLAYER_PLAYER_CODE;      // the server itself
     public final short DEVICE_POWER_CODE        = PlayerConstants.PLAYER_POWER_CODE;       // power subsystem
