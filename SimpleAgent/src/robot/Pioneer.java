@@ -485,6 +485,9 @@ public class Pioneer extends Device implements Trackable, IPioneer
 	public Position getGoal() {
 		return null;
 	}
-	public void setPosition(Position position) {		
+	public void setPosition(Position position) {
+		if (posi != null) {
+			posi.setPosition(position);
+		}
 	}
 }

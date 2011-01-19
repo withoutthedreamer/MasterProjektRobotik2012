@@ -28,14 +28,14 @@ public class FindCollectExample {
 			gripDevices2.runThreaded();
 			Device gripperDevices = new Device( new Device[]{gripDevices, gripDevices2} );
 
-			ExploreRobot explorer = new ExploreRobot(explDevices);
-			explorer.runThreaded();
-			
+			ExploreRobot explorer = new ExploreRobot(explDevices);	
 			GripperRobot gripper = new GripperRobot(gripperDevices);
-			gripper.runThreaded();
 			
-			gripper.setPosition(new Position(-16,3,Math.toRadians(90)));
+			gripper.setPosition(new Position(-3,-5,Math.toRadians(90)));
+			explorer.setPosition(new Position(-6,-5,Math.toRadians(90)));
 
+			explorer.runThreaded();
+			gripper.runThreaded();	
 			
 			// Task synchronization
 			Blackboard blackb= Blackboard.getInstance(gripper);

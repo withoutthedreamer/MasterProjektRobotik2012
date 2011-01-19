@@ -19,12 +19,13 @@ public class Localize extends PlayerDevice
 	public Localize(RobotClient roboClient, Device device) {
 		super(roboClient, device);
 
+		getPosition = new Position();
 		// set the initial guessed pose for localization (AMCL)
 		setPosition = new PlayerLocalizeSetPose ();
 		// set the mean values to 0,0,0
 		setPosition.setMean (new PlayerPose ());
 		setPosition.setCov (cov);
-		
+		((javaclient3.LocalizeInterface) this.device).setPose(setPosition);
 	}
 	// Only to be called @~10Hz
 	@Override
@@ -50,7 +51,7 @@ public class Localize extends PlayerDevice
 		}
 	}
 
-	public synchronized void setPose(Position position) {
+	public synchronized void setPosition(Position position) {
 		setPosition.setMean(new PlayerPose(position.getX(),position.getY(),position.getYaw()));
 		getPosition = position;
 		isNewPose = true;

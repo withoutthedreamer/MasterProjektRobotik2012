@@ -24,6 +24,12 @@ public class Position {
 		this.yaw= yaw;
 	}
 
+	public Position() {
+		x=0.;
+		y=0.;
+		yaw=0.;
+	}
+
 	public void setPosition (Position pos) {
 		this.x = pos.getX();
 		this.y = pos.getY();

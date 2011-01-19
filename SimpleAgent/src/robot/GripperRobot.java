@@ -9,10 +9,10 @@ public class GripperRobot extends Pioneer {
 		super(roboDevices);
 	}
 
-	@Override
-	protected void update () {
-	// Robot is planner controlled
-	}
+//	@Override
+//	protected void update () {
+//	// Robot is planner controlled
+//	}
 	@Override
 	public void setGoal(Position goal) {
 		if (planner != null)
@@ -29,7 +29,9 @@ public class GripperRobot extends Pioneer {
 	@Override
 	public final void setPosition(Position position) {
 		if (localizer != null)
-			localizer.setPose(position);		
+			localizer.setPosition(position);	
+//		if (planner != null)
+//			planner.setPose(position);
 	}
 	
 	/// Return robot position
