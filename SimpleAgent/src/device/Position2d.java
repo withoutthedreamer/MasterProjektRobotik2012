@@ -28,12 +28,6 @@ public class Position2d extends PlayerDevice
 	protected void update() {
 		// Check for sonar readings ready
 		if ( ((javaclient3.Position2DInterface) device).isDataReady() ){
-			// Request current position
-			PlayerPosition2dData poseData = ((javaclient3.Position2DInterface) device).getData();
-				pos = new Position(poseData.getPos().getPx(),
-						poseData.getPos().getPy(),
-						poseData.getPos().getPa());
-				
 			// Update odometry if updated externally
 			if (setOdometry != null) {				
 				((javaclient3.Position2DInterface) device).setOdometry(new PlayerPose(
@@ -41,6 +35,12 @@ public class Position2d extends PlayerDevice
 						setOdometry.getY(),
 						setOdometry.getYaw()));
 				setOdometry = null;
+			} else {
+				// Request current position
+				PlayerPosition2dData poseData = ((javaclient3.Position2DInterface) device).getData();
+				pos = new Position(poseData.getPos().getPx(),
+						poseData.getPos().getPy(),
+						poseData.getPos().getPa());
 			}
 			// Set new speed
 			if (isNewSpeed == true) {

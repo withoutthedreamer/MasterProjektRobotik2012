@@ -3,7 +3,6 @@ package device;
 import core.Logger;
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
-import javaclient3.structures.PlayerConstants;
 import javaclient3.structures.PlayerDevAddr;
 import javaclient3.structures.player.PlayerDeviceDevlist;
 
@@ -37,16 +36,21 @@ public class RobotClient extends Device {
 			// Requires that above call has internally updated device list already!
 			// TODO check this
         	updateDeviceList();
-			playerClient.setNotThreaded();
+//			playerClient.setNotThreaded();
 			
 			// Get the devices available
-			playerClient.requestDataDeliveryMode(PlayerConstants.PLAYER_DATAMODE_PULL);
+//			playerClient.requestDataDeliveryMode(PlayerConstants.PLAYER_DATAMODE_PULL);
 		}
 		catch (PlayerException e)
 		{
 			Logger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
+	}
+	@Override
+	public void runThreaded() {
+		super.runThreaded();
+		playerClient.runThreaded(-1, -1);
 	}
 
 	/**
@@ -64,6 +68,7 @@ public class RobotClient extends Device {
 		// Note RobotClient must not be in the list of devices!
 		// Let shutdown all devices in list and this thread
 		super.shutdown();
+//		playerClient.interrupt();
 		playerClient.close();
 	}
 	private void updateDeviceList()

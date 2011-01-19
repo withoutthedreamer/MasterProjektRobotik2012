@@ -104,7 +104,7 @@ public class Device implements IDevice, Runnable
 
 	public synchronized void shutdown() {
 		thread.interrupt();
-//		while (thread.isAlive());
+		while (thread.isAlive());
 		
 		// Stop all devices
 		if (deviceList.size() > 0) {
@@ -120,7 +120,7 @@ public class Device implements IDevice, Runnable
 			deviceList.clear();
 //			deviceList = null;
 //			thread.interrupt();
-			while (thread.isAlive());
+//			while (thread.isAlive());
 		}
 	}
 	/**

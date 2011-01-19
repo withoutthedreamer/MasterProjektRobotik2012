@@ -19,17 +19,17 @@ public class Planner extends PlayerDevice
 	public Planner(RobotClient roboClient, Device device) {
 		super(roboClient, device);
 		
-		goal = new Position(6,6,6);
-		curPosition = new Position(6,6,6);
+		goal = new Position();
+		curPosition = new Position();
 		
 		// enable motion
 		((javaclient3.PlannerInterface) this.device).setRobotMotion(1);
 	}
-	public void setGoal (Position newGoal) {
+	public synchronized void setGoal (Position newGoal) {
 		goal = newGoal;
 		isNewGoal = true;
 	}
-	public Position getGoal() {
+	public synchronized Position getGoal() {
 		return goal;
 	}
 	// Only to be called @~10Hz
@@ -49,11 +49,13 @@ public class Planner extends PlayerDevice
 						curPosition.getX(),
 						curPosition.getY(),
 						curPosition.getYaw()));
+			} else {
+				PlayerPose poseTemp = ppd.getPos();
+				// Update current position belief
+				curPosition.setX(poseTemp.getPx());
+				curPosition.setY(poseTemp.getPy());
+				curPosition.setYaw(poseTemp.getPa());
 			}
-			// Update current position belief
-			curPosition.setX(ppd.getPos().getPx());
-			curPosition.setY(ppd.getPos().getPy());
-			curPosition.setYaw(ppd.getPos().getPa());
 		}
 		// update goal
 		if(isNewGoal) {
@@ -62,6 +64,16 @@ public class Planner extends PlayerDevice
 					goal.getX(),
 					goal.getY(),
 					goal.getYaw()));
+		} else { // Get current goal
+			if (((javaclient3.PlannerInterface) device).isReadyWaypointData() == true) {
+				//goal.setX(((javaclient3.PlannerInterface) device).getData().getGoal().getPx());
+				//goal.setY(((javaclient3.PlannerInterface) device).getData().getGoal().getPx());
+				//goal.setYaw(((javaclient3.PlannerInterface) device).getData().getGoal().getPa());
+				PlayerPose poseTemp = ((javaclient3.PlannerInterface) device).getData().getGoal();
+				goal.setX(poseTemp.getPx());
+				goal.setY(poseTemp.getPy());
+				goal.setYaw(poseTemp.getPa());
+			}
 		}
 	}
 
