@@ -31,11 +31,10 @@ public class Position2d extends Device {
 	 * @param id Robot id.
 	 */
 	// Host id
-	public Position2d (RobotClient roboClient, int id) {
+	public Position2d (RobotClient roboClient) {
 //		super(id);
 		try {
 			posi = roboClient.getClient().requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
-			this.id = id;
 
 			// Automatically start own thread in constructor
 //			this.thread.start();
@@ -43,12 +42,12 @@ public class Position2d extends Device {
 
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
+			Logger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
 	}
 	public Position2d(RobotClient roboClient, Device device) {
-		this(roboClient,device.getHost());
+		this(roboClient);
 		host = device.getHost();
 		name = device.getName();
 		deviceNumber = device.getDeviceNumber();

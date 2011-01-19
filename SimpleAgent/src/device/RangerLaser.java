@@ -10,8 +10,8 @@ public class RangerLaser extends Ranger {
 	protected LaserInterface las = null;
 	protected float[] lasRanges = null;
 		
-	public RangerLaser (RobotClient roboClient, int id) throws IllegalStateException {
-		super(id);
+	public RangerLaser (RobotClient roboClient, Device device) throws IllegalStateException {
+		super(device);
 		try {
 			las = roboClient.getClient().requestInterfaceLaser(0, PlayerConstants.PLAYER_OPEN_MODE);
 
@@ -21,17 +21,17 @@ public class RangerLaser extends Ranger {
 
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
+			Logger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
 	}
-	public RangerLaser(RobotClient roboClient, Device device) {
-		this(roboClient,device.getHost());
-		host = device.getHost();
-		name = device.getName();
-		deviceNumber = device.getDeviceNumber();
-		port = device.getPort();
-	}
+//	public RangerLaser(RobotClient roboClient, Device device) {
+//		this(roboClient,device.getHost());
+//		host = device.getHost();
+//		name = device.getName();
+//		deviceNumber = device.getDeviceNumber();
+//		port = device.getPort();
+//	}
 	// Will check for new ranges
 	// If not yet ready will put current thread to sleep
 	protected void update() {

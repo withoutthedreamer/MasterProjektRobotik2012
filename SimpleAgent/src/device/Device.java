@@ -9,7 +9,7 @@ import java.util.concurrent.*;
 import core.Logger;
 
 public class Device implements IDevice, Runnable {
-	int id = -1;
+//	int id = -1;
 	
 //	List<Device> deviceList = null;
 //	private LinkedHashMap<String[],Device> deviceList = null;
@@ -17,8 +17,8 @@ public class Device implements IDevice, Runnable {
 	protected ConcurrentLinkedQueue<Device> deviceList = null;
 	
 	int name = -1;
-	int host = 0;
-	int port = 6665;
+	String host = "0";
+	int port = 0;
 	int deviceNumber = 0;
 	
 	// Every class of this type has it's own thread
@@ -71,7 +71,7 @@ public class Device implements IDevice, Runnable {
 	 * This constructor is used to create a data device object
 	 * and has no internal devicelist or thread
 	 */
-	public Device (int name, int host, int port, int devNum) {
+	public Device (int name, String host, int port, int devNum) {
 		this.name = name;
 		this.host = host;
 		this.port = port;
@@ -119,7 +119,8 @@ public class Device implements IDevice, Runnable {
 			try { Thread.sleep ( SLEEPTIME ); }
 			catch (InterruptedException e) { thread.interrupt(); }
 		}
-		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
+//		Logger.logActivity(false, "Shutdown", this.toString(), id, thread.getName());
+		Logger.logDeviceActivity(false, "Shutdown", this);
 	}
 	/**
 	 * Might be to be implemented by subclass to do something
@@ -142,7 +143,8 @@ public class Device implements IDevice, Runnable {
 		
 		thread.start();
 		while (thread.isAlive() == false);
-		Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
+//		Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
+		Logger.logDeviceActivity(false, "Running", this);
 	}
 
 	public synchronized void shutdown() {
@@ -198,10 +200,10 @@ public class Device implements IDevice, Runnable {
 			return null;
 		}
 	}
-	public int getHost() {
+	public String getHost() {
 		return host;
 	}
-	public void setHost(int host) {
+	public void setHost(String host) {
 		this.host = host;
 	}
 	public int getPort() {
@@ -219,5 +221,12 @@ public class Device implements IDevice, Runnable {
 
 	public int getDeviceNumber() {
 		return deviceNumber;
+	}
+	public String getThreadName() {
+		if (thread != null) {
+			return thread.getName();
+		} else {
+			return null;
+		}
 	}
 }

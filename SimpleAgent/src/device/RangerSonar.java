@@ -10,8 +10,8 @@ public class RangerSonar extends Ranger {
 	protected SonarInterface soni  = null;
 	protected float[] sonRanges = null;
 
-	public RangerSonar(RobotClient roboClient, int id) {
-		super(id);
+	public RangerSonar(RobotClient roboClient, Device device) {
+		super(device);
 		try {
 			soni = roboClient.getClient().requestInterfaceSonar(0, PlayerConstants.PLAYER_OPEN_MODE);
 
@@ -21,17 +21,17 @@ public class RangerSonar extends Ranger {
 
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
+			Logger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
 	}
-	public RangerSonar(RobotClient roboClient, Device device) {
-		this(roboClient,device.getHost());
-		host = device.getHost();
-		name = device.getName();
-		deviceNumber = device.getDeviceNumber();
-		port = device.getPort();
-	}
+//	public RangerSonar(RobotClient roboClient, Device device) {
+//		this(roboClient,device.getHost());
+//		host = device.getHost();
+//		name = device.getName();
+//		deviceNumber = device.getDeviceNumber();
+//		port = device.getPort();
+//	}
 	// Will check for new ranges
 	// If not yet ready will put current thread to sleep
 	protected void update() {

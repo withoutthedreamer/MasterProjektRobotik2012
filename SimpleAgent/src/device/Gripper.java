@@ -22,7 +22,7 @@ public class Gripper extends Device {
 		ERROR
 	}
 
-	public Gripper(RobotClient roboClient, int id) {
+	public Gripper(RobotClient roboClient) {
 //		super(id);
 		try {
 			grip = roboClient.getClient().requestInterfaceGripper(0, PlayerConstants.PLAYER_OPEN_MODE);
@@ -34,12 +34,12 @@ public class Gripper extends Device {
 
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
+			Logger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
 	}
 	public Gripper(RobotClient roboClient, Device device) {
-		this(roboClient,device.getHost());
+		this(roboClient);
 		host = device.getHost();
 		name = device.getName();
 		deviceNumber = device.getDeviceNumber();

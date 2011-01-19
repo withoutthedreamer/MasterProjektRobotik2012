@@ -34,6 +34,8 @@ public class RobotClient extends Device {
 	public RobotClient (String host, int port) throws IllegalStateException
 	{
 		try {
+			this.host = host;
+			this.port = port;
 			// Connect to the Player server
 			playerClient  = new PlayerClient (host, port);
 			// Requires that above call has internally updated device list already!
@@ -88,70 +90,65 @@ public class RobotClient extends Device {
 	}
 	private void updateDeviceList()
 	{
-//		if (playerClient.isReadyPDDList() == true) {
-//		boolean isReady = playerClient.isReadyPDDList();
-//			if (playerClient.isReadyRequestDevice() == true) {
-			PlayerDeviceDevlist pDevList = playerClient.getPDDList();
-			if (pDevList != null) {
-	
-				PlayerDevAddr[] pDevListAddr = pDevList.getDevList();
-				if (pDevListAddr != null) {
-	
-					int devCount = pDevList.getDeviceCount();
-					for (int i=0; i<devCount; i++) {
-	
-						int name = pDevListAddr[i].getInterf();
-						int hosts = pDevListAddr[i].getHost();
-						int Indes = pDevListAddr[i].getIndex();
-						// TODO instantiate Devices here
-						Device dev = null;
-						switch (name)
-						{
-						case IDevice.DEVICE_POSITION2D_CODE :
-							if (Indes == 0)
-								dev = new Position2d(this, new Device(name, hosts, port, Indes)); break;
-							//						addToDeviceList(new Position2d(roboClient, id)); break;
-	
-						case IDevice.DEVICE_RANGER_CODE : 
-							//						int devId = Indes;
-							//						if (devId == 0) {
-							dev = new Ranger(this, new Device(name, hosts, port, Indes)); break;
-							//						} else {
-							//							dev = new Ranger(this, new Device(name, hosts, port, Indes)); break;
-							//						}
-	
-						case IDevice.DEVICE_BLOBFINDER_CODE :
-							dev = new Blobfinder(this, new Device(name, hosts, port, Indes)); break;
-							//						addToDeviceList( new Blobfinder(roboClient, id)); break;
-							//	
-						case IDevice.DEVICE_GRIPPER_CODE : 
-							dev = new Gripper(this, new Device(name, hosts, port, Indes)); break;
-							//						addToDeviceList( new Gripper(roboClient, id)); break;
-	
-						case IDevice.DEVICE_SONAR_CODE : 
-							dev = new RangerSonar(this, new Device(name, hosts, port, Indes)); break;
-	
-						case IDevice.DEVICE_LASER_CODE : 
-							dev = new RangerLaser(this, new Device(name, hosts, port, Indes)); break;
-	
-							//					case DeviceCode.DEVICE_LOCALIZE_CODE : break;
-							//	
-							//					case DeviceCode.DEVICE_SIMULATION_CODE : break; 
-							//	
-						case IDevice.DEVICE_PLANNER_CODE : 
-							dev = new Planner(this, new Device(name, hosts, port, Indes)); break;
-							//						addToDeviceList( new Planner(roboClient, id)); break;
-	
-						default: break;
-						}
-						//					deviceList.add(new Device(name, hosts, port, Indes));
-						if (dev != null) {
-							deviceList.add(dev);
-						}
+		//		if (playerClient.isReadyPDDList() == true) {
+		//		boolean isReady = playerClient.isReadyPDDList();
+		//			if (playerClient.isReadyRequestDevice() == true) {
+		PlayerDeviceDevlist pDevList = playerClient.getPDDList();
+		if (pDevList != null) {
+
+			PlayerDevAddr[] pDevListAddr = pDevList.getDevList();
+			if (pDevListAddr != null) {
+
+				int devCount = pDevList.getDeviceCount();
+				for (int i=0; i<devCount; i++) {
+
+					int name = pDevListAddr[i].getInterf();
+//					int hosts = pDevListAddr[i].getHost();
+					int Indes = pDevListAddr[i].getIndex();
+					// port will be taken from this object's field
+					// TODO instantiate Devices here
+					Device dev = null;
+					switch (name)
+					{
+					case IDevice.DEVICE_POSITION2D_CODE :
+						if (Indes == 0)
+							dev = new Position2d(this, new Device(name, host, port, Indes)); break;
+
+					case IDevice.DEVICE_RANGER_CODE : 
+						dev = new Ranger(this, new Device(name, host, port, Indes)); break;
+						
+					case IDevice.DEVICE_BLOBFINDER_CODE :
+						dev = new Blobfinder(this, new Device(name, host, port, Indes)); break;
+						//						addToDeviceList( new Blobfinder(roboClient, id)); break;
+						//	
+					case IDevice.DEVICE_GRIPPER_CODE : 
+						dev = new Gripper(this, new Device(name, host, port, Indes)); break;
+						//						addToDeviceList( new Gripper(roboClient, id)); break;
+
+					case IDevice.DEVICE_SONAR_CODE : 
+						dev = new RangerSonar(this, new Device(name, host, port, Indes)); break;
+
+					case IDevice.DEVICE_LASER_CODE : 
+						dev = new RangerLaser(this, new Device(name, host, port, Indes)); break;
+
+						//					case DeviceCode.DEVICE_LOCALIZE_CODE : break;
+						//	
+						//					case DeviceCode.DEVICE_SIMULATION_CODE : break; 
+						//	
+					case IDevice.DEVICE_PLANNER_CODE : 
+						dev = new Planner(this, new Device(name, host, port, Indes)); break;
+						//						addToDeviceList( new Planner(roboClient, id)); break;
+
+					default: break;
+					}
+					//					deviceList.add(new Device(name, host, port, Indes));
+					if (dev != null) {
+						deviceList.add(dev);
 					}
 				}
 			}
-//		}
+		}
+		//		}
 	}
 
 	/**

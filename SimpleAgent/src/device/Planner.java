@@ -35,7 +35,7 @@ public class Planner extends Device {
 
 	// Host id
 //	public Planner (String host, int port, int id) {
-	public Planner (RobotClient roboClient, int id) {
+	public Planner (RobotClient roboClient) {
 		try {
 			// Connect to the Player server and request access to Position
 //			playerclient  = new PlayerClient (host, port);
@@ -64,12 +64,12 @@ public class Planner extends Device {
 
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
+			Logger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
 	}
 	public Planner(RobotClient roboClient, Device device) {
-		this(roboClient,device.getHost());
+		this(roboClient);
 		host = device.getHost();
 		name = device.getName();
 		deviceNumber = device.getDeviceNumber();

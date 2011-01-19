@@ -21,7 +21,7 @@ public class Blobfinder extends Device {
 	// Every class of this type has it's own thread
 //	public Thread thread = new Thread ( this );
 	
-	public Blobfinder (RobotClient roboClient, int id) {
+	public Blobfinder (RobotClient roboClient) {
 //		super(id);
 		try {
 			bfi = roboClient.getClient().requestInterfaceBlobfinder(0, PlayerConstants.PLAYER_OPEN_MODE);
@@ -34,12 +34,12 @@ public class Blobfinder extends Device {
 
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
+			Logger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
 	}
 	public Blobfinder(RobotClient roboClient, Device device) {
-		this(roboClient,device.getHost());
+		this(roboClient);
 		host = device.getHost();
 		name = device.getName();
 		deviceNumber = device.getDeviceNumber();

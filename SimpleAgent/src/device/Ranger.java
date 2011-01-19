@@ -15,13 +15,19 @@ public class Ranger extends Device {
 	// Every class of this type has it's own thread
 //	public Thread thread = new Thread ( this );
 
-	protected Ranger (int id) {
-//		super(id);
+//	protected Ranger (int id) {
+////		super(id);
+//	}
+	protected Ranger (Device device) {
+		host = device.getHost();
+		name = device.getName();
+		deviceNumber = device.getDeviceNumber();
+		port = device.getPort();		
 	}
-	public Ranger (RobotClient roboClient, int id, int device) {
-//		super(id);
+	public Ranger (RobotClient roboClient, Device device) {
+		this(device);
 		try {
-			rang = roboClient.getClient().requestInterfaceRanger(device, PlayerConstants.PLAYER_OPEN_MODE);
+			rang = roboClient.getClient().requestInterfaceRanger(deviceNumber, PlayerConstants.PLAYER_OPEN_MODE);
 			
 			// Automatically start own thread in constructor
 //			this.thread.start();
@@ -29,17 +35,13 @@ public class Ranger extends Device {
 
 		} catch ( PlayerException e ) {
 //			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logActivity(true, "Connecting", this.toString(), id, thread.getName());
+			Logger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
 	}
-	public Ranger(RobotClient roboClient, Device device) {
-		this(roboClient, device.getHost(),device.getDeviceNumber());
-		host = device.getHost();
-		name = device.getName();
-		deviceNumber = device.getDeviceNumber();
-		port = device.getPort();
-	}
+//	public Ranger(RobotClient roboClient, Device device) {
+//		this(roboClient);
+//	}
 	/**
 	 * Will check for new ranges
 	 * If not yet ready will put current thread to sleep
