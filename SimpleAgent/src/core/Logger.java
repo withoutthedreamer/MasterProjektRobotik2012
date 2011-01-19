@@ -47,7 +47,7 @@ public class Logger {
 				
 			String logMsg = event + " of "
 			+ objName.toString()
-			+ " @(" + objName.getHost() + "," + objName.getPort() + "," + objName.getDeviceNumber() + ")"
+			+ " @[" + objName.getHost() + "," + objName.getPort() + "," + objName.getDeviceNumber() + "]"
 			+ " in " + threadName;
 
 			if (isError == true) {

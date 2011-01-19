@@ -1,22 +1,17 @@
 package device;
 
-import core.Logger;
 import data.Position;
-import javaclient3.PlannerInterface;
-//import javaclient3.PlayerClient;
-import javaclient3.PlayerException;
-import javaclient3.structures.PlayerConstants;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.planner.PlayerPlannerData;
 
-public class Planner extends Device {
+public class Planner extends PlayerDevice {
 	// Planner is running its own Player server
 //	protected PlayerClient playerclient = null;
-	protected PlannerInterface plan = null;
+//	protected PlannerInterface plan = null;
 //	protected LocalizeInterface loci  = null;
 //	protected MapInterface mapi = null;
 //	protected PlayerLocalizeSetPose locPose = null;
-	protected final int SLEEPTIME = 100;
+//	protected final int SLEEPTIME = 100;
 
 	// Every class of this type has it's own thread
 //	public Thread thread = new Thread ( this );
@@ -35,45 +30,47 @@ public class Planner extends Device {
 
 	// Host id
 //	public Planner (String host, int port, int id) {
-	public Planner (RobotClient roboClient) {
-		try {
-			// Connect to the Player server and request access to Position
-//			playerclient  = new PlayerClient (host, port);
-
-//			mapi = playerclient.requestInterfaceMap(0, PlayerConstants.PLAYER_OPEN_MODE);
-//			loci = playerclient.requestInterfaceLocalize(0, PlayerConstants.PLAYER_OPEN_MODE);
-			plan = roboClient.getClient().requestInterfacePlanner(0, PlayerConstants.PLAYER_OPEN_MODE);
-
-			// set the initial guessed pose for localization (AMCL)
-//			locPose = new PlayerLocalizeSetPose ();
+//	public Planner (RobotClient roboClient) {
+//		try {
+//			// Connect to the Player server and request access to Position
+////			playerclient  = new PlayerClient (host, port);
+//
+////			mapi = playerclient.requestInterfaceMap(0, PlayerConstants.PLAYER_OPEN_MODE);
+////			loci = playerclient.requestInterfaceLocalize(0, PlayerConstants.PLAYER_OPEN_MODE);
+//			plan = roboClient.getClient().requestInterfacePlanner(0, PlayerConstants.PLAYER_OPEN_MODE);
+//
+//			// set the initial guessed pose for localization (AMCL)
+////			locPose = new PlayerLocalizeSetPose ();
+////			
+////			pose = new PlayerPose();
+////			goal = new PlayerPose();
+//			goal = new Position(6,6,6);
+//			curPosition = new Position(6,6,6);
+//
+//			// set the first mean values
+////			locPose.setMean (pose);
+////			locPose.setCov (cov);
 //			
-//			pose = new PlayerPose();
-//			goal = new PlayerPose();
-			goal = new Position(6,6,6);
-			curPosition = new Position(6,6,6);
-
-			// set the first mean values
-//			locPose.setMean (pose);
-//			locPose.setCov (cov);
-			
-			// enable motion
-			plan.setRobotMotion(1);
-
-			// Add itself to the device list
-//			deviceList.put("planner", this);
-
-		} catch ( PlayerException e ) {
-//			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logDeviceActivity(true, "Connecting", this);
-			throw new IllegalStateException();
-		}
-	}
+//			// enable motion
+//			plan.setRobotMotion(1);
+//
+//			// Add itself to the device list
+////			deviceList.put("planner", this);
+//
+//		} catch ( PlayerException e ) {
+////			System.err.println ("    [ " + e.toString() + " ]");
+//			Logger.logDeviceActivity(true, "Connecting", this);
+//			throw new IllegalStateException();
+//		}
+//	}
 	public Planner(RobotClient roboClient, Device device) {
-		this(roboClient);
-		host = device.getHost();
-		name = device.getName();
-		deviceNumber = device.getDeviceNumber();
-		port = device.getPort();
+		super(roboClient, device);
+		
+		goal = new Position(6,6,6);
+		curPosition = new Position(6,6,6);
+		
+		// enable motion
+		((javaclient3.PlannerInterface) this.device).setRobotMotion(1);
 	}
 	public void setGoal (Position newGoal) {
 //		goal.setPx(newGoal.getX());
@@ -104,9 +101,9 @@ public class Planner extends Device {
 //			}
 //		}
 		// TODO check if position is on map
-		if (plan.isDataReady()) {
+		if (((javaclient3.PlannerInterface) device).isDataReady()) {
 			// request recent planner data
-			ppd = plan.getData ();
+			ppd = ((javaclient3.PlannerInterface) device).getData ();
 //			System.out.println (ppd.getWaypoints_count());
 
 			// set position belief
@@ -127,7 +124,7 @@ public class Planner extends Device {
 		// update goal
 		if(isNewGoal) {
 			isNewGoal = false;
-			plan.setGoal(new PlayerPose(
+			((javaclient3.PlannerInterface) device).setGoal(new PlayerPose(
 					goal.getX(),
 					goal.getY(),
 					goal.getYaw()));

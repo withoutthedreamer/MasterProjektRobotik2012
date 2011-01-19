@@ -1,10 +1,6 @@
 package device;
 
-import core.Logger;
 import data.Position;
-import javaclient3.PlayerException;
-import javaclient3.Position2DInterface;
-import javaclient3.structures.PlayerConstants;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.position2d.PlayerPosition2dData;
 
@@ -13,8 +9,8 @@ import javaclient3.structures.position2d.PlayerPosition2dData;
  * @author sebastian
  *
  */
-public class Position2d extends Device {
-	Position2DInterface posi  = null;
+public class Position2d extends PlayerDevice {
+//	Position2DInterface posi  = null;
 	Position pos = null;
 //	protected final int SLEEPTIME = 100;
 	
@@ -31,27 +27,28 @@ public class Position2d extends Device {
 	 * @param id Robot id.
 	 */
 	// Host id
-	public Position2d (RobotClient roboClient) {
-//		super(id);
-		try {
-			posi = roboClient.getClient().requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
-
-			// Automatically start own thread in constructor
-//			this.thread.start();
-//			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
-
-		} catch ( PlayerException e ) {
-//			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logDeviceActivity(true, "Connecting", this);
-			throw new IllegalStateException();
-		}
-	}
+//	public Position2d (RobotClient roboClient) {
+////		super(id);
+//		try {
+//			posi = roboClient.getClient().requestInterfacePosition2D (0, PlayerConstants.PLAYER_OPEN_MODE);
+//
+//			// Automatically start own thread in constructor
+////			this.thread.start();
+////			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
+//
+//		} catch ( PlayerException e ) {
+////			System.err.println ("    [ " + e.toString() + " ]");
+//			Logger.logDeviceActivity(true, "Connecting", this);
+//			throw new IllegalStateException();
+//		}
+//	}
 	public Position2d(RobotClient roboClient, Device device) {
-		this(roboClient);
-		host = device.getHost();
-		name = device.getName();
-		deviceNumber = device.getDeviceNumber();
-		port = device.getPort();
+		super(roboClient, device);
+//		this(roboClient);
+//		host = device.getHost();
+//		name = device.getName();
+//		deviceNumber = device.getDeviceNumber();
+//		port = device.getPort();
 	}
 	/**
 	 * Updates the position device's settings at ~10 Hz
@@ -59,19 +56,19 @@ public class Position2d extends Device {
 	 */
 		// Wait for sonar readings
 	protected void update() {
-		if ( ! posi.isDataReady() ){
+		if ( ! ((javaclient3.Position2DInterface) device).isDataReady() ){
 //			try { Thread.sleep (this.SLEEPTIME); }
 //			catch (InterruptedException e) { this.thread.interrupt(); }
 		} else {
 			// Request current position
-			PlayerPosition2dData poseData = posi.getData();
+			PlayerPosition2dData poseData = ((javaclient3.Position2DInterface) device).getData();
 				pos = new Position(poseData.getPos().getPx(),
 						poseData.getPos().getPy(),
 						poseData.getPos().getPa());
 				
 			// Update odometry if updated externally
 			if (setOdometry != null) {				
-				posi.setOdometry(new PlayerPose(
+				((javaclient3.Position2DInterface) device).setOdometry(new PlayerPose(
 						setOdometry.getX(),
 						setOdometry.getY(),
 						setOdometry.getYaw()));
@@ -80,7 +77,7 @@ public class Position2d extends Device {
 			// Set new speed
 			if (isNewSpeed == true) {
 				isNewSpeed = false;
-				posi.setSpeed(speed, turnrate);
+				((javaclient3.Position2DInterface) device).setSpeed(speed, turnrate);
 			}
 		}
 	}

@@ -1,30 +1,29 @@
 package device;
 
-import core.Logger;
 import javaclient3.LaserInterface;
-import javaclient3.PlayerException;
-import javaclient3.structures.PlayerConstants;
 
 public class RangerLaser extends Ranger {
 	
 	protected LaserInterface las = null;
 	protected float[] lasRanges = null;
 		
-	public RangerLaser (RobotClient roboClient, Device device) throws IllegalStateException {
-		super(device);
-		try {
-			las = roboClient.getClient().requestInterfaceLaser(0, PlayerConstants.PLAYER_OPEN_MODE);
-
-			// Automatically start own thread in constructor
-//			thread.start();
-//			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
-
-		} catch ( PlayerException e ) {
-//			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logDeviceActivity(true, "Connecting", this);
-			throw new IllegalStateException();
-		}
+	public RangerLaser (RobotClient roboClient, Device device) {
+		super(roboClient, device);
 	}
+//		super(device);
+//		try {
+//			las = roboClient.getClient().requestInterfaceLaser(0, PlayerConstants.PLAYER_OPEN_MODE);
+//
+//			// Automatically start own thread in constructor
+////			thread.start();
+////			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
+//
+//		} catch ( PlayerException e ) {
+////			System.err.println ("    [ " + e.toString() + " ]");
+//			Logger.logDeviceActivity(true, "Connecting", this);
+//			throw new IllegalStateException();
+//		}
+//	}
 //	public RangerLaser(RobotClient roboClient, Device device) {
 //		this(roboClient,device.getHost());
 //		host = device.getHost();
@@ -36,13 +35,13 @@ public class RangerLaser extends Ranger {
 	// If not yet ready will put current thread to sleep
 	protected void update() {
 		// Wait for the laser readings
-		while ( ! las.isDataReady() ) {
+		while ( ! ((javaclient3.LaserInterface) device).isDataReady() ) {
 //			try { Thread.sleep (SLEEPTIME); }
 //			catch (InterruptedException e) { thread.interrupt(); }
 		}
-		count = las.getData().getRanges_count();
+		count = ((javaclient3.LaserInterface) device).getData().getRanges_count();
 		if (count > 0) {
-			lasRanges = las.getData().getRanges();
+			lasRanges = ((javaclient3.LaserInterface) device).getData().getRanges();
 		}
 	}
 	

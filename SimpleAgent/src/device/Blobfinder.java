@@ -1,18 +1,11 @@
 package device;
 
-import javaclient3.BlobfinderInterface;
-import javaclient3.PlayerException;
-import javaclient3.structures.PlayerConstants;
 import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
-
 import java.util.Vector;
-
-import core.Logger;
-
 import data.BlobfinderBlob;
 
-public class Blobfinder extends Device {
-	protected BlobfinderInterface  bfi  = null;
+public class Blobfinder extends PlayerDevice {
+//	protected BlobfinderInterface  bfi  = null;
 	protected int count = 0;
 	protected int[] color = null;
 	protected Vector<BlobfinderBlob> blobs = null;;
@@ -21,29 +14,32 @@ public class Blobfinder extends Device {
 	// Every class of this type has it's own thread
 //	public Thread thread = new Thread ( this );
 	
-	public Blobfinder (RobotClient roboClient) {
-//		super(id);
-		try {
-			bfi = roboClient.getClient().requestInterfaceBlobfinder(0, PlayerConstants.PLAYER_OPEN_MODE);
-			blobs = new Vector<BlobfinderBlob>();
-			
-			// Automatically start own thread in constructor
-//			thread.start();
-			
-//			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
-
-		} catch ( PlayerException e ) {
-//			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logDeviceActivity(true, "Connecting", this);
-			throw new IllegalStateException();
-		}
-	}
+//	public Blobfinder (RobotClient roboClient) {
+////		super(id);
+//		try {
+//			bfi = roboClient.getClient().requestInterfaceBlobfinder(0, PlayerConstants.PLAYER_OPEN_MODE);
+//			blobs = new Vector<BlobfinderBlob>();
+//			
+//			// Automatically start own thread in constructor
+////			thread.start();
+//			
+////			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
+//
+//		} catch ( PlayerException e ) {
+////			System.err.println ("    [ " + e.toString() + " ]");
+//			Logger.logDeviceActivity(true, "Connecting", this);
+//			throw new IllegalStateException();
+//		}
+//	}
 	public Blobfinder(RobotClient roboClient, Device device) {
-		this(roboClient);
-		host = device.getHost();
-		name = device.getName();
-		deviceNumber = device.getDeviceNumber();
-		port = device.getPort();
+		super(roboClient, device);
+		blobs = new Vector<BlobfinderBlob>();
+		
+//		this(roboClient);
+//		host = device.getHost();
+//		name = device.getName();
+//		deviceNumber = device.getDeviceNumber();
+//		port = device.getPort();
 	}
 	// Only to be called @~10Hz
 	@Override
@@ -53,13 +49,13 @@ public class Blobfinder extends Device {
 //			try { Thread.sleep (this.SLEEPTIME); }
 //			catch (InterruptedException e) { this.thread.interrupt(); }
 //		}
-		if (bfi.isDataReady()) {
+		if (((javaclient3.BlobfinderInterface) device).isDataReady()) {
 		// TODO else case
-		this.count = this.bfi.getData().getBlobs_count();
+		count = ((javaclient3.BlobfinderInterface) device).getData().getBlobs_count();
 		
-		if (this.count > 0) {
-			for (int i = 0; i<this.count; i++) {
-				PlayerBlobfinderBlob unblob = this.bfi.getData().getBlobs()[i];
+		if (count > 0) {
+			for (int i = 0; i<count; i++) {
+				PlayerBlobfinderBlob unblob = ((javaclient3.BlobfinderInterface) device).getData().getBlobs()[i];
 				// envelope for new blob
 				BlobfinderBlob inblob = new BlobfinderBlob(
 						unblob.getColor(),
@@ -73,9 +69,9 @@ public class Blobfinder extends Device {
 						unblob.getRange()	);
 				
 				if (i >= this.blobs.size()) {
-					this.blobs.add(inblob);
+					blobs.add(inblob);
 				} else {
-					this.blobs.set(i, inblob);
+					blobs.set(i, inblob);
 				}
 			}
 		}
@@ -83,10 +79,10 @@ public class Blobfinder extends Device {
 	}
 	
 	public Vector<BlobfinderBlob> getBlobs () {
-		return this.blobs;
+		return blobs;
 	}
 	public int getCount () {
-		return this.count;
+		return count;
 	}
 //	@Override
 //	public void run() {

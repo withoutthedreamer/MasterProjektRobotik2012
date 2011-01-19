@@ -1,13 +1,8 @@
 package device;
 
-import core.Logger;
-import javaclient3.GripperInterface;
-import javaclient3.PlayerException;
-import javaclient3.structures.PlayerConstants;
+public class Gripper extends PlayerDevice {
 
-public class Gripper extends Device {
-
-	protected GripperInterface  grip  = null;
+//	protected GripperInterface  grip  = null;
 	protected final int SLEEPTIME = 1000;
 
 	// Every class of this type has it's own thread
@@ -22,35 +17,37 @@ public class Gripper extends Device {
 		ERROR
 	}
 
-	public Gripper(RobotClient roboClient) {
-//		super(id);
-		try {
-			grip = roboClient.getClient().requestInterfaceGripper(0, PlayerConstants.PLAYER_OPEN_MODE);
-
-			// Automatically start own thread in constructor
-//			this.thread.start();
-			
-//			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
-
-		} catch ( PlayerException e ) {
-//			System.err.println ("    [ " + e.toString() + " ]");
-			Logger.logDeviceActivity(true, "Connecting", this);
-			throw new IllegalStateException();
-		}
-	}
+//	public Gripper(RobotClient roboClient) {
+////		super(id);
+//		try {
+//			grip = roboClient.getClient().requestInterfaceGripper(0, PlayerConstants.PLAYER_OPEN_MODE);
+//
+//			// Automatically start own thread in constructor
+////			this.thread.start();
+//			
+////			Logger.logActivity(false, "Running", this.toString(), id, thread.getName());
+//
+//		} catch ( PlayerException e ) {
+////			System.err.println ("    [ " + e.toString() + " ]");
+//			Logger.logDeviceActivity(true, "Connecting", this);
+//			throw new IllegalStateException();
+//		}
+//	}
 	public Gripper(RobotClient roboClient, Device device) {
-		this(roboClient);
-		host = device.getHost();
-		name = device.getName();
-		deviceNumber = device.getDeviceNumber();
-		port = device.getPort();
+		super(roboClient, device);
 	}
+//		this(roboClient);
+//		host = device.getHost();
+//		name = device.getName();
+//		deviceNumber = device.getDeviceNumber();
+//		port = device.getPort();
+//	}
 	protected void update () {
-		if ( ! grip.isDataReady() ) {			
+		if ( ! ((javaclient3.GripperInterface) device).isDataReady() ) {			
 //			try { Thread.sleep (this.SLEEPTIME); }
 //			catch (InterruptedException e) { this.thread.interrupt(); }
 		} else {
-			curState = grip.getData().getState();
+			curState = ((javaclient3.GripperInterface) device).getData().getState();
 //			grip.setGripper(goalState);
 		}
 	}

@@ -77,6 +77,12 @@ public class Device implements IDevice, Runnable {
 		this.port = port;
 		deviceNumber = devNum;
 	}
+	public Device (Device device) {
+		host = device.getHost();
+		name = device.getName();
+		deviceNumber = device.getDeviceNumber();
+		port = device.getPort();		
+	}
 	/**
 	 * This constructor adds all devices of the devices in the list
 	 * to its internal device list.
@@ -130,7 +136,7 @@ public class Device implements IDevice, Runnable {
 
 	public synchronized void runThreaded() {
 		// Start all devices
-		if (deviceList.size() > 0) {
+		if (deviceList != null && deviceList.size() > 0) {
 			Iterator<Device> deviceIterator = deviceList.iterator();
 			while (deviceIterator.hasNext()) {
 				Device device = deviceIterator.next();
