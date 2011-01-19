@@ -15,11 +15,12 @@ public class RangerLaser extends Ranger
 	@Override
 	protected void update() {
 		// Wait for the laser readings
-		while ( ! ((javaclient3.LaserInterface) device).isDataReady() ) {
-		}
-		count = ((javaclient3.LaserInterface) device).getData().getRanges_count();
-		if (count > 0) {
-			lasRanges = ((javaclient3.LaserInterface) device).getData().getRanges();
+		if ( ((javaclient3.LaserInterface) device).isDataReady() )
+		{
+			count = ((javaclient3.LaserInterface) device).getData().getRanges_count();
+			if (count > 0) {
+				lasRanges = ((javaclient3.LaserInterface) device).getData().getRanges();
+			}
 		}
 	}
 	@Override

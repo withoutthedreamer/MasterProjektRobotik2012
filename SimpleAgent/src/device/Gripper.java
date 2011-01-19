@@ -18,8 +18,7 @@ public class Gripper extends PlayerDevice {
 		super(roboClient, device);
 	}
 	protected void update () {
-		if ( ! ((javaclient3.GripperInterface) device).isDataReady() ) {			
-		} else {
+		if ( ((javaclient3.GripperInterface) device).isDataReady() ) {			
 			curState = ((javaclient3.GripperInterface) device).getData().getState();
 //			grip.setGripper(goalState);
 		}

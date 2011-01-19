@@ -26,6 +26,7 @@ public class Pioneer extends Device implements Trackable, IPioneer
 	Ranger laser = null;
 	Ranger sonar = null;
 	Planner planner = null;
+	Localize localizer = null;
 	Gripper gripper = null;
 	Blobfinder bloFi = null;
 	
@@ -97,6 +98,9 @@ public class Pioneer extends Device implements Trackable, IPioneer
 
 					case IDevice.DEVICE_PLANNER_CODE :
 						planner = (Planner) dev; break;
+							
+					case IDevice.DEVICE_LOCALIZE_CODE :
+						localizer = (Localize) dev; break;
 							
 					case IDevice.DEVICE_BLOBFINDER_CODE :
 						bloFi = (Blobfinder) dev; break;

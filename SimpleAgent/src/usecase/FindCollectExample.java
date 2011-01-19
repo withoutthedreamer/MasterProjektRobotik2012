@@ -5,7 +5,9 @@ import java.io.InputStreamReader;
 
 import robot.ExploreRobot;
 import robot.GripperRobot;
+import simulator.Simulator;
 import data.Position;
+import device.Blackboard;
 import device.Device;
 import device.RobotClient;
 
@@ -36,13 +38,15 @@ public class FindCollectExample {
 
 			
 			// Task synchronization
-//			Blackboard blackb= Blackboard.getInstance(pionRG);
+			Blackboard blackb= Blackboard.getInstance(gripper);
 			// wants to write notes
-//			pionRsB.setBlackboard(blackb);
+			explorer.setBlackboard(blackb);
 			
 			// for modifying world
-//			Simulator simu   = Simulator.getInstance("localhost", 6665);
-//			blackb.setSimulation(simu);
+			Simulator simu   = Simulator.getInstance("localhost", 6665);
+			blackb.setSimulation(simu);
+
+			blackb.runThreaded();
 //			Tracker tracker  = Tracker.getInstance(simu, null);
 //			tracker.addObject("r0", pionSB);
 //			tracker.addObject("r1", pionLG);
@@ -53,7 +57,7 @@ public class FindCollectExample {
 			// Wait until enter is pressed
 			in.readLine();
 //			tracker.shutdown()
-//			blackb.shutdown();
+			blackb.shutdown();
 						
 			explorer.shutdown();
 			explDevices.shutdown();
@@ -62,7 +66,7 @@ public class FindCollectExample {
 			gripDevices.shutdown();
 			gripDevices2.shutdown();
 
-//			simu.shutdown();
+			simu.shutdown();
 			
 		} catch (Exception e) {
 //			e.printStackTrace();

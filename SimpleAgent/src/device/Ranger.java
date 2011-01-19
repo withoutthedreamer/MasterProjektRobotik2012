@@ -17,8 +17,7 @@ public class Ranger extends PlayerDevice
 	 */
 	@Override
 	protected void update() {
-		if ( ! ((javaclient3.RangerInterface) device).isDataReady() ) {
-		} else {
+		if ( ((javaclient3.RangerInterface) device).isDataReady() ) {
 			count = ((javaclient3.RangerInterface) device).getData().getRanges_count();
 			ranges = ((javaclient3.RangerInterface) device).getData().getRanges();
 		}

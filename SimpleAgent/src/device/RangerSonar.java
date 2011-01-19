@@ -15,11 +15,12 @@ public class RangerSonar extends Ranger
 	@Override
 	protected void update() {
 		// Wait for the laser readings
-		while ( ! ((javaclient3.SonarInterface) device).isDataReady() ) {
-		}
-		count = ((javaclient3.SonarInterface) device).getData().getRanges_count();
-		if (count > 0) {
-			sonRanges = ((javaclient3.SonarInterface) device).getData().getRanges();
+		if ( ((javaclient3.SonarInterface) device).isDataReady() )
+		{
+			count = ((javaclient3.SonarInterface) device).getData().getRanges_count();
+			if (count > 0) {
+				sonRanges = ((javaclient3.SonarInterface) device).getData().getRanges();
+			}
 		}
 	}
 	@Override

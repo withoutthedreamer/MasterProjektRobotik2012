@@ -110,8 +110,9 @@ public class RobotClient extends Device {
 					case IDevice.DEVICE_LASER_CODE : 
 						dev = new RangerLaser(this, new Device(name, host, port, Indes)); break;
 
-						//					case DeviceCode.DEVICE_LOCALIZE_CODE : break;
-						//	
+					case IDevice.DEVICE_LOCALIZE_CODE : 
+						dev = new Localize(this, new Device(name, host, port, Indes)); break;
+	
 						//					case DeviceCode.DEVICE_SIMULATION_CODE : break; 
 						//	
 					case IDevice.DEVICE_PLANNER_CODE : 

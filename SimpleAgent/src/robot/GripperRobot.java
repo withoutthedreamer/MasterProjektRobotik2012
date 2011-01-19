@@ -4,28 +4,10 @@ import data.Position;
 import device.Device;
 
 public class GripperRobot extends Pioneer {
-//	protected Gripper grip = null;
-//	protected Planner plan = null;
 
 	public GripperRobot (Device roboDevices) {
 		super(roboDevices);
 	}
-//	public GripperRobot(String name, int port, int id) throws IllegalStateException {
-//		
-//		super(name, port, id);
-//
-//		grip  = new Gripper (roboClient, id);
-//		// Take the next port
-//		plan  = new Planner (name, port+1, this.id);
-//	}
-
-//	protected void shutdownDevices () {
-//		super.shutdownDevices();
-//		this.grip.thread.interrupt();
-//		while (this.grip.thread.isAlive());
-//		if (plan != null)
-//			this.plan.shutdown();
-//	}
 
 	@Override
 	protected void update () {
@@ -46,8 +28,8 @@ public class GripperRobot extends Pioneer {
 	}
 	@Override
 	public final void setPosition(Position position) {
-		if (planner != null)
-			planner.setPose(position);		
+		if (localizer != null)
+			localizer.setPose(position);		
 	}
 	
 	/// Return robot position
@@ -60,7 +42,4 @@ public class GripperRobot extends Pioneer {
 			return super.getPosition();
 		}
 	}
-//	public void setPlanner(String name, int port) {
-//		plan = new Planner (name, port, this.id);
-//	}
 }

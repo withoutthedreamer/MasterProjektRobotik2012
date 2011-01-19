@@ -27,8 +27,7 @@ public class Position2d extends PlayerDevice
 	 */
 	protected void update() {
 		// Check for sonar readings ready
-		if ( ! ((javaclient3.Position2DInterface) device).isDataReady() ){
-		} else {
+		if ( ((javaclient3.Position2DInterface) device).isDataReady() ){
 			// Request current position
 			PlayerPosition2dData poseData = ((javaclient3.Position2DInterface) device).getData();
 				pos = new Position(poseData.getPos().getPx(),

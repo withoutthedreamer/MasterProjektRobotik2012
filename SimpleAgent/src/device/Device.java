@@ -30,12 +30,14 @@ public class Device implements IDevice, Runnable
 	 * and has no internal devicelist or thread
 	 */
 	public Device (int name, String host, int port, int devNum) {
+		this();
 		this.name = name;
 		this.host = host;
 		this.port = port;
 		deviceNumber = devNum;
 	}
 	public Device (Device device) {
+		this();
 		host = device.getHost();
 		name = device.getName();
 		deviceNumber = device.getDeviceNumber();
@@ -47,6 +49,7 @@ public class Device implements IDevice, Runnable
 	 * @param aDeviceList The list of devices that contain devices.
 	 */
 	public Device (Device[] aDeviceList) {
+		this();
 		if (aDeviceList != null) {
 			for (int i=0; i<aDeviceList.length; i++) {
 				addDevicesOf(aDeviceList[i]);

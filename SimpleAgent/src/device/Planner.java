@@ -69,7 +69,7 @@ public class Planner extends PlayerDevice
 		curPosition = position;
 		isNewPose = true;
 	}
-	public Position getPose() {
+	public synchronized Position getPose() {
 		return curPosition;
 	}
 }
