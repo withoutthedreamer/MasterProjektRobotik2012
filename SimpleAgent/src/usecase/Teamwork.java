@@ -38,6 +38,7 @@ package usecase;
 import robot.*;
 import simulator.*;
 import data.Position;
+import device.Device;
 import device.RobotClient;
 
 import java.io.BufferedReader;
@@ -55,16 +56,14 @@ public class Teamwork  {
 			
 			RobotClient gripDevices = new RobotClient("localhost", 6667);
 			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
-			gripDevices.addDevicesOf(gripDevices2);
-			gripDevices2 = null;
 			gripDevices.runThreaded();
+			gripDevices2.runThreaded();
+			Device gripperDevices = new Device( new Device[]{gripDevices, gripDevices2} );
 
-			
 			ExploreRobot explorer = new ExploreRobot(explDevices);
 			explorer.runThreaded();
 			
-			GripperRobot gripper = new GripperRobot(gripDevices);
-//			gripper.addDevices(gripDevices2);
+			GripperRobot gripper = new GripperRobot(gripperDevices);
 			gripper.runThreaded();
 			
 			gripper.setPosition(new Position(-16,3,Math.toRadians(90)));
@@ -87,7 +86,7 @@ public class Teamwork  {
 			
 			gripper.shutdown();
 			gripDevices.shutdown();
-//			gripDevices2.shutdown();
+			gripDevices2.shutdown();
 
 			simu.shutdown();
 			

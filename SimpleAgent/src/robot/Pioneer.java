@@ -38,18 +38,18 @@ public class Pioneer extends Device implements Trackable, IPioneer
 	/**
 	 * Default constructor
 	 */
-	public Pioneer(){}
+//	public Pioneer(){}
 	/**
 	 * This constructor has to be overwritten in any subclasses!
 	 */
 	//	public Pioneer (String name, int port, int id) throws IllegalStateException {
-	public Pioneer (RobotClient roboClient) throws IllegalStateException {
+	public Pioneer (Device roboDevices) {
 
 		// Get the available devices
 //		deviceList = roboClient.getDeviceList();
 		
 		// Make the devices available
-		connectDevices(roboClient.getDeviceList());
+		connectDevices(roboDevices.getDeviceList());
 	}
 //	/**
 //	 * It is possible to give this robot more devices by passing an

@@ -1,7 +1,7 @@
 package core;
 // TODO wrap message service
 public class Logger {
-	
+	//TODO log device
 	public static synchronized void logActivity(boolean isError, String event, String objName, int id, String thread) {
 		
 		int otherId = -1;

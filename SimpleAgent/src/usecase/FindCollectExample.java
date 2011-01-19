@@ -1,12 +1,12 @@
 package usecase;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 
 import robot.ExploreRobot;
 import robot.GripperRobot;
 import data.Position;
+import device.Device;
 import device.RobotClient;
 
 public class FindCollectExample {
@@ -21,21 +21,19 @@ public class FindCollectExample {
 			explDevices.runThreaded();
 			
 			RobotClient gripDevices = new RobotClient("localhost", 6667);
+			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
 			gripDevices.runThreaded();
-			
+			gripDevices2.runThreaded();
+			Device gripperDevices = new Device( new Device[]{gripDevices, gripDevices2} );
+
 			ExploreRobot explorer = new ExploreRobot(explDevices);
 			explorer.runThreaded();
 			
-			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
-//			gripDevices2.runThreaded();
-			gripDevices.addDevicesOf(gripDevices2);
-			gripDevices2 = null;
-			
-			GripperRobot gripper = new GripperRobot(gripDevices);
-//			gripper.addDevices(gripDevices2);
+			GripperRobot gripper = new GripperRobot(gripperDevices);
 			gripper.runThreaded();
 			
 			gripper.setPosition(new Position(-16,3,Math.toRadians(90)));
+
 			
 			// Task synchronization
 //			Blackboard blackb= Blackboard.getInstance(pionRG);
@@ -53,21 +51,16 @@ public class FindCollectExample {
 //				System.out.println(pionRG.getPosition().toString());
 //			}
 			// Wait until enter is pressed
-			try {
-				in.readLine();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			in.readLine();
 //			tracker.shutdown()
 //			blackb.shutdown();
-			
+						
 			explorer.shutdown();
 			explDevices.shutdown();
 			
 			gripper.shutdown();
 			gripDevices.shutdown();
-//			gripDevices2.shutdown();
+			gripDevices2.shutdown();
 
 //			simu.shutdown();
 			

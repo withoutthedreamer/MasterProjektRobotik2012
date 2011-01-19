@@ -3,15 +3,15 @@ package robot;
 import data.BbNote;
 import data.BlobfinderBlob;
 import device.Blackboard;
-import device.RobotClient;
+import device.Device;
 
 public class ExploreRobot extends Pioneer {
 	
 	protected Blackboard blackboard = null;
 
-	public ExploreRobot(RobotClient roboClient)
+	public ExploreRobot(Device roboDevices)
 	{
-		super(roboClient);
+		super(roboDevices);
 	}
 	protected final void blobsearch() {
 		if (this.bloFi == null ) { return; }

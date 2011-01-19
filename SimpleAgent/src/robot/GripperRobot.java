@@ -1,14 +1,14 @@
 package robot;
 
 import data.Position;
-import device.RobotClient;
+import device.Device;
 
 public class GripperRobot extends Pioneer {
 //	protected Gripper grip = null;
 //	protected Planner plan = null;
 
-	public GripperRobot (RobotClient roboClient) {
-		super(roboClient);
+	public GripperRobot (Device roboDevices) {
+		super(roboDevices);
 	}
 //	public GripperRobot(String name, int port, int id) throws IllegalStateException {
 //		
