@@ -13,6 +13,8 @@ public class PlayerDevice extends Device
 		try
 		{
 			this.device = roboClient.getClient().requestInterface (name, deviceNumber, PlayerConstants.PLAYER_OPEN_MODE);
+			if(this.device == null)
+				throw new IllegalStateException();
 		}
 		catch ( PlayerException e )
 		{
