@@ -18,9 +18,6 @@ public class RobotClient extends Device {
 
 	// Required to every player robot
 	protected PlayerClient playerClient = null;
-//	private boolean isRunning = false;
-//	private boolean isThreaded = false;
-//	long SLEEPTIME = 0;
 
 	/**
 	 * Constructor for a RobotClient.
@@ -54,43 +51,28 @@ public class RobotClient extends Device {
 		}
 	}
 	@Override
-	public void runThreaded() {
-//        isThreaded  = true;
+	public void runThreaded()
+	{
 		super.runThreaded();
 //		playerClient.runThreaded(-1, -1);
 	}
-
 	@Override
-		protected void update() {
-	//		isRunning = true;
-	//
-	//		while (isThreaded == true)
-	//		{
-				playerClient.readAll();
-	//			Thread.yield ();
-	//		}
-	
-	//		isRunning = false;
-		}
+	protected void update()
+	{
+		playerClient.readAll();
+	}
 	/**
 	 * Shutdown robot client and clean up
 	 */
 	@Override
-	public void shutdown () {
-//		isThreaded = false;
-		
-//		while (isRunning == true) { // wait to exit run thread
-//			try { Thread.sleep (10); } catch (Exception e) { }
-//		}
+	public void shutdown ()
+	{
 		super.shutdown();
-		//		playerClient.interrupt();
 		playerClient.close();
 	}
+	
 	private void updateDeviceList()
 	{
-		//		if (playerClient.isReadyPDDList() == true) {
-		//		boolean isReady = playerClient.isReadyPDDList();
-		//			if (playerClient.isReadyRequestDevice() == true) {
 		PlayerDeviceDevlist pDevList = playerClient.getPDDList();
 		if (pDevList != null) {
 
@@ -101,11 +83,9 @@ public class RobotClient extends Device {
 				for (int i=0; i<devCount; i++) {
 
 					int name = pDevListAddr[i].getInterf();
-//					int hosts = pDevListAddr[i].getHost();
 					int Indes = pDevListAddr[i].getIndex();
 					// port will be taken from this object's field
 					// host will be taken from this object's field
-					// TODO instantiate Devices here
 					Device dev = null;
 					switch (name)
 					{
@@ -118,11 +98,9 @@ public class RobotClient extends Device {
 						
 					case IDevice.DEVICE_BLOBFINDER_CODE :
 						dev = new Blobfinder(this, new Device(name, host, port, Indes)); break;
-						//						addToDeviceList( new Blobfinder(roboClient, id)); break;
-						//	
+	
 					case IDevice.DEVICE_GRIPPER_CODE : 
 						dev = new Gripper(this, new Device(name, host, port, Indes)); break;
-						//						addToDeviceList( new Gripper(roboClient, id)); break;
 
 					case IDevice.DEVICE_SONAR_CODE : 
 						dev = new RangerSonar(this, new Device(name, host, port, Indes)); break;
@@ -133,22 +111,20 @@ public class RobotClient extends Device {
 					case IDevice.DEVICE_LOCALIZE_CODE : 
 						dev = new Localize(this, new Device(name, host, port, Indes)); break;
 	
-						//					case DeviceCode.DEVICE_SIMULATION_CODE : break; 
-						//	
+					case IDevice.DEVICE_SIMULATION_CODE : 
+						dev = new Simulation(this, new Device(name, host, port, Indes)); break; 
+
 					case IDevice.DEVICE_PLANNER_CODE : 
 						dev = new Planner(this, new Device(name, host, port, Indes)); break;
-						//						addToDeviceList( new Planner(roboClient, id)); break;
 
 					default: break;
 					}
-					//					deviceList.add(new Device(name, host, port, Indes));
 					if (dev != null) {
 						deviceList.add(dev);
 					}
 				}
 			}
 		}
-		//		}
 	}
 
 	/**

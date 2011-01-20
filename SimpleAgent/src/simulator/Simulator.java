@@ -16,6 +16,7 @@ import javaclient3.structures.PlayerConstants;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.simulation.PlayerSimulationPose2dReq;
 
+// TODO obsolete
 /**
  * Stage Gui to draw online robot(s) position
  * @author sebastian

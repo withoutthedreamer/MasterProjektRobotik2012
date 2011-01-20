@@ -2,12 +2,12 @@ package data;
 
 import java.util.Date;
 
-import simulator.Simulator;
+import device.Simulation;
 
 // Blackboard note object
 public class BbNote {
 
-	protected Simulator simu = null;
+	protected Simulation simu = null;
 	protected String key = "";
 	protected Position pose = null;
 	protected Position oldPose = null;
@@ -17,7 +17,7 @@ public class BbNote {
 	protected Trackable tracked = null;
 	protected boolean completed = false;
 	protected long lastChecked = 0;
-	protected int timeout = 1000;
+	protected int timeout = 2000;
 	protected double epsilon = 0.5; // meters
 	
 	public boolean isCompleted() {
@@ -115,7 +115,7 @@ public class BbNote {
 			Position curPos = tracked.getPosition();
 			if (curPos.isEqualTo(oldPose)) {
 				// no progress done: timeout
-				System.out.println("Timeout");
+				System.err.println("Timeout: Robot has not moved.");
 				return true;
 			}
 		}
@@ -136,7 +136,7 @@ public class BbNote {
 		this.key = key;
 	}
 
-	public void setSimu(Simulator simu) {
+	public void setSimu(Simulation simu) {
 		this.simu = simu;
 	}	
 }

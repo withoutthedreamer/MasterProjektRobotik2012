@@ -1,4 +1,5 @@
 package device;
+
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -9,13 +10,11 @@ import java.util.Set;
 import data.BbNote;
 import data.Position;
 import data.Trackable;
-import simulator.Simulator;
-
 
 public class Blackboard extends Device {
 	
 	protected static Blackboard instance = null;
-	protected static Simulator simu = null;
+	protected static Simulation simu = null;
 	protected Trackable collectrobot = null;
 
 	protected LinkedHashMap<String,BbNote> notehm = null;
@@ -99,7 +98,7 @@ public class Blackboard extends Device {
 	public BbNote get(String key) {
 		return this.notehm.get(key);
 	}
-	public void setSimulation (Simulator simu2) {
+	public void setSimulation (Simulation simu2) {
 		simu = simu2;
 	}
 	@SuppressWarnings("rawtypes")

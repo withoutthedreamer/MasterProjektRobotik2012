@@ -24,26 +24,30 @@ public class Device implements IDevice, Runnable
 	private boolean isRunning = false;
 	private boolean isThreaded = false;
 	
-	public Device() {
+	public Device()
+	{
 		deviceList = new ConcurrentLinkedQueue<Device>();
 	}
 	/**
 	 * This constructor is used to create a data device object
 	 * and has no internal devicelist or thread
 	 */
-	public Device (int name, String host, int port, int devNum) {
+	public Device (int name, String host, int port, int devNum)
+	{
 		this();
 		this.name = name;
-		this.host = host;
+		if (host != null)
+			this.host = host;
 		this.port = port;
 		deviceNumber = devNum;
 	}
-	public Device (Device device) {
-		this();
-		host = device.getHost();
-		name = device.getName();
-		deviceNumber = device.getDeviceNumber();
-		port = device.getPort();		
+	/**
+	 * 
+	 * @param device A device template to create a new device
+	 */
+	public Device (Device device)
+	{
+		this(device.getName(), device.getHost(), device.getPort(), device.getDeviceNumber());
 	}
 	/**
 	 * This constructor adds all devices of the devices in the list
@@ -77,11 +81,15 @@ public class Device implements IDevice, Runnable
 	protected void update() {
 	}
 
-	public synchronized void runThreaded() {
+	public synchronized void runThreaded()
+	{
 		// Start all devices
-		if (deviceList != null && deviceList.size() > 0) {
+		if (deviceList != null && deviceList.size() > 0)
+		{
 			Iterator<Device> deviceIterator = deviceList.iterator();
-			while (deviceIterator.hasNext()) {
+			
+			while (deviceIterator.hasNext())
+			{
 				Device device = deviceIterator.next();
 				
 				// Start device
@@ -91,20 +99,27 @@ public class Device implements IDevice, Runnable
 		}
 		
         isThreaded  = true;
-		thread.start();
+		
+        thread.start();
 		while (thread.isAlive() == false);
+		
 		Logger.logDeviceActivity(false, "Running", this);
 	}
 
 	@Override
-	public void run() {
+	public void run()
+	{
 	    isRunning = true;
-		while ( ! thread.isInterrupted() && isThreaded == true) {
-			if (isThreaded == true)
-				update();
-			if (SLEEPTIME == 0) {
+		while ( ! thread.isInterrupted() && isThreaded == true)
+		{
+			update();
+			
+			if (SLEEPTIME == 0)
+			{
 				Thread.yield();
-			} else {
+			}
+			else
+			{
 				try { Thread.sleep ( SLEEPTIME ); }
 				catch (InterruptedException e) { thread.interrupt(); }
 			}
@@ -112,10 +127,15 @@ public class Device implements IDevice, Runnable
 		isRunning = false;    // sync with setNotThreaded
 		Logger.logDeviceActivity(false, "Shutdown", this);
 	}
-	public synchronized void shutdown() {
+	public synchronized void shutdown()
+	{
 		isThreaded = false;
-        while (isRunning == true) // wait to exit run thread
+        
+		while (isRunning == true)
+		{// wait to exit run thread
             try { Thread.sleep (10); } catch (Exception e) { }
+		}
+		
 		thread.interrupt();
 		while (thread.isAlive());
 		
@@ -131,9 +151,6 @@ public class Device implements IDevice, Runnable
 			}
 			// empty device list
 			deviceList.clear();
-//			deviceList = null;
-//			thread.interrupt();
-//			while (thread.isAlive());
 		}
 	}
 	/**
@@ -163,6 +180,27 @@ public class Device implements IDevice, Runnable
 		} else {
 			return null;
 		}
+	}
+	/**
+	 * 
+	 * @param dev Device template.
+	 * @return A device matching the given template when found in list, null otherwise
+	 */
+	public final Device getDevice (Device dev) {
+		int name = dev.getName();
+		int number = dev.getDeviceNumber();
+		Device found = null;
+		
+		Iterator<Device> it = getDeviceIterator();
+		while (it.hasNext())
+		{
+			if (it.next().getName() == name
+					&& it.next().getDeviceNumber() == number)
+			{
+				found = it.next();
+			}
+		}
+		return found;
 	}
 	public String getHost() {
 		return host;

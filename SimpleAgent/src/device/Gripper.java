@@ -2,8 +2,6 @@ package device;
 
 public class Gripper extends PlayerDevice {
 
-	protected final int SLEEPTIME = 1000;
-
 	@SuppressWarnings("unused")
 	private int goalState = 1;
 	private int curState = 0;
@@ -16,6 +14,7 @@ public class Gripper extends PlayerDevice {
 
 	public Gripper(RobotClient roboClient, Device device) {
 		super(roboClient, device);
+		setSleepTime(1000);
 	}
 	protected void update () {
 		if ( ((javaclient3.GripperInterface) device).isDataReady() ) {			

@@ -9,7 +9,9 @@ import simulator.Simulator;
 import data.Position;
 import device.Blackboard;
 import device.Device;
+import device.IDevice;
 import device.RobotClient;
+import device.Simulation;
 
 public class FindCollectExample {
 
@@ -42,8 +44,10 @@ public class FindCollectExample {
 			// wants to write notes
 			explorer.setBlackboard(blackb);
 			
+			Simulation simu = (Simulation) explDevices.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE,null, 6665, 0));
+			
 			// for modifying world
-			Simulator simu   = Simulator.getInstance("localhost", 6665);
+//			Simulator simu   = Simulator.getInstance("localhost", 6665);
 			blackb.setSimulation(simu);
 
 			blackb.runThreaded();
@@ -69,7 +73,7 @@ public class FindCollectExample {
 			simu.shutdown();
 			
 		} catch (Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 			System.err.println("Exit with errors");
 		}
 	}

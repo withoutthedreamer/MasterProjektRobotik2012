@@ -29,8 +29,9 @@ public class Pioneer extends Device implements Trackable, IPioneer
 	Localize localizer = null;
 	Gripper gripper = null;
 	Blobfinder bloFi = null;
+	Simulation simu = null;
 	
-	int id = -1;
+//	int id = -1;
 	double speed = -1.0;
 	double turnrate = -1.0;
 
@@ -107,6 +108,9 @@ public class Pioneer extends Device implements Trackable, IPioneer
 	
 					case IDevice.DEVICE_GRIPPER_CODE : 
 						gripper = (Gripper) dev; break;
+						
+//					case IDevice.DEVICE_SIMULATION_CODE : 
+//						simu = (Simulation) dev; break; 
 
 					default: break;
 					}
