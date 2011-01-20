@@ -21,6 +21,8 @@ public class Device implements IDevice, Runnable
 	protected Thread thread = new Thread ( this );
 
 	long SLEEPTIME = 100;
+	private boolean isRunning = false;
+	private boolean isThreaded = false;
 	
 	public Device() {
 		deviceList = new ConcurrentLinkedQueue<Device>();
@@ -69,15 +71,6 @@ public class Device implements IDevice, Runnable
 			}
 		}
 	}
-	@Override
-	public void run() {
-		while ( ! thread.isInterrupted()) {
-			update();
-			try { Thread.sleep ( SLEEPTIME ); }
-			catch (InterruptedException e) { thread.interrupt(); }
-		}
-		Logger.logDeviceActivity(false, "Shutdown", this);
-	}
 	/**
 	 * Might be to be implemented by subclass to do something
 	 */
@@ -97,12 +90,32 @@ public class Device implements IDevice, Runnable
 			}
 		}
 		
+        isThreaded  = true;
 		thread.start();
 		while (thread.isAlive() == false);
 		Logger.logDeviceActivity(false, "Running", this);
 	}
 
+	@Override
+	public void run() {
+	    isRunning = true;
+		while ( ! thread.isInterrupted() && isThreaded == true) {
+			if (isThreaded == true)
+				update();
+			if (SLEEPTIME == 0) {
+				Thread.yield();
+			} else {
+				try { Thread.sleep ( SLEEPTIME ); }
+				catch (InterruptedException e) { thread.interrupt(); }
+			}
+		}
+		isRunning = false;    // sync with setNotThreaded
+		Logger.logDeviceActivity(false, "Shutdown", this);
+	}
 	public synchronized void shutdown() {
+		isThreaded = false;
+        while (isRunning == true) // wait to exit run thread
+            try { Thread.sleep (10); } catch (Exception e) { }
 		thread.interrupt();
 		while (thread.isAlive());
 		
@@ -179,5 +192,8 @@ public class Device implements IDevice, Runnable
 		} else {
 			return null;
 		}
+	}
+	public void setSleepTime(int time) {
+		this.SLEEPTIME = time;
 	}
 }

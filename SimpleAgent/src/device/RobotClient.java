@@ -18,8 +18,9 @@ public class RobotClient extends Device {
 
 	// Required to every player robot
 	protected PlayerClient playerClient = null;
-	private boolean isRunning = false;
-	private boolean isThreaded = false;
+//	private boolean isRunning = false;
+//	private boolean isThreaded = false;
+//	long SLEEPTIME = 0;
 
 	/**
 	 * Constructor for a RobotClient.
@@ -43,6 +44,8 @@ public class RobotClient extends Device {
 			
 			// Get the devices available
 			playerClient.requestDataDeliveryMode(PlayerConstants.PLAYER_DATAMODE_PUSH);
+			// Push requires no sleep time
+			setSleepTime(0);
 		}
 		catch (PlayerException e)
 		{
@@ -52,37 +55,36 @@ public class RobotClient extends Device {
 	}
 	@Override
 	public void runThreaded() {
-        isThreaded  = true;
+//        isThreaded  = true;
 		super.runThreaded();
 //		playerClient.runThreaded(-1, -1);
 	}
 
+	@Override
+		protected void update() {
+	//		isRunning = true;
+	//
+	//		while (isThreaded == true)
+	//		{
+				playerClient.readAll();
+	//			Thread.yield ();
+	//		}
+	
+	//		isRunning = false;
+		}
 	/**
 	 * Shutdown robot client and clean up
 	 */
 	@Override
 	public void shutdown () {
-		isThreaded = false;
+//		isThreaded = false;
 		
-		while (isRunning == true) { // wait to exit run thread
-			try { Thread.sleep (10); } catch (Exception e) { }
-		}
+//		while (isRunning == true) { // wait to exit run thread
+//			try { Thread.sleep (10); } catch (Exception e) { }
+//		}
 		super.shutdown();
 		//		playerClient.interrupt();
 		playerClient.close();
-	}
-	@Override
-	protected void update() {
-		isRunning = true;
-
-		while (isThreaded == true)
-		{
-			//		playerClient.requestData();
-			playerClient.readAll();
-			Thread.yield ();
-		}
-
-		isRunning = false;
 	}
 	private void updateDeviceList()
 	{
