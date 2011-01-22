@@ -6,7 +6,6 @@ include "urgr.inc"
 include "platte.inc"
 include "laptop.inc"
 
-#resolution 0.084 # meters per pixel
 resolution 0.05 # meters per pixel
 
 # configure the GUI window
@@ -25,9 +24,9 @@ window
 floorplan
 (
   #size [86.016 22.428 0.800]
-  size [50 13 0.800]
+  size [62.95 15.6 0.800]
   pose [0 0 0 0]
-  bitmap "bitmaps/tams_compl_red.png"
+  bitmap "bitmaps/tams_compl_red_map.png"
   blob_return 1
 )
 
