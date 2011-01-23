@@ -32,7 +32,7 @@ public class Test {
 			// Start the robot clients
 //			plannerClient.runThreaded();
 			roboClient.runThreaded();
-			(Position2d) roboClient.getDevice(new Device(IDevice.DEVICE_POSITION2D_CODE, null, 0, 0));
+			((Position2d) roboClient.getDevice(new Device(IDevice.DEVICE_POSITION2D_CODE, null, -1, -1))).setSpeed(0);
 			// Create a Device containing all the clients devices
 //			Device gripperDevices = new Device( new Device[]{roboClient, plannerClient} );
 			// Init the robot with the devices

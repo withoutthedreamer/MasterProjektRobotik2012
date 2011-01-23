@@ -183,8 +183,8 @@ public class Device implements IDevice, Runnable
 	}
 	/**
 	 * 
-	 * @param dev Device template.
-	 * @return A device matching the given template when found in list, null otherwise
+	 * @param dev Device template (0 or null for args not to take care of).
+	 * @return A device matching the given template when found in list, null otherwise.
 	 */
 	public final Device getDevice (Device dev) {
 		int name = dev.getName();
@@ -194,10 +194,17 @@ public class Device implements IDevice, Runnable
 		Iterator<Device> it = getDeviceIterator();
 		while (it.hasNext())
 		{
-			if (it.next().getName() == name
-					&& it.next().getDeviceNumber() == number)
+			if (it.next().getName() == name)
 			{
-				found = it.next();
+				if (number != -1)
+				{
+					if (it.next().getDeviceNumber() == number)
+					{
+						found = it.next();
+					}
+				} else {
+					found = it.next();
+				}
 			}
 		}
 		return found;
