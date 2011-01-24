@@ -72,6 +72,16 @@ public class Position {
 		}
 		return false;
 	}
+	public boolean equals (Position pose) {
+		if (x == pose.getX() &&
+			y == pose.getY() &&
+			yaw == pose.getYaw())
+		{
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	public double distanceTo(Position position) {
 		if (position != null) {

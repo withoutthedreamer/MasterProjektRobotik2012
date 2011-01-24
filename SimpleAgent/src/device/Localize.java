@@ -5,7 +5,7 @@ import javaclient3.structures.PlayerPose;
 import javaclient3.structures.localize.PlayerLocalizeHypoth;
 import javaclient3.structures.localize.PlayerLocalizeSetPose;
 
-public class Localize extends PlayerDevice
+public class Localize extends RobotDevice
 {
 	// TODO move to localize IF
 	// initial values for the covariance matrix (c&p example from playernav)
@@ -16,7 +16,7 @@ public class Localize extends PlayerDevice
 
 	private boolean isNewPose = false;
 
-	public Localize(RobotClient roboClient, Device device) {
+	public Localize(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
 
 		getPosition = new Position();
@@ -52,9 +52,11 @@ public class Localize extends PlayerDevice
 	}
 
 	public synchronized void setPosition(Position position) {
-		setPosition.setMean(new PlayerPose(position.getX(),position.getY(),position.getYaw()));
-		getPosition = position;
-		isNewPose = true;
+		if (position != null) {
+			setPosition.setMean(new PlayerPose(position.getX(),position.getY(),position.getYaw()));
+			getPosition = position;
+			isNewPose = true;
+		}
 	}
 	public synchronized Position getPose() {
 		return getPosition;

@@ -9,7 +9,7 @@ import javaclient3.structures.position2d.PlayerPosition2dData;
  * @author sebastian
  *
  */
-public class Position2d extends PlayerDevice
+public class Position2d extends RobotDevice
 {
 	Position pos = null;
 	
@@ -18,7 +18,7 @@ public class Position2d extends PlayerDevice
 	private Position setOdometry = null;
 	private boolean isNewSpeed = false;
 		
-	public Position2d(RobotClient roboClient, Device device) {
+	public Position2d(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
 	}
 	/**

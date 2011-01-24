@@ -4,11 +4,11 @@ import core.Logger;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
 
-public class PlayerDevice extends Device
+public class RobotDevice extends Device
 {
 	javaclient3.PlayerDevice device = null;
 
-	public PlayerDevice (RobotClient roboClient, Device device) {
+	public RobotDevice (DeviceNode roboClient, Device device) {
 		super(device);
 		try
 		{

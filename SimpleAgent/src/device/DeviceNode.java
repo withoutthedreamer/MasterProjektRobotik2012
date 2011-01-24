@@ -14,7 +14,7 @@ import javaclient3.structures.player.PlayerDeviceDevlist;
  * @author sebastian
  *
  */
-public class RobotClient extends Device {
+public class DeviceNode extends Device {
 
 	// Required to every player robot
 	protected PlayerClient playerClient = null;
@@ -26,7 +26,7 @@ public class RobotClient extends Device {
 	 * @param clientId Robot id.
 	 * @throws Exception
 	 */
-	public RobotClient (String host, int port) throws IllegalStateException
+	public DeviceNode (String host, int port) throws IllegalStateException
 	{
 		try
 		{

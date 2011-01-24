@@ -39,7 +39,7 @@ import java.io.InputStreamReader;
 
 import robot.Pioneer;
 
-import device.RobotClient;
+import device.DeviceNode;
 
 public class Wallfollow {
 
@@ -48,7 +48,7 @@ public class Wallfollow {
 
 	public static void main (String[] args) {
 		try {
-			RobotClient roboClient = new RobotClient("localhost", 6667);
+			DeviceNode roboClient = new DeviceNode("localhost", 6667);
 			roboClient.runThreaded();
 			
 			Pioneer pion = new Pioneer(roboClient);

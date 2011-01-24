@@ -4,7 +4,7 @@ import data.Position;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.planner.PlayerPlannerData;
 
-public class Planner extends PlayerDevice
+public class Planner extends RobotDevice
 {
 	// TODO move to localize IF
 	// initial values for the covariance matrix (c&p example from playernav)
@@ -16,7 +16,7 @@ public class Planner extends PlayerDevice
 	private boolean isNewPose = false;
 	private Position curPosition;
 
-	public Planner(RobotClient roboClient, Device device) {
+	public Planner(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
 		
 		goal = new Position();

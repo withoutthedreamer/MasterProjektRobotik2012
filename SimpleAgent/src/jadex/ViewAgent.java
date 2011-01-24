@@ -2,10 +2,13 @@ package jadex;
 
 import java.util.Vector;
 
-import simulator.Simulator;
 import core.OSCommand;
 import data.Position;
 import data.SimuObject;
+import device.Device;
+import device.DeviceNode;
+import device.IDevice;
+import device.Simulation;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.bridge.IComponentStep;
@@ -18,7 +21,8 @@ public class ViewAgent extends PlayerAgent {
 	protected static String port = "6600";
 	
 	// API to the simulator (gui)
-	protected Simulator simu = null;
+	protected Simulation simu = null;
+	protected DeviceNode deviceNode = null;
 	protected Vector<SimuObject> simuObjs = null;
 	// Keeps simulation in sync with receiving position updates
 //	protected Tracker tracker = null;
@@ -29,6 +33,9 @@ public class ViewAgent extends PlayerAgent {
 	public void agentCreated()
 	{
 		super.agentCreated();
+		deviceNode = new DeviceNode("localhost", 6600);
+		deviceNode.runThreaded();
+
 //		tracker = Tracker.getInstance(simu, null);
 		
 //		PioneerRR[] pionRRList = new PioneerRR[3];
@@ -47,7 +54,8 @@ public class ViewAgent extends PlayerAgent {
 		{
 			public Object execute(IInternalAccess args)
 			{
-				simu = Simulator.getInstance("localhost", 6600);
+//				simu = Simulation.getInstance("localhost", 6600);
+				simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, 6600, -1));; 
 				return null;
 			}
 		});
@@ -64,7 +72,7 @@ public class ViewAgent extends PlayerAgent {
 						Position pos = simuObjs.get(i).getObject().getPosition();
 
 						// update the simulator
-						simu.setObjectPos(id, pos);
+						simu.setPositionOf(id, pos);
 					}
 				}
 

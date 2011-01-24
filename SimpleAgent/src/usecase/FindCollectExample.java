@@ -9,7 +9,7 @@ import data.Position;
 import device.Blackboard;
 import device.Device;
 import device.IDevice;
-import device.RobotClient;
+import device.DeviceNode;
 import device.Simulation;
 
 public class FindCollectExample {
@@ -20,37 +20,45 @@ public class FindCollectExample {
 	
 	public static void main (String[] args) {
 		try {
-			RobotClient explDevices = new RobotClient("localhost", 6665);
+			DeviceNode explDevices = new DeviceNode("localhost", 6665);
 			explDevices.runThreaded();
 			
-			RobotClient gripDevices = new RobotClient("localhost", 6667);
-			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
+			DeviceNode gripDevices = new DeviceNode("localhost", 6667);
+//			DeviceNode gripDevices2 = new DeviceNode("localhost", 6668);
 			gripDevices.runThreaded();
-			gripDevices2.runThreaded();
-			Device gripperDevices = new Device( new Device[]{gripDevices, gripDevices2} );
+//			gripDevices2.runThreaded();
+//			Device gripperDevices = new Device( new Device[]{gripDevices, gripDevices2} );
 
-			ExploreRobot explorer = new ExploreRobot(explDevices);	
-			GripperRobot gripper = new GripperRobot(gripperDevices);
+//			ExploreRobot explorer = new ExploreRobot(explDevices);	
+//			GripperRobot gripper = new GripperRobot(gripperDevices);
 			
-			gripper.setPosition(new Position(-3,-5,Math.toRadians(90)));
-			explorer.setPosition(new Position(-6,-5,Math.toRadians(90)));
+			Simulation simu = (Simulation) explDevices.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));; 
+			simu.initPositionOf("r0");
+			simu.initPositionOf("r1");
+//			gripper.setPosition(new Position(-3,-5,Math.toRadians(90)));
+//			explorer.setPosition(new Position(-6,-5,Math.toRadians(90)));
+//			Position simuPose = simu.getPositionOf("r0");
+//			while( simu.getPositionOf("r0").equals(new Position(0,0,0)) == true ) {
+//				System.err.print(".");
+//			}
+			
+//			try { Thread.sleep(300); } catch (InterruptedException e) {	e.printStackTrace(); }
+//			explorer.setPosition(simu.getPositionOf("r0"));
+//			gripper.setPosition(simu.getPositionOf("r1"));
 
-			explorer.runThreaded();
-			gripper.runThreaded();	
+//			explorer.runThreaded();
+//			gripper.runThreaded();	
 			
 			// Task synchronization
-			Blackboard blackb= Blackboard.getInstance(gripper);
+//			Blackboard blackb= Blackboard.getInstance(gripper);
 			// wants to write notes
-			explorer.setBlackboard(blackb);
+//			explorer.setBlackboard(blackb);
 			
-			Device dev = explDevices.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
-			
-			Simulation simu = (Simulation) dev; 
 			
 			// for modifying world
 //			Simulator simu   = Simulator.getInstance("localhost", 6665);
-			blackb.setSimulation(simu);
-			blackb.runThreaded();
+//			blackb.setSimulation(simu);
+//			blackb.runThreaded();
 			
 //			Tracker tracker  = Tracker.getInstance(simu, null);
 //			tracker.addObject("r0", pionSB);
@@ -62,14 +70,14 @@ public class FindCollectExample {
 			// Wait until enter is pressed
 			in.readLine();
 //			tracker.shutdown()
-			blackb.shutdown();
+//			blackb.shutdown();
 						
-			explorer.shutdown();
+//			explorer.shutdown();
 			explDevices.shutdown();
 			
-			gripper.shutdown();
+//			gripper.shutdown();
 			gripDevices.shutdown();
-			gripDevices2.shutdown();
+//			gripDevices2.shutdown();
 
 			simu.shutdown();
 			

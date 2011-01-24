@@ -62,7 +62,7 @@ public class BbNote {
 				this.completed = true;
 				// Set object in simulator
 				if (simu != null && key != "") {
-					simu.setObjectPos(key, new Position(-3, -5, 0));
+					simu.setPositionOf(key, new Position(-3, -5, 0));
 					System.out.println("Setting " + key + " back");
 				}
 			} else {

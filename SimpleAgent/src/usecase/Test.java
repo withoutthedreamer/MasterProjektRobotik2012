@@ -9,7 +9,7 @@ import robot.GripperRobot;
 import data.Position;
 import device.Device;
 import device.IDevice;
-import device.RobotClient;
+import device.DeviceNode;
 import device.Position2d;
 
 
@@ -24,11 +24,11 @@ public class Test {
 	 */
 	public static void main(String[] args) throws IOException {
 		GripperRobot pion = null;
-		RobotClient roboClient = null, plannerClient = null;
+		DeviceNode roboClient = null, plannerClient = null;
 		try {
 			// Init the robot clients
 //			plannerClient = new RobotClient("localhost", 6668);
-			roboClient = new RobotClient("localhost", 6667);
+			roboClient = new DeviceNode("localhost", 6667);
 			// Start the robot clients
 //			plannerClient.runThreaded();
 			roboClient.runThreaded();

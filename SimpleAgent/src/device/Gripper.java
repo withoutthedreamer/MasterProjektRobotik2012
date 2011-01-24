@@ -1,6 +1,6 @@
 package device;
 
-public class Gripper extends PlayerDevice {
+public class Gripper extends RobotDevice {
 
 	@SuppressWarnings("unused")
 	private int goalState = 1;
@@ -12,7 +12,7 @@ public class Gripper extends PlayerDevice {
 		ERROR
 	}
 
-	public Gripper(RobotClient roboClient, Device device) {
+	public Gripper(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
 		setSleepTime(1000);
 	}

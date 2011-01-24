@@ -16,18 +16,21 @@ import javaclient3.structures.simulation.PlayerSimulationPose2dReq;
  * @author sebastian
  *
  */
-public class Simulation extends PlayerDevice {
-	
+public class Simulation extends RobotDevice {
+		
 	protected static Simulation instance = null;
-	
+	// Objects of interest in the simulation
 	protected ConcurrentHashMap<String,Position> objList = null;
+	protected ConcurrentHashMap<String,Boolean> isDirtyList = null;
 
 	// Singleton
-	protected Simulation(RobotClient roboClient, Device device)
+	protected Simulation(DeviceNode roboClient, Device device)
 	{
 		super(roboClient, device);
 		
-		objList = new ConcurrentHashMap<String, Position>();			
+		objList = new ConcurrentHashMap<String, Position>();	
+		isDirtyList = new ConcurrentHashMap<String, Boolean>();
+		this.setSleepTime(2000);
 	}
 	/**
 	 * Returns a Singleton instance of the Gui
@@ -35,7 +38,7 @@ public class Simulation extends PlayerDevice {
 	 * @param port Port of the player server.
 	 * @return Gui instance.
 	 */
-	public static Simulation getInstance (RobotClient roboClient, Device device)
+	public static Simulation getInstance (DeviceNode roboClient, Device device)
 	{
 		if (instance == null) {
 			instance = new Simulation(roboClient, device);
@@ -52,25 +55,41 @@ public class Simulation extends PlayerDevice {
 	
 	// TODO Currently only 'static' objects should be modified
 	@Override
-	protected void update () {
-//		while ( ! this.simu.isDataReady() ) { // TODO debug it
-		//		PlayerPose pp = new PlayerPose(7,7,0);
-		//		this.simu.set2DPose(identifier, pp);
-		Set<Entry<String,Position>> set = this.objList.entrySet();
+	protected void update ()
+	{
+		Set<Entry<String,Position>> set = objList.entrySet();
 		Iterator<Entry<String, Position>> i = set.iterator();
-		while(i.hasNext()) {
+		while(i.hasNext())
+		{
 			Map.Entry<String, Position> me = (Map.Entry<String, Position>)i.next();
 			String key = (String)me.getKey();
-			Position pos = (Position)me.getValue();
-			PlayerPose pp = new PlayerPose(pos.getX(), pos.getY(), pos.getYaw());
-			((javaclient3.SimulationInterface) device).set2DPose(key, pp);
-			// TODO player not working yet
-			//			pos = this.getObjectPos(key);
-			//			if (pos != null) {
-			//				System.out.println(pos.toString());
-			//			}
-			// Unlock objects
-			objList.clear();
+			
+			if (isDirtyList.get(key) == true)
+			{
+				isDirtyList.put(key, false);
+				Position pos = (Position)me.getValue();
+				PlayerPose pp = new PlayerPose(pos.getX(), pos.getY(), pos.getYaw());
+				
+//				while ( ! this.simu.isDataReady() ) { // TODO debug it
+				((javaclient3.SimulationInterface) device).set2DPose(key, pp);
+			}
+			else
+			{
+				((javaclient3.SimulationInterface) device).get2DPose (key);
+				if (((javaclient3.SimulationInterface) device).isPose2DReady())
+				{
+					PlayerSimulationPose2dReq pose = ((javaclient3.SimulationInterface) device).getSimulationPose2D();
+					Position curPose = new Position(
+							pose.getPose().getPx(),
+							pose.getPose().getPy(),
+							pose.getPose().getPa());
+					objList.put(key, curPose);
+					System.err.println(key + ": " + curPose.toString());
+					
+				} else {
+//					System.err.print(key);
+				}
+			}
 		}
 	}
 
@@ -83,13 +102,16 @@ public class Simulation extends PlayerDevice {
 		objList.clear();
 	}
 	/**
-	 * Set a Gui object's position 
+	 * Set a Gui object's position.
+	 * The object will be either added or updated with respect to the internal data structure.
 	 * @param key The Stage object id (usually set by the 'name' tag in the world file).
 	 * @param value The new Position of that object.
 	 */
-	public void setObjectPos(String key, Position value) {
+	public synchronized void setPositionOf(String key, Position value)
+	{
 		objList.put(key, value);
-//		((javaclient3.SimulationInterface) device).getSimulationPose2D();
+		// Mark dirty
+		isDirtyList.put(key, true);
 	}
 	/**
 	 * Returns the last known object Position.
@@ -98,16 +120,14 @@ public class Simulation extends PlayerDevice {
 	 */
 	// TODO test and make asynchronous
 	// TODO not working yet
-	public Position getObjectPos(String key) {
-		((javaclient3.SimulationInterface) device).get2DPose (key);
-		if ( ((javaclient3.SimulationInterface) device).isPose2DReady() ) {
-			PlayerSimulationPose2dReq pose = ((javaclient3.SimulationInterface) device).getSimulationPose2D();
-			return new Position(
-					pose.getPose().getPx(),
-					pose.getPose().getPy(),
-					pose.getPose().getPa());
-		} else {
-			return null;
-		}
+	public synchronized Position getPositionOf(String key) {
+		return objList.get(key);
+	}
+	public synchronized void initPositionOf(String key) {
+		objList.put(key, new Position());
+		// Trigger a position read
+		isDirtyList.put(key, false);
+		// Wait for simulation
+//		try { Thread.sleep(300); } catch (InterruptedException e) {	e.printStackTrace(); }
 	}
 }

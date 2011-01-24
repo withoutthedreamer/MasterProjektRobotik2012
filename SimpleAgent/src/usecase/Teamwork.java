@@ -36,10 +36,12 @@ package usecase;
 
 //import java.text.NumberFormat;
 import robot.*;
-import simulator.*;
 import data.Position;
 import device.Device;
-import device.RobotClient;
+import device.IDevice;
+import device.DeviceNode;
+import device.Simulation;
+import device.Tracker;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -51,11 +53,11 @@ public class Teamwork  {
 
 	public static void main (String[] args) {
 		try {
-			RobotClient explDevices = new RobotClient("localhost", 6665);
+			DeviceNode explDevices = new DeviceNode("localhost", 6665);
 			explDevices.runThreaded();
 			
-			RobotClient gripDevices = new RobotClient("localhost", 6667);
-			RobotClient gripDevices2 = new RobotClient("localhost", 6668);
+			DeviceNode gripDevices = new DeviceNode("localhost", 6667);
+			DeviceNode gripDevices2 = new DeviceNode("localhost", 6668);
 			gripDevices.runThreaded();
 			gripDevices2.runThreaded();
 			Device gripperDevices = new Device( new Device[]{gripDevices, gripDevices2} );
@@ -72,8 +74,8 @@ public class Teamwork  {
 			gripper.setPosition(new Position(-3,-5,0));
 			gripper.setGoal(new Position(-6,6,0));
 //			// Testing Simulator
-			Simulator simu   = Simulator.getInstance("localhost", 6675);
-			Tracker tracker  = Tracker.getInstance(simu, null);
+			Simulation simu = (Simulation) explDevices.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));; 
+			Tracker tracker  = Tracker.getInstance(simu);
 			tracker.addObject("r0", explorer);
 			tracker.addObject("r1", gripper);
 		

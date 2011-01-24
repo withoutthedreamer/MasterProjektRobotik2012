@@ -3,14 +3,14 @@ package jadex;
 import jadex.bridge.*;
 import jadex.micro.MicroAgentMetaInfo;
 import data.Position;
-import device.RobotClient;
+import device.DeviceNode;
 import robot.GripperRobot;
 
 public class GripperAgent extends PlayerAgent
 {
 //	protected final static String[] playerCmd={"/usr/local/bin/player","/Users/sebastian/robotcolla/SimpleAgent/player/planner2.cfg"};
 
-	RobotClient devices = null;
+	DeviceNode devices = null;
 	GripperRobot gripper = null;
 	Position curPos = null;
 	//TODO start planner
@@ -19,7 +19,7 @@ public class GripperAgent extends PlayerAgent
 	{
 		super.agentCreated();
 		try {
-			devices = new RobotClient("localhost", port);
+			devices = new DeviceNode("localhost", port);
 			devices.runThreaded();
 			
 			gripper = new GripperRobot(devices);

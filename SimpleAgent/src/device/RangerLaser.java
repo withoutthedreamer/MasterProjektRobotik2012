@@ -7,7 +7,7 @@ public class RangerLaser extends Ranger
 	protected LaserInterface las = null;
 	protected float[] lasRanges = null;
 		
-	public RangerLaser (RobotClient roboClient, Device device) {
+	public RangerLaser (DeviceNode roboClient, Device device) {
 		super(roboClient, device);
 	}
 	// Will check for new ranges

@@ -4,13 +4,13 @@ import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
 import java.util.Vector;
 import data.BlobfinderBlob;
 
-public class Blobfinder extends PlayerDevice
+public class Blobfinder extends RobotDevice
 {
 	protected int count = 0;
 	protected int[] color = null;
 	protected Vector<BlobfinderBlob> blobs = null;;
 	
-	public Blobfinder(RobotClient roboClient, Device device) {
+	public Blobfinder(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
 		blobs = new Vector<BlobfinderBlob>();
 	}

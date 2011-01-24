@@ -7,7 +7,7 @@ public class RangerSonar extends Ranger
 	protected SonarInterface soni  = null;
 	protected float[] sonRanges = null;
 
-	public RangerSonar(RobotClient roboClient, Device device) {
+	public RangerSonar(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
 	}
 	// Will check for new ranges

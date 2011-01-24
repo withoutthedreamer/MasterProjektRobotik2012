@@ -1,9 +1,6 @@
 package device;
 
-//import java.util.Collections;
 import java.util.Iterator;
-//import java.util.LinkedList;
-//import java.util.List;
 import java.util.concurrent.*;
 
 import core.Logger;
@@ -238,7 +235,7 @@ public class Device implements IDevice, Runnable
 			return null;
 		}
 	}
-	public void setSleepTime(int time) {
+	public void setSleepTime(long time) {
 		this.SLEEPTIME = time;
 	}
 }

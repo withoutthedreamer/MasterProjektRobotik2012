@@ -1,13 +1,13 @@
 package device;
 
 
-public class Ranger extends PlayerDevice
+public class Ranger extends RobotDevice
 {
 
 	protected double[] ranges	= null;
 	protected int count;
 
-	public Ranger (RobotClient roboClient, Device device) {
+	public Ranger (DeviceNode roboClient, Device device) {
 		super(roboClient, device);;
 	}
 

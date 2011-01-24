@@ -1,6 +1,6 @@
 package jadex;
 
-import device.RobotClient;
+import device.DeviceNode;
 import jadex.bridge.*;
 import jadex.micro.MicroAgentMetaInfo;
 import robot.*;
@@ -8,14 +8,14 @@ import robot.*;
 public class ExploreAgent extends PlayerAgent {
 	
 	ExploreRobot explorer = null;
-	RobotClient devices = null;
+	DeviceNode devices = null;
 
 	@Override
 	public void agentCreated()
 	{
 		super.agentCreated();
 		try {
-			devices = new RobotClient("localhost", port);
+			devices = new DeviceNode("localhost", port);
 			devices.runThreaded();
 			explorer = new ExploreRobot(devices);
 			explorer.runThreaded();
