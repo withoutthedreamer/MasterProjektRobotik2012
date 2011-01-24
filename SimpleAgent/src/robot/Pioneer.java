@@ -4,10 +4,6 @@
  */
 package robot;
 
-import java.util.Iterator;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
-import data.*;
 import device.*;
 
 /**
@@ -18,141 +14,18 @@ import device.*;
  * @author sebastian
  *
  */
-public class Pioneer extends Device implements Trackable, IPioneer
+public class Pioneer extends Robot implements IPioneer
 {
-	// Standard devices
-	// TODO dynamic array
-	Position2d posi = null;
-	Ranger laser = null;
-	Ranger sonar = null;
-	Planner planner = null;
-	Localize localizer = null;
-	Gripper gripper = null;
-	Blobfinder bloFi = null;
-	Simulation simu = null;
-	
-//	int id = -1;
-	double speed = -1.0;
-	double turnrate = -1.0;
-
-	StateType currentState;
-
-	/**
-	 * Default constructor
-	 */
-//	public Pioneer(){}
-	/**
-	 * This constructor has to be overwritten in any subclasses!
-	 */
-	//	public Pioneer (String name, int port, int id) throws IllegalStateException {
 	public Pioneer (Device roboDevices) {
-
-		// Get the available devices
-//		deviceList = roboClient.getDeviceList();
-		
-		// Make the devices available
-		connectDevices(roboDevices.getDeviceList());
+		super(roboDevices);
 	}
-//	/**
-//	 * It is possible to give this robot more devices by passing an
-//	 * RobotClient object which includes new devices.
-//	 * The new devices will be added to the internal device list.
-//	 * @param roboClient @ref RobotClient object containing new devices
-//	 */
-//	public void addDevices (RobotClient roboClient) {
-//		if (roboClient != null)
-//			connectDevices(roboClient.getDeviceList());
-//	}
 	
-	/**
-	 * Initiate standard variables to this robot for the devices
-	 * Note that if there are duplicate devices in the list
-	 * always the last one of the same device code will be chosen!
-	 * @param deviceList 
-	 */
-	void connectDevices (ConcurrentLinkedQueue<Device> deviceList) {
-		
-		if (deviceList != null) {
-			Iterator<Device> devIt = deviceList.iterator();
-
-			if (devIt != null) {
-				while (devIt.hasNext()) {
-					Device dev = devIt.next();
-
-					switch (dev.getName())
-					{
-					case IDevice.DEVICE_POSITION2D_CODE :
-						posi = (Position2d) dev; break;
-
-					case IDevice.DEVICE_RANGER_CODE : 
-						if (dev.getDeviceNumber() == 0) {
-							sonar = (Ranger) dev; break;
-						} else {
-							laser = (Ranger) dev; break;
-						}
-
-					case IDevice.DEVICE_SONAR_CODE : 
-						sonar = (RangerSonar) dev; break;
-
-					case IDevice.DEVICE_LASER_CODE : 
-						laser = (RangerLaser) dev; break;
-
-					case IDevice.DEVICE_PLANNER_CODE :
-						planner = (Planner) dev; break;
-							
-					case IDevice.DEVICE_LOCALIZE_CODE :
-						localizer = (Localize) dev; break;
-							
-					case IDevice.DEVICE_BLOBFINDER_CODE :
-						bloFi = (Blobfinder) dev; break;
-	
-					case IDevice.DEVICE_GRIPPER_CODE : 
-						gripper = (Gripper) dev; break;
-						
-//					case IDevice.DEVICE_SIMULATION_CODE : 
-//						simu = (Simulation) dev; break; 
-
-					default: break;
-					}
-				}
-			}
-		}
-	}
-
-//		@Override
-//		public void runThreaded () {
-//	//		isRunning = true;
-//			Logger.logActivity(false, "Running", this.toString(), this.id, thread.getName());
-//	//		super.runThreaded();
-//			thread.start();
-//		}
 	@Override
 	protected void update() {
 		// Sensor read is done asynchronously
 		plan();
 		execute();
 	}
-
-	//	 Shutdown robot and clean up
-//	@Override
-//	public void shutdown () {
-//		Logger.logActivity(false, "Shutdown", this.toString(), this.id, thread.getName());
-//		// Cleaning up
-//		thread.interrupt();
-//		////		while(this.thread.isAlive());
-//		//		isRunning = false;
-//		//		super.shutdown();
-//		//		
-//		//	}
-//		//	public boolean isRunning(){
-//		//		return isRunning;
-//	}
-
-	/**
-	 * To be implemented by subclasses.
-	 * When they have additional devices.
-	 */
-	//	protected void shutdownDevices(){};
 
 	@SuppressWarnings("unused")
 	protected void plan () {
@@ -230,22 +103,6 @@ public class Pioneer extends Device implements Trackable, IPioneer
 			System.out.printf("%5.2f", posi.getPosition().getY());	System.out.print("\t");
 			System.out.printf("%5.2f\n", java.lang.Math.toDegrees(posi.getPosition().getYaw()));
 		}
-	}
-
-	/**
-	 * Command the motors
-	 */
-	protected final void execute() {
-		if (posi != null) {
-			posi.setSpeed(speed);
-			posi.setTurnrate(turnrate);
-		}
-	}
-	/**
-	 * Return robot position
-	 */
-	public Position getPosition() {
-		return posi.getPosition();
 	}
 
 	/**
@@ -483,15 +340,5 @@ public class Pioneer extends Device implements Trackable, IPioneer
 		}
 		return saveTurnrate;
 	}
-	@Override
-	public void setGoal(Position goal) {}
-	@Override
-	public Position getGoal() {
-		return null;
-	}
-	public void setPosition(Position position) {
-		if (posi != null) {
-			posi.setPosition(position);
-		}
-	}
 }
+

@@ -5,7 +5,6 @@ import java.io.InputStreamReader;
 
 import robot.ExploreRobot;
 import robot.GripperRobot;
-import simulator.Simulator;
 import data.Position;
 import device.Blackboard;
 import device.Device;

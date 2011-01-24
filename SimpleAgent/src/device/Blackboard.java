@@ -5,22 +5,20 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-//import core.Logger;
-
+import robot.IRobot;
 import data.BbNote;
 import data.Position;
-import data.Trackable;
 
 public class Blackboard extends Device {
 	
 	protected static Blackboard instance = null;
 	protected static Simulation simu = null;
-	protected Trackable collectrobot = null;
+	protected IRobot collectrobot = null;
 
 	protected LinkedHashMap<String,BbNote> notehm = null;
 	long SLEEPTIME = 500;
 
-	protected Blackboard(Trackable robot) {
+	protected Blackboard(IRobot robot) {
 		try {
 			notehm = new LinkedHashMap<String,BbNote>();
 			collectrobot = robot;
@@ -68,7 +66,7 @@ public class Blackboard extends Device {
 		}		
 	}
 	
-	public static Blackboard getInstance (Trackable robot) {
+	public static Blackboard getInstance (IRobot robot) {
 		if (instance == null) {
 			instance = new Blackboard(robot);
 		}

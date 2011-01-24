@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import data.Position;
 import data.SimuObject;
-import data.Trackable;
+import robot.IRobot;
 
 import javaclient3.PlayerException;
 /**
@@ -93,7 +93,7 @@ public class Tracker implements Runnable {
 		while(this.thread.isAlive());
 		System.out.println("Shutdown of " + this.toString());		
 	}
-	public void addObject(String id, Trackable obj) {
+	public void addObject(String id, IRobot obj) {
 		this.simuObjs.add(new SimuObject(id, obj));
 	}
 

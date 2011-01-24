@@ -1,18 +1,20 @@
 package data;
 
+import robot.IRobot;
+
 public class SimuObject {
-	protected Trackable obj = null;
+	protected IRobot obj = null;
 	protected String    id  = "";
 //	protected Position  pos = null;
 	
-	public SimuObject (String id, Trackable obj) {
+	public SimuObject (String id, IRobot obj) {
 		this.id = id;
 		this.obj = obj;
 	}
 	public String getId () {
 		return this.id;
 	}
-	public Trackable getObject () {
+	public IRobot getObject () {
 		return this.obj;
 	}
 //	public Position getPosition () {

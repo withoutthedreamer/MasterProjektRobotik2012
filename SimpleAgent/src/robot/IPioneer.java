@@ -1,7 +1,5 @@
 package robot;
 
-import data.Position;
-
 public interface IPioneer {
 
 	enum StateType { // TODO static ?
@@ -61,10 +59,4 @@ public interface IPioneer {
 	static boolean isDebugSonar = false;
 	static boolean isDebugDistance = false;
 	static boolean isDebugPosition = false;
-
-	// Some functionality
-	public Position getPosition();
-	public void setPosition(Position pos);
-	public Position getGoal();
-	public void setGoal(Position goal);
 }

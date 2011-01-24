@@ -78,8 +78,7 @@ public class Device implements IDevice, Runnable
 	/**
 	 * Might be to be implemented by subclass to do something
 	 */
-	protected void update() {
-	}
+	protected void update() {}
 
 	public synchronized void runThreaded()
 	{

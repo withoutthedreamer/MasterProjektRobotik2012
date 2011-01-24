@@ -2,6 +2,8 @@ package data;
 
 import java.util.Date;
 
+import robot.IRobot;
+
 import device.Simulation;
 
 // Blackboard note object
@@ -14,7 +16,7 @@ public class BbNote {
 
 	protected Position goal = null;
 	protected boolean isGoal = false;
-	protected Trackable tracked = null;
+	protected IRobot tracked = null;
 	protected boolean completed = false;
 	protected long lastChecked = 0;
 	protected int timeout = 2000;
@@ -44,10 +46,10 @@ public class BbNote {
 		this.goal = goal;
 	}
 
-	public void setTrackable (Trackable tracked2) {
+	public void setTrackable (IRobot tracked2) {
 		this.tracked = tracked2;
 	}
-	public Trackable getTrackable () {
+	public IRobot getTrackable () {
 		return this.tracked;
 	}
 
