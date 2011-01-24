@@ -193,16 +193,17 @@ public class Device implements IDevice, Runnable
 		Iterator<Device> it = getDeviceIterator();
 		while (it.hasNext())
 		{
-			if (it.next().getName() == name)
+			Device curDev = it.next();
+			if (curDev.getName() == name)
 			{
 				if (number != -1)
 				{
-					if (it.next().getDeviceNumber() == number)
+					if (curDev.getDeviceNumber() == number)
 					{
-						found = it.next();
+						found = curDev;
 					}
 				} else {
-					found = it.next();
+					found = curDev;
 				}
 			}
 		}

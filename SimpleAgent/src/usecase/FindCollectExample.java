@@ -43,13 +43,15 @@ public class FindCollectExample {
 			// wants to write notes
 			explorer.setBlackboard(blackb);
 			
-			Simulation simu = (Simulation) explDevices.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE,null, 6665, 0));
+			Device dev = explDevices.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
+			
+			Simulation simu = (Simulation) dev; 
 			
 			// for modifying world
 //			Simulator simu   = Simulator.getInstance("localhost", 6665);
 			blackb.setSimulation(simu);
-
 			blackb.runThreaded();
+			
 //			Tracker tracker  = Tracker.getInstance(simu, null);
 //			tracker.addObject("r0", pionSB);
 //			tracker.addObject("r1", pionLG);
