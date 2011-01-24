@@ -18,10 +18,12 @@ import javaclient3.structures.simulation.PlayerSimulationPose2dReq;
  */
 public class Simulation extends RobotDevice {
 		
-	protected static Simulation instance = null;
+	static Simulation instance = null;
 	// Objects of interest in the simulation
-	protected ConcurrentHashMap<String,Position> objList = null;
-	protected ConcurrentHashMap<String,Boolean> isDirtyList = null;
+	ConcurrentHashMap<String,Position> objList = null;
+	ConcurrentHashMap<String,Boolean> isDirtyList = null;
+//	Set<Entry<String,Position>> set = null;
+//	Iterator<Entry<String, Position>> i = null;
 
 	// Singleton
 	protected Simulation(DeviceNode roboClient, Device device)
@@ -30,7 +32,10 @@ public class Simulation extends RobotDevice {
 		
 		objList = new ConcurrentHashMap<String, Position>();	
 		isDirtyList = new ConcurrentHashMap<String, Boolean>();
-		this.setSleepTime(2000);
+//		set = objList.entrySet();
+//		i = set.iterator();
+		
+//		this.setSleepTime(1000);
 	}
 	/**
 	 * Returns a Singleton instance of the Gui
@@ -60,6 +65,7 @@ public class Simulation extends RobotDevice {
 		Set<Entry<String,Position>> set = objList.entrySet();
 		Iterator<Entry<String, Position>> i = set.iterator();
 		while(i.hasNext())
+//		if(i.hasNext())
 		{
 			Map.Entry<String, Position> me = (Map.Entry<String, Position>)i.next();
 			String key = (String)me.getKey();
@@ -76,6 +82,11 @@ public class Simulation extends RobotDevice {
 			else
 			{
 				((javaclient3.SimulationInterface) device).get2DPose (key);
+				try {
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+					thread.interrupt();
+				}
 				if (((javaclient3.SimulationInterface) device).isPose2DReady())
 				{
 					PlayerSimulationPose2dReq pose = ((javaclient3.SimulationInterface) device).getSimulationPose2D();
@@ -84,13 +95,14 @@ public class Simulation extends RobotDevice {
 							pose.getPose().getPy(),
 							pose.getPose().getPa());
 					objList.put(key, curPose);
-					System.err.println(key + ": " + curPose.toString());
+//					System.err.println(key + ": " + curPose.toString());
 					
-				} else {
-//					System.err.print(key);
 				}
 			}
 		}
+//		if (i.hasNext() != true) {
+//			i = set.iterator();
+//		}
 	}
 
 	/**
@@ -128,6 +140,5 @@ public class Simulation extends RobotDevice {
 		// Trigger a position read
 		isDirtyList.put(key, false);
 		// Wait for simulation
-//		try { Thread.sleep(300); } catch (InterruptedException e) {	e.printStackTrace(); }
 	}
 }

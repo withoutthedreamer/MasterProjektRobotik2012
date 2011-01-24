@@ -44,7 +44,6 @@ public class Planner extends RobotDevice
 			// has to be before over writing curPosition!
 			if(isNewPose) {
 				isNewPose = false;
-//				loci.setPose (locPose);	
 				ppd.setPos(new PlayerPose(
 						curPosition.getX(),
 						curPosition.getY(),
@@ -66,9 +65,6 @@ public class Planner extends RobotDevice
 					goal.getYaw()));
 		} else { // Get current goal
 			if (((javaclient3.PlannerInterface) device).isReadyWaypointData() == true) {
-				//goal.setX(((javaclient3.PlannerInterface) device).getData().getGoal().getPx());
-				//goal.setY(((javaclient3.PlannerInterface) device).getData().getGoal().getPx());
-				//goal.setYaw(((javaclient3.PlannerInterface) device).getData().getGoal().getPa());
 				PlayerPose poseTemp = ((javaclient3.PlannerInterface) device).getData().getGoal();
 				goal.setX(poseTemp.getPx());
 				goal.setY(poseTemp.getPy());
