@@ -66,7 +66,7 @@ public class BbNote {
 					System.out.println("Setting " + key + " back");
 				}
 			} else {
-				if ( timeout() ) {
+				if ( timeout() == true ) {
 					System.out.println("Current goal: " + tracked.getGoal().toString());
 //					if ( tracked.getGoal().isEqualTo(goal)) {
 					// Setting goal again
@@ -80,29 +80,14 @@ public class BbNote {
 //					System.out.println("Goal is being processed: " + tracked.getGoal().toString());
 				}
 			}
-			this.oldPose = tracked.getPosition();
+			oldPose = tracked.getPosition();
 		}
-	}
-
-	private boolean goalReached() {
-		if ( pose != null && goal != null) {
-			// get last robot position
-			Position robotpos = this.tracked.getPosition();
-			// Euclidean distance, Pythagoras
-//			if (distance(robotpos, goal) < epsilon) {
-			if (robotpos.distanceTo(goal) < epsilon) {
-				System.out.println("Goal reached");
-				return true;
-			}
-		}
-		//		System.out.println("Goal not reached yet");
-		return false;
 	}
 
 	private boolean timeout() {
 		// get current time
 		long now = new Date().getTime();
-
+	
 		// 1st time then timeout
 		if (lastChecked == 0) {
 			lastChecked = now;
@@ -115,7 +100,7 @@ public class BbNote {
 			// Check for pose change
 			// get current position
 			Position curPos = tracked.getPosition();
-			if (curPos.isEqualTo(oldPose)) {
+			if (curPos.distanceTo(oldPose) < 0.3) {
 				// no progress done: timeout
 				System.err.println("Timeout: Robot has not moved.");
 				return true;
@@ -123,16 +108,21 @@ public class BbNote {
 		}
 		return false;
 	}
-//	private double distance(Position oldPose, Position newPose) {
-//			// Euclidean distance, Pythagoras
-//			return Math.sqrt(
-//					Math.pow(
-//							Math.abs(oldPose.getY()
-//									-newPose.getY()),2)
-//					+ Math.pow(
-//							Math.abs(oldPose.getX()
-//									-newPose.getX()),2));
-//	}
+
+	private boolean goalReached() {
+		if ( pose != null && goal != null) {
+			// get last robot position
+			Position robotpos = tracked.getPosition();
+			// Euclidean distance, Pythagoras
+//			if (distance(robotpos, goal) < epsilon) {
+			if (robotpos.equals(goal) == true) {
+				System.out.println("Goal reached");
+				return true;
+			}
+		}
+		//		System.out.println("Goal not reached yet");
+		return false;
+	}
 
 	public void setKey(String key) {
 		this.key = key;

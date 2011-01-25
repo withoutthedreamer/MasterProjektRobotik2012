@@ -1,5 +1,7 @@
 package robot;
 
+import java.util.Vector;
+
 import data.BbNote;
 import data.BlobfinderBlob;
 import device.Blackboard;
@@ -18,8 +20,9 @@ public class ExploreRobot extends Pioneer {
 		int count = this.bloFi.getCount();
 		if (count > 0) {
 			for (int i=0; i<count; i++) {
-				if (bloFi.getBlobs().capacity() > i) {
-					BlobfinderBlob ablob = bloFi.getBlobs().get(i);
+				Vector<BlobfinderBlob> blobs = bloFi.getBlobs(); 
+				if (blobs.capacity() > i) {
+					BlobfinderBlob ablob = blobs.get(i);
 					// Seen from this position
 					ablob.setDiscovered(this.getPosition());
 					BbNote note = new BbNote();

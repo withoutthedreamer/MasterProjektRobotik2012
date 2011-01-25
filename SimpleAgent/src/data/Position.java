@@ -62,7 +62,7 @@ public class Position {
 	public String toString() {
 		return String.format("(%5.2f,%5.2f,%3.0f)",this.x, this.y, Math.toDegrees(this.yaw));
 	}
-	public boolean isEqualTo(Position pose){
+	public boolean isNearTo(Position pose){
 		if (pose != null) {
 			if ((Math.abs(x   - pose.getX())   < epsilonPos) &&
 				(Math.abs(y   - pose.getY())   < epsilonPos) &&
