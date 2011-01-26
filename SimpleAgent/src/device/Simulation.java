@@ -25,6 +25,10 @@ public class Simulation extends RobotDevice {
 //	Set<Entry<String,Position>> set = null;
 //	Iterator<Entry<String, Position>> i = null;
 
+	protected Simulation () {
+		super();
+	}
+	
 	// Singleton
 	protected Simulation(DeviceNode roboClient, Device device)
 	{
@@ -32,10 +36,8 @@ public class Simulation extends RobotDevice {
 		
 		objList = new ConcurrentHashMap<String, Position>();	
 		isDirtyList = new ConcurrentHashMap<String, Boolean>();
-//		set = objList.entrySet();
-//		i = set.iterator();
 		
-		this.setSleepTime(0);
+		setSleepTime(0);
 	}
 	/**
 	 * Returns a Singleton instance of the Gui
@@ -55,7 +57,10 @@ public class Simulation extends RobotDevice {
 	 * @return null or Gui instance.
 	 */
 	public static Simulation getInstance () {
-		return instance; // whether or not it is null
+		if (instance == null) {
+			instance = new Simulation();
+		}
+		return instance;
 	}
 	
 	// TODO Currently only 'static' objects should be modified

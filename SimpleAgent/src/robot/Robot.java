@@ -32,9 +32,13 @@ public class Robot extends Device implements IRobot {
 	
 	double speed = -1.0;
 	double turnrate = -1.0;
+	Position position = null;
+	Position goal = null;
 
 	StateType currentState;
 
+	public Robot(){}
+	
 	/**
 	 * This constructor has to be overwritten in any subclasses!
 	 */
@@ -118,6 +122,8 @@ public class Robot extends Device implements IRobot {
 		if (planner != null)
 		{
 			planner.setGoal(newGoal);
+		} else {
+			goal = newGoal;
 		}
 	}
 	/**
@@ -132,7 +138,7 @@ public class Robot extends Device implements IRobot {
 		}
 		else
 		{
-			return null;
+			return goal;
 		}
 	}
 	/**
@@ -151,6 +157,10 @@ public class Robot extends Device implements IRobot {
 			if (posi != null)
 			{
 				posi.setPosition(newPosition);
+			}
+			else
+			{
+				position = newPosition;
 			}
 		}
 	}
@@ -173,7 +183,7 @@ public class Robot extends Device implements IRobot {
 			}
 			else
 			{
-				return null;
+				return position;
 			}
 		}
 	}

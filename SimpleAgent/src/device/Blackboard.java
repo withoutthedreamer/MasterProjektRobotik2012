@@ -18,21 +18,41 @@ public class Blackboard extends Device {
 //	protected LinkedHashMap<String,BbNote> notehm = null;
 	protected ConcurrentHashMap<String,BbNote> notehm = null;
 	
-	long SLEEPTIME = 500;
-
-	protected Blackboard(IRobot robot) {
+	Blackboard()
+	{
+		notehm = new ConcurrentHashMap<String,BbNote>();
+		setSleepTime(500);		
+	}
+	
+	Blackboard(IRobot robot)
+	{
+		this();
 		try {
-			notehm = new ConcurrentHashMap<String,BbNote>();
 			collectrobot = robot;
 		} catch ( Exception e ) {
 			e.printStackTrace();
 			throw new IllegalStateException();
 		}
 	}
+	public static Blackboard getInstance (IRobot robot)
+	{
+		if (instance == null) {
+			instance = new Blackboard(robot);
+		}
+		return instance;
+		
+	}
+	public static Blackboard getInstance () 
+	{
+		if (instance == null) {
+			instance = new Blackboard();
+		}
+		return instance;
+	}
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void update () {
-		Set set = this.notehm.entrySet();
+		Set set = notehm.entrySet();
 		Iterator i = set.iterator();
 		// Track the 1st only
 		// FIFO HashMap to keep goal order
@@ -68,23 +88,13 @@ public class Blackboard extends Device {
 		}		
 	}
 	
-	public static Blackboard getInstance (IRobot robot) {
-		if (instance == null) {
-			instance = new Blackboard(robot);
-		}
-		return instance;
-		
-	}
-	public static Blackboard getInstance () {
-		return instance;
-	}
 	public void add(String key, BbNote note) {
 		if ( notehm.containsKey(key) == false ) {
 			// TODO for testing only
 			note.setTrackable(collectrobot);
 			note.setKey(key);
 			note.setSimu(simu);
-			this.notehm.put(key, note);
+			notehm.put(key, note);
 			System.out.println("BB: added note " + key);
 			
 		}

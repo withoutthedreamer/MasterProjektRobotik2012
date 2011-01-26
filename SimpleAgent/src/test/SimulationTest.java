@@ -65,7 +65,7 @@ public class SimulationTest extends TestCase {
 			simu.setPositionOf("black", new Position(pose2.getX()+2,pose2.getY(),pose2.getYaw()));
 			simu.setPositionOf("red", new Position(pose2.getX()+3,pose2.getY(),pose2.getYaw()));
 			
-//			simu.setPositionOf("nottExist", new Position(pose2.getX()+4,pose2.getY(),pose2.getYaw()));
+			simu.setPositionOf("nottExist", new Position(pose2.getX()+4,pose2.getY(),pose2.getYaw()));
 			
 			pose.setY(0.5+pose.getY());
 			pose.setX(0.5+pose.getX());

@@ -8,6 +8,8 @@ public class RobotDevice extends Device
 {
 	javaclient3.PlayerDevice device = null;
 
+	public RobotDevice () {}
+	
 	public RobotDevice (DeviceNode roboClient, Device device) {
 		super(device);
 		try

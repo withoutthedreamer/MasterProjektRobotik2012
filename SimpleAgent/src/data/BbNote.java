@@ -80,36 +80,41 @@ public class BbNote {
 //					System.out.println("Goal is being processed: " + tracked.getGoal().toString());
 				}
 			}
-			oldPose = tracked.getPosition();
-			System.err.println("old robot pose updated: " + oldPose.toString());
 		}
 	}
 
 	private boolean timeout() {
+		boolean isTimeout = false;
+		
 		// get current time
 		long now = new Date().getTime();
-	
+
 		// 1st time then timeout
 		if (lastChecked == 0) {
 			lastChecked = now;
-			return true;
-		}
-		
-		if ( (lastChecked + timeout) <= now) {
-			lastChecked = now;
-			// timeout
-			// Check for pose change
-			// get current position
-			Position curPos = tracked.getPosition();
-			System.err.println("current robot pose updated: " + curPos.toString());
+			oldPose = tracked.getPosition();
+			isTimeout = true;
+		} else {
+			if ( (lastChecked + timeout) <= now) {
+				lastChecked = now;
+				// timeout
+				// Check for pose change
+				// get current position
+				Position curPos = tracked.getPosition();
+//				System.err.println("current robot pose updated: " + curPos.toString());
 
-			if (curPos.distanceTo(oldPose) < 0.3) {
-				// no progress done: timeout
-				System.err.println("Timeout: Robot has not moved.");
-				return true;
+				if (curPos.distanceTo(oldPose) < 0.1) {
+					// no progress done: timeout
+					System.err.println("Timeout: Robot has not moved.");
+					System.err.println("current robot pose updated: " + curPos.toString());
+					System.err.println("old robot pose updated: " + oldPose.toString());
+
+					isTimeout = true;
+				}
+				oldPose = curPos;
 			}
 		}
-		return false;
+		return isTimeout;
 	}
 
 	private boolean goalReached() {
