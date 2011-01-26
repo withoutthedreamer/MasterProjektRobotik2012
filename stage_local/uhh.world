@@ -61,6 +61,7 @@ fancypioneer2dx
   name "r0"
   pose [ -6 -5 0 90 ] 
 
+  laser240()
   platte()
   laptop()
   bobsblobfinder()

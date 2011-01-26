@@ -81,6 +81,7 @@ public class BbNote {
 				}
 			}
 			oldPose = tracked.getPosition();
+			System.err.println("old robot pose updated: " + oldPose.toString());
 		}
 	}
 
@@ -100,6 +101,8 @@ public class BbNote {
 			// Check for pose change
 			// get current position
 			Position curPos = tracked.getPosition();
+			System.err.println("current robot pose updated: " + curPos.toString());
+
 			if (curPos.distanceTo(oldPose) < 0.3) {
 				// no progress done: timeout
 				System.err.println("Timeout: Robot has not moved.");

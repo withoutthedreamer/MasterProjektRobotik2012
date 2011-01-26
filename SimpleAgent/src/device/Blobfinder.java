@@ -1,18 +1,20 @@
 package device;
 
 import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
-import java.util.Vector;
 import data.BlobfinderBlob;
+import java.util.concurrent.*;
 
 public class Blobfinder extends RobotDevice
 {
 	protected int count = 0;
 	protected int[] color = null;
-	protected Vector<BlobfinderBlob> blobs = null;;
+//	protected Vector<BlobfinderBlob> blobs = null;
+	protected CopyOnWriteArrayList<BlobfinderBlob> blobs = null;;
 	
 	public Blobfinder(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
-		blobs = new Vector<BlobfinderBlob>();
+//		blobs = new Vector<BlobfinderBlob>();
+		blobs = new CopyOnWriteArrayList<BlobfinderBlob>();
 	}
 	// Only to be called @~10Hz
 	@Override
@@ -36,7 +38,7 @@ public class Blobfinder extends RobotDevice
 						unblob.getBottom(),
 						unblob.getRange()	);
 				
-				if (i >= this.blobs.size()) {
+				if (i >= blobs.size()) {
 					blobs.add(inblob);
 				} else {
 					blobs.set(i, inblob);
@@ -46,7 +48,7 @@ public class Blobfinder extends RobotDevice
 		}
 	}
 	
-	public Vector<BlobfinderBlob> getBlobs () {
+	public CopyOnWriteArrayList<BlobfinderBlob> getBlobs () {
 		return blobs;
 	}
 	public int getCount () {

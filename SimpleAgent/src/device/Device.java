@@ -144,6 +144,7 @@ public class Device implements IDevice, Runnable
 				// Stop device
 				device.thread.interrupt();
 				while (device.thread.isAlive());
+				device.shutdown();
 			}
 			// empty device list
 			deviceList.clear();
@@ -237,5 +238,14 @@ public class Device implements IDevice, Runnable
 	}
 	public void setSleepTime(long time) {
 		this.SLEEPTIME = time;
+	}
+	public long getSleepTime() {
+		return SLEEPTIME;
+	}
+	public boolean isRunning() {
+		return isRunning;
+	}
+	public boolean isThreaded() {
+		return isThreaded;
 	}
 }

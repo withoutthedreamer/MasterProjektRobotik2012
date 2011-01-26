@@ -72,6 +72,11 @@ public class Position {
 		}
 		return false;
 	}
+	/**
+	 * 
+	 * @param pose @ref Position to compare.
+	 * @return true if @ref Position matches exactly, false otherwise.
+	 */
 	public boolean equals (Position pose) {
 		if (x == pose.getX() &&
 			y == pose.getY() &&

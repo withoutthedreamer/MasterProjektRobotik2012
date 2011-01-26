@@ -35,7 +35,7 @@ public class Simulation extends RobotDevice {
 //		set = objList.entrySet();
 //		i = set.iterator();
 		
-//		this.setSleepTime(1000);
+		this.setSleepTime(0);
 	}
 	/**
 	 * Returns a Singleton instance of the Gui
@@ -78,15 +78,14 @@ public class Simulation extends RobotDevice {
 				
 //				while ( ! this.simu.isDataReady() ) { // TODO debug it
 				((javaclient3.SimulationInterface) device).set2DPose(key, pp);
+				try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
 			}
 			else
 			{
 				((javaclient3.SimulationInterface) device).get2DPose (key);
-				try {
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-					thread.interrupt();
-				}
+				
+				try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
+				
 				if (((javaclient3.SimulationInterface) device).isPose2DReady())
 				{
 					PlayerSimulationPose2dReq pose = ((javaclient3.SimulationInterface) device).getSimulationPose2D();
@@ -99,6 +98,7 @@ public class Simulation extends RobotDevice {
 					
 				}
 			}
+			try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
 		}
 //		if (i.hasNext() != true) {
 //			i = set.iterator();
@@ -112,6 +112,7 @@ public class Simulation extends RobotDevice {
 	public void shutdown () {
 		super.shutdown();
 		objList.clear();
+		isDirtyList.clear();
 	}
 	/**
 	 * Set a Gui object's position.
@@ -140,5 +141,11 @@ public class Simulation extends RobotDevice {
 		// Trigger a position read
 		isDirtyList.put(key, false);
 		// Wait for simulation
+	}
+	public int getObjListCount() {
+		return objList.size();
+	}
+	public int getIsDirtyListCount() {
+		return isDirtyList.size();
 	}
 }

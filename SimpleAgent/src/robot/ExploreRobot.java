@@ -1,6 +1,6 @@
 package robot;
 
-import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import data.BbNote;
 import data.BlobfinderBlob;
@@ -20,8 +20,9 @@ public class ExploreRobot extends Pioneer {
 		int count = this.bloFi.getCount();
 		if (count > 0) {
 			for (int i=0; i<count; i++) {
-				Vector<BlobfinderBlob> blobs = bloFi.getBlobs(); 
-				if (blobs.capacity() > i) {
+				CopyOnWriteArrayList<BlobfinderBlob> blobs = bloFi.getBlobs(); 
+//				if (blobs.capacity() > i) {
+				if (blobs.size() > i) {
 					BlobfinderBlob ablob = blobs.get(i);
 					// Seen from this position
 					ablob.setDiscovered(this.getPosition());

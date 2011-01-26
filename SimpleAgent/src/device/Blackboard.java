@@ -1,7 +1,7 @@
 package device;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
+import java.util.concurrent.*;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,12 +15,14 @@ public class Blackboard extends Device {
 	protected static Simulation simu = null;
 	protected IRobot collectrobot = null;
 
-	protected LinkedHashMap<String,BbNote> notehm = null;
+//	protected LinkedHashMap<String,BbNote> notehm = null;
+	protected ConcurrentHashMap<String,BbNote> notehm = null;
+	
 	long SLEEPTIME = 500;
 
 	protected Blackboard(IRobot robot) {
 		try {
-			notehm = new LinkedHashMap<String,BbNote>();
+			notehm = new ConcurrentHashMap<String,BbNote>();
 			collectrobot = robot;
 		} catch ( Exception e ) {
 			e.printStackTrace();

@@ -114,8 +114,13 @@ public class DeviceNode extends Device {
 					case IDevice.DEVICE_SIMULATION_CODE : 
 						dev = new Simulation(this, new Device(name, host, port, Indes)); break; 
 
-					case IDevice.DEVICE_PLANNER_CODE : 
-						dev = new Planner(this, new Device(name, host, port, Indes)); break;
+					case IDevice.DEVICE_PLANNER_CODE :
+						try {
+						dev = new Planner(this, new Device(name, host, port, Indes));
+						} catch (IllegalStateException e) {
+							dev = new Planner(this, new Device(name, host, port, Indes));
+						}
+						break;
 
 					default: break;
 					}
