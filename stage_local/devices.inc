@@ -1,4 +1,5 @@
 include "pioneer.inc"
+#include "utm30lx.inc"
 include "urgr.inc"
 include "platte.inc"
 include "laptop.inc"
@@ -25,6 +26,7 @@ define bobsgripper gripper
 define robot fancypioneer2dx
 (		  
   laser240()
+  #utm30lx() 
   platte()
   laptop()
   bobsblobfinder()
