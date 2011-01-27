@@ -54,6 +54,7 @@ public class ControlAgent extends MicroAgent
 		receiver = (IComponentIdentifier)getArgument("receiver");
 		final int missed_max = ((Number)getArgument("missed_max")).intValue();
 		final long timeout = ((Number)getArgument("timeout")).longValue();
+		final long port = ((Number)getArgument("port")).longValue();
 //		final Object content = getArgument("content");
 		final Position content = new Position(-1,-1,0);
 		sent = new HashSet();
@@ -92,7 +93,7 @@ public class ControlAgent extends MicroAgent
 		
 		if(receiver==null)
 		{
-			createComponentIdentifier("Work").addResultListener(
+			createComponentIdentifier("Work@Fastclient-E.local_61e",false,new String[]{"nio-mtp://fastclient-e.local:" + port}).addResultListener(
 				createResultListener(new DefaultResultListener()
 			{
 				public void resultAvailable(Object source, Object result)
@@ -144,6 +145,7 @@ public class ControlAgent extends MicroAgent
 				new Argument("receiver", "The component receiver of the ping target.", "IComponentIdentifier"),
 				new Argument("missed_max", "Maximum number of allowed missed replies", "int", new Integer(3)),
 				new Argument("timeout", "Timeout for reply", "long", new Long(1000)),
+				new Argument("port", "Port for reply", "long", new Long(1000)),
 				new Argument("content", "Ping message content", "String", "ping"),
 				
 			}, null);
