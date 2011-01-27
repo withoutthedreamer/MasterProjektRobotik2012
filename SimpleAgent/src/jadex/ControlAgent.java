@@ -75,7 +75,9 @@ public class ControlAgent extends MicroAgent
 					
 					msg.put(SFipa.LANGUAGE, SFipa.NUGGETS_XML);
 					msg.put(SFipa.CONTENT, content);
-					msg.put(SFipa.PERFORMATIVE, SFipa.QUERY_IF);
+//					msg.put(SFipa.PERFORMATIVE, SFipa.QUERY_IF);
+					
+					msg.put(SFipa.PERFORMATIVE, SFipa.REQUEST);
 					msg.put(SFipa.CONVERSATION_ID, convid);
 					msg.put(SFipa.RECEIVERS, new IComponentIdentifier[]{receiver});
 //					msg.put(SFipa.SENDER, getComponentIdentifier());
