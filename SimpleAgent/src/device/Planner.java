@@ -7,6 +7,8 @@ import javaclient3.structures.planner.PlayerPlannerData;
 public class Planner extends RobotDevice
 {
 	protected Position goal = null;
+	protected Position globalGoal = null;
+
 	protected PlayerPlannerData ppd = null;
 	private boolean isNewGoal = false;
 	private boolean isNewPose = false;
@@ -14,11 +16,14 @@ public class Planner extends RobotDevice
 	private boolean isDone;
 	private boolean isValidGoal;
 	private boolean isCanceled;
+	int wayPointCount;
+	int wayPointIndex;
 
 	public Planner(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
 		
 		goal = new Position();
+		globalGoal = new Position();
 		curPosition = new Position();
 		
 		// enable motion
@@ -33,21 +38,25 @@ public class Planner extends RobotDevice
 	//			System.out.println (ppd.getWaypoints_count());
 
 				if (isCanceled == true) {
-					ppd.setDone((byte)1);
-					ppd.setValid((byte)0);
+					ppd.setDone(new Integer(1).byteValue());
+					ppd.setValid(new Integer(0).byteValue());
 				} else {
 					// Check for a valid path
-					if (ppd.getValid() > 0)
+					if (ppd.getValid() == new Integer(1).byteValue())
 						isValidGoal = true;
 					else
 						isValidGoal = false;
 
 					// Check if goal is achieved
-					if (ppd.getDone() > 0)
+					if (ppd.getDone() == new Integer(1).byteValue())
 						isDone = true;
 					else
 						isDone = false;
 				}
+				
+				wayPointCount = ppd.getWaypoints_count();
+				wayPointIndex = ppd.getWaypoint_idx();
+				
 				// set position belief
 				// has to be before over writing curPosition!
 				if(isNewPose) {
@@ -83,6 +92,7 @@ public class Planner extends RobotDevice
 		}
 		public synchronized void setGoal (Position newGoal) {
 		goal = newGoal;
+		globalGoal = newGoal;
 		isNewGoal = true;
 		isValidGoal = false;
 		isDone = false;
@@ -101,16 +111,29 @@ public class Planner extends RobotDevice
 		return curPosition;
 	}
 	// TODO debug
+	// taken from wavefront.cc
 	public boolean isDone() {
-		return isDone;
+//		if (wayPointCount > 0 && wayPointIndex < 0)
+		if (isCanceled == true || goal.isNearTo(globalGoal))
+			return true;
+		else
+			return false;
+//		return isDone;
 	}
 	public boolean isValidGoal() {
-//		while (isRunning() == true);
-		return isValidGoal;
+		if (wayPointCount > 0)
+			return true;
+		else
+			return false;
+//		return isValidGoal;
 	}
-	public void removeGoal() {
+	public void cancel() {
 		isCanceled  = true;
 		isValidGoal = false;
 		isDone = true;
+		wayPointCount = 0;
+		wayPointIndex = -1;
+		globalGoal.setPosition(new Position(0,0,0));
+		goal.setPosition(new Position(0,0,0));
 	}
 }

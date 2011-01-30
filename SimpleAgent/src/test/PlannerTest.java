@@ -41,10 +41,7 @@ public class PlannerTest extends TestCase {
 		assertNotNull(planner);
 		assertEquals(planner.getClass(),Planner.class);
 		assertEquals(planner.isRunning(), true);
-		assertEquals(planner.isThreaded(), true);
-		
-		planner.removeGoal();
-		while(planner.isDone() != true);
+		assertEquals(planner.isThreaded(), true);		
 	}
 
 	@Test
@@ -57,30 +54,35 @@ public class PlannerTest extends TestCase {
 //		planner.setPosition(pose);
 		localizer.setPosition(pose);
 		
-		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 		
 		assertTrue(planner.getPosition().isNearTo(pose));
 	}
 
 	@Test
 	public void testSetGoal() {
+		planner.cancel();
+		assertTrue(planner.isDone());
+		
 		Position pose = new Position(-6.5,-2,Math.toRadians(90));
 		
 		planner.setGoal(pose);
 	
-		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 		
 		assertTrue(planner.isValidGoal());
 		assertTrue(planner.getGoal().equals(pose));
 		
-		try { Thread.sleep(12000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(8000); } catch (InterruptedException e) { e.printStackTrace(); }
 	
 		assertTrue(planner.isDone());
+//		assertFalse(planner.isValidGoal());
 	}
 
 	@Test
 	public void testShutdown() {
 		deviceNode.shutdown();
+//		while(true);
 	}
 
 }
