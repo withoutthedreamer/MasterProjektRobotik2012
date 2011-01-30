@@ -9,8 +9,8 @@ public class Position {
 	protected double x  = 0.;
 	protected double y  = 0.;
 	protected double yaw= 0.;
-	protected final static double epsilonPos = 0.01;
-	protected final static double epsilonRot = Math.toRadians(0.1);
+	protected final static double epsilonPos = 1.0; // meters
+	protected final static double epsilonRot = Math.toRadians(10); // radians
 
 	/**
 	 * Constructor creates a Position

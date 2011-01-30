@@ -39,7 +39,7 @@ public class GripperRobot extends Pioneer {
 	public final Position getPosition() {
 //		return posi.getPosition();
 		if (planner != null) {
-			return planner.getPose();
+			return planner.getPosition();
 		} else {
 			return super.getPosition();
 		}

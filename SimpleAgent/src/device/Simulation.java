@@ -75,7 +75,7 @@ public class Simulation extends RobotDevice {
 			Map.Entry<String, Position> me = (Map.Entry<String, Position>)i.next();
 			String key = (String)me.getKey();
 			
-			if (isDirtyList.get(key) == true)
+			if (isDirtyList.get(key) != null && isDirtyList.get(key) == true)
 			{
 				isDirtyList.put(key, false);
 				Position pos = (Position)me.getValue();
