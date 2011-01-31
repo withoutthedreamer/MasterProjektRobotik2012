@@ -1,5 +1,7 @@
 package test;
 
+import java.util.logging.Level;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -23,6 +25,7 @@ public class PlannerTest extends TestCase {
 	public void testPlanner() {
 		deviceNode = new DeviceNode("localhost", 6666);
 		assertNotNull(deviceNode);
+		deviceNode.getClient().getLogger().setLevel(Level.FINEST);
 		
 		DeviceNode deviceNode2 = new DeviceNode("localhost", 6665);
 		assertNotNull(deviceNode2);
@@ -41,7 +44,10 @@ public class PlannerTest extends TestCase {
 		assertNotNull(planner);
 		assertEquals(planner.getClass(),Planner.class);
 		assertEquals(planner.isRunning(), true);
-		assertEquals(planner.isThreaded(), true);		
+		assertEquals(planner.isThreaded(), true);
+		
+//		planner.cancel();
+		planner.setDebug(true);
 	}
 
 	@Test
@@ -54,35 +60,35 @@ public class PlannerTest extends TestCase {
 //		planner.setPosition(pose);
 		localizer.setPosition(pose);
 		
-		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 		
 		assertTrue(planner.getPosition().isNearTo(pose));
 	}
 
 	@Test
 	public void testSetGoal() {
-		planner.cancel();
-		assertTrue(planner.isDone());
-		
-		Position pose = new Position(-6.5,-2,Math.toRadians(90));
-		
-		planner.setGoal(pose);
-	
-		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
-		
-		assertTrue(planner.isValidGoal());
-		assertTrue(planner.getGoal().equals(pose));
-		
-		try { Thread.sleep(8000); } catch (InterruptedException e) { e.printStackTrace(); }
-	
-		assertTrue(planner.isDone());
-//		assertFalse(planner.isValidGoal());
+
+		Position pose = new Position(-6.5,-2,Math.toRadians(75));
+
+		for (int i=0; i<3; i++) {
+			
+			planner.setGoal(pose);
+			try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+//			assertTrue(planner.isValidGoal());
+			assertTrue(planner.getGoal().equals(pose));
+			
+			try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+			assertTrue(planner.isDone());
+			
+			pose.setX(pose.getX()+2);
+			pose.setYaw(0);
+		}
 	}
 
 	@Test
 	public void testShutdown() {
 		deviceNode.shutdown();
-//		while(true);
 	}
 
 }

@@ -9,8 +9,8 @@ public class Position {
 	protected double x  = 0.;
 	protected double y  = 0.;
 	protected double yaw= 0.;
-	protected final static double epsilonPos = 1.0; // meters
-	protected final static double epsilonRot = Math.toRadians(10); // radians
+	protected final static double epsilonPos = 2.0; // meters
+	protected final static double epsilonRot = Math.toRadians(45); // radians
 
 	/**
 	 * Constructor creates a Position
@@ -29,11 +29,19 @@ public class Position {
 		y=0.;
 		yaw=0.;
 	}
+	public Position(Position position){
+		this(position.getX(),position.getY(),position.getYaw());
+	}
 
 	public void setPosition (Position pos) {
 		this.x = pos.getX();
 		this.y = pos.getY();
 		this.yaw = pos.getYaw();
+	}
+	public void setPosition (double xv,double yv,double av){
+		this.x = xv;
+		this.y = yv;
+		this.yaw = av;
 	}
 
 	public double getX() {
