@@ -54,11 +54,11 @@ public class Localize extends RobotDevice
 	public synchronized void setPosition(Position position) {
 		if (position != null) {
 			setPosition.setMean(new PlayerPose(position.getX(),position.getY(),position.getYaw()));
-			getPosition = position;
+			getPosition.setPosition(position);
 			isNewPose = true;
 		}
 	}
 	public synchronized Position getPose() {
-		return getPosition;
+		return new Position(getPosition);
 	}
 }

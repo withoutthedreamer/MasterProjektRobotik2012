@@ -21,8 +21,7 @@ public class PlannerTest extends TestCase {
 	static DeviceNode deviceNode = null;
 	static Simulation simu = null;
 
-	@Test
-	public void testPlanner() {
+	@Test public void testInit() {
 		deviceNode = new DeviceNode("localhost", 6666);
 		assertNotNull(deviceNode);
 		deviceNode.getClient().getLogger().setLevel(Level.FINEST);
@@ -46,12 +45,11 @@ public class PlannerTest extends TestCase {
 		assertEquals(planner.isRunning(), true);
 		assertEquals(planner.isThreaded(), true);
 		
-//		planner.cancel();
+		planner.cancel();
 		planner.setDebug(true);
 	}
 
-	@Test
-	public void testSetPosition() {
+	@Test public void testSetPosition() {
 		Position pose = new Position(-6,-5,Math.toRadians(90));
 		
 		simu.setPositionOf("r0", pose);
@@ -61,33 +59,52 @@ public class PlannerTest extends TestCase {
 		localizer.setPosition(pose);
 		
 		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
-		
-		assertTrue(planner.getPosition().isNearTo(pose));
+	}
+	@Test public void testGetPosition() {
+		assertTrue(planner.getPosition().isNearTo(new Position(-6,-5,Math.toRadians(90))));
 	}
 
-	@Test
-	public void testSetGoal() {
+	@Test public void testSetGoal() {
 
 		Position pose = new Position(-6.5,-2,Math.toRadians(75));
 
-		for (int i=0; i<3; i++) {
-			
-			planner.setGoal(pose);
-			try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-//			assertTrue(planner.isValidGoal());
-			assertTrue(planner.getGoal().equals(pose));
-			
-			try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
+		planner.setGoal(pose);
 
-			assertTrue(planner.isDone());
-			
-			pose.setX(pose.getX()+2);
-			pose.setYaw(0);
-		}
+		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
+	@Test public void testIsValid(){
+		assertTrue(planner.isValidGoal());
+	}
+	@Test public void testIsDoneFalse() {
+		assertFalse(planner.isDone());
+	}
+	@Test public void testGetGoal() {
+		assertTrue(planner.getGoal().equals(new Position(-6.5,-2,Math.toRadians(75))));
+	}
+	@Test public void testWPCount() {
+		assertNotNull(planner.getWayPointCount());
+	}
+	@Test public void testWPIndex() {
+		assertNotNull(planner.getWayPointIndex());
+	}
+	@Test public void testIsDone() {
+		try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
+		assertTrue(planner.isDone());
+	}
+	@Test public void testSetGoalAbort(){
+		Position pose = new Position(-2.5,-6,Math.toRadians(75));
 
-	@Test
-	public void testShutdown() {
+		planner.setGoal(pose);
+
+		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+	}
+	@Test public void testCancel() {
+		planner.cancel();
+		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+		assertTrue(planner.isDone());
+	}
+	@Test public void testShutdown() {
 		deviceNode.shutdown();
 	}
 

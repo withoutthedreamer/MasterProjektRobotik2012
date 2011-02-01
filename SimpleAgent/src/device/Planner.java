@@ -28,7 +28,7 @@ public class Planner extends RobotDevice
 		globalGoal = new Position();
 		curPosition = new Position();
 		
-		this.setSleepTime(1000);
+		setSleepTime(1000);
 		
 		// disable motion
 		((javaclient3.PlannerInterface) this.device).setRobotMotion(0);
@@ -39,23 +39,22 @@ public class Planner extends RobotDevice
 			if (((javaclient3.PlannerInterface) device).isDataReady()) {
 				// request recent planner data
 				ppd = ((javaclient3.PlannerInterface) device).getData ();
-	//			System.out.println (ppd.getWaypoints_count());
 				
 				if (isCanceled == true) {
 					ppd.setDone(new Integer(1).byteValue());
 					ppd.setValid(new Integer(0).byteValue());
 				} else {
-//					// Check for a valid path
-//					if (ppd.getValid() == new Integer(1).byteValue())
-//						isValidGoal = true;
-//					else
-//						isValidGoal = false;
-//
-//					// Check if goal is achieved
-//					if (ppd.getDone() == new Integer(1).byteValue())
-//						isDone = true;
-//					else
-//						isDone = false;
+					// Check for a valid path
+					if (ppd.getValid() == new Integer(1).byteValue())
+						isValidGoal = true;
+					else
+						isValidGoal = false;
+
+					// Check if goal is achieved
+					if (ppd.getDone() == new Integer(1).byteValue())
+						isDone = true;
+					else
+						isDone = false;
 				}
 				
 				wayPointCount = ppd.getWaypoints_count();
@@ -125,35 +124,29 @@ public class Planner extends RobotDevice
 		isNewPose = true;
 	}
 	public synchronized Position getPosition() {
-		// Wait latest updates
-//		while (isRunning() == true);
 		return new Position(curPosition);
 	}
-	// TODO debug
-	// taken from wavefront.cc
 	public boolean isDone() {
-//		if (wayPointCount > 0 && wayPointIndex < 0)
-//		if (isCanceled == true || goal.isNearTo(globalGoal))
-//			return true;
-//		else
-//			return false;
 		return isDone;
 	}
 	public boolean isValidGoal() {
-//		if (wayPointCount > 0)
-//			return true;
-//		else
-//			return false;
 		return isValidGoal;
+	}
+	public int getWayPointCount() {
+		return wayPointCount;
+	}
+	public int getWayPointIndex() {
+		return wayPointIndex;
 	}
 	public void cancel() {
 		isCanceled  = true;
 		isValidGoal = false;
 		isDone = true;
-		wayPointCount = 0;
-		wayPointIndex = -1;
-		globalGoal.setPosition(0,0,0);
-		goal.setPosition(0,0,0);
+//		wayPointCount = 0;
+//		wayPointIndex = -1;
+//		globalGoal.setPosition(curPosition);
+//		goal.setPosition(curPosition);
+//		isNewGoal = true;
 		// disable motion
 		((javaclient3.PlannerInterface) this.device).setRobotMotion(0);
 	}
