@@ -9,7 +9,7 @@ public class Blobfinder extends RobotDevice
 	protected int count = 0;
 	protected int[] color = null;
 //	protected Vector<BlobfinderBlob> blobs = null;
-	protected CopyOnWriteArrayList<BlobfinderBlob> blobs = null;;
+	protected CopyOnWriteArrayList<BlobfinderBlob> blobs = null;
 	
 	public Blobfinder(DeviceNode roboClient, Device device) {
 		super(roboClient, device);

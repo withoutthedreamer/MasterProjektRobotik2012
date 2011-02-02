@@ -79,27 +79,29 @@ public class Device implements IDevice, Runnable
 
 	public synchronized void runThreaded()
 	{
-		// Start all devices
-		if (deviceList != null && deviceList.size() > 0)
-		{
-			Iterator<Device> deviceIterator = deviceList.iterator();
-			
-			while (deviceIterator.hasNext())
+		if (thread.isAlive() != true) {
+			// Start all devices
+			if (deviceList != null && deviceList.size() > 0)
 			{
-				Device device = deviceIterator.next();
-				
-				// Start device
-				device.runThreaded();
-				while (device.thread.isAlive() == false);
+				Iterator<Device> deviceIterator = deviceList.iterator();
+
+				while (deviceIterator.hasNext())
+				{
+					Device device = deviceIterator.next();
+
+					// Start device
+					device.runThreaded();
+					while (device.thread.isAlive() == false);
+				}
 			}
+
+			isThreaded  = true;
+
+			thread.start();
+			while (thread.isAlive() == false);
+
+			Logger.logDeviceActivity(false, "Running", this);
 		}
-		
-        isThreaded  = true;
-		
-        thread.start();
-		while (thread.isAlive() == false);
-		
-		Logger.logDeviceActivity(false, "Running", this);
 	}
 
 	@Override
