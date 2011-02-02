@@ -65,7 +65,7 @@ public class Teamwork  {
 			ExploreRobot explorer = new ExploreRobot(explDevices);
 			explorer.runThreaded();
 			
-			GripperRobot gripper = new GripperRobot(gripperDevices);
+			NavRobot gripper = new NavRobot(gripperDevices);
 			gripper.runThreaded();
 			
 			gripper.setPosition(new Position(-16,3,Math.toRadians(90)));

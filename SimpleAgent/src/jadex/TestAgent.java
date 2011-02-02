@@ -6,6 +6,7 @@ import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.micro.MicroAgent;
 import jadex.micro.MicroAgentMetaInfo;
+import jadex.service.MessageService;
 
 public class TestAgent extends MicroAgent {
 

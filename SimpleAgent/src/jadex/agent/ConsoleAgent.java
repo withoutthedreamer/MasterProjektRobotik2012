@@ -1,13 +1,16 @@
 package jadex.agent;
 
-import jadex.IMessageService;
-import jadex.MessagePanel;
-import jadex.MessageService;
 import jadex.bridge.IArgument;
 import jadex.commons.SUtil;
 import jadex.micro.IMicroExternalAccess;
 import jadex.micro.MicroAgent;
 import jadex.micro.MicroAgentMetaInfo;
+import jadex.service.HelloService;
+import jadex.service.IMessageService;
+import jadex.service.MessagePanel;
+import jadex.service.MessageService;
+import jadex.service.ReceiveNewGoalService;
+import jadex.service.SendPositionService;
 
 import javax.swing.SwingUtilities;
 
@@ -20,7 +23,12 @@ public class ConsoleAgent extends MicroAgent
 	
 	/** The message service. */
 	protected MessageService ms;
-	
+	/* Services */
+	HelloService hs = null;
+	SendPositionService ps = null;
+	ReceiveNewGoalService gs = null;
+
+
 	//-------- methods --------
 	
 	/**
@@ -29,7 +37,15 @@ public class ConsoleAgent extends MicroAgent
 	public void agentCreated()
 	{
 		ms = new MessageService(getExternalAccess());
+		hs = new HelloService(getExternalAccess());
+		ps = new SendPositionService(getExternalAccess());
+		gs = new ReceiveNewGoalService(getExternalAccess());
+		
 		addDirectService(ms);
+		addDirectService(hs);
+		addDirectService(ps);
+		addDirectService(gs);
+		
 		SwingUtilities.invokeLater(new Runnable()
 		{
 			public void run()
@@ -42,10 +58,10 @@ public class ConsoleAgent extends MicroAgent
 	/**
 	 *  Get the chat service.
 	 */
-	public MessageService getMessageService()
-	{
-		return ms;
-	}
+	public MessageService getMessageService() { return ms; 	}
+	public HelloService getHelloService() { return hs; }
+	public SendPositionService getSendPositionService() { return ps; }
+	public ReceiveNewGoalService getReceiveNewGoalService() { return gs; }
 	
 	//-------- static methods --------
 

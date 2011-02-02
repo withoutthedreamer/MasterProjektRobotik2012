@@ -1,4 +1,4 @@
-package jadex;
+package jadex.service;
 
 import jadex.agent.ConsoleAgent;
 import jadex.bridge.IComponentListener;
@@ -62,6 +62,26 @@ public class MessagePanel extends JPanel
 				return null;
 			}
 		});
+
+		agent.scheduleStep(new IComponentStep()
+		{
+			public Object execute(IInternalAccess ia)
+			{
+				ConsoleAgent ca = (ConsoleAgent)ia;
+				ca.getHelloService().addChangeListener(new IChangeListener()
+				{
+					public void changeOccurred(ChangeEvent event)
+					{
+						String[] text = (String[])event.getValue();
+						StringBuffer buf = new StringBuffer();
+						buf.append("[").append(text[0]).append("]: ").append(text[1]).append(lf);
+						ta.append(buf.toString());
+					}
+				});
+				return null;
+			}
+		});
+		
 		
 		JPanel south = new JPanel(new BorderLayout());
 		final JTextField tf = new JTextField();

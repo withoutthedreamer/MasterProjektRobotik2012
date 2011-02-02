@@ -37,13 +37,17 @@ public class Robot extends Device implements IRobot {
 
 	StateType currentState;
 
-	public Robot(){}
+	public Robot(){
+		position = new Position();
+		goal = new Position();
+	}
 	
 	/**
 	 * This constructor has to be overwritten in any subclasses!
 	 */
 	public Robot (Device roboDevices) {
-
+		this();
+		
 		// Make the devices available
 		connectDevices(roboDevices.getDeviceList());
 	}
@@ -93,8 +97,8 @@ public class Robot extends Device implements IRobot {
 					case IDevice.DEVICE_GRIPPER_CODE : 
 						gripper = (Gripper) dev; break;
 						
-//					case IDevice.DEVICE_SIMULATION_CODE : 
-//						simu = (Simulation) dev; break; 
+					case IDevice.DEVICE_SIMULATION_CODE : 
+						simu = (Simulation) dev; break; 
 
 					default: break;
 					}
@@ -120,11 +124,9 @@ public class Robot extends Device implements IRobot {
 	public void setGoal(Position newGoal)
 	{
 		if (planner != null)
-		{
 			planner.setGoal(newGoal);
-		} else {
-			goal = newGoal;
-		}
+		else
+			goal.setPosition(newGoal);
 	}
 	/**
 	 * @return Current goal @ref Position or null.
@@ -133,13 +135,9 @@ public class Robot extends Device implements IRobot {
 	public Position getGoal()
 	{
 		if (planner != null)
-		{
 			return planner.getGoal();
-		}
 		else
-		{
-			return goal;
-		}
+			return new Position(goal);
 	}
 	/**
 	 * Sets the position if the robot possesses an position device.
@@ -149,20 +147,12 @@ public class Robot extends Device implements IRobot {
 	public void setPosition(Position newPosition)
 	{
 		if (localizer != null)
-		{
 			localizer.setPosition(newPosition);
-		}
 		else
-		{
 			if (posi != null)
-			{
 				posi.setPosition(newPosition);
-			}
 			else
-			{
-				position = newPosition;
-			}
-		}
+				position.setPosition(newPosition);
 	}
 
 	/**
@@ -171,20 +161,18 @@ public class Robot extends Device implements IRobot {
 	@Override
 	public Position getPosition()
 	{
-		if (localizer != null)
-		{
-			return localizer.getPose();
-		}
+		if (planner != null)
+			return planner.getPosition();
 		else
-		{
 			if (posi != null)
-			{
 				return posi.getPosition();
-			}
 			else
-			{
-				return position;
-			}
-		}
+				return new Position(position);
+	}
+	@Override
+	public void shutdown()
+	{
+		super.shutdown();
+		planner.cancel();
 	}
 }

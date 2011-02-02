@@ -58,7 +58,7 @@ public class Localize extends RobotDevice
 			isNewPose = true;
 		}
 	}
-	public synchronized Position getPose() {
+	public synchronized Position getPosition() {
 		return new Position(getPosition);
 	}
 }

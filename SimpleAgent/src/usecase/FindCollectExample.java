@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import robot.ExploreRobot;
-import robot.GripperRobot;
+import robot.NavRobot;
 import data.Position;
 import device.Blackboard;
 import device.Device;
@@ -30,7 +30,7 @@ public class FindCollectExample {
 			Device gripperDevices = new Device( new Device[]{gripDevices, gripDevices2} );
 
 			ExploreRobot explorer = new ExploreRobot(explDevices);	
-			GripperRobot gripper = new GripperRobot(gripperDevices);
+			NavRobot gripper = new NavRobot(gripperDevices);
 //			GripperRobot gripper = new GripperRobot(gripDevices);
 
 			

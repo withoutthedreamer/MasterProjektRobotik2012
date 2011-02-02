@@ -1,4 +1,4 @@
-package jadex;
+package jadex.service;
 
 import jadex.bridge.IExternalAccess;
 import jadex.commons.ChangeEvent;

@@ -1,4 +1,4 @@
-package jadex;
+package jadex.service;
 
 import jadex.commons.service.IService;
 

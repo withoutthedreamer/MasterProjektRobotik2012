@@ -5,7 +5,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import robot.GripperRobot;
+import robot.NavRobot;
 import data.Position;
 import device.Device;
 import device.IDevice;
@@ -23,7 +23,7 @@ public class Test {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-		GripperRobot pion = null;
+		NavRobot pion = null;
 		DeviceNode roboClient = null, plannerClient = null;
 		try {
 			// Init the robot clients

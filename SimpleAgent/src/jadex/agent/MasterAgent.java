@@ -78,14 +78,15 @@ public class MasterAgent extends MicroAgent {
 			}
 		});
 		
-		waitForTick(new IComponentStep()
+		final IComponentStep step = new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
 			{
+				waitFor(1000,this);
 				return null;
 			}
-		});
-
+		};
+		waitForTick(step);
 	}
 
 	@Override
