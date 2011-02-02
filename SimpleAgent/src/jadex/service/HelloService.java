@@ -1,4 +1,4 @@
-package test.jadex;
+package jadex.service;
 
 import jadex.bridge.IExternalAccess;
 import jadex.commons.ChangeEvent;
@@ -15,7 +15,17 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class TestService extends BasicService implements IService {
+/**
+ * This class implements a Hello service.
+ * Every agent on the network is required to send a hello message
+ * on this service when it is started.
+ * A normal agent is not required to receive any message on this service.
+ * A control agent will receive this message (if it is started)
+ * and then knows that this agent is available.
+ * @author sebastian
+ *
+ */
+public class HelloService extends BasicService implements IService {
 
 //-------- attributes --------
 	
@@ -32,7 +42,7 @@ public class TestService extends BasicService implements IService {
 	 *  Create a new helpline service.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public TestService(IExternalAccess agent)
+	public HelloService(IExternalAccess agent)
 	{
 		super(agent.getServiceProvider().getId(), IService.class, null);
 		this.agent = (IMicroExternalAccess)agent;
@@ -47,7 +57,7 @@ public class TestService extends BasicService implements IService {
 	 */
 	public void send(final String name, final Object obj)
 	{
-		SServiceProvider.getServices(agent.getServiceProvider(), IService.class, true, true)
+		SServiceProvider.getServices(agent.getServiceProvider(), HelloService.class, true, true)
 			.addResultListener(new DefaultResultListener()
 		{
 			@SuppressWarnings("rawtypes")
@@ -57,8 +67,8 @@ public class TestService extends BasicService implements IService {
 				{
 					for(Iterator it=((Collection)result).iterator(); it.hasNext(); )
 					{
-						TestService ts = (TestService)it.next();
-						ts.receive(name, obj);
+						HelloService hs = (HelloService)it.next();
+						hs.receive(name, obj);
 					}
 				}
 			}
@@ -103,6 +113,6 @@ public class TestService extends BasicService implements IService {
 	 */
 	public String toString()
 	{
-		return "TestService, "+agent.getComponentIdentifier();
+		return "HelloService, "+agent.getComponentIdentifier();
 	}
 }

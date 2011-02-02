@@ -15,7 +15,13 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class TestService extends BasicService implements IService {
+/**
+ * This service sends new goals to agents on the network.
+ * No sending is required of participating agents.
+ * @author sebastian
+ *
+ */
+public class ReceiveNewGoalService extends BasicService implements IService {
 
 //-------- attributes --------
 	
@@ -32,7 +38,7 @@ public class TestService extends BasicService implements IService {
 	 *  Create a new helpline service.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public TestService(IExternalAccess agent)
+	public ReceiveNewGoalService(IExternalAccess agent)
 	{
 		super(agent.getServiceProvider().getId(), IService.class, null);
 		this.agent = (IMicroExternalAccess)agent;
@@ -47,7 +53,7 @@ public class TestService extends BasicService implements IService {
 	 */
 	public void send(final String name, final Object obj)
 	{
-		SServiceProvider.getServices(agent.getServiceProvider(), IService.class, true, true)
+		SServiceProvider.getServices(agent.getServiceProvider(), ReceiveNewGoalService.class, true, true)
 			.addResultListener(new DefaultResultListener()
 		{
 			@SuppressWarnings("rawtypes")
@@ -57,8 +63,7 @@ public class TestService extends BasicService implements IService {
 				{
 					for(Iterator it=((Collection)result).iterator(); it.hasNext(); )
 					{
-						TestService ts = (TestService)it.next();
-//						System.err.println("Sent: " + name + ", " + obj.toString());
+						ReceiveNewGoalService ts = (ReceiveNewGoalService)it.next();
 						ts.receive(name, obj);
 					}
 				}
@@ -78,7 +83,6 @@ public class TestService extends BasicService implements IService {
 		for(int i=0; i<lis.length; i++)
 		{
 			lis[i].changeOccurred(new ChangeEvent(this, null, new Object[]{name, obj}));
-//			System.err.println("Received: " + name + ", " + obj.toString());
 		}
 	}
 	

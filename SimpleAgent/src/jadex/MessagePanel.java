@@ -1,5 +1,6 @@
 package jadex;
 
+import jadex.agent.ConsoleAgent;
 import jadex.bridge.IComponentListener;
 import jadex.bridge.IComponentStep;
 import jadex.bridge.IInternalAccess;

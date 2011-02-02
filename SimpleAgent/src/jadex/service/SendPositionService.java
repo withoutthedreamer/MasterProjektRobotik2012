@@ -1,4 +1,4 @@
-package test.jadex;
+package jadex.service;
 
 import jadex.bridge.IExternalAccess;
 import jadex.commons.ChangeEvent;
@@ -15,7 +15,15 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-public class TestService extends BasicService implements IService {
+/**
+ * This service is should be used regularly to send the agents position.
+ * It is received (or not) by some control agent to update its internal
+ * knowledge of all participating agents.
+ * Normally an agent needs not to receive any message of this service.
+ * @author sebastian
+ *
+ */
+public class SendPositionService extends BasicService implements IService {
 
 //-------- attributes --------
 	
@@ -32,7 +40,7 @@ public class TestService extends BasicService implements IService {
 	 *  Create a new helpline service.
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public TestService(IExternalAccess agent)
+	public SendPositionService(IExternalAccess agent)
 	{
 		super(agent.getServiceProvider().getId(), IService.class, null);
 		this.agent = (IMicroExternalAccess)agent;
@@ -47,7 +55,7 @@ public class TestService extends BasicService implements IService {
 	 */
 	public void send(final String name, final Object obj)
 	{
-		SServiceProvider.getServices(agent.getServiceProvider(), IService.class, true, true)
+		SServiceProvider.getServices(agent.getServiceProvider(), SendPositionService.class, true, true)
 			.addResultListener(new DefaultResultListener()
 		{
 			@SuppressWarnings("rawtypes")
@@ -57,7 +65,7 @@ public class TestService extends BasicService implements IService {
 				{
 					for(Iterator it=((Collection)result).iterator(); it.hasNext(); )
 					{
-						TestService ts = (TestService)it.next();
+						SendPositionService ts = (SendPositionService)it.next();
 						ts.receive(name, obj);
 					}
 				}

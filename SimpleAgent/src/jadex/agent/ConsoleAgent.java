@@ -1,5 +1,8 @@
-package jadex;
+package jadex.agent;
 
+import jadex.IMessageService;
+import jadex.MessagePanel;
+import jadex.MessageService;
 import jadex.bridge.IArgument;
 import jadex.commons.SUtil;
 import jadex.micro.IMicroExternalAccess;
