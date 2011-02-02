@@ -1,5 +1,6 @@
-package jadex.test;
+package test.jadex;
 
+import core.Logger;
 import data.Position;
 import jadex.bridge.IComponentStep;
 import jadex.bridge.IInternalAccess;
@@ -15,6 +16,10 @@ public class ServiceAgent extends MicroAgent {
 	public void agentCreated() {
 		ts = new TestService(getExternalAccess());
 		addDirectService(ts);
+		
+		ts.send(getComponentIdentifier().toString(), getComponentIdentifier().toString() + " started");
+		Logger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
+		
 	}
 
 	@Override
@@ -23,7 +28,6 @@ public class ServiceAgent extends MicroAgent {
 		{
 			public Object execute(IInternalAccess ia)
 			{
-//				ConsoleAgent ca = (ConsoleAgent)ia;
 				getTestService().addChangeListener(new IChangeListener()
 				{
 					public void changeOccurred(ChangeEvent event)
@@ -31,7 +35,8 @@ public class ServiceAgent extends MicroAgent {
 						Object[] content = (Object[])event.getValue();
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString());
-//						ta.append(buf.toString());
+						
+						Logger.logActivity(false, "Receiving", getComponentIdentifier().toString(), -1, null);
 					}
 				});
 				return null;
@@ -42,6 +47,8 @@ public class ServiceAgent extends MicroAgent {
 	@Override
 	public void agentKilled() {
 		ts.send(getComponentIdentifier().toString(), new Position(-1,-1,0));
+	
+		Logger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
 	}
 
 	public TestService getTestService()

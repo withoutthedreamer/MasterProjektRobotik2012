@@ -1,7 +1,6 @@
 package jadex;
 
 import jadex.base.fipa.SFipa;
-import jadex.bridge.IComponentIdentifier;
 import jadex.bridge.MessageType;
 import jadex.commons.concurrent.DefaultResultListener;
 import jadex.micro.MicroAgent;
@@ -20,6 +19,7 @@ public class WorkAgent extends MicroAgent
 	 *  @param msg The message.
 	 *  @param mt The message type.
 	 */
+	@SuppressWarnings("rawtypes")
 	public void messageArrived(Map msg, final MessageType mt)
 	{
 		String perf = (String)msg.get(SFipa.PERFORMATIVE);
@@ -33,6 +33,7 @@ public class WorkAgent extends MicroAgent
 		{
 			createReply(msg, mt).addResultListener(createResultListener(new DefaultResultListener()
 			{
+				@SuppressWarnings("unchecked")
 				public void resultAvailable(Object source, Object result)
 				{
 					Map reply = (Map)result;

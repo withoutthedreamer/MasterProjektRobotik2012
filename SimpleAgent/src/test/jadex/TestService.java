@@ -1,4 +1,4 @@
-package jadex.test;
+package test.jadex;
 
 import jadex.bridge.IExternalAccess;
 import jadex.commons.ChangeEvent;
@@ -58,7 +58,7 @@ public class TestService extends BasicService implements IService {
 					for(Iterator it=((Collection)result).iterator(); it.hasNext(); )
 					{
 						TestService ts = (TestService)it.next();
-						System.err.println("Sent: " + name + ", " + obj.toString());
+//						System.err.println("Sent: " + name + ", " + obj.toString());
 						ts.receive(name, obj);
 					}
 				}
@@ -78,7 +78,7 @@ public class TestService extends BasicService implements IService {
 		for(int i=0; i<lis.length; i++)
 		{
 			lis[i].changeOccurred(new ChangeEvent(this, null, new Object[]{name, obj}));
-			System.err.println("Received: " + name + ", " + obj.toString());
+//			System.err.println("Received: " + name + ", " + obj.toString());
 		}
 	}
 	

@@ -14,17 +14,21 @@ public class Logger {
 	 */
 	public static synchronized void logActivity(boolean isError, String event, String objName, int id, String thread) {
 		
-		int otherId = -1;
-		final String otherThread = "no thread";
+		String otherId = "";
+		final String otherThread = "";
 		String threadName = null;
 
-		if (id >= 0) { otherId = id; }
+		if (id >= 0) {
+			otherId = " of device " + new Integer(id).toString(); 
+		} else {
+			otherId = "";
+		}
 		if (thread == null) {
 			threadName = otherThread;
 		} else {
-			threadName = thread;
+			threadName = " in " + thread;
 		}
-		String logMsg = event + " of " + objName + " of device " + otherId + " in " + threadName;
+		String logMsg = event + " of " + objName + otherId + threadName;
 
 		if (isError == true) {
 			System.err.println(logMsg);
