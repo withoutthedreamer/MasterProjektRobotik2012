@@ -99,7 +99,8 @@ public class DeviceNode extends Device {
 	{
 		if (deviceList.size() > 0) {
 			super.runThreaded();
-//			playerClient.runThreaded(-1, -1);
+//			Iterator<PlayerClient> it = playerClientList.iterator();
+//			while (it.hasNext()) { it.next().runThreaded(-1, -1); }
 		}
 	}
 	@Override

@@ -12,7 +12,7 @@ public class DeviceNodeTest extends TestCase {
 
 	@Test
 	public void testDeviceNodeStringInteger() {
-		deviceNode = new DeviceNode("localhost", 6666);
+		deviceNode = new DeviceNode("localhost", 6665);
 		assertNotNull(deviceNode);
 	}
 
@@ -20,6 +20,8 @@ public class DeviceNodeTest extends TestCase {
 	public void testRunThreaded() {
 		deviceNode.runThreaded();
 		assertTrue(deviceNode.isThreaded());
+		try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
+		/** Check machine load. Must not be at ~100% */
 	}
 
 	@Test
@@ -34,10 +36,25 @@ public class DeviceNodeTest extends TestCase {
 		assertNotNull(deviceNode);
 		
 		testRunThreaded();
-		
+			
 		testShutdown();
 	}
 
+	@Test
+	public void testDeviceNodeAddDevices() {
+		deviceNode = new DeviceNode("localhost", 6665);
+		assertNotNull(deviceNode);
+		
+		DeviceNode devNode2 = new DeviceNode("localhost", 6666);
+		assertNotNull(devNode2);
+		
+		deviceNode.addDevicesOf(devNode2);
+
+		testRunThreaded();
+
+		testShutdown();
+	}
+	
 	@Test
 	public void testDeviceNodePlayerClient() {
 		

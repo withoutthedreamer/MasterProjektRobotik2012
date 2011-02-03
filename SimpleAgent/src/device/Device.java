@@ -112,15 +112,17 @@ public class Device implements IDevice, Runnable
 		{
 			update();
 			
-			if (SLEEPTIME == 0)
-			{
-				Thread.yield();
-			}
-			else
+			if (SLEEPTIME > 0)
 			{
 				try { Thread.sleep ( SLEEPTIME ); }
 				catch (InterruptedException e) { thread.interrupt(); }
 			}
+			else
+				if (SLEEPTIME == 0)
+				{
+					Thread.yield();
+				}
+				// else if (SLEEPTIME < 0) do nothing				
 		}
 		isRunning = false;    // sync with setNotThreaded
 		Logger.logDeviceActivity(false, "Shutdown", this);

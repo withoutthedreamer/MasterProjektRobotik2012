@@ -37,7 +37,7 @@ public class Simulation extends RobotDevice {
 		objList = new ConcurrentHashMap<String, Position>();	
 		isDirtyList = new ConcurrentHashMap<String, Boolean>();
 		
-		setSleepTime(0);
+//		setSleepTime(1000);
 	}
 	/**
 	 * Returns a Singleton instance of the Gui
@@ -81,15 +81,15 @@ public class Simulation extends RobotDevice {
 				Position pos = (Position)me.getValue();
 				PlayerPose pp = new PlayerPose(pos.getX(), pos.getY(), pos.getYaw());
 				
-//				while ( ! this.simu.isDataReady() ) { // TODO debug it
+//				while ( ! ((javaclient3.SimulationInterface) device).isDataReady() );// { // TODO debug it
 				((javaclient3.SimulationInterface) device).set2DPose(key, pp);
-				try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
+//				try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
 			}
 			else
 			{
 				((javaclient3.SimulationInterface) device).get2DPose (key);
 				
-				try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
+//				try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
 				
 				if (((javaclient3.SimulationInterface) device).isPose2DReady())
 				{
@@ -103,11 +103,9 @@ public class Simulation extends RobotDevice {
 					
 				}
 			}
+			/** Wait for simulation sync before updating a new object */
 			try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
 		}
-//		if (i.hasNext() != true) {
-//			i = set.iterator();
-//		}
 	}
 
 	/**
