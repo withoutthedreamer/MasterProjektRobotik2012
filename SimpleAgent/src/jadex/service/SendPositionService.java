@@ -52,7 +52,7 @@ public class SendPositionService extends BasicService implements ISendPositionSe
 	 *  @param name The name.
 	 *  @param text The text.
 	 */
-	public void send(final String name, final Object obj)
+	public void send(final String name,final String robotName, final Object obj)
 	{
 		SServiceProvider.getServices(agent.getServiceProvider(), ISendPositionService.class, true, true)
 			.addResultListener(new DefaultResultListener()
@@ -65,7 +65,7 @@ public class SendPositionService extends BasicService implements ISendPositionSe
 					for(Iterator it=((Collection)result).iterator(); it.hasNext(); )
 					{
 						ISendPositionService ts = (ISendPositionService)it.next();
-						ts.receive(name, obj);
+						ts.receive(name, robotName, obj);
 					}
 				}
 			}
@@ -78,12 +78,12 @@ public class SendPositionService extends BasicService implements ISendPositionSe
 	 *  @param text The text.
 	 */
 	@SuppressWarnings("unchecked")
-	public void receive(String name, Object obj)
+	public void receive(String name, String robotName, Object obj)
 	{
 		IChangeListener[] lis = (IChangeListener[])listeners.toArray(new IChangeListener[0]);
 		for(int i=0; i<lis.length; i++)
 		{
-			lis[i].changeOccurred(new ChangeEvent(this, null, new Object[]{name, obj}));
+			lis[i].changeOccurred(new ChangeEvent(this, null, new Object[]{name, robotName, obj}));
 		}
 	}
 	

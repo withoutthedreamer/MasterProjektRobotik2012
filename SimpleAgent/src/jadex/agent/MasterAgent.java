@@ -62,7 +62,7 @@ public class MasterAgent extends MicroAgent {
 					{
 						Object[] content = (Object[])event.getValue();
 						StringBuffer buf = new StringBuffer();
-						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString());
+						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2]);
 						
 						Logger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
 					}

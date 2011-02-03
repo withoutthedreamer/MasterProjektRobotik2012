@@ -11,8 +11,9 @@ public interface ISendPositionService extends IService
 	/**
 	 *  Hear something.
 	 *  @param name The name of the sender.
+	 *  @param robotName 
 	 *  @param text The text message.
 	 */
-	public void receive(String name, Object content);
+	public void receive(String name, String robotName, Object content);
 		
 }

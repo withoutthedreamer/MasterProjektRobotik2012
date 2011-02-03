@@ -125,7 +125,7 @@ public class Simulation extends RobotDevice {
 	 */
 	public synchronized void setPositionOf(String key, Position value)
 	{
-		objList.put(key, value);
+		objList.put(key, new Position(value));
 		// Mark dirty
 		isDirtyList.put(key, true);
 	}
@@ -137,7 +137,7 @@ public class Simulation extends RobotDevice {
 	// TODO test and make asynchronous
 	// TODO not working yet
 	public synchronized Position getPositionOf(String key) {
-		return objList.get(key);
+		return new Position(objList.get(key));
 	}
 	public synchronized void initPositionOf(String key) {
 		objList.put(key, new Position());

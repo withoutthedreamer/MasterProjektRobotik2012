@@ -65,7 +65,7 @@ public class TestNavAgent extends MicroAgent
 		{			
 			public Object execute(IInternalAccess args)
 			{
-				ps.send(getComponentIdentifier().toString(), new Position(-6,-6,-6));
+				ps.send(getComponentIdentifier().toString(), "dummy", new Position(-6,-6,-6));
 				Logger.logActivity(false, "Send position", getComponentIdentifier().toString(), -1, null);
 
 				waitFor(1000, this);

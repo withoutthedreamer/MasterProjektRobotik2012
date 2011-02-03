@@ -36,6 +36,8 @@ public class Robot extends Device implements IRobot {
 	Position goal = null;
 
 	StateType currentState;
+	
+	String robotId = null;
 
 	public Robot(){
 		position = new Position();
@@ -52,6 +54,14 @@ public class Robot extends Device implements IRobot {
 		connectDevices(roboDevices.getDeviceList());
 	}
 	
+	public String getRobotId() {
+		return robotId;
+	}
+
+	public void setRobotId(String name) {
+		this.robotId = name;
+	}
+
 	/**
 	 * Initiate standard variables to this robot for the devices
 	 * Note that if there are duplicate devices in the list
@@ -153,6 +163,10 @@ public class Robot extends Device implements IRobot {
 				posi.setPosition(newPosition);
 			else
 				position.setPosition(newPosition);
+		
+		/** Is the robot simulated ? */
+		if (robotId != null && simu != null)
+			simu.setPositionOf(robotId, newPosition);
 	}
 
 	/**

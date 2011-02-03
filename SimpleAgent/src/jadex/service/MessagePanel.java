@@ -193,7 +193,7 @@ public class MessagePanel extends JPanel
 					public Object execute(IInternalAccess ia)
 					{
 						ConsoleAgent ca = (ConsoleAgent)ia;
-						ca.getSendPositionService().send(""+agent.getComponentIdentifier(), tf.getText());
+						ca.getSendPositionService().send(""+agent.getComponentIdentifier(),"dummy", tf.getText());
 						tf.setText("");
 						return null;
 					}

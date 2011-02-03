@@ -43,8 +43,9 @@ public class NavAgent extends MicroAgent
 		deviceNode.runThreaded();
 
 		robot = new NavRobot(deviceNode);
+		robot.setRobotId((String)getArgument("robot name"));
 //		robot.runThreaded();
-		robot.setPosition(new Position(-6, -5, Math.toRadians(90)));
+		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), (Double)getArgument("Yaw")));
 		
 		hs.send(getComponentIdentifier().toString(), "Hello");
 		Logger.logActivity(false, "Hello", getComponentIdentifier().toString(), -1, null);
@@ -80,7 +81,7 @@ public class NavAgent extends MicroAgent
 			public Object execute(IInternalAccess args)
 			{
 				curPos = robot.getPosition();
-				ps.send(getComponentIdentifier().toString(), curPos);
+				ps.send(getComponentIdentifier().toString(), robot.getRobotId(), curPos);
 				Logger.logActivity(false, "Send position", getComponentIdentifier().toString(), -1, null);
 
 				waitFor(1000, this);
@@ -106,10 +107,15 @@ public class NavAgent extends MicroAgent
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
 		IArgument[] args = {
-				new Argument("requires player", "dummy", "Boolean", new Boolean(false)),
-				new Argument("player path", "dummy", "String", ""),
-				new Argument("port", "dummy", "Integer", new Integer(6665)),	
-				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/planner2.cfg")};
+//				new Argument("requires player", "dummy", "Boolean", new Boolean(false)),
+//				new Argument("player path", "dummy", "String", ""),
+				new Argument("port", "dummy", "Integer", new Integer(6665)),
+				new Argument("robot name", "dummy", "String", "r0"),
+				new Argument("X", "dummy", "Double", new Double(-6)),
+				new Argument("Y", "dummy", "Double", new Double(-5)),
+				new Argument("Yaw", "dummy", "Double", new Double(Math.toRadians(90)))
+//				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/planner2.cfg")
+		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a navigation agent.", null, args, null);
 	}
