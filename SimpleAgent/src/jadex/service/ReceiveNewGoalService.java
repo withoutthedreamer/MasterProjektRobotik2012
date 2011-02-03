@@ -7,7 +7,6 @@ import jadex.commons.concurrent.DefaultResultListener;
 import jadex.commons.service.BasicService;
 import jadex.commons.service.SServiceProvider;
 import jadex.micro.IMicroExternalAccess;
-import jadex.commons.service.IService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +20,7 @@ import java.util.List;
  * @author sebastian
  *
  */
-public class ReceiveNewGoalService extends BasicService implements IService {
+public class ReceiveNewGoalService extends BasicService implements IReceiveNewGoalService {
 
 //-------- attributes --------
 	
@@ -40,7 +39,7 @@ public class ReceiveNewGoalService extends BasicService implements IService {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public ReceiveNewGoalService(IExternalAccess agent)
 	{
-		super(agent.getServiceProvider().getId(), IService.class, null);
+		super(agent.getServiceProvider().getId(), IReceiveNewGoalService.class, null);
 		this.agent = (IMicroExternalAccess)agent;
 		this.listeners = Collections.synchronizedList(new ArrayList());
 	}
@@ -53,7 +52,7 @@ public class ReceiveNewGoalService extends BasicService implements IService {
 	 */
 	public void send(final String name, final Object obj)
 	{
-		SServiceProvider.getServices(agent.getServiceProvider(), ReceiveNewGoalService.class, true, true)
+		SServiceProvider.getServices(agent.getServiceProvider(), IReceiveNewGoalService.class, true, true)
 			.addResultListener(new DefaultResultListener()
 		{
 			@SuppressWarnings("rawtypes")
@@ -63,7 +62,7 @@ public class ReceiveNewGoalService extends BasicService implements IService {
 				{
 					for(Iterator it=((Collection)result).iterator(); it.hasNext(); )
 					{
-						ReceiveNewGoalService ts = (ReceiveNewGoalService)it.next();
+						IReceiveNewGoalService ts = (IReceiveNewGoalService)it.next();
 						ts.receive(name, obj);
 					}
 				}

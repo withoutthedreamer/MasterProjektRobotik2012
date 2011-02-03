@@ -1,4 +1,4 @@
-package jadex;
+package jadex.agent;
 
 import java.util.Vector;
 
@@ -14,8 +14,9 @@ import jadex.bridge.IArgument;
 import jadex.bridge.IComponentStep;
 import jadex.bridge.IInternalAccess;
 import jadex.micro.MicroAgentMetaInfo;
+import jadex.micro.MicroAgent;
 
-public class ViewAgent extends PlayerAgent {
+public class ViewAgent extends MicroAgent {
 
 	protected OSCommand startPlayer = null;
 	protected static String port = "6600";
@@ -33,7 +34,7 @@ public class ViewAgent extends PlayerAgent {
 	public void agentCreated()
 	{
 		super.agentCreated();
-		deviceNode = new DeviceNode("localhost", 6600);
+		deviceNode = new DeviceNode("localhost", (Integer)getArgument("port"));
 		deviceNode.runThreaded();
 
 //		tracker = Tracker.getInstance(simu, null);
@@ -54,8 +55,7 @@ public class ViewAgent extends PlayerAgent {
 		{
 			public Object execute(IInternalAccess args)
 			{
-//				simu = Simulation.getInstance("localhost", 6600);
-				simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, 6600, -1));; 
+				simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));; 
 				return null;
 			}
 		});
@@ -85,16 +85,15 @@ public class ViewAgent extends PlayerAgent {
 	}
 	@Override
 	public void agentKilled() {
-		
-		simu.shutdown();
 		super.agentKilled();
+		deviceNode.shutdown();
 	}
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
 		IArgument[] args = {
 				new Argument("requires player", "dummy", "Boolean", new Boolean(true)),
-				new Argument("player path", "dummy", "String", playerPath),
-				new Argument("player port", "dummy", "Integer", new Integer(port)),	
+//				new Argument("player path", "dummy", "String", playerPath),
+				new Argument("port", "dummy", "Integer", new Integer(port)),	
 				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg")};
 		
 		return new MicroAgentMetaInfo("This agent starts up a Player agent.", null, args, null);

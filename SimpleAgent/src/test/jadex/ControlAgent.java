@@ -1,4 +1,4 @@
-package jadex;
+package test.jadex;
 
 import jadex.base.fipa.SFipa;
 import jadex.bridge.Argument;

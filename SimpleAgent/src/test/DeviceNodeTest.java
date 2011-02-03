@@ -32,7 +32,8 @@ public class DeviceNodeTest extends TestCase {
 
 	@Test
 	public void testDeviceNodeObjectArray() {
-		deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666});
+//		deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666});
+		deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666, "localhost",6667});
 		assertNotNull(deviceNode);
 		
 		testRunThreaded();

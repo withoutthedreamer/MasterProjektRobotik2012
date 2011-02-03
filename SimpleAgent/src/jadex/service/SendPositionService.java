@@ -7,7 +7,6 @@ import jadex.commons.concurrent.DefaultResultListener;
 import jadex.commons.service.BasicService;
 import jadex.commons.service.SServiceProvider;
 import jadex.micro.IMicroExternalAccess;
-import jadex.commons.service.IService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,7 +22,7 @@ import java.util.List;
  * @author sebastian
  *
  */
-public class SendPositionService extends BasicService implements IService {
+public class SendPositionService extends BasicService implements ISendPositionService {
 
 //-------- attributes --------
 	
@@ -42,7 +41,7 @@ public class SendPositionService extends BasicService implements IService {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public SendPositionService(IExternalAccess agent)
 	{
-		super(agent.getServiceProvider().getId(), IService.class, null);
+		super(agent.getServiceProvider().getId(), ISendPositionService.class, null);
 		this.agent = (IMicroExternalAccess)agent;
 		this.listeners = Collections.synchronizedList(new ArrayList());
 	}
@@ -55,7 +54,7 @@ public class SendPositionService extends BasicService implements IService {
 	 */
 	public void send(final String name, final Object obj)
 	{
-		SServiceProvider.getServices(agent.getServiceProvider(), SendPositionService.class, true, true)
+		SServiceProvider.getServices(agent.getServiceProvider(), ISendPositionService.class, true, true)
 			.addResultListener(new DefaultResultListener()
 		{
 			@SuppressWarnings("rawtypes")
@@ -65,7 +64,7 @@ public class SendPositionService extends BasicService implements IService {
 				{
 					for(Iterator it=((Collection)result).iterator(); it.hasNext(); )
 					{
-						SendPositionService ts = (SendPositionService)it.next();
+						ISendPositionService ts = (ISendPositionService)it.next();
 						ts.receive(name, obj);
 					}
 				}

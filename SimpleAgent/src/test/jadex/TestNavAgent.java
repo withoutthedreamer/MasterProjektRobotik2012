@@ -1,4 +1,4 @@
-package jadex.agent;
+package test.jadex;
 
 import core.Logger;
 import jadex.bridge.*;
@@ -10,22 +10,15 @@ import jadex.service.HelloService;
 import jadex.service.ReceiveNewGoalService;
 import jadex.service.SendPositionService;
 import data.Position;
-import device.DeviceNode;
-import robot.NavRobot;
 
-public class NavAgent extends MicroAgent
+public class TestNavAgent extends MicroAgent
 {
 
 	/** Services */
 	HelloService hs = null;
 	SendPositionService ps = null;
 	ReceiveNewGoalService gs = null;
-	
-	DeviceNode deviceNode = null;
-	NavRobot robot = null;
-	Position curPos = null;
-	
-	
+		
 	@Override
 	public void agentCreated()
 	{
@@ -33,30 +26,23 @@ public class NavAgent extends MicroAgent
 		ps = new SendPositionService(getExternalAccess());
 		gs = new ReceiveNewGoalService(getExternalAccess());
 
+		assert(hs != null && gs != null && ps != null);
+		
 		addDirectService(hs);
 		addDirectService(ps);
 		addDirectService(gs);
 
 		Integer port = (Integer)getArgument("port");
-		// Get the device node
-		deviceNode = new DeviceNode(new Object[] {"localhost",port, "localhost",port+1});
-		deviceNode.runThreaded();
-
-		robot = new NavRobot(deviceNode);
-//		robot.runThreaded();
-		robot.setPosition(new Position(-6, -5, Math.toRadians(90)));
+		
+		System.err.println("Got port: "+port);
 		
 		hs.send(getComponentIdentifier().toString(), "Hello");
-		Logger.logActivity(false, "Hello", getComponentIdentifier().toString(), -1, null);
+		Logger.logActivity(false, "sent Hello", getComponentIdentifier().toString(), -1, null);
 	}
 
 	@Override
 	public void executeBody()
 	{
-		if (robot == null) {
-			killAgent();
-		}
-
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -79,8 +65,7 @@ public class NavAgent extends MicroAgent
 		{			
 			public Object execute(IInternalAccess args)
 			{
-				curPos = robot.getPosition();
-				ps.send(getComponentIdentifier().toString(), curPos);
+				ps.send(getComponentIdentifier().toString(), new Position(-6,-6,-6));
 				Logger.logActivity(false, "Send position", getComponentIdentifier().toString(), -1, null);
 
 				waitFor(1000, this);
@@ -92,10 +77,8 @@ public class NavAgent extends MicroAgent
 	@Override
 	public void agentKilled() {
 		
-		robot.shutdown();
-		deviceNode.shutdown();
-		
 		hs.send(getComponentIdentifier().toString(), "Bye");
+		Logger.logActivity(false, "sent Bye", getComponentIdentifier().toString(), -1, null);
 
 	}
 	

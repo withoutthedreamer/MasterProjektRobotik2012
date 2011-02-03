@@ -1,4 +1,4 @@
-package jadex.agent;
+package test.jadex;
 
 import jadex.bridge.IArgument;
 import jadex.commons.SUtil;

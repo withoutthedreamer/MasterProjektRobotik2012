@@ -7,7 +7,6 @@ import jadex.commons.concurrent.DefaultResultListener;
 import jadex.commons.service.BasicService;
 import jadex.commons.service.SServiceProvider;
 import jadex.micro.IMicroExternalAccess;
-import jadex.commons.service.IService;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +24,7 @@ import java.util.List;
  * @author sebastian
  *
  */
-public class HelloService extends BasicService implements IService {
+public class HelloService extends BasicService implements IHelloService {
 
 //-------- attributes --------
 	
@@ -44,7 +43,7 @@ public class HelloService extends BasicService implements IService {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public HelloService(IExternalAccess agent)
 	{
-		super(agent.getServiceProvider().getId(), IService.class, null);
+		super(agent.getServiceProvider().getId(), IHelloService.class, null);
 		this.agent = (IMicroExternalAccess)agent;
 		this.listeners = Collections.synchronizedList(new ArrayList());
 	}
@@ -57,7 +56,7 @@ public class HelloService extends BasicService implements IService {
 	 */
 	public void send(final String name, final Object obj)
 	{
-		SServiceProvider.getServices(agent.getServiceProvider(), HelloService.class, true, true)
+		SServiceProvider.getServices(agent.getServiceProvider(), IHelloService.class, true, true)
 			.addResultListener(new DefaultResultListener()
 		{
 			@SuppressWarnings("rawtypes")
@@ -67,7 +66,7 @@ public class HelloService extends BasicService implements IService {
 				{
 					for(Iterator it=((Collection)result).iterator(); it.hasNext(); )
 					{
-						HelloService hs = (HelloService)it.next();
+						IHelloService hs = (IHelloService)it.next();
 						hs.receive(name, obj);
 					}
 				}
