@@ -4,6 +4,7 @@ public class BoardObject {
 	
 	Goal goal;
 	double distanceGoal;
+	String name;
 	
 	public BoardObject(){}
 	
@@ -25,6 +26,14 @@ public class BoardObject {
 
 	public void setGoal(Goal goal) {
 		this.goal = goal;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

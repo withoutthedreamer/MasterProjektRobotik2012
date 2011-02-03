@@ -1,4 +1,4 @@
-package jadex;
+package test.jadex;
 
 import data.Board;
 import jadex.bridge.Argument;

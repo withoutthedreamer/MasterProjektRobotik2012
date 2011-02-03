@@ -48,7 +48,7 @@ public class NavAgent extends MicroAgent
 //		robot.runThreaded();
 		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), (Double)getArgument("Yaw")));
 		
-		hs.send(getComponentIdentifier().toString(), "Hello");
+		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Hello");
 		Logger.logActivity(false, "Hello", getComponentIdentifier().toString(), -1, null);
 	}
 
@@ -100,7 +100,7 @@ public class NavAgent extends MicroAgent
 		robot.shutdown();
 		deviceNode.shutdown();
 		
-		hs.send(getComponentIdentifier().toString(), "Bye");
+		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Bye");
 
 	}
 	

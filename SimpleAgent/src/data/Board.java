@@ -1,5 +1,6 @@
 package data;
 
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -23,6 +24,15 @@ public class Board
 	
 	/**
 	 * 
+	 * @param key
+	 * @return The @ref BoardObject for the key or null if not found on the board.
+	 */
+	public BoardObject getObject(String key) {
+		return objectHm.get(key);
+	}
+	
+	/**
+	 * 
 	 * @param key @ref BoardObject identifier.
 	 * @return Previous @ref BoardObject or null if it was not found.
 	 */
@@ -37,4 +47,7 @@ public class Board
 		objectHm.clear();
 	}
 	
+//	public Iterator<BoardObject> getIterator () {
+//		return objectHm.entrySet().iterator();
+//	}
 }
