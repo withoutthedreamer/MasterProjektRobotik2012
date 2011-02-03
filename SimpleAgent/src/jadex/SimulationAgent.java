@@ -1,6 +1,5 @@
-package jadex.agent;
+package jadex;
 
-import jadex.PlayerAgent;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.micro.MicroAgentMetaInfo;

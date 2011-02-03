@@ -54,7 +54,7 @@ public class NavAgent extends MicroAgent
 	@Override
 	public void executeBody()
 	{
-		if (robot == null) {
+		if (robot == null || deviceNode == null) {
 			killAgent();
 		}
 
@@ -82,7 +82,7 @@ public class NavAgent extends MicroAgent
 			{
 				curPos = robot.getPosition();
 				ps.send(getComponentIdentifier().toString(), robot.getRobotId(), curPos);
-				Logger.logActivity(false, "Send position", getComponentIdentifier().toString(), -1, null);
+//				Logger.logActivity(false, "Send position", getComponentIdentifier().toString(), -1, null);
 
 				waitFor(1000, this);
 				return null;
