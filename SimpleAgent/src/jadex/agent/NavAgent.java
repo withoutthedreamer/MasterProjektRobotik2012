@@ -24,6 +24,7 @@ public class NavAgent extends MicroAgent
 	DeviceNode deviceNode = null;
 	NavRobot robot = null;
 	Position curPos = null;
+	Position lastPos = null;
 	
 	
 	@Override
@@ -81,8 +82,11 @@ public class NavAgent extends MicroAgent
 			public Object execute(IInternalAccess args)
 			{
 				curPos = robot.getPosition();
-				ps.send(getComponentIdentifier().toString(), robot.getRobotId(), curPos);
-//				Logger.logActivity(false, "Send position", getComponentIdentifier().toString(), -1, null);
+				if(curPos.equals(lastPos) == false) {
+					ps.send(getComponentIdentifier().toString(), robot.getRobotId(), curPos);
+//					Logger.logActivity(false, "Send position", getComponentIdentifier().toString(), -1, null);
+					lastPos = curPos;
+				}
 
 				waitFor(1000, this);
 				return null;

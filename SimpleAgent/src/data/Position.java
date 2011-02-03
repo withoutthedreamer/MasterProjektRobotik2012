@@ -86,6 +86,9 @@ public class Position {
 	 * @return true if @ref Position matches exactly, false otherwise.
 	 */
 	public boolean equals (Position pose) {
+		if (pose == null)
+			return false;
+		
 		if (x == pose.getX() &&
 			y == pose.getY() &&
 			yaw == pose.getYaw())
