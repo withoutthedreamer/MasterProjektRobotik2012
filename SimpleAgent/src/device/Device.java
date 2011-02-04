@@ -115,7 +115,10 @@ public class Device implements IDevice, Runnable
 			if (SLEEPTIME > 0)
 			{
 				try { Thread.sleep ( SLEEPTIME ); }
-				catch (InterruptedException e) { thread.interrupt(); }
+				catch (InterruptedException e) {
+//					thread.interrupt();
+					isThreaded = false;
+				}
 			}
 			else
 				if (SLEEPTIME == 0)
@@ -125,6 +128,7 @@ public class Device implements IDevice, Runnable
 				// else if (SLEEPTIME < 0) do nothing				
 		}
 		isRunning = false;    // sync with setNotThreaded
+		// TODO java.lang.Error: Interrupted attempt to aquire write lock
 		Logger.logDeviceActivity(false, "Shutdown", this);
 	}
 	public synchronized void shutdown()
@@ -136,8 +140,8 @@ public class Device implements IDevice, Runnable
             try { Thread.sleep (10); } catch (Exception e) { }
 		}
 		
-		thread.interrupt();
-		while (thread.isAlive());
+//		thread.interrupt();
+//		while (thread.isAlive());
 		
 		// Stop all devices
 		if (deviceList.size() > 0) {
@@ -146,8 +150,8 @@ public class Device implements IDevice, Runnable
 				Device device = deviceIterator.next();
 				
 				// Stop device
-				device.thread.interrupt();
-				while (device.thread.isAlive());
+//				device.thread.interrupt();
+//				while (device.thread.isAlive());
 				device.shutdown();
 			}
 			// empty device list

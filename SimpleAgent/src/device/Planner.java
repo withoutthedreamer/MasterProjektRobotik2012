@@ -71,9 +71,11 @@ public class Planner extends RobotDevice
 				} else {
 					PlayerPose poseTemp = ppd.getPos();
 					// Update current position belief
-					curPosition.setX(poseTemp.getPx());
-					curPosition.setY(poseTemp.getPy());
-					curPosition.setYaw(poseTemp.getPa());
+					if (poseTemp != null) {
+						curPosition.setX(poseTemp.getPx());
+						curPosition.setY(poseTemp.getPy());
+						curPosition.setYaw(poseTemp.getPa());
+					}
 //					ppd.setPos(poseTemp);
 				}
 			}

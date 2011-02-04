@@ -34,9 +34,11 @@ public class Position {
 	}
 
 	public void setPosition (Position pos) {
-		this.x = pos.getX();
-		this.y = pos.getY();
-		this.yaw = pos.getYaw();
+		if (pos != null) {
+			this.x = pos.getX();
+			this.y = pos.getY();
+			this.yaw = pos.getYaw();
+		}
 	}
 	public void setPosition (double xv,double yv,double av){
 		this.x = xv;
