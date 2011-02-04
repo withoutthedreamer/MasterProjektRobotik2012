@@ -74,7 +74,7 @@ public class Planner extends RobotDevice
 					curPosition.setX(poseTemp.getPx());
 					curPosition.setY(poseTemp.getPy());
 					curPosition.setYaw(poseTemp.getPa());
-					ppd.setPos(poseTemp);
+//					ppd.setPos(poseTemp);
 				}
 			}
 			// update goal

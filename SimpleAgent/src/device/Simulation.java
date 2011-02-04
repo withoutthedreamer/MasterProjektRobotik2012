@@ -94,10 +94,14 @@ public class Simulation extends RobotDevice {
 				if (((javaclient3.SimulationInterface) device).isPose2DReady())
 				{
 					PlayerSimulationPose2dReq pose = ((javaclient3.SimulationInterface) device).getSimulationPose2D();
+					PlayerPose pPose = pose.getPose();
 					Position curPose = new Position(
-							pose.getPose().getPx(),
-							pose.getPose().getPy(),
-							pose.getPose().getPa());
+//							pose.getPose().getPx(),
+							pPose.getPx(),
+//							pose.getPose().getPy(),
+							pPose.getPy(),
+//							pose.getPose().getPa());
+							pPose.getPa());
 					objList.put(key, curPose);
 //					System.err.println(key + ": " + curPose.toString());
 					
