@@ -25,8 +25,8 @@ define bobsgripper gripper
 
 define robot fancypioneer2dx
 (		  
-  laser240( pose [0.13 0 -0.2 0] )
-  #utm30lx( pose [0.13 0 -0.2 0] ) 
+  laser240( pose [0.13 0 0 0] )
+  #utm30lx( pose [0.13 0 0 0] ) 
   platte()
   laptop()
   bobsblobfinder()

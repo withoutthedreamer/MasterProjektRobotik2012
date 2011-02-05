@@ -12,6 +12,6 @@ define utm30lx ranger
   model (
     color "blue"
     size [ 0.05 0.05 0.1 ]	
-    #pose [ 0.13 0 -0.2 0 ] # to be set in robot definition
+    pose [ 0 0 -0.2 0 ] # to be set in robot definition
   )
 )
