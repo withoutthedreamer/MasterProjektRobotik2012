@@ -1,5 +1,7 @@
 package jadex.agent;
 
+import java.util.logging.Logger;
+
 import core.ProjectLogger;
 import jadex.bridge.*;
 import jadex.commons.ChangeEvent;
@@ -15,6 +17,8 @@ import robot.NavRobot;
 
 public class NavAgent extends MicroAgent
 {
+	// Logging support
+    private static Logger logger = Logger.getLogger (ProjectLogger.class.getName ());
 
 	/** Services */
 	HelloService hs = null;
@@ -48,8 +52,9 @@ public class NavAgent extends MicroAgent
 //		robot.runThreaded();
 		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), (Double)getArgument("Yaw")));
 		
-		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Hello");
-		ProjectLogger.logActivity(false, "Hello", getComponentIdentifier().toString(), -1, null);
+		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), ": Hello");
+//		ProjectLogger.logActivity(false, "Hello", getComponentIdentifier().toString(), -1, null);
+		logger.info("Sent Hello "+getComponentIdentifier().toString());
 	}
 
 	@Override
@@ -71,7 +76,8 @@ public class NavAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString());
 						
-						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
+//						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
+						logger.finer("Receiving "+buf.toString()+" "+getComponentIdentifier().toString());
 					}
 				});
 				return null;
@@ -85,6 +91,7 @@ public class NavAgent extends MicroAgent
 				if(curPos.equals(lastPos) == false) {
 					ps.send(getComponentIdentifier().toString(), robot.getRobotId(), curPos);
 //					Logger.logActivity(false, "Send position", getComponentIdentifier().toString(), -1, null);
+					logger.finer("Sending position "+getComponentIdentifier().toString());
 					lastPos = curPos;
 				}
 
@@ -101,7 +108,7 @@ public class NavAgent extends MicroAgent
 		deviceNode.shutdown();
 		
 		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Bye");
-
+		logger.info("Bye "+getComponentIdentifier());
 	}
 	
 	public HelloService getHelloService() { return hs; }

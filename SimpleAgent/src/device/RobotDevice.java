@@ -1,11 +1,15 @@
 package device;
 
-import core.ProjectLogger;
+import java.util.logging.Logger;
+
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
 
 public class RobotDevice extends Device
 {
+	// Logging support
+    private static Logger logger = Logger.getLogger (RobotDevice.class.getName ());
+
 	javaclient3.PlayerDevice device = null;
 
 	public RobotDevice () {}
@@ -20,7 +24,8 @@ public class RobotDevice extends Device
 		}
 		catch ( PlayerException e )
 		{
-			ProjectLogger.logDeviceActivity(true, "Connecting", this);
+//			ProjectLogger.logDeviceActivity(true, "Connecting", this);
+			logger.severe("Connecting");
 			throw new IllegalStateException();
 		}
 

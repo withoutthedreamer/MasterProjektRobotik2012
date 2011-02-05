@@ -1,9 +1,11 @@
 package jadex.agent;
 
-import core.ProjectLogger;
+import java.util.logging.Logger;
+
 import data.Board;
 import data.BoardObject;
 import data.Position;
+import device.Device;
 import jadex.bridge.IComponentStep;
 import jadex.bridge.IInternalAccess;
 import jadex.commons.ChangeEvent;
@@ -11,7 +13,10 @@ import jadex.commons.IChangeListener;
 import jadex.micro.*;
 import jadex.service.*;
 
-public class MasterAgent extends MicroAgent {
+public class MasterAgent extends MicroAgent
+{
+	// Logging support
+    private static Logger logger = Logger.getLogger (Device.class.getName ());
 	
 	/* Services */
 	HelloService hs = null;
@@ -36,7 +41,8 @@ public class MasterAgent extends MicroAgent {
 		addDirectService(gs);
 		
 		hs.send(getComponentIdentifier().toString(), "dummy", "Hello");
-		ProjectLogger.logActivity(false, "sent Hello", getComponentIdentifier().toString(), -1, null);
+//		ProjectLogger.logActivity(false, "sent Hello", getComponentIdentifier().toString(), -1, null);
+		logger.info("Sent Hello "+getComponentIdentifier().toString());
 	}
 
 	@Override
@@ -53,7 +59,8 @@ public class MasterAgent extends MicroAgent {
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2].toString());
 						
-						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
+//						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
+						logger.info("Receiving "+buf.toString()+", I am "+getComponentIdentifier().toString());
 						
 						if (board.getObject((String)content[1]) == null) {
 							board.addObject((String)content[1], new BoardObject());
@@ -75,7 +82,9 @@ public class MasterAgent extends MicroAgent {
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2]);
 						
-						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
+//						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
+//						logger.info("Receiving "+buf.toString()+" "+getComponentIdentifier().toString());
+						logger.finer("Receiving "+buf.toString()+" "+getComponentIdentifier().toString());
 					}
 				});
 				return null;
@@ -107,7 +116,8 @@ public class MasterAgent extends MicroAgent {
 		board.clear();
 
 		hs.send(getComponentIdentifier().toString(), "dummy", "Bye");
-		ProjectLogger.logActivity(false, "sent Bye", getComponentIdentifier().toString(), -1, null);
+//		ProjectLogger.logActivity(false, "sent Bye", getComponentIdentifier().toString(), -1, null);
+		logger.info("Sent bye "+getComponentIdentifier().toString());
 	}
 
 	public HelloService getHelloService() { return hs; }

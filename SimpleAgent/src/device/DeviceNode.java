@@ -1,6 +1,5 @@
 package device;
 
-import core.ProjectLogger;
 import javaclient3.PlayerClient;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
@@ -9,6 +8,7 @@ import javaclient3.structures.player.PlayerDeviceDevlist;
 
 import java.util.Iterator;
 import java.util.concurrent.*;
+import java.util.logging.Logger;
 
 /**
  * Client API to the robot server.
@@ -18,6 +18,9 @@ import java.util.concurrent.*;
  *
  */
 public class DeviceNode extends Device {
+
+	// Logging support
+    private static Logger logger = Logger.getLogger (DeviceNode.class.getName ());
 
 	/** A list of all connected robot clients of this node */
 	CopyOnWriteArrayList<PlayerClient> playerClientList = null;
@@ -90,7 +93,8 @@ public class DeviceNode extends Device {
 		}
 		catch (PlayerException e)
 		{
-			ProjectLogger.logDeviceActivity(true, "Connecting", this);
+//			ProjectLogger.logDeviceActivity(true, "Connecting", this);
+			logger.severe("Connecting");
 			throw new IllegalStateException();
 		}		
 	}

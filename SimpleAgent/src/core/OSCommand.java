@@ -1,9 +1,13 @@
 package core;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 public class OSCommand implements Runnable{
 	
+	// Logging support
+    private static Logger logger = Logger.getLogger (ProjectLogger.class.getName ());
+
 	protected String[] command = null;
 	protected Process process = null;
 	
@@ -19,9 +23,11 @@ public class OSCommand implements Runnable{
 			// Automatically start own thread in constructor
 			thread.start();
 
-			ProjectLogger.logActivity(false, "Running", this.toString(), -1, thread.getName());
+//			ProjectLogger.logActivity(false, "Running", this.toString(), -1, thread.getName());
+			logger.info("Running "+this.getClass().toString()+" in "+thread.getName());
 		} else {
-			ProjectLogger.logActivity(true, "Null command", this.toString(), -1, thread.getName());
+//			ProjectLogger.logActivity(true, "Null command", this.toString(), -1, thread.getName());
+			logger.warning("Null command "+this.getClass().toString()+" in "+thread.getName());
 		}
 	}
 
@@ -57,7 +63,8 @@ public class OSCommand implements Runnable{
 
 	@Override
 	public void run() {
-		ProjectLogger.logActivity(false, exec(command), this.toString(), -1, thread.getName());
+//		ProjectLogger.logActivity(false, exec(command), this.toString(), -1, thread.getName());
+		logger.info(exec(command)+" "+this.getClass().toString()+" in "+thread.getName());
 	}
 	public void terminate() {
 		// orderly termination
@@ -66,7 +73,8 @@ public class OSCommand implements Runnable{
 		if (process != null) {
 			process.destroy();
 		}
-		ProjectLogger.logActivity(false, "Terminating", this.toString(), -1, thread.getName());
+//		ProjectLogger.logActivity(false, "Terminating", this.toString(), -1, thread.getName());
+		logger.info("Terminating "+" "+this.getClass().toString()+" in "+thread.getName());
 	}
 	public boolean isRunning () {
 		return isRunning;

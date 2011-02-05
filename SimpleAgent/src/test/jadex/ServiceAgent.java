@@ -1,5 +1,7 @@
 package test.jadex;
 
+import java.util.logging.Logger;
+
 import core.ProjectLogger;
 import data.Position;
 import jadex.bridge.IComponentStep;
@@ -10,6 +12,9 @@ import jadex.micro.*;
 
 public class ServiceAgent extends MicroAgent {
 	
+	// Logging support
+    private static Logger logger = Logger.getLogger (ProjectLogger.class.getName ());
+
 	protected TestService ts = null;
 
 	@Override
@@ -18,7 +23,8 @@ public class ServiceAgent extends MicroAgent {
 		addDirectService(ts);
 		
 		ts.send(getComponentIdentifier().toString(), getComponentIdentifier().toString() + " started");
-		ProjectLogger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
+//		ProjectLogger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
+		logger.info("Sending "+getComponentIdentifier().toString());
 		
 	}
 
@@ -36,7 +42,8 @@ public class ServiceAgent extends MicroAgent {
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString());
 						
-						ProjectLogger.logActivity(false, "Receiving", getComponentIdentifier().toString(), -1, null);
+//						ProjectLogger.logActivity(false, "Receiving", getComponentIdentifier().toString(), -1, null);
+						logger.info("Receiving "+getComponentIdentifier().toString());
 					}
 				});
 				return null;
@@ -48,7 +55,8 @@ public class ServiceAgent extends MicroAgent {
 	public void agentKilled() {
 		ts.send(getComponentIdentifier().toString(), new Position(-1,-1,0));
 	
-		ProjectLogger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
+//		ProjectLogger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
+		logger.info("Sending "+getComponentIdentifier().toString());
 	}
 
 	public TestService getTestService()
