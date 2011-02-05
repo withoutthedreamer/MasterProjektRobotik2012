@@ -45,8 +45,7 @@ public class PlannerTest extends TestCase {
 		assertEquals(planner.isRunning(), true);
 		assertEquals(planner.isThreaded(), true);
 		
-		planner.cancel();
-		planner.setDebug(true);
+		planner.stop();
 	}
 
 	@Test public void testSetPosition() {
@@ -100,7 +99,7 @@ public class PlannerTest extends TestCase {
 
 	}
 	@Test public void testCancel() {
-		planner.cancel();
+		planner.stop();
 		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 		assertTrue(planner.isDone());
 	}

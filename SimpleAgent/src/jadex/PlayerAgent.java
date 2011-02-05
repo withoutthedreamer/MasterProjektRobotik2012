@@ -1,6 +1,6 @@
 package jadex;
 
-import core.Logger;
+import core.ProjectLogger;
 import core.OSCommand;
 import jadex.bridge.*;
 import jadex.micro.*;
@@ -13,7 +13,7 @@ public class PlayerAgent extends MicroAgent {
 
 	public void agentCreated()
 	{
-		Logger.logActivity(false, "running", this.toString(), port, Thread.currentThread().getName());
+		ProjectLogger.logActivity(false, "running", this.toString(), port, Thread.currentThread().getName());
 		
 		port = ((Integer)getArgument("player port")).intValue();
 
@@ -45,7 +45,7 @@ public class PlayerAgent extends MicroAgent {
 		if (startPlayer != null) {
 			startPlayer.terminate();
 		}
-		Logger.logActivity(false, "Termination", this.toString(), port, Thread.currentThread().getName());
+		ProjectLogger.logActivity(false, "Termination", this.toString(), port, Thread.currentThread().getName());
 	}
 	
 	public static MicroAgentMetaInfo getMetaInfo()

@@ -1,9 +1,15 @@
 package core;
 
+import java.util.logging.Logger;
+
 import device.Device;
 
 // TODO wrap message service
-public class Logger {
+public class ProjectLogger
+{
+    // Logging support
+    private static Logger logger = Logger.getLogger (ProjectLogger.class.getName ());
+
 	/**
 	 * Log an event.
 	 * @param isError
@@ -31,9 +37,9 @@ public class Logger {
 		String logMsg = event + " of " + objName + otherId + threadName;
 
 		if (isError == true) {
-			System.err.println(logMsg);
+			logger.warning(logMsg);
 		} else {
-			System.out.println(logMsg);
+			logger.info(logMsg);
 		}
 	}
 	/**
@@ -55,9 +61,9 @@ public class Logger {
 			+ " in " + threadName;
 
 			if (isError == true) {
-				System.err.println(logMsg);
+				logger.warning(logMsg);
 			} else {
-				System.out.println(logMsg);
+				logger.info(logMsg);
 			}
 		}
 	}

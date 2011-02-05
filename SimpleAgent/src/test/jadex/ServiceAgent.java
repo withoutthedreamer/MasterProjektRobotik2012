@@ -1,6 +1,6 @@
 package test.jadex;
 
-import core.Logger;
+import core.ProjectLogger;
 import data.Position;
 import jadex.bridge.IComponentStep;
 import jadex.bridge.IInternalAccess;
@@ -18,7 +18,7 @@ public class ServiceAgent extends MicroAgent {
 		addDirectService(ts);
 		
 		ts.send(getComponentIdentifier().toString(), getComponentIdentifier().toString() + " started");
-		Logger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
+		ProjectLogger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
 		
 	}
 
@@ -36,7 +36,7 @@ public class ServiceAgent extends MicroAgent {
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString());
 						
-						Logger.logActivity(false, "Receiving", getComponentIdentifier().toString(), -1, null);
+						ProjectLogger.logActivity(false, "Receiving", getComponentIdentifier().toString(), -1, null);
 					}
 				});
 				return null;
@@ -48,7 +48,7 @@ public class ServiceAgent extends MicroAgent {
 	public void agentKilled() {
 		ts.send(getComponentIdentifier().toString(), new Position(-1,-1,0));
 	
-		Logger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
+		ProjectLogger.logActivity(false, "Sending", getComponentIdentifier().toString(), -1, null);
 	}
 
 	public TestService getTestService()

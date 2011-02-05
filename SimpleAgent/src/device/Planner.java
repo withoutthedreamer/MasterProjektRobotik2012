@@ -1,12 +1,20 @@
 package device;
 
+import java.util.logging.Logger;
+
 import data.Position;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.planner.PlayerPlannerData;
 
 public class Planner extends RobotDevice
 {
-	protected Position goal = null;
+//	public static final boolean isDebugging =
+//        (System.getProperty ("Planner.debug") != null) ? true : false;
+
+    // Logging support
+    private Logger logger = Logger.getLogger (Planner.class.getName ());
+
+    protected Position goal = null;
 	protected Position globalGoal = null;
 
 	protected PlayerPlannerData ppd = null;
@@ -19,8 +27,6 @@ public class Planner extends RobotDevice
 	int wayPointCount;
 	int wayPointIndex;
 	
-	boolean isDebug;
-
 	public Planner(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
 		
@@ -95,14 +101,15 @@ public class Planner extends RobotDevice
 
 				}
 			}
-			if(isDebug == true){
-				System.err.print("WPCnt: "+this.wayPointCount);
-				System.err.print(" WPIdx: "+this.wayPointIndex);
-				System.err.print(" CurGoal: "+this.goal.toString());
-				System.err.print(" CurPos: "+this.curPosition.toString());
-				System.err.print(" IsDone: "+this.isDone);
-				System.err.println(" IsValid: "+this.isValidGoal);
-			}
+//			if(isDebugging == true){
+				logger.fine(
+						"WPCnt: "+this.wayPointCount
+						+" WPIdx: "+this.wayPointIndex
+						+" CurGoal: "+this.goal.toString()
+						+" CurPos: "+this.curPosition.toString()
+						+" IsDone: "+this.isDone
+						+" IsValid: "+this.isValidGoal);
+//			}
 			if (curPosition.isNearTo(goal)) {
 				isDone = true;
 			}
@@ -140,7 +147,7 @@ public class Planner extends RobotDevice
 	public int getWayPointIndex() {
 		return wayPointIndex;
 	}
-	public void cancel() {
+	public void stop() {
 		isCanceled  = true;
 		isValidGoal = false;
 		isDone = true;
@@ -151,11 +158,5 @@ public class Planner extends RobotDevice
 //		isNewGoal = true;
 		// disable motion
 		((javaclient3.PlannerInterface) this.device).setRobotMotion(0);
-	}
-	public boolean isDebug() {
-		return isDebug;
-	}
-	public void setDebug(boolean isDebug) {
-		this.isDebug = isDebug;
 	}
 }

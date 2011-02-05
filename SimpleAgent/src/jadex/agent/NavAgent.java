@@ -1,6 +1,6 @@
 package jadex.agent;
 
-import core.Logger;
+import core.ProjectLogger;
 import jadex.bridge.*;
 import jadex.commons.ChangeEvent;
 import jadex.commons.IChangeListener;
@@ -49,7 +49,7 @@ public class NavAgent extends MicroAgent
 		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), (Double)getArgument("Yaw")));
 		
 		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Hello");
-		Logger.logActivity(false, "Hello", getComponentIdentifier().toString(), -1, null);
+		ProjectLogger.logActivity(false, "Hello", getComponentIdentifier().toString(), -1, null);
 	}
 
 	@Override
@@ -71,7 +71,7 @@ public class NavAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString());
 						
-						Logger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
+						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
 					}
 				});
 				return null;

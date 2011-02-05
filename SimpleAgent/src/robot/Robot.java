@@ -187,6 +187,6 @@ public class Robot extends Device implements IRobot {
 	public void shutdown()
 	{
 		super.shutdown();
-		planner.cancel();
+		planner.stop();
 	}
 }

@@ -19,9 +19,9 @@ public class OSCommand implements Runnable{
 			// Automatically start own thread in constructor
 			thread.start();
 
-			Logger.logActivity(false, "Running", this.toString(), -1, thread.getName());
+			ProjectLogger.logActivity(false, "Running", this.toString(), -1, thread.getName());
 		} else {
-			Logger.logActivity(true, "Null command", this.toString(), -1, thread.getName());
+			ProjectLogger.logActivity(true, "Null command", this.toString(), -1, thread.getName());
 		}
 	}
 
@@ -57,7 +57,7 @@ public class OSCommand implements Runnable{
 
 	@Override
 	public void run() {
-		Logger.logActivity(false, exec(command), this.toString(), -1, thread.getName());
+		ProjectLogger.logActivity(false, exec(command), this.toString(), -1, thread.getName());
 	}
 	public void terminate() {
 		// orderly termination
@@ -66,7 +66,7 @@ public class OSCommand implements Runnable{
 		if (process != null) {
 			process.destroy();
 		}
-		Logger.logActivity(false, "Terminating", this.toString(), -1, thread.getName());
+		ProjectLogger.logActivity(false, "Terminating", this.toString(), -1, thread.getName());
 	}
 	public boolean isRunning () {
 		return isRunning;

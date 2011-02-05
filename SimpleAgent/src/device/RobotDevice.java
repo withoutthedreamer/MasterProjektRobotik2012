@@ -1,6 +1,6 @@
 package device;
 
-import core.Logger;
+import core.ProjectLogger;
 import javaclient3.PlayerException;
 import javaclient3.structures.PlayerConstants;
 
@@ -20,7 +20,7 @@ public class RobotDevice extends Device
 		}
 		catch ( PlayerException e )
 		{
-			Logger.logDeviceActivity(true, "Connecting", this);
+			ProjectLogger.logDeviceActivity(true, "Connecting", this);
 			throw new IllegalStateException();
 		}
 

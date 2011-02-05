@@ -1,6 +1,6 @@
 package jadex;
 
-import core.Logger;
+import core.ProjectLogger;
 import core.OSCommand;
 import jadex.bridge.*;
 import jadex.micro.*;
@@ -11,7 +11,7 @@ public class KillPlayerAgent extends MicroAgent {
 
 	public void agentCreated()
 	{
-		Logger.logActivity(false, "running", this.toString(), -1, Thread.currentThread().getName());
+		ProjectLogger.logActivity(false, "running", this.toString(), -1, Thread.currentThread().getName());
 
 		// Get the Gui argument, if any
 		String[] command = {
@@ -29,7 +29,7 @@ public class KillPlayerAgent extends MicroAgent {
 	public void agentKilled()
 	{		
 		stopPlayer.terminate();
-		Logger.logActivity(false, "Termination", this.toString(), -1, Thread.currentThread().getName());
+		ProjectLogger.logActivity(false, "Termination", this.toString(), -1, Thread.currentThread().getName());
 	}
 	
 	public static MicroAgentMetaInfo getMetaInfo()

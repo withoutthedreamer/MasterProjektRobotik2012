@@ -3,7 +3,7 @@ package device;
 import java.util.Iterator;
 import java.util.concurrent.*;
 
-import core.Logger;
+import core.ProjectLogger;
 
 public class Device implements IDevice, Runnable
 {
@@ -100,7 +100,7 @@ public class Device implements IDevice, Runnable
 			thread.start();
 			while (thread.isAlive() == false);
 
-			Logger.logDeviceActivity(false, "Running", this);
+			ProjectLogger.logDeviceActivity(false, "Running", this);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class Device implements IDevice, Runnable
 		}
 		isRunning = false;    // sync with setNotThreaded
 		// TODO java.lang.Error: Interrupted attempt to aquire write lock
-		Logger.logDeviceActivity(false, "Shutdown", this);
+		ProjectLogger.logDeviceActivity(false, "Shutdown", this);
 	}
 	public synchronized void shutdown()
 	{
