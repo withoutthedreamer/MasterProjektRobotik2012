@@ -29,8 +29,6 @@ public class ViewAgent extends MicroAgent {
 	@Override
 	public void agentCreated()
 	{
-		super.agentCreated();
-
 		ps = new SendPositionService(getExternalAccess());
 		addDirectService(ps);
 
@@ -41,8 +39,6 @@ public class ViewAgent extends MicroAgent {
 	@Override
 	public void executeBody()
 	{
-		super.executeBody();
-		
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -52,10 +48,7 @@ public class ViewAgent extends MicroAgent {
 					public void changeOccurred(ChangeEvent event)
 					{
 						Object[] content = (Object[])event.getValue();
-//						StringBuffer buf = new StringBuffer();
-//						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2]);
-//						
-//						Logger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
+
 						simu.setPositionOf((String)content[1], (Position)content[2]);
 					}
 				});
@@ -76,7 +69,6 @@ public class ViewAgent extends MicroAgent {
 	}
 	@Override
 	public void agentKilled() {
-		super.agentKilled();
 		deviceNode.shutdown();
 	}
 	public static MicroAgentMetaInfo getMetaInfo()

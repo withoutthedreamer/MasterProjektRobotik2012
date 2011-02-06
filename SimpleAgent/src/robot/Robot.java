@@ -178,15 +178,18 @@ public class Robot extends Device implements IRobot {
 		if (planner != null)
 			return planner.getPosition();
 		else
-			if (posi != null)
-				return posi.getPosition();
+			if (localizer != null)
+				return localizer.getPosition();
 			else
-				return new Position(position);
+				if (posi != null)
+					return posi.getPosition();
+				else
+					return new Position(position);
 	}
 	@Override
 	public void shutdown()
 	{
-		super.shutdown();
 		planner.stop();
+		super.shutdown();
 	}
 }
