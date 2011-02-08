@@ -86,6 +86,11 @@ public class PlannerTest extends TestCase {
 	@Test public void testWPIndex() {
 		assertNotNull(planner.getWayPointIndex());
 	}
+	@Test public void testGetCost() {
+		double cost = planner.getCost();
+		System.err.println("Cost: "+cost);
+		assertTrue(cost > 0);
+	}
 	@Test public void testIsDone() {
 		try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
 		assertTrue(planner.isDone());
@@ -100,8 +105,18 @@ public class PlannerTest extends TestCase {
 	}
 	@Test public void testCancel() {
 		planner.stop();
+		assertFalse(planner.getCost() >= 0.0);
 		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 		assertTrue(planner.isDone());
+	}
+	@Test public void testSetFarGoal() {
+		planner.getLogger().setLevel(Level.FINEST);
+		planner.setGoal(new Position(0,5,0));
+//		for (int i=0; i<10; i++) {
+		while(planner.isDone() != true) {
+			System.err.println("Cost: "+planner.getCost());
+			try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+		}
 	}
 	@Test public void testShutdown() {
 		deviceNode.shutdown();
