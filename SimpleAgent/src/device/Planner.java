@@ -158,4 +158,15 @@ public class Planner extends RobotDevice
 		// disable motion
 		((javaclient3.PlannerInterface) this.device).setRobotMotion(0);
 	}
+	public double getCost() {
+		if (isDone == true){
+			return -1.0;
+		} else {
+			logger.info("wayPointCount: "+wayPointCount+" wayPointIndex: "+wayPointIndex+" distance: "+globalGoal.distanceTo(curPosition));
+			return (1 + wayPointCount - wayPointIndex) * globalGoal.distanceTo(curPosition);
+		}
+	}
+	public Logger getLogger() {
+		return logger;
+	}
 }
