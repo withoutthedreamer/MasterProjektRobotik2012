@@ -101,18 +101,17 @@ public class Planner extends RobotDevice
 
 				}
 			}
-//			if(isDebugging == true){
-				logger.fine(
-						"WPCnt: "+this.wayPointCount
-						+" WPIdx: "+this.wayPointIndex
-						+" CurGoal: "+this.goal.toString()
-						+" CurPos: "+this.curPosition.toString()
-						+" IsDone: "+this.isDone
-						+" IsValid: "+this.isValidGoal);
+			logger.fine(
+					"WPCnt: "+this.wayPointCount
+					+" WPIdx: "+this.wayPointIndex
+					+" CurGoal: "+this.goal.toString()
+					+" CurPos: "+this.curPosition.toString()
+					+" IsDone: "+this.isDone
+					+" IsValid: "+this.isValidGoal);
+			
+//			if (curPosition.isNearTo(goal)) {
+//				isDone = true;
 //			}
-			if (curPosition.isNearTo(goal)) {
-				isDone = true;
-			}
 		}
 		public synchronized void setGoal (Position newGoal) {
 		// New Positions and copy

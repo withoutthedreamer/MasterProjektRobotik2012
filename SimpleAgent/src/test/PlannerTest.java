@@ -54,13 +54,22 @@ public class PlannerTest extends TestCase {
 		simu.setPositionOf("r0", pose);
 		while(simu.getPositionOf("r0").isNearTo(pose) != true);
 		
-//		planner.setPosition(pose);
+		planner.setPosition(pose);
+		// TODO should not be neccessary. Only as workaround as long as the planner doesn't work
 		localizer.setPosition(pose);
 		
-		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+		assertTrue(planner.getPosition().isNearTo(pose));
+		assertTrue(false); // Fix planner setposition
 	}
 	@Test public void testGetPosition() {
-		assertTrue(planner.getPosition().isNearTo(new Position(-6,-5,Math.toRadians(90))));
+		Position curPose = planner.getPosition();
+		boolean isNear = curPose.isNearTo(new Position(-6,-5,Math.toRadians(90))); 
+		if ( isNear == false ) {
+			System.err.println("Planner position: "+curPose.toString());
+			System.err.println("Localize position: "+localizer.getPosition().toString());
+		}
+		assertTrue(isNear);
 	}
 
 	@Test public void testSetGoal() {
@@ -87,7 +96,7 @@ public class PlannerTest extends TestCase {
 		assertNotNull(planner.getWayPointIndex());
 	}
 	@Test public void testIsDone() {
-		try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(12000); } catch (InterruptedException e) { e.printStackTrace(); }
 		assertTrue(planner.isDone());
 	}
 	@Test public void testSetGoalAbort(){
