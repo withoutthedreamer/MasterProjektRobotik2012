@@ -113,6 +113,8 @@ public class Planner extends RobotDevice
 //				isDone = true;
 //			}
 		}
+		// TODO check if valid goal
+		// TODO callback when there
 		public synchronized void setGoal (Position newGoal) {
 		// New Positions and copy
 		goal = new Position(newGoal);
@@ -146,25 +148,58 @@ public class Planner extends RobotDevice
 	public int getWayPointIndex() {
 		return wayPointIndex;
 	}
+	/**
+	 * Stops approaching the current goal (if any).
+	 * Does not remove goal from goal stack but stops robot motion.
+	 */
 	public void stop() {
 		isCanceled  = true;
 		isValidGoal = false;
 		isDone = true;
-//		wayPointCount = 0;
-//		wayPointIndex = -1;
-//		globalGoal.setPosition(curPosition);
-//		goal.setPosition(curPosition);
-//		isNewGoal = true;
 		// disable motion
 		((javaclient3.PlannerInterface) this.device).setRobotMotion(0);
 	}
+	/**
+	 * Returns the current cost to current goal position.
+	 * @return The cost value.
+	 */
 	public double getCost() {
-		if (isDone == true){
+		try { Thread.sleep(SLEEPTIME); } catch (InterruptedException e) { e.printStackTrace(); }
+		if (isDone() == true){
 			return -1.0;
 		} else {
-			logger.info("wayPointCount: "+wayPointCount+" wayPointIndex: "+wayPointIndex+" distance: "+globalGoal.distanceTo(curPosition));
-			return (1 + wayPointCount - wayPointIndex) * globalGoal.distanceTo(curPosition);
+			if (isValidGoal() == true) {
+				logger.info("wayPointCount: "+wayPointCount+" wayPointIndex: "+wayPointIndex+" distance: "+globalGoal.distanceTo(curPosition));
+				return (1 + wayPointCount - wayPointIndex) * globalGoal.distanceTo(curPosition);
+			} else {
+				return -1.0;
+			}
 		}
+	}
+	/**
+	 * Returns the cost if the goal would be the given position.
+	 * The planner does not actually approach the given goal but
+	 * resumes the previous set one (if any).
+	 * @param toPosition @see Position to calculate the cost.
+	 * @return The cost value.
+	 */
+	public double getCost(Position toPosition) {
+		Position oldGoal = globalGoal;
+		double cost;
+		stop();
+		
+		setGoal(toPosition);
+//		while(isDone() == true);
+//		while(wayPointCount <= 0);
+//		if (isValidGoal() == true)
+			cost = getCost();
+//		else
+//			cost = -1.0;
+		stop();
+		
+		setGoal(oldGoal);
+		
+		return cost;
 	}
 	public Logger getLogger() {
 		return logger;

@@ -1,6 +1,7 @@
 package test;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
@@ -21,7 +22,10 @@ public class PlannerTest extends TestCase {
 	static DeviceNode deviceNode = null;
 	static Simulation simu = null;
 
-	@Test public void testInit() {
+	 // Logging support
+    private Logger logger = Logger.getLogger (PlannerTest.class.getName ());
+
+    @Test public void testInit() {
 		deviceNode = new DeviceNode("localhost", 6666);
 		assertNotNull(deviceNode);
 		deviceNode.getClient().getLogger().setLevel(Level.FINEST);
@@ -66,8 +70,8 @@ public class PlannerTest extends TestCase {
 		Position curPose = planner.getPosition();
 		boolean isNear = curPose.isNearTo(new Position(-6,-5,Math.toRadians(90))); 
 		if ( isNear == false ) {
-			System.err.println("Planner position: "+curPose.toString());
-			System.err.println("Localize position: "+localizer.getPosition().toString());
+			logger.info("Planner position: "+curPose.toString());
+			logger.info("Localize position: "+localizer.getPosition().toString());
 		}
 		assertTrue(isNear);
 	}
@@ -97,7 +101,7 @@ public class PlannerTest extends TestCase {
 	}
 	@Test public void testGetCost() {
 		double cost = planner.getCost();
-		System.err.println("Cost: "+cost);
+		logger.info("Cost: "+cost);
 		assertTrue(cost > 0);
 	}
 	@Test public void testIsDone() {
@@ -105,7 +109,7 @@ public class PlannerTest extends TestCase {
 		assertTrue(planner.isDone());
 	}
 	@Test public void testSetGoalAbort(){
-		Position pose = new Position(-2.5,-6,Math.toRadians(75));
+		Position pose = new Position(0,-6,Math.toRadians(75));
 
 		planner.setGoal(pose);
 
@@ -118,17 +122,38 @@ public class PlannerTest extends TestCase {
 		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 		assertTrue(planner.isDone());
 	}
-	@Test public void testSetFarGoal() {
-		planner.getLogger().setLevel(Level.FINEST);
-		planner.setGoal(new Position(0,5,0));
-//		for (int i=0; i<10; i++) {
-		while(planner.isDone() != true) {
-			System.err.println("Cost: "+planner.getCost());
-			try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+	@Test public void testGetCostPosition() {
+		Position pose = new Position(-7,1.5,0);
+		double cost;
+		
+		for (int i=0; i<10; i++) {
+			cost = planner.getCost(pose);
+			assertTrue(cost > 0);
+			logger.info("Cost: "+cost+" to pose "+pose.toString());
+			pose.setX(pose.getX()+1);
+			try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
 	}
+	@Test public void testGetCostInvalidPosition() {
+		Position pose = new Position(-9,-9,0);
+		double cost;
+
+		cost = planner.getCost(pose);
+		logger.info("Cost: "+cost+" to pose "+pose.toString());
+		assertFalse(cost > 0);
+	}
+//	@Test public void testSetFarGoal() {
+//		planner.getLogger().setLevel(Level.FINEST);
+//		planner.setGoal(new Position(0,5,0));
+//
+//		while(planner.isDone() != true) {
+//			logger.info("Cost: "+planner.getCost());
+//			try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+//		}
+//	}
 	@Test public void testShutdown() {
 		deviceNode.shutdown();
+		assertFalse(planner.isRunning());
 	}
 
 }
