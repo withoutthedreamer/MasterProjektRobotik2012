@@ -83,7 +83,7 @@ public class Planner extends RobotDevice
 				{ /** Planner is not yet done */
 					isDone = false;					
 					// Check if planner has maybe stucked
-					if (globalGoal.distanceTo(curPosition) < 1.0)
+					if (goal.distanceTo(curPosition) < 2.0)
 					{
 						if ( timerIsArmed == false) {
 							timerIsArmed = true;
@@ -277,9 +277,6 @@ public class Planner extends RobotDevice
 			if (isValidGoal() == false)
 				return false;
 		
-//		if (globalGoal.isNearTo(curPosition))
-//			return false;
-//		else
-			return true;
+		return true;
 	}
 }
