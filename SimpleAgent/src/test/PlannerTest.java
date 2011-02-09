@@ -11,6 +11,7 @@ import data.Position;
 import device.Device;
 import device.DeviceNode;
 import device.IDevice;
+import device.IPlannerListener;
 import device.Localize;
 import device.Planner;
 import device.Simulation;
@@ -21,9 +22,12 @@ public class PlannerTest extends TestCase {
 	static Localize localizer = null;
 	static DeviceNode deviceNode = null;
 	static Simulation simu = null;
+	/** Callback */
+	IPlannerListener isDoneListener;
 
 	 // Logging support
-    private Logger logger = Logger.getLogger (PlannerTest.class.getName ());
+    Logger logger = Logger.getLogger (PlannerTest.class.getName ());
+	static boolean isDone = false;
 
     @Test public void testInit() {
 		deviceNode = new DeviceNode("localhost", 6666);
@@ -58,21 +62,23 @@ public class PlannerTest extends TestCase {
 		simu.setPositionOf("r0", pose);
 		while(simu.getPositionOf("r0").isNearTo(pose) != true);
 		
-//		planner.setPosition(pose);
-		// TODO should not be neccessary. Only as workaround as long as the planner doesn't work
+		// Planner does not currently provide set position service.
 		localizer.setPosition(pose);
 		
 		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+		
 		assertTrue(planner.getPosition().isNearTo(pose));
-//		assertTrue(false); // Fix planner setposition
 	}
 	@Test public void testGetPosition() {
 		Position curPose = planner.getPosition();
+		
 		boolean isNear = curPose.isNearTo(new Position(-6,-5,Math.toRadians(90))); 
+		
 		if ( isNear == false ) {
 			logger.info("Planner position: "+curPose.toString());
 			logger.info("Localize position: "+localizer.getPosition().toString());
 		}
+		
 		assertTrue(isNear);
 	}
 
@@ -80,9 +86,18 @@ public class PlannerTest extends TestCase {
 
 		Position pose = new Position(-6.5,-2,Math.toRadians(75));
 
-		planner.setGoal(pose);
+		// Add isDone listener
+		planner.addIsDoneListener(new IPlannerListener()
+		{
+			@Override public void callWhenIsDone() {
+				isDone = true;
+				logger.info("Planner is done.");
+			}
+			
+		});
+		assertTrue(planner.setGoal(pose));
 
-		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	@Test public void testIsValid(){
 		assertTrue(planner.isValidGoal());
@@ -104,9 +119,17 @@ public class PlannerTest extends TestCase {
 		logger.info("Cost: "+cost);
 		assertTrue(cost > 0);
 	}
+	@Test public void testIsActive() {
+		assertTrue(planner.isActive());
+	}
 	@Test public void testIsDone() {
+		
 		try { Thread.sleep(12000); } catch (InterruptedException e) { e.printStackTrace(); }
-		assertTrue(planner.isDone());
+		
+		assertTrue(isDone);
+	}
+	@Test public void testNotActive() {
+		assertFalse(planner.isActive());
 	}
 	@Test public void testSetGoalAbort(){
 		Position pose = new Position(0,-6,Math.toRadians(75));
@@ -117,10 +140,8 @@ public class PlannerTest extends TestCase {
 
 	}
 	@Test public void testCancel() {
-		planner.stop();
-		assertFalse(planner.getCost() >= 0.0);
-		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
-		assertTrue(planner.isDone());
+		assertTrue(planner.stop());
+		// TODO assert condition
 	}
 	@Test public void testGetCostPosition() {
 		Position pose = new Position(-7,1.5,0);
@@ -140,6 +161,7 @@ public class PlannerTest extends TestCase {
 
 		cost = planner.getCost(pose);
 		logger.info("Cost: "+cost+" to pose "+pose.toString());
+		
 		assertFalse(cost > 0);
 	}
 	@Test public void testSetFarGoal() {
@@ -155,6 +177,7 @@ public class PlannerTest extends TestCase {
 	}
 	@Test public void testShutdown() {
 		deviceNode.shutdown();
+		
 		assertFalse(planner.isRunning());
 	}
 
