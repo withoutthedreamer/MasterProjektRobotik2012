@@ -131,26 +131,28 @@ public class PlannerTest extends TestCase {
 			assertTrue(cost > 0);
 			logger.info("Cost: "+cost+" to pose "+pose.toString());
 			pose.setX(pose.getX()+1);
-			try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+			try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
 	}
 	@Test public void testGetCostInvalidPosition() {
-		Position pose = new Position(-9,-9,0);
+		Position pose = new Position(-90,-90,0);
 		double cost;
 
 		cost = planner.getCost(pose);
 		logger.info("Cost: "+cost+" to pose "+pose.toString());
 		assertFalse(cost > 0);
 	}
-//	@Test public void testSetFarGoal() {
-//		planner.getLogger().setLevel(Level.FINEST);
-//		planner.setGoal(new Position(0,5,0));
-//
-//		while(planner.isDone() != true) {
-//			logger.info("Cost: "+planner.getCost());
-//			try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
-//		}
-//	}
+	@Test public void testSetFarGoal() {
+		double cost = 100;
+		planner.getLogger().setLevel(Level.FINEST);
+		planner.setGoal(new Position(0,5,0));
+
+		while(planner.isDone() != true || cost > 1.0) {
+			cost = planner.getCost();
+			logger.info("Cost: "+cost);
+			try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+		}
+	}
 	@Test public void testShutdown() {
 		deviceNode.shutdown();
 		assertFalse(planner.isRunning());

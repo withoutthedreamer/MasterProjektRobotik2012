@@ -58,7 +58,11 @@ public class Planner extends RobotDevice
 
 					// Check if goal is achieved
 					if (ppd.getDone() == new Integer(1).byteValue())
-						isDone = true;
+						// Check if really at the goal position
+						if (globalGoal.isNearTo(goal))
+							isDone = true;
+						else
+							setGoal(globalGoal);
 					else
 						isDone = false;
 				}
@@ -82,7 +86,6 @@ public class Planner extends RobotDevice
 						curPosition.setY(poseTemp.getPy());
 						curPosition.setYaw(poseTemp.getPa());
 					}
-//					ppd.setPos(poseTemp);
 				}
 			}
 			// update goal
@@ -109,9 +112,6 @@ public class Planner extends RobotDevice
 					+" IsDone: "+this.isDone
 					+" IsValid: "+this.isValidGoal);
 			
-//			if (curPosition.isNearTo(goal)) {
-//				isDone = true;
-//			}
 		}
 		// TODO check if valid goal
 		// TODO callback when there
@@ -157,23 +157,20 @@ public class Planner extends RobotDevice
 		isValidGoal = false;
 		isDone = true;
 		// disable motion
-		((javaclient3.PlannerInterface) this.device).setRobotMotion(0);
+		((javaclient3.PlannerInterface) device).setRobotMotion(0);
 	}
 	/**
 	 * Returns the current cost to current goal position.
 	 * @return The cost value.
 	 */
 	public double getCost() {
-		try { Thread.sleep(SLEEPTIME); } catch (InterruptedException e) { e.printStackTrace(); }
-		if (isDone() == true){
+		try { Thread.sleep(getSleepTime()*2); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
+
+		if (isDone() == true || isValidGoal() == false){
 			return -1.0;
 		} else {
-			if (isValidGoal() == true) {
-				logger.info("wayPointCount: "+wayPointCount+" wayPointIndex: "+wayPointIndex+" distance: "+globalGoal.distanceTo(curPosition));
-				return (1 + wayPointCount - wayPointIndex) * globalGoal.distanceTo(curPosition);
-			} else {
-				return -1.0;
-			}
+			logger.info("wayPointCount: "+wayPointCount+" wayPointIndex: "+wayPointIndex+" distance: "+globalGoal.distanceTo(curPosition));
+			return (1 + wayPointCount - wayPointIndex) * globalGoal.distanceTo(curPosition);
 		}
 	}
 	/**
@@ -189,12 +186,7 @@ public class Planner extends RobotDevice
 		stop();
 		
 		setGoal(toPosition);
-//		while(isDone() == true);
-//		while(wayPointCount <= 0);
-//		if (isValidGoal() == true)
-			cost = getCost();
-//		else
-//			cost = -1.0;
+		cost = getCost();
 		stop();
 		
 		setGoal(oldGoal);
