@@ -92,6 +92,7 @@ public class PlannerTest extends TestCase {
 			@Override public void callWhenIsDone() {
 				isDone = true;
 				logger.info("Planner is done.");
+				planner.removeIsDoneListener(this);
 			}
 			
 		});
@@ -165,19 +166,37 @@ public class PlannerTest extends TestCase {
 		assertFalse(cost > 0);
 	}
 	@Test public void testSetFarGoal() {
+		planner.stop();
+		
+		// Add isDone listener
+		planner.addIsDoneListener(new IPlannerListener()
+		{
+			@Override public void callWhenIsDone() {
+				isDone = true;
+				logger.info("Planner is done.");
+				deviceNode.shutdown();
+			}
+		});
+
 		double cost = 100;
 		planner.getLogger().setLevel(Level.FINEST);
 		planner.setGoal(new Position(0,5,0));
+		isDone = false;
 
-		while(planner.isDone() != true || cost > 1.0) {
+		while (isDone != true) {
 			cost = planner.getCost();
 			logger.info("Cost: "+cost);
 			try { Thread.sleep(planner.getSleepTime()); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
 	}
 	@Test public void testShutdown() {
-		deviceNode.shutdown();
-		
+		isDone = false;
+//		deviceNode.shutdown();
+		try { Thread.sleep(planner.getSleepTime()); } catch (InterruptedException e) { e.printStackTrace(); }
+		while (isDone != true) {
+			try { Thread.sleep(planner.getSleepTime()); } catch (InterruptedException e) { e.printStackTrace(); }
+		}
+
 		assertFalse(planner.isRunning());
 	}
 

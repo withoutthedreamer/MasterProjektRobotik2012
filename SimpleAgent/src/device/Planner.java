@@ -252,6 +252,9 @@ public class Planner extends RobotDevice
 	public void addIsDoneListener(IPlannerListener cb){
 		isDoneListeners.addIfAbsent(cb);
 	}
+	public void removeIsDoneListener(IPlannerListener cb){
+		isDoneListeners.remove(cb);
+	}
 	public void notifyListeners() {
 		if (notify == true) {
 			notify = false;
