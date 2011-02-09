@@ -8,8 +8,6 @@ import javaclient3.structures.planner.PlayerPlannerData;
 
 public class Planner extends RobotDevice
 {
-//	public static final boolean isDebugging =
-//        (System.getProperty ("Planner.debug") != null) ? true : false;
 
     // Logging support
     private Logger logger = Logger.getLogger (Planner.class.getName ());
@@ -19,7 +17,7 @@ public class Planner extends RobotDevice
 
 	protected PlayerPlannerData ppd = null;
 	private boolean isNewGoal = false;
-	private boolean isNewPose = false;
+//	private boolean isNewPose = false;
 	private Position curPosition;
 	private boolean isDone;
 	private boolean isValidGoal;
@@ -34,7 +32,7 @@ public class Planner extends RobotDevice
 		globalGoal = new Position();
 		curPosition = new Position();
 		
-		setSleepTime(1000);
+		setSleepTime(500);
 		
 		// disable motion
 		((javaclient3.PlannerInterface) this.device).setRobotMotion(0);
@@ -70,15 +68,15 @@ public class Planner extends RobotDevice
 				wayPointCount = ppd.getWaypoints_count();
 				wayPointIndex = ppd.getWaypoint_idx();
 				
-				// set position belief
-				// has to be before over writing curPosition!
-				if(isNewPose) {
-					isNewPose = false;
-					ppd.setPos(new PlayerPose(
-							curPosition.getX(),
-							curPosition.getY(),
-							curPosition.getYaw()));
-				} else {
+//				// set position belief
+//				// has to be before over writing curPosition!
+//				if(isNewPose) {
+//					isNewPose = false;
+//					ppd.setPos(new PlayerPose(
+//							curPosition.getX(),
+//							curPosition.getY(),
+//							curPosition.getYaw()));
+//				} else {
 					PlayerPose poseTemp = ppd.getPos();
 					// Update current position belief
 					if (poseTemp != null) {
@@ -86,7 +84,7 @@ public class Planner extends RobotDevice
 						curPosition.setY(poseTemp.getPy());
 						curPosition.setYaw(poseTemp.getPa());
 					}
-				}
+//				}
 			}
 			// update goal
 			if(isNewGoal) {
@@ -129,9 +127,13 @@ public class Planner extends RobotDevice
 	public synchronized Position getGoal() {
 		return goal;
 	}
+	/**
+	 * @depreciated Use @Localize#setPosition instead.
+	 * @param position
+	 */
 	public synchronized void setPosition(Position position) {
-		curPosition.setPosition(position);
-		isNewPose = true;
+//		curPosition.setPosition(position);
+//		isNewPose = true;
 	}
 	public synchronized Position getPosition() {
 		return new Position(curPosition);
