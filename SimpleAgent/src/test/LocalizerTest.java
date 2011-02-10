@@ -44,9 +44,8 @@ public class LocalizerTest extends TestCase {
 		simu.setPositionOf("r0", pose);
 		while(simu.getPositionOf("r0").isNearTo(pose) != true);
 		
-		localizer.setPosition(pose);
+		assertTrue(localizer.setPosition(pose));
 		
-		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	@Test public void testGetPosition() {
 		assertTrue(localizer.getPosition().isNearTo(new Position(-6,-5,Math.toRadians(90))));

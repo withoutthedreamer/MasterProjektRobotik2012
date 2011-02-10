@@ -193,8 +193,6 @@ public class Planner extends RobotDevice
 	 */
 	public boolean stop() {
 		isCanceled  = true;
-//		isValidGoal = false;
-//		isDone = true;
 				
 		// disable motion
 		((javaclient3.PlannerInterface) device).setRobotMotion(0);
@@ -208,7 +206,6 @@ public class Planner extends RobotDevice
 	public double getCost() {
 		try { Thread.sleep(getSleepTime()); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
 
-//		if (isDone() == true || isValidGoal() == false){
 		if (isActive() == false) {
 			return -1.0;
 		} else {

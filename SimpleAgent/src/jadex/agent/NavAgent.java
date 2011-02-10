@@ -8,11 +8,13 @@ import jadex.commons.ChangeEvent;
 import jadex.commons.IChangeListener;
 import jadex.micro.MicroAgent;
 import jadex.micro.MicroAgentMetaInfo;
+import jadex.service.GoalReachedService;
 import jadex.service.HelloService;
 import jadex.service.ReceiveNewGoalService;
 import jadex.service.SendPositionService;
 import data.Position;
 import device.DeviceNode;
+import device.IPlannerListener;
 import robot.NavRobot;
 
 public class NavAgent extends MicroAgent
@@ -21,9 +23,10 @@ public class NavAgent extends MicroAgent
     private static Logger logger = Logger.getLogger (ProjectLogger.class.getName ());
 
 	/** Services */
-	HelloService hs = null;
-	SendPositionService ps = null;
-	ReceiveNewGoalService gs = null;
+	HelloService hs;
+	SendPositionService ps;
+	ReceiveNewGoalService gs;
+	GoalReachedService gr;
 	
 	DeviceNode deviceNode = null;
 	NavRobot robot = null;
@@ -37,10 +40,12 @@ public class NavAgent extends MicroAgent
 		hs = new HelloService(getExternalAccess());
 		ps = new SendPositionService(getExternalAccess());
 		gs = new ReceiveNewGoalService(getExternalAccess());
+		gr = new GoalReachedService(getExternalAccess());
 
 		addDirectService(hs);
 		addDirectService(ps);
 		addDirectService(gs);
+		addDirectService(gr);
 
 		Integer port = (Integer)getArgument("port");
 		// Get the device node
@@ -49,21 +54,37 @@ public class NavAgent extends MicroAgent
 
 		robot = new NavRobot(deviceNode);
 		robot.setRobotId((String)getArgument("robot name"));
-//		robot.runThreaded();
 		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), (Double)getArgument("Yaw")));
-		
+				
 		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), ": Hello");
-//		ProjectLogger.logActivity(false, "Hello", getComponentIdentifier().toString(), -1, null);
 		logger.info("Sent Hello "+getComponentIdentifier().toString());
 	}
 
 	@Override
 	public void executeBody()
 	{
+		/** Agent is worthless if underlying robot or devices fail */
 		if (robot == null || deviceNode == null) {
 			killAgent();
 		}
-
+		
+		/** Register planner callback */
+		scheduleStep(new IComponentStep()
+		{
+			public Object execute(IInternalAccess ia)
+			{
+				robot.getPlanner().addIsDoneListener(new IPlannerListener()
+				{
+					@Override public void callWhenIsDone() {
+						gr.send(getComponentIdentifier().toString(), robot.getRobotId(),robot.getPlanner().getGoal());
+						logger.finest((String)getArgument("robot name")+" reached goal "+robot.getPlanner().getGoal().toString());
+					}
+				});
+				return null;
+			}
+		});
+		
+		/** Register new goal event callback */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -76,13 +97,22 @@ public class NavAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString());
 						
-//						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
 						logger.finer("Receiving "+buf.toString()+" "+getComponentIdentifier().toString());
+						
+						// Check if it is my goal
+						if ( ((String)content[1]).equals((String)getArgument("robot name")) ||
+							 ((String)content[1]).equals("all") )
+						{
+							robot.setGoal((Position)content[2]);
+							logger.info((String)getArgument("robot name")+" received new goal "+((Position)content[2]).toString());
+						}
 					}
 				});
 				return null;
 			}
 		});
+		
+		/** Set up periodical position broadcast */
 		final IComponentStep step = new IComponentStep()
 		{			
 			public Object execute(IInternalAccess args)
@@ -90,7 +120,7 @@ public class NavAgent extends MicroAgent
 				curPos = robot.getPosition();
 				if(curPos.equals(lastPos) == false) {
 					ps.send(getComponentIdentifier().toString(), robot.getRobotId(), curPos);
-//					Logger.logActivity(false, "Send position", getComponentIdentifier().toString(), -1, null);
+
 					logger.finer("Sending position "+getComponentIdentifier().toString());
 					lastPos = curPos;
 				}
@@ -114,18 +144,16 @@ public class NavAgent extends MicroAgent
 	public HelloService getHelloService() { return hs; }
 	public SendPositionService getSendPositionService() { return ps; }
 	public ReceiveNewGoalService getReceiveNewGoalService() { return gs; }
+	public GoalReachedService getGoalReachedService() { return gr; }
 
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
 		IArgument[] args = {
-//				new Argument("requires player", "dummy", "Boolean", new Boolean(false)),
-//				new Argument("player path", "dummy", "String", ""),
 				new Argument("port", "dummy", "Integer", new Integer(6665)),
 				new Argument("robot name", "dummy", "String", "r0"),
 				new Argument("X", "dummy", "Double", new Double(-6)),
 				new Argument("Y", "dummy", "Double", new Double(-5)),
 				new Argument("Yaw", "dummy", "Double", new Double(Math.toRadians(90)))
-//				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/planner2.cfg")
 		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a navigation agent.", null, args, null);

@@ -19,9 +19,10 @@ public class MasterAgent extends MicroAgent
     private static Logger logger = Logger.getLogger (Device.class.getName ());
 	
 	/* Services */
-	HelloService hs = null;
-	SendPositionService ps = null;
-	ReceiveNewGoalService gs = null;
+	HelloService hs;
+	SendPositionService ps;
+	ReceiveNewGoalService gs;
+	GoalReachedService gr;
 	
 	/** Global blackboard */
 	Board board;
@@ -33,20 +34,21 @@ public class MasterAgent extends MicroAgent
 		hs = new HelloService(getExternalAccess());
 		ps = new SendPositionService(getExternalAccess());
 		gs = new ReceiveNewGoalService(getExternalAccess());
-
-		assert(hs != null && gs != null && ps != null);
+		gr = new GoalReachedService(getExternalAccess());
 
 		addDirectService(hs);
 		addDirectService(ps);
 		addDirectService(gs);
+		addDirectService(gr);
 		
 		hs.send(getComponentIdentifier().toString(), "dummy", "Hello");
-//		ProjectLogger.logActivity(false, "sent Hello", getComponentIdentifier().toString(), -1, null);
+
 		logger.info("Sent Hello "+getComponentIdentifier().toString());
 	}
 
 	@Override
 	public void executeBody() {
+		/** Register to HelloService */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -59,7 +61,6 @@ public class MasterAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2].toString());
 						
-//						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
 						logger.info("Receiving "+buf.toString()+", I am "+getComponentIdentifier().toString());
 						
 						if (board.getObject((String)content[1]) == null) {
@@ -70,6 +71,8 @@ public class MasterAgent extends MicroAgent
 				return null;
 			}
 		});
+		
+		/** Register to Position update service */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -82,8 +85,6 @@ public class MasterAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2]);
 						
-//						ProjectLogger.logActivity(false, "Receiving "+buf.toString(), getComponentIdentifier().toString(), -1, null);
-//						logger.info("Receiving "+buf.toString()+" "+getComponentIdentifier().toString());
 						logger.finer("Receiving "+buf.toString()+" "+getComponentIdentifier().toString());
 					}
 				});
@@ -91,11 +92,33 @@ public class MasterAgent extends MicroAgent
 			}
 		});
 		
+		/** Register to goal reached service */
+		scheduleStep(new IComponentStep()
+		{
+			public Object execute(IInternalAccess ia)
+			{
+				getGoalReachedService().addChangeListener(new IChangeListener()
+				{
+					public void changeOccurred(ChangeEvent event)
+					{
+						Object[] content = (Object[])event.getValue();
+						StringBuffer buf = new StringBuffer();
+						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(" "+content[2].toString());
+						
+						logger.info("Receiving goal reached "+buf.toString()+" "+getComponentIdentifier().toString());
+						
+					}
+				});
+				return null;
+			}
+		});
+		
+		/** Send a 1st goal */
 		waitFor(5000, new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				gs.send(getComponentIdentifier().toString(), "r0", new Position(-6,-6,0));
+				gs.send(getComponentIdentifier().toString(), "r0", new Position(-6.5,-1.5,0));
 				return null;
 			}
 		});
@@ -116,13 +139,14 @@ public class MasterAgent extends MicroAgent
 		board.clear();
 
 		hs.send(getComponentIdentifier().toString(), "dummy", "Bye");
-//		ProjectLogger.logActivity(false, "sent Bye", getComponentIdentifier().toString(), -1, null);
+
 		logger.info("Sent bye "+getComponentIdentifier().toString());
 	}
 
 	public HelloService getHelloService() { return hs; }
 	public SendPositionService getSendPositionService() { return ps; }
 	public ReceiveNewGoalService getReceiveNewGoalService() { return gs; }
+	public GoalReachedService getGoalReachedService() { return gr; }
 	
 	void goToAll(Position goalPos) {
 		// TODO implement

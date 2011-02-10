@@ -51,11 +51,15 @@ public class Localize extends RobotDevice
 		}
 	}
 
-	public synchronized void setPosition(Position position) {
+	public synchronized boolean setPosition(Position position) {
 		if (position != null) {
 			setPosition.setMean(new PlayerPose(position.getX(),position.getY(),position.getYaw()));
 			getPosition.setPosition(position);
 			isNewPose = true;
+			try { Thread.sleep(getSleepTime()*2); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
+			return true;
+		} else {
+			return false;
 		}
 	}
 	public synchronized Position getPosition() {

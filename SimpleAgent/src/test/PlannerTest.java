@@ -59,16 +59,15 @@ public class PlannerTest extends TestCase {
 		while(simu.getPositionOf("r0").isNearTo(pose) != true);
 		
 		// Planner does not currently provide set position service.
-		localizer.setPosition(pose);
-		
-		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
-		
-		assertTrue(planner.getPosition().distanceTo(pose) < 2.0);
+		assertTrue(localizer.setPosition(pose));		
+		assertTrue(localizer.getPosition().distanceTo(pose) < 2.0);
 	}
 	@Test public void testGetPosition() {
+		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+		
 		Position curPose = planner.getPosition();
 		
-		boolean isNear = curPose.isNearTo(new Position(-6,-5,Math.toRadians(90))); 
+		boolean isNear = curPose.distanceTo(new Position(-6,-5,Math.toRadians(90))) < 2.0; 
 		
 		if ( isNear == false ) {
 			logger.info("Planner position: "+curPose.toString());
@@ -93,8 +92,6 @@ public class PlannerTest extends TestCase {
 		});
 		
 		assertTrue(planner.setGoal(pose));
-
-//		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	@Test public void testIsValid(){
 		assertTrue(planner.isValidGoal());
@@ -134,7 +131,7 @@ public class PlannerTest extends TestCase {
 		isDone = false;
 		assertTrue(planner.setGoal(pose));
 
-//		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 
 		assertTrue(planner.stop());
 		// TODO assert condition
@@ -148,7 +145,7 @@ public class PlannerTest extends TestCase {
 			logger.info("Cost: "+cost+" to pose "+pose.toString());
 			assertTrue(cost > 0);
 			pose.setX(pose.getX()+1);
-			try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+			try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
 	}
 	@Test public void testGetCostInvalidPosition() {

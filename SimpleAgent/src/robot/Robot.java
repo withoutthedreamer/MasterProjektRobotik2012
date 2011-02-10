@@ -192,4 +192,11 @@ public class Robot extends Device implements IRobot {
 		planner.stop();
 		super.shutdown();
 	}
+	/**
+	 * Returns the current Planner.
+	 * @return The @see Planner or 'null' if no one is available.
+	 */
+	public Planner getPlanner() {
+		return planner;
+	}
 }
