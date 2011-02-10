@@ -98,7 +98,7 @@ public class Planner extends RobotDevice
 										notifyListeners();
 										logger.config("Timout, set goal again: "+globalGoal.toString());
 									}
-							}}, 10000);		
+							}}, 20000);		
 						}
 					}
 				}
@@ -155,7 +155,7 @@ public class Planner extends RobotDevice
 		// enable motion
 		((javaclient3.PlannerInterface) device).setRobotMotion(1);
 		
-		try { Thread.sleep(getSleepTime()); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
+		try { Thread.sleep(getSleepTime()*2); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
 		
 		notify = true; // notify listeners of this new goal
 

@@ -25,7 +25,7 @@ public class PlannerTest extends TestCase {
 
 	 // Logging support
     Logger logger = Logger.getLogger (PlannerTest.class.getName ());
-	static boolean isDone = false;
+	static boolean isDone;
 
     @Test public void testInit() {
 		deviceNode = new DeviceNode("localhost", 6666);
@@ -63,7 +63,7 @@ public class PlannerTest extends TestCase {
 		
 		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 		
-		assertTrue(planner.getPosition().isNearTo(pose));
+		assertTrue(planner.getPosition().distanceTo(pose) < 2.0);
 	}
 	@Test public void testGetPosition() {
 		Position curPose = planner.getPosition();
@@ -81,21 +81,20 @@ public class PlannerTest extends TestCase {
 	@Test public void testSetGoal() {
 
 		Position pose = new Position(-6.5,-2,Math.toRadians(75));
-
+		isDone = false;
+		
 		// Add isDone listener
 		planner.addIsDoneListener(new IPlannerListener()
 		{
 			@Override public void callWhenIsDone() {
 				isDone = true;
 				logger.info("Planner is done.");
-				planner.removeIsDoneListener(this);
 			}
-			
 		});
 		
 		assertTrue(planner.setGoal(pose));
 
-		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+//		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	@Test public void testIsValid(){
 		assertTrue(planner.isValidGoal());
@@ -121,9 +120,9 @@ public class PlannerTest extends TestCase {
 		assertTrue(planner.isActive());
 	}
 	@Test public void testIsDone() {
-		
-		try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
-		
+		while (isDone == false) {
+			try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
+		}
 		assertTrue(isDone);
 	}
 	@Test public void testNotActive() {
@@ -132,9 +131,10 @@ public class PlannerTest extends TestCase {
 	@Test public void testCancel() {
 		Position pose = new Position(0,-6,Math.toRadians(75));
 
-		planner.setGoal(pose);
+		isDone = false;
+		assertTrue(planner.setGoal(pose));
 
-		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+//		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 
 		assertTrue(planner.stop());
 		// TODO assert condition
@@ -167,23 +167,20 @@ public class PlannerTest extends TestCase {
 		planner.addIsDoneListener(new IPlannerListener()
 		{
 			@Override public void callWhenIsDone() {
-				isDone = true;
-				logger.info("Planner is done.");
-				deviceNode.shutdown();
+				logger.info("Planner will be shutdown.");
 			}
 		});
 
 //		planner.getLogger().setLevel(Level.FINEST);
-		planner.setGoal(new Position(0,5,0));
 		isDone = false;
+		planner.setGoal(new Position(0,5,0));
 	}
 	@Test public void testShutdown() {
-		while (isDone != true) {
-			try { Thread.sleep(planner.getSleepTime()); } catch (InterruptedException e) { e.printStackTrace(); }
+		while (isDone == false) {
+			try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
 
-		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
-		
+		deviceNode.shutdown();		
 		assertFalse(planner.isRunning());
 	}
 
