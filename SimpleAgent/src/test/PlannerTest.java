@@ -140,7 +140,7 @@ public class PlannerTest extends TestCase {
 		Position pose = new Position(-7,1.5,0);
 		double cost;
 		
-		for (int i=0; i<10; i++) {
+		for (int i=0; i<5; i++) {
 			cost = planner.getCost(pose);
 			logger.info("Cost: "+cost+" to pose "+pose.toString());
 			assertTrue(cost > 0);

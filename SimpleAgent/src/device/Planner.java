@@ -96,7 +96,7 @@ public class Planner extends RobotDevice
 //										setGoal(globalGoal);
 										// TODO workaround
 										notifyListeners();
-										logger.config("Timout, set goal again: "+globalGoal.toString());
+										logger.info("Timout, set goal again: "+globalGoal.toString());
 									}
 							}}, 20000);		
 						}
