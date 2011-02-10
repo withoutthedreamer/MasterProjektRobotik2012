@@ -12,13 +12,12 @@ import javaclient3.structures.planner.PlayerPlannerData;
 
 public class Planner extends RobotDevice
 {
-
-	// Logging support
+	/** Logging support */
 	Logger logger = Logger.getLogger (Planner.class.getName ());
 
-	// Callback listeners
+	/** Callback listeners */
 	CopyOnWriteArrayList<IPlannerListener> isDoneListeners;
-		
+
 	Position goal = null;
 	Position globalGoal = null;
 
@@ -28,12 +27,13 @@ public class Planner extends RobotDevice
 	Position curPosition;
 	boolean isDone;
 	boolean isValidGoal;
-	boolean isCanceled;
+	boolean isStopped;
 	int wayPointCount;
 	int wayPointIndex;
 
 	/** Watchdog timer for goal checking */
 	boolean timerIsArmed = false;
+	Timer timer;
 
 	public Planner(DeviceNode roboClient, Device device)
 	{
@@ -43,62 +43,76 @@ public class Planner extends RobotDevice
 		globalGoal = new Position();
 		curPosition = new Position();
 		isDoneListeners = new CopyOnWriteArrayList<IPlannerListener>();
-		
+		timer = new Timer();
+
 		setSleepTime(500);
 
-		// disable motion
+		/** Disable motion */
 		((javaclient3.PlannerInterface) this.device).setRobotMotion(0);
+
+		/** Let the planner still to refresh its internal data */
+		isStopped = false;
 	}
 	protected void update ()
 	{
+		if(isStopped == true) return;
+
 		/** Check for ready planner data */
 		if (((javaclient3.PlannerInterface) device).isDataReady()) {
-			
-			// request recent planner data
+
+			/** request recent planner data */
 			ppd = ((javaclient3.PlannerInterface) device).getData ();
 
-			if (isCanceled == true) {
-				ppd.setDone(new Integer(1).byteValue());
-				ppd.setValid(new Integer(0).byteValue());
-			} else {
-				// Check for a valid path
-				if (ppd.getValid() == new Integer(1).byteValue())
-					isValidGoal = true;
-				else
-					isValidGoal = false;
+			/** Check for a valid path */
+			if (ppd.getValid() == new Integer(1).byteValue())
+				isValidGoal = true;
+			else
+				isValidGoal = false;
 
-				// Check if goal is achieved
-				if (ppd.getDone() == new Integer(1).byteValue())
-				{ /** Planner is done */
-					// Check if really at the goal position
-					if (globalGoal.distanceTo(goal) < 1.0) {
-						isDone = true;
-						notifyListeners();
-					} else {
-						/** Set the goal again */
-						setGoal(globalGoal);
+			/** Check if goal is achieved */
+			if (ppd.getDone() == new Integer(1).byteValue())
+			{
+				/** Planner is done */
+				// Check if really at the goal position
+				if (globalGoal.distanceTo(curPosition) < 1.0) {
+					isDone = true;
+					if (timerIsArmed == true) {
+						timerIsArmed = false;
+						timer.cancel();
+						timer = new Timer();
 					}
+					notifyListeners();
+				} else {
+					/** Set the goal again */
+					setGoal(globalGoal);
 				}
-				else
-				{ /** Planner is not yet done */
+			}
+			else /** Planner is not yet done */
+			{
+				if (isValidGoal == true) {
 					isDone = false;					
-					// Check if planner has maybe stucked
-					if (goal.distanceTo(curPosition) < 2.0)
+					/** Check if planner is maybe stucked */
+					if (goal.distanceTo(curPosition) < 1.0)
 					{
 						if ( timerIsArmed == false) {
 							timerIsArmed = true;
-							new Timer().schedule(new TimerTask() {
-								public void run() {
+							logger.info("Set up planner watchdog timer");
+
+							timer.schedule(new TimerTask()
+							{
+								public void run()
+								{
 									timerIsArmed = false;
+									logger.info("Watchdog occured");
 									// Check if not already finished
 									if (isDone() == false) {
-										// Set the goal again
-//										setGoal(globalGoal);
-										// TODO workaround
-										notifyListeners();
-										logger.info("Timout, set goal again: "+globalGoal.toString());
+										notifyListeners(); // TODO debug setDone();
+										stop();
+
+										logger.config("Timout for goal: "+globalGoal.toString());
 									}
-							}}, 20000);		
+								}
+							}, 20000);		
 						}
 					}
 				}
@@ -108,36 +122,41 @@ public class Planner extends RobotDevice
 			wayPointIndex = ppd.getWaypoint_idx();
 
 			PlayerPose poseTemp = ppd.getPos();
-			// Update current position belief
+			/** Update current position belief */
 			if (poseTemp != null) {
 				curPosition.setX(poseTemp.getPx());
 				curPosition.setY(poseTemp.getPy());
 				curPosition.setYaw(poseTemp.getPa());
 			}
-		}
-		/* Update goal */
-		if(isNewGoal) {
-			isNewGoal = false;
-			((javaclient3.PlannerInterface) device).setGoal(new PlayerPose(
-					goal.getX(),
-					goal.getY(),
-					goal.getYaw()));
-		} else { // Get current goal
-			if (((javaclient3.PlannerInterface) device).isReadyWaypointData() == true) {
-				PlayerPose poseTemp = ((javaclient3.PlannerInterface) device).getData().getGoal();
-				goal.setX(poseTemp.getPx());
-				goal.setY(poseTemp.getPy());
-				goal.setYaw(poseTemp.getPa());
 
+			/** Set new goal */
+			if(isNewGoal)
+			{
+				isNewGoal = false;
+				((javaclient3.PlannerInterface) device).setGoal(new PlayerPose(
+						goal.getX(),
+						goal.getY(),
+						goal.getYaw()));
 			}
+			else /** Get current goal */
+			{
+				if (((javaclient3.PlannerInterface) device).isReadyWaypointData() == true) {
+					poseTemp = ((javaclient3.PlannerInterface) device).getData().getGoal();
+					if (poseTemp != null) {
+						goal.setX(poseTemp.getPx());
+						goal.setY(poseTemp.getPy());
+						goal.setYaw(poseTemp.getPa());
+					}
+				}
+			}
+			logger.fine(
+					"WPCnt: "+this.wayPointCount
+					+" WPIdx: "+this.wayPointIndex
+					+" CurGoal: "+this.goal.toString()
+					+" CurPos: "+this.curPosition.toString()
+					+" IsDone: "+this.isDone
+					+" IsValid: "+this.isValidGoal);
 		}
-		logger.fine(
-				"WPCnt: "+this.wayPointCount
-				+" WPIdx: "+this.wayPointIndex
-				+" CurGoal: "+this.goal.toString()
-				+" CurPos: "+this.curPosition.toString()
-				+" IsDone: "+this.isDone
-				+" IsValid: "+this.isValidGoal);
 	}
 	/**
 	 * Sets the planner goal to the given @see Position.
@@ -151,12 +170,12 @@ public class Planner extends RobotDevice
 		isNewGoal = true;
 		isValidGoal = false;
 		isDone = false;
-		isCanceled = false;
+		isStopped = false;
 		// enable motion
 		((javaclient3.PlannerInterface) device).setRobotMotion(1);
-		
+
 		try { Thread.sleep(getSleepTime()*2); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
-		
+
 		notify = true; // notify listeners of this new goal
 
 		return isValidGoal();
@@ -192,11 +211,11 @@ public class Planner extends RobotDevice
 	 * Does not remove goal from goal stack but stops robot motion.
 	 */
 	public boolean stop() {
-		isCanceled  = true;
-				
+		isStopped  = true;
+		
 		// disable motion
 		((javaclient3.PlannerInterface) device).setRobotMotion(0);
-		
+
 		return true;
 	}
 	/**
@@ -223,7 +242,7 @@ public class Planner extends RobotDevice
 	public double getCost(Position toPosition) {
 		Position oldGoal = null;
 		double cost = -1.0;
-		
+
 		if (isActive() == true) {
 			// Suspend current goal
 			oldGoal = globalGoal;
@@ -232,7 +251,7 @@ public class Planner extends RobotDevice
 
 		if (setGoal(toPosition) == true)
 			cost = getCost();
-	
+
 		stop();
 
 		// Resume old goal if any
@@ -273,7 +292,7 @@ public class Planner extends RobotDevice
 		else
 			if (isValidGoal() == false)
 				return false;
-		
+
 		return true;
 	}
 }

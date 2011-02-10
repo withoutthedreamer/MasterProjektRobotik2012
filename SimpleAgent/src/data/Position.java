@@ -110,7 +110,7 @@ public class Position {
 					+ Math.pow(
 						Math.abs(x-position.getX()),2));
 		} else {
-			return -1;
+			return Double.MAX_VALUE;
 		}
 	}
 }
