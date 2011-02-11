@@ -13,12 +13,15 @@ import jadex.commons.ChangeEvent;
 import jadex.commons.IChangeListener;
 import jadex.micro.MicroAgent;
 import jadex.micro.MicroAgentMetaInfo;
+import jadex.service.HelloService;
 import jadex.service.SendPositionService;
 
 public class ViewAgent extends MicroAgent {
 
 
-	SendPositionService ps = null;
+	/** Services */
+	HelloService hs;
+	SendPositionService ps;
 
 	protected static String port = "6600";
 	
@@ -29,11 +32,16 @@ public class ViewAgent extends MicroAgent {
 	@Override
 	public void agentCreated()
 	{
+		hs = new HelloService(getExternalAccess());
 		ps = new SendPositionService(getExternalAccess());
+
+		addDirectService(hs);
 		addDirectService(ps);
 
 		deviceNode = new DeviceNode("localhost", (Integer)getArgument("port"));
 		deviceNode.runThreaded();
+		
+		hs.send(getComponentIdentifier().toString(), "", "Hello");
 	}
 
 	@Override
@@ -70,16 +78,19 @@ public class ViewAgent extends MicroAgent {
 	@Override
 	public void agentKilled() {
 		deviceNode.shutdown();
+		hs.send(getComponentIdentifier().toString(), "", "Bye");
 	}
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
 		IArgument[] args = {
-				new Argument("requires player", "dummy", "Boolean", new Boolean(true)),
+//				new Argument("requires player", "dummy", "Boolean", new Boolean(true)),
 //				new Argument("player path", "dummy", "String", playerPath),
-				new Argument("port", "dummy", "Integer", new Integer(port)),	
-				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg")};
+				new Argument("port", "dummy", "Integer", new Integer(port))};
+//				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg")};
 		
-		return new MicroAgentMetaInfo("This agent starts up a Player agent.", null, args, null);
+		return new MicroAgentMetaInfo("This agent starts up a view agent.", null, args, null);
 	}
+
+	public HelloService getHelloService() { return hs; }
 	public SendPositionService getSendPositionService() { return ps; }
 }

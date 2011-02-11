@@ -15,10 +15,10 @@ import jadex.service.*;
 
 public class MasterAgent extends MicroAgent
 {
-	// Logging support
+	/** Logging support */
     private static Logger logger = Logger.getLogger (Device.class.getName ());
 	
-	/* Services */
+	/** Services */
 	HelloService hs;
 	SendPositionService ps;
 	ReceiveNewGoalService gs;
@@ -41,7 +41,7 @@ public class MasterAgent extends MicroAgent
 		addDirectService(gs);
 		addDirectService(gr);
 		
-		hs.send(getComponentIdentifier().toString(), "dummy", "Hello");
+		hs.send(getComponentIdentifier().toString(), "", "Hello");
 
 		logger.info("Sent Hello "+getComponentIdentifier().toString());
 	}
@@ -118,7 +118,7 @@ public class MasterAgent extends MicroAgent
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				gs.send(getComponentIdentifier().toString(), "r0", new Position(-6.5,-1.5,0));
+				gs.send(getComponentIdentifier().toString(), "all", new Position(-6.5,-1.5,0));
 				return null;
 			}
 		});
@@ -138,7 +138,7 @@ public class MasterAgent extends MicroAgent
 	public void agentKilled() {
 		board.clear();
 
-		hs.send(getComponentIdentifier().toString(), "dummy", "Bye");
+		hs.send(getComponentIdentifier().toString(), "", "Bye");
 
 		logger.info("Sent bye "+getComponentIdentifier().toString());
 	}

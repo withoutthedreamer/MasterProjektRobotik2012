@@ -55,7 +55,7 @@ public class Planner extends RobotDevice
 	}
 	protected void update ()
 	{
-		if(isStopped == true) return;
+//		if(isStopped == true) return;
 
 		/** Check for ready planner data */
 		if (((javaclient3.PlannerInterface) device).isDataReady()) {
@@ -76,11 +76,7 @@ public class Planner extends RobotDevice
 				// Check if really at the goal position
 				if (globalGoal.distanceTo(curPosition) < 1.0) {
 					isDone = true;
-					if (timerIsArmed == true) {
-						timerIsArmed = false;
-						timer.cancel();
-						timer = new Timer();
-					}
+					stopTimer();
 					notifyListeners();
 				} else {
 					/** Set the goal again */
@@ -89,31 +85,15 @@ public class Planner extends RobotDevice
 			}
 			else /** Planner is not yet done */
 			{
-				if (isValidGoal == true) {
+				if (isValidGoal != true) {
+					isDone = true;
+				} else {
 					isDone = false;					
 					/** Check if planner is maybe stucked */
-					if (goal.distanceTo(curPosition) < 1.0)
-					{
-						if ( timerIsArmed == false) {
-							timerIsArmed = true;
-							logger.info("Set up planner watchdog timer");
-
-							timer.schedule(new TimerTask()
-							{
-								public void run()
-								{
-									timerIsArmed = false;
-									logger.info("Watchdog occured");
-									// Check if not already finished
-									if (isDone() == false) {
-										notifyListeners(); // TODO debug setDone();
-										stop();
-
-										logger.config("Timout for goal: "+globalGoal.toString());
-									}
-								}
-							}, 20000);		
-						}
+					if (goal.distanceTo(curPosition) < 1.0)	{
+						startTimer();
+					} else {
+						stopTimer();
 					}
 				}
 			}
@@ -239,7 +219,7 @@ public class Planner extends RobotDevice
 	 * @param toPosition @see Position to calculate the cost.
 	 * @return The cost value.
 	 */
-	public double getCost(Position toPosition) {
+	public synchronized double getCost(Position toPosition) {
 		Position oldGoal = null;
 		double cost = -1.0;
 
@@ -278,7 +258,7 @@ public class Planner extends RobotDevice
 			while (it.hasNext()) { it.next().callWhenIsDone(); }
 		}
 	}
-	@Override public void shutdown() {
+	@Override synchronized public void shutdown() {
 		super.shutdown();
 		isDoneListeners.clear();
 	}
@@ -294,5 +274,42 @@ public class Planner extends RobotDevice
 				return false;
 
 		return true;
+	}
+	/**
+	 * Start a timer if not already a timer is running.
+	 */
+	synchronized void startTimer() {
+		if ( timerIsArmed == false) {
+			timerIsArmed = true;
+			logger.info("Set up planner watchdog timer");
+
+			timer.schedule(new TimerTask()
+			{
+				public void run()
+				{
+					timerIsArmed = false;
+					logger.info("Watchdog occured");
+					// Check if not already finished
+					if (isDone() == false) {
+						notifyListeners(); // TODO debug setDone();
+						stop();
+
+						logger.config("Timout for goal: "+globalGoal.toString());
+					}
+				}
+			}, 20000);
+		}
+	}
+	/**
+	 * Stop a timer if already a timer has been started.
+	 */
+	synchronized void stopTimer() {
+		if (timerIsArmed == true) {
+			timerIsArmed = false;
+			timer.cancel();
+			timer = new Timer();
+
+			logger.info("Watchdog canceled");
+		}
 	}
 }

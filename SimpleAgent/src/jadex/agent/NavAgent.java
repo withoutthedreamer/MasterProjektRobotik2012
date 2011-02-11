@@ -56,7 +56,7 @@ public class NavAgent extends MicroAgent
 		robot.setRobotId((String)getArgument("robot name"));
 		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), (Double)getArgument("Yaw")));
 				
-		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), ": Hello");
+		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Hello");
 		logger.info("Sent Hello "+getComponentIdentifier().toString());
 	}
 
@@ -118,7 +118,7 @@ public class NavAgent extends MicroAgent
 			public Object execute(IInternalAccess args)
 			{
 				curPos = robot.getPosition();
-				if(curPos.equals(lastPos) == false) {
+				if(curPos.equals(lastPos) == false && curPos != null) {
 					ps.send(getComponentIdentifier().toString(), robot.getRobotId(), curPos);
 
 					logger.finer("Sending position "+getComponentIdentifier().toString());
