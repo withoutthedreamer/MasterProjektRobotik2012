@@ -58,6 +58,7 @@ public class ViewAgent extends MicroAgent {
 						Object[] content = (Object[])event.getValue();
 
 						simu.setPositionOf((String)content[1], (Position)content[2]);
+//						System.err.println("View receive: "+(String)content[1]+(Position)content[2]);
 					}
 				});
 				return null;

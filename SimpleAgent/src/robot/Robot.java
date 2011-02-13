@@ -199,4 +199,10 @@ public class Robot extends Device implements IRobot {
 	public Planner getPlanner() {
 		return planner;
 	}
+	/**
+	 * @return the current @see Localize @see Device or 'null' if no such device.
+	 */
+	public Localize getLocalizer() {
+		return localizer;
+	}
 }

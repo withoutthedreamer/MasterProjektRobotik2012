@@ -14,6 +14,7 @@ import jadex.service.ReceiveNewGoalService;
 import jadex.service.SendPositionService;
 import data.Position;
 import device.DeviceNode;
+import device.ILocalizeListener;
 import device.IPlannerListener;
 import robot.NavRobot;
 
@@ -30,10 +31,7 @@ public class NavAgent extends MicroAgent
 	
 	DeviceNode deviceNode = null;
 	NavRobot robot = null;
-	Position curPos = null;
-	Position lastPos = null;
-	
-	
+		
 	@Override
 	public void agentCreated()
 	{
@@ -53,8 +51,8 @@ public class NavAgent extends MicroAgent
 		deviceNode.runThreaded();
 
 		robot = new NavRobot(deviceNode);
-		robot.setRobotId((String)getArgument("robot name"));
-		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), (Double)getArgument("Yaw")));
+		robot.setRobotId((String)getArgument("name"));
+		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), Math.toRadians((Double)getArgument("Yaw"))));
 				
 		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Hello");
 		logger.info("Sent Hello "+getComponentIdentifier().toString());
@@ -77,13 +75,30 @@ public class NavAgent extends MicroAgent
 				{
 					@Override public void callWhenIsDone() {
 						gr.send(getComponentIdentifier().toString(), robot.getRobotId(),robot.getPlanner().getGoal());
+						
 						logger.finest((String)getArgument("robot name")+" reached goal "+robot.getPlanner().getGoal().toString());
 					}
 				});
 				return null;
 			}
 		});
-		
+		/** Register localizer callback */
+		scheduleStep(new IComponentStep()
+		{
+			public Object execute(IInternalAccess ia)
+			{
+				robot.getLocalizer().addListener(new ILocalizeListener()
+				{
+					@Override public void newPositionAvailable(Position newPose) {
+						ps.send(getComponentIdentifier().toString(), robot.getRobotId(), newPose);
+
+						logger.finest("Sending position "+getComponentIdentifier()+" "+newPose);
+					}
+				});
+				return null;
+			}
+		});
+
 		/** Register new goal event callback */
 		scheduleStep(new IComponentStep()
 		{
@@ -104,32 +119,13 @@ public class NavAgent extends MicroAgent
 							 ((String)content[1]).equals("all") )
 						{
 							robot.setGoal((Position)content[2]);
-							logger.info((String)getArgument("robot name")+" received new goal "+((Position)content[2]).toString());
+							logger.finest((String)getArgument("robot name")+" received new goal "+((Position)content[2]).toString());
 						}
 					}
 				});
 				return null;
 			}
 		});
-		
-		/** Set up periodical position broadcast */
-		final IComponentStep step = new IComponentStep()
-		{			
-			public Object execute(IInternalAccess args)
-			{
-				curPos = robot.getPosition();
-				if(curPos.equals(lastPos) == false && curPos != null) {
-					ps.send(getComponentIdentifier().toString(), robot.getRobotId(), curPos);
-
-					logger.finer("Sending position "+getComponentIdentifier().toString());
-					lastPos = curPos;
-				}
-
-				waitFor(1000, this);
-				return null;
-			}
-		};
-		waitForTick(step);
 	}
 	@Override
 	public void agentKilled() {
@@ -149,11 +145,11 @@ public class NavAgent extends MicroAgent
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
 		IArgument[] args = {
-				new Argument("port", "dummy", "Integer", new Integer(6665)),
-				new Argument("robot name", "dummy", "String", "r0"),
-				new Argument("X", "dummy", "Double", new Double(-6)),
-				new Argument("Y", "dummy", "Double", new Double(-5)),
-				new Argument("Yaw", "dummy", "Double", new Double(Math.toRadians(90)))
+				new Argument("port", "Player", "Integer", new Integer(6665)),
+				new Argument("name", "Robot", "String", "r0"),
+				new Argument("X", "Meter", "Double", new Double(-6)),
+				new Argument("Y", "Meter", "Double", new Double(-5)),
+				new Argument("Yaw", "Degree", "Double", new Double(0))
 		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a navigation agent.", null, args, null);

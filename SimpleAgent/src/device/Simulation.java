@@ -129,9 +129,11 @@ public class Simulation extends RobotDevice {
 	 */
 	public synchronized void setPositionOf(String key, Position value)
 	{
-		objList.put(key, new Position(value));
-		// Mark dirty
-		isDirtyList.put(key, true);
+		if (key != null && value != null) {
+			objList.put(key, new Position(value));
+			// Mark dirty
+			isDirtyList.put(key, true);
+		}
 	}
 	/**
 	 * Returns the last known object Position.
