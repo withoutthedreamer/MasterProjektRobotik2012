@@ -29,13 +29,13 @@ floorplan
 robot
 (
   name "r0"
-  pose [ -6 -5 0 90 ]
+  pose [ -6 -5 0 0 ]
 )
 
 robot
 (
   name "r1"
-  pose [ -3 -5 0 90 ]
+  pose [ -6 -7 0 0 ]
 )
 
 # Place some blobs

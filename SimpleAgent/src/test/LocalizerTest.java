@@ -1,5 +1,8 @@
 package test;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -8,6 +11,7 @@ import data.Position;
 import device.Device;
 import device.DeviceNode;
 import device.IDevice;
+import device.ILocalizeListener;
 import device.Localize;
 import device.Position2d;
 import device.Simulation;
@@ -18,6 +22,9 @@ public class LocalizerTest extends TestCase {
 	static DeviceNode deviceNode = null;
 	static Simulation simu = null;
 	static Position2d motor = null;
+	static Position curPosition;
+	static boolean isNewPose;
+	static boolean shutdown;
 
 	@Test public void testInit() {
 		deviceNode = new DeviceNode(new Object[]{"localhost",6665, "localhost",6666});
@@ -36,31 +43,55 @@ public class LocalizerTest extends TestCase {
 		assertEquals(localizer.getClass(),Localize.class);
 		assertEquals(localizer.isRunning(), true);
 		assertEquals(localizer.isThreaded(), true);
+		
+		localizer.addListener(new ILocalizeListener()
+		{
+			public void newPositionAvailable(Position newPose)
+			{
+				isNewPose = true;
+				curPosition = newPose;
+				System.err.println("New position: "+newPose.toString());
+			}
+		});
 	}
 
 	@Test public void testSetPosition() {
-		Position pose = new Position(-6,-5,Math.toRadians(90));
+		Position pose = new Position(-6,-5,0);
 		
 		simu.setPositionOf("r0", pose);
-		while(simu.getPositionOf("r0").isNearTo(pose) != true);
+		while(simu.getPositionOf("r0").distanceTo(pose) > 1.0);
 		
-		assertTrue(localizer.setPosition(pose));
+		localizer.setPosition(pose);		
 		
 	}
 	@Test public void testGetPosition() {
-		assertTrue(localizer.getPosition().isNearTo(new Position(-6,-5,Math.toRadians(90))));
+		isNewPose = false;
+		while (isNewPose == false)
+			try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
+
+		assertTrue(curPosition.distanceTo(new Position(-6,-5,0)) < 1.0);
 	}
 	
 	@Test public void testGetPositionLoop() {
-		motor.setSpeed(0.3);
-		for (int i=0; i<10; i++) {
-			System.err.println("getPosition: "+localizer.getPosition().toString());
-			try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
-		}
-		motor.setSpeed(0.0);
+		motor.setSpeed(0.4);
+		motor.setTurnrate(0.04);
+		
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask()
+		{
+			public void run() {
+				shutdown = true;
+			}
+		}, 20000);
 	}
 
 	@Test public void testShutdown() {
+		shutdown = false;
+		while (shutdown == false)
+			try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
+
+		motor.setSpeed(0.0);
+		
 		deviceNode.shutdown();
 		assertFalse(localizer.isRunning());
 	}
