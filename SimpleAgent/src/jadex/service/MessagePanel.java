@@ -12,6 +12,8 @@ import jadex.micro.IMicroExternalAccess;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -42,7 +44,7 @@ public class MessagePanel extends JPanel
 		this.agent = agent;
 		
 		final JTextArea ta = new JTextArea(10, 30);
-		JScrollPane main = new JScrollPane(ta);
+		final JScrollPane main = new JScrollPane(ta);
 		
 		/** Register message service */
 		agent.scheduleStep(new IComponentStep()
@@ -57,7 +59,9 @@ public class MessagePanel extends JPanel
 						String[] text = (String[])event.getValue();
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(text[0]).append("]: ").append(text[1]).append(lf);
+	
 						ta.append(buf.toString());
+						scrollToEnd(main);
 					}
 				});
 				return null;
@@ -79,6 +83,7 @@ public class MessagePanel extends JPanel
 						buf.append("[").append(content[0].toString()).append("|HelloService").append("]: ").append(content[1].toString()).append(" says: ").append(content[2].toString()).append(lf);
 												
 						ta.append(buf.toString());
+						scrollToEnd(main);
 					}
 				});
 				return null;
@@ -100,6 +105,7 @@ public class MessagePanel extends JPanel
 						buf.append("[").append(content[0].toString()).append("|PoseUpdateService").append("]: ").append(content[1].toString()).append(" says: ").append(content[2]).append(lf);
 						
 						ta.append(buf.toString());
+						scrollToEnd(main);
 					}
 				});
 				return null;
@@ -121,6 +127,7 @@ public class MessagePanel extends JPanel
 						buf.append("[").append(content[0].toString()).append("|GoalReachedService").append("]: ").append(content[1].toString()).append(" says: ").append(content[2].toString()).append(lf);						
 
 						ta.append(buf.toString());
+						scrollToEnd(main);
 					}
 				});
 				return null;
@@ -142,6 +149,7 @@ public class MessagePanel extends JPanel
 						buf.append("[").append(content[0].toString()).append("|NewGoalService").append("]: ").append(content[1].toString()).append(" heading ").append(content[2].toString()).append(lf);
 						
 						ta.append(buf.toString());
+						scrollToEnd(main);
 					}
 				});
 				return null;
@@ -173,64 +181,6 @@ public class MessagePanel extends JPanel
 		tf.addActionListener(al);
 		send.addActionListener(al);
 		
-//		ActionListener al2 = new ActionListener()
-//		{
-//			public void actionPerformed(ActionEvent e)
-//			{
-//				agent.scheduleStep(new IComponentStep()
-//				{
-//					public Object execute(IInternalAccess ia)
-//					{
-//						ConsoleAgent ca = (ConsoleAgent)ia;
-//						ca.getHelloService().send(""+agent.getComponentIdentifier(), "dummy", tf.getText());
-//						tf.setText("");
-//						return null;
-//					}
-//				});
-//			}
-//		};
-//		tf.addActionListener(al2);
-//		send.addActionListener(al2);
-//		
-//		ActionListener al3 = new ActionListener()
-//		{
-//			public void actionPerformed(ActionEvent e)
-//			{
-//				agent.scheduleStep(new IComponentStep()
-//				{
-//					public Object execute(IInternalAccess ia)
-//					{
-//						ConsoleAgent ca = (ConsoleAgent)ia;
-//						ca.getReceiveNewGoalService().send(""+agent.getComponentIdentifier(), "dummy", tf.getText());
-//						tf.setText("");
-//						return null;
-//					}
-//				});
-//			}
-//		};
-//		tf.addActionListener(al3);
-//		send.addActionListener(al3);
-//
-//		ActionListener al4 = new ActionListener()
-//		{
-//			public void actionPerformed(ActionEvent e)
-//			{
-//				agent.scheduleStep(new IComponentStep()
-//				{
-//					public Object execute(IInternalAccess ia)
-//					{
-//						ConsoleAgent ca = (ConsoleAgent)ia;
-//						ca.getSendPositionService().send(""+agent.getComponentIdentifier(),"dummy", tf.getText());
-//						tf.setText("");
-//						return null;
-//					}
-//				});
-//			}
-//		};
-//
-//		tf.addActionListener(al4);
-//		send.addActionListener(al4);
-
 		this.setLayout(new BorderLayout());
 		this.add(main, BorderLayout.CENTER);
 		this.add(south, BorderLayout.SOUTH);
@@ -272,5 +222,15 @@ public class MessagePanel extends JPanel
 				return null;
 			}
 		});
+	}
+	
+	void scrollToEnd(JScrollPane sp)
+	{
+		sp.getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener()
+		{  
+			public void adjustmentValueChanged(AdjustmentEvent e) {  
+				e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+			}
+		});  
 	}
 }
