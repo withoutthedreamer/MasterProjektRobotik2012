@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 public class Device implements IDevice, Runnable
 {
-	// Logging support
+	/** Logging support */
     private static Logger logger = Logger.getLogger (Device.class.getName ());
 
 	protected ConcurrentLinkedQueue<Device> deviceList = null;
@@ -16,7 +16,7 @@ public class Device implements IDevice, Runnable
 	int port = 0;
 	int deviceNumber = 0;
 	
-	// Every class of this type has it's own thread
+	/** Every class of this type has it's own thread */
 	protected Thread thread = new Thread ( this );
 
 	long SLEEPTIME = 100;
@@ -102,7 +102,6 @@ public class Device implements IDevice, Runnable
 			thread.start();
 			while (thread.isAlive() == false);
 
-//			ProjectLogger.logDeviceActivity(false, "Running", this);
 			logger.info("Running "+this.getClass().toString()+" in "+thread.getName());
 		}
 	}
@@ -119,7 +118,6 @@ public class Device implements IDevice, Runnable
 			{
 				try { Thread.sleep ( SLEEPTIME ); }
 				catch (InterruptedException e) {
-//					thread.interrupt();
 					isThreaded = false;
 				}
 			}
@@ -130,35 +128,29 @@ public class Device implements IDevice, Runnable
 				}
 				// else if (SLEEPTIME < 0) do nothing				
 		}
-		isRunning = false;    // sync with setNotThreaded
-		// TODO java.lang.Error: Interrupted attempt to aquire write lock
-//		ProjectLogger.logDeviceActivity(false, "Shutdown", this);
+		isRunning = false;    /** sync with setNotThreaded */
+		
 		logger.info("Shutdown "+this.getClass().toString()+" in "+thread.getName());
 	}
 	public synchronized void shutdown()
 	{
 		isThreaded = false;
         
-		while (isRunning == true)
-		{// wait to exit run thread
+		while (isRunning == true) /** wait to exit run thread */
+		{
             try { Thread.sleep (10); } catch (Exception e) { }
 		}
 		
-//		thread.interrupt();
-//		while (thread.isAlive());
-		
-		// Stop all devices
+		/** Stop all devices */
 		if (deviceList.size() > 0) {
 			Iterator<Device> deviceIterator = deviceList.iterator();
 			while (deviceIterator.hasNext()) {
 				Device device = deviceIterator.next();
 				
-				// Stop device
-//				device.thread.interrupt();
-//				while (device.thread.isAlive());
+				/** Stop device */
 				device.shutdown();
 			}
-			// empty device list
+			/** empty device list */
 			deviceList.clear();
 		}
 	}
@@ -172,11 +164,11 @@ public class Device implements IDevice, Runnable
 	
 	public synchronized final void addToDeviceList(Device dev) {
 
-		// Check if it has other devices linked
+		/** Check if it has other devices linked */
 		Iterator<Device> iter = dev.getDeviceIterator(); 
 		if (iter != null) {
 			while (iter.hasNext()) {
-				// Add the device to internal list	
+				/** Add the device to internal list */	
 				addToDeviceList(dev);
 			}
 		}

@@ -51,11 +51,6 @@
 			<locationURI>PARENT-1-PROJECT_LOC/stage_local/rangertolaser.cfg</locationURI>
 		</link>
 		<link>
-			<name>player/sick.inc</name>
-			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/stage_local/sick.inc</locationURI>
-		</link>
-		<link>
 			<name>player/uhh.cfg</name>
 			<type>1</type>
 			<locationURI>PARENT-1-PROJECT_LOC/stage_local/uhh.cfg</locationURI>

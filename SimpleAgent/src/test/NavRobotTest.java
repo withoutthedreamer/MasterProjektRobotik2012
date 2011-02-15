@@ -47,9 +47,9 @@ public class NavRobotTest extends TestCase {
 
 	@Test
 	public void testGetPosition() {
-		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 
-		assertTrue(robot.getPosition().isNearTo((new Position(-6,-5,Math.toRadians(90)))));
+		assertTrue(robot.getPosition().distanceTo((new Position(-6,-5,Math.toRadians(90)))) < 1.0);
 	}
 
 	@Test
