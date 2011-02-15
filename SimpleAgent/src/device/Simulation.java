@@ -19,11 +19,9 @@ import javaclient3.structures.simulation.PlayerSimulationPose2dReq;
 public class Simulation extends RobotDevice {
 		
 	static Simulation instance = null;
-	// Objects of interest in the simulation
-	ConcurrentHashMap<String,Position> objList = null;
-	ConcurrentHashMap<String,Boolean> isDirtyList = null;
-//	Set<Entry<String,Position>> set = null;
-//	Iterator<Entry<String, Position>> i = null;
+	/** Objects of interest in the simulation */
+	ConcurrentHashMap<String,Position> objList;
+	ConcurrentHashMap<String,Boolean> isDirtyList;
 
 	protected Simulation () {
 		super();
@@ -70,7 +68,6 @@ public class Simulation extends RobotDevice {
 		Set<Entry<String,Position>> set = objList.entrySet();
 		Iterator<Entry<String, Position>> i = set.iterator();
 		while(i.hasNext())
-//		if(i.hasNext())
 		{
 			Map.Entry<String, Position> me = (Map.Entry<String, Position>)i.next();
 			String key = (String)me.getKey();
@@ -81,29 +78,23 @@ public class Simulation extends RobotDevice {
 				Position pos = (Position)me.getValue();
 				PlayerPose pp = new PlayerPose(pos.getX(), pos.getY(), pos.getYaw());
 				
-//				while ( ! ((javaclient3.SimulationInterface) device).isDataReady() );// { // TODO debug it
 				((javaclient3.SimulationInterface) device).set2DPose(key, pp);
-//				try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
 			}
 			else
 			{
 				((javaclient3.SimulationInterface) device).get2DPose (key);
-				
-//				try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
-				
+								
 				if (((javaclient3.SimulationInterface) device).isPose2DReady())
 				{
 					PlayerSimulationPose2dReq pose = ((javaclient3.SimulationInterface) device).getSimulationPose2D();
 					PlayerPose pPose = pose.getPose();
-					Position curPose = new Position(
-//							pose.getPose().getPx(),
-							pPose.getPx(),
-//							pose.getPose().getPy(),
-							pPose.getPy(),
-//							pose.getPose().getPa());
-							pPose.getPa());
-					objList.put(key, curPose);
-//					System.err.println(key + ": " + curPose.toString());
+					if (pPose != null) {
+						Position curPose = new Position(
+								pPose.getPx(),
+								pPose.getPy(),
+								pPose.getPa());
+						objList.put(key, curPose);
+					}
 					
 				}
 			}
@@ -131,7 +122,7 @@ public class Simulation extends RobotDevice {
 	{
 		if (key != null && value != null) {
 			objList.put(key, new Position(value));
-			// Mark dirty
+			/** Mark dirty */
 			isDirtyList.put(key, true);
 		}
 	}
