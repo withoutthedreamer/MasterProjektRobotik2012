@@ -261,6 +261,7 @@ public class Planner extends RobotDevice
 	@Override synchronized public void shutdown() {
 		super.shutdown();
 		isDoneListeners.clear();
+		stopTimer();
 	}
 	/**
 	 * Checks if the planner is currently busy with a plan.

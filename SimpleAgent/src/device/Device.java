@@ -112,6 +112,7 @@ public class Device implements IDevice, Runnable
 	    isRunning = true;
 		while ( ! thread.isInterrupted() && isThreaded == true)
 		{
+			/** Do sub-class specific stuff */
 			update();
 			
 			if (SLEEPTIME > 0)
@@ -134,17 +135,25 @@ public class Device implements IDevice, Runnable
 	}
 	public synchronized void shutdown()
 	{
+		long delayCount = 0;
+		
 		isThreaded = false;
         
-		while (isRunning == true) /** wait to exit run thread */
+		while (isRunning == true) /** wait to exit run loop */
 		{
-            try { Thread.sleep (10); } catch (Exception e) { }
+			delayCount += 1;
+			if (delayCount > 2)
+				logger.fine("Shutdown delayed " + this.getClass().getName());
+			
+            try { Thread.sleep (100); } catch (Exception e) { }
 		}
 		
 		/** Stop all devices */
-		if (deviceList.size() > 0) {
+		if (deviceList.size() > 0)
+		{
 			Iterator<Device> deviceIterator = deviceList.iterator();
-			while (deviceIterator.hasNext()) {
+			while (deviceIterator.hasNext())
+			{
 				Device device = deviceIterator.next();
 				
 				/** Stop device */
