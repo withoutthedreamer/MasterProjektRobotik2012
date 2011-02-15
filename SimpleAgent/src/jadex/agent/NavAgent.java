@@ -2,7 +2,6 @@ package jadex.agent;
 
 import java.util.logging.Logger;
 
-import core.ProjectLogger;
 import jadex.bridge.*;
 import jadex.commons.ChangeEvent;
 import jadex.commons.IChangeListener;
@@ -20,8 +19,8 @@ import robot.NavRobot;
 
 public class NavAgent extends MicroAgent
 {
-	// Logging support
-    private static Logger logger = Logger.getLogger (ProjectLogger.class.getName ());
+	/** Logging support */
+    private static Logger logger = Logger.getLogger (NavAgent.class.getName ());
 
 	/** Services */
 	HelloService hs;
@@ -46,7 +45,7 @@ public class NavAgent extends MicroAgent
 		addDirectService(gr);
 
 		Integer port = (Integer)getArgument("port");
-		// Get the device node
+		/** Get the device node */
 		deviceNode = new DeviceNode(new Object[] {"localhost",port, "localhost",port+1});
 		deviceNode.runThreaded();
 
@@ -71,14 +70,17 @@ public class NavAgent extends MicroAgent
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				robot.getPlanner().addIsDoneListener(new IPlannerListener()
+				if (robot.getPlanner() != null) /** Does it have a planner? */
 				{
-					@Override public void callWhenIsDone() {
-						gr.send(getComponentIdentifier().toString(), robot.getRobotId(),robot.getPlanner().getGoal());
-						
-						logger.finest((String)getArgument("robot name")+" reached goal "+robot.getPlanner().getGoal().toString());
-					}
-				});
+					robot.getPlanner().addIsDoneListener(new IPlannerListener()
+					{
+						@Override public void callWhenIsDone() {
+							gr.send(getComponentIdentifier().toString(), robot.getRobotId(),robot.getPlanner().getGoal());
+
+							logger.finest((String)getArgument("name")+" reached goal "+robot.getPlanner().getGoal().toString());
+						}
+					});
+				}
 				return null;
 			}
 		});
@@ -87,14 +89,17 @@ public class NavAgent extends MicroAgent
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				robot.getLocalizer().addListener(new ILocalizeListener()
+				if (robot.getLocalizer() != null) /** Does it have a localizer? */
 				{
-					@Override public void newPositionAvailable(Position newPose) {
-						ps.send(getComponentIdentifier().toString(), robot.getRobotId(), newPose);
+					robot.getLocalizer().addListener(new ILocalizeListener()
+					{
+						@Override public void newPositionAvailable(Position newPose) {
+							ps.send(getComponentIdentifier().toString(), robot.getRobotId(), newPose);
 
-						logger.finest("Sending position "+getComponentIdentifier()+" "+newPose);
-					}
-				});
+							logger.finest("Sending position "+getComponentIdentifier()+" "+newPose);
+						}
+					});
+				}
 				return null;
 			}
 		});
@@ -114,12 +119,12 @@ public class NavAgent extends MicroAgent
 						
 						logger.finer("Receiving "+buf.toString()+" "+getComponentIdentifier().toString());
 						
-						// Check if it is my goal
-						if ( ((String)content[1]).equals((String)getArgument("robot name")) ||
+						/** Check if it is this robot's goal */
+						if ( ((String)content[1]).equals((String)getArgument("name")) ||
 							 ((String)content[1]).equals("all") )
 						{
 							robot.setGoal((Position)content[2]);
-							logger.finest((String)getArgument("robot name")+" received new goal "+((Position)content[2]).toString());
+							logger.finest((String)getArgument("name")+" received new goal "+((Position)content[2]).toString());
 						}
 					}
 				});

@@ -19,7 +19,9 @@ import device.Simulation;
 
 public class Robot extends Device implements IRobot {
 
-	// Standard devices
+	/**
+	 *  Standard devices
+	 */
 	// TODO dynamic array
 	Position2d posi = null;
 	Ranger laser = null;
@@ -50,7 +52,7 @@ public class Robot extends Device implements IRobot {
 	public Robot (Device roboDevices) {
 		this();
 		
-		// Make the devices available
+		/** Make the devices available */
 		connectDevices(roboDevices.getDeviceList());
 	}
 	
@@ -165,31 +167,31 @@ public class Robot extends Device implements IRobot {
 				position.setPosition(newPosition);
 		
 		/** Is the robot simulated ? */
-		if (robotId != null && simu != null)
+		if (robotId != null && simu != null) {
+			/** Set the position of the robot simulation */
 			simu.setPositionOf(robotId, newPosition);
+		}
 	}
 
 	/**
-	 * @return Current robot @ref Position or null.
+	 * @return Current robot @see Position or null.
 	 */
 	@Override
 	public Position getPosition()
 	{
-		if (planner != null)
-			return planner.getPosition();
+		if (localizer != null)
+			return localizer.getPosition();
 		else
-			if (localizer != null)
-				return localizer.getPosition();
+			if (posi != null)
+				return posi.getPosition();
 			else
-				if (posi != null)
-					return posi.getPosition();
-				else
-					return new Position(position);
+				return new Position(position);
 	}
 	@Override
 	public void shutdown()
 	{
-		planner.stop();
+		if (planner != null)
+			planner.stop();
 		super.shutdown();
 	}
 	/**
