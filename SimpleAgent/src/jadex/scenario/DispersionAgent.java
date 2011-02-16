@@ -61,33 +61,49 @@ public class DispersionAgent extends MasterAgent {
 			public Object execute(IInternalAccess ia)
 			{
 				getLogger().info("Checking agents on network");
-				ArrayList<Integer> positions = new ArrayList<Integer>();
-			
-				/**
-				 *  Create a sorted number array
-				 */
-				for (int i=0; i<dispersionPoints.length; i++)
-					positions.add(i);
-				
-				Collections.shuffle(positions);
-				getLogger().info("Shuffle positions: "+positions);
+//				ArrayList<Integer> positions = new ArrayList<Integer>();
+//			
+//				/**
+//				 *  Create a sorted number array
+//				 */
+//				for (int i=0; i<dispersionPoints.length; i++)
+//					positions.add(i);
+//				
+//				Collections.shuffle(positions);
+//				getLogger().info("Shuffle positions: "+positions);
 
 				/**
 				 *  Loop through dispersion points
 				 */
 				Iterator<Entry<String, BoardObject>> it = getBoard().getSet().iterator();
-				for (int i=0; i<positions.size(); i++) {
+				
+				for (int i=0; i<dispersionPoints.length; i++) {
+					Position curGoal = dispersionPoints[i];
+					double minGoalDistance = Double.MAX_VALUE;
+					String minDistRobot = "";
+					
 					if (it.hasNext()) {
 						String key = it.next().getKey();
 						
 						/** Check if it is a navigation agent */
 						if ( getBoard().getObject(key).getName().equals(Robot.class.getName()) )
 						{
-							getReceiveNewGoalService().send(""+getComponentIdentifier(), key, dispersionPoints[positions.get(i)]);
-							
-							getLogger().info("Sending goal: "+dispersionPoints[positions.get(i)]+" to "+key);
+							/** Check for the robot distance to goal */
+							if (getBoard().getObject(key) != null) {
+								if (getBoard().getObject(key).getPosition() != null) {
+									double robotDist = getBoard().getObject(key).getPosition().distanceTo(curGoal);
+
+									if (minGoalDistance > robotDist) {
+										minGoalDistance = robotDist;
+										minDistRobot = key;
+									}
+								}
+							}
 						}
 					}
+					getReceiveNewGoalService().send(""+getComponentIdentifier(), minDistRobot, curGoal);
+					
+					getLogger().info("Sending goal: "+curGoal+" to "+minDistRobot);					
 				}
 				
 				if ((Integer)getArgument("dispersionInterval") != -1)
