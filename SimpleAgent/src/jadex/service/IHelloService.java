@@ -11,8 +11,9 @@ public interface IHelloService extends IService
 	/**
 	 *  Hear something.
 	 *  @param name The name of the sender.
-	 *  @param text The text message.
+	 *  @param robotName The name of the robot.
+	 *  @param content The message object (normally a @see String).
 	 */
-	public void receive(String name, String robotName, Object content);
+	public void receive(String name, String robotName, String content);
 		
 }

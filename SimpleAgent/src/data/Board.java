@@ -1,5 +1,8 @@
 package data;
 
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -46,7 +49,10 @@ public class Board
 		objectHm.clear();
 	}
 	
-//	public Iterator<BoardObject> getIterator () {
-//		return objectHm.entrySet().iterator();
-//	}
+	public Iterator<Entry<String, BoardObject>> getIterator () {
+		return objectHm.entrySet().iterator();
+	}
+	public Set<Entry<String,BoardObject>> getSet() {
+		return objectHm.entrySet();
+	}
 }

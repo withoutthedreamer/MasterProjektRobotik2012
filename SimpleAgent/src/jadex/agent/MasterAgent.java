@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 import data.Board;
 import data.BoardObject;
 import data.Position;
-import device.Device;
 import jadex.bridge.IComponentStep;
 import jadex.bridge.IInternalAccess;
 import jadex.commons.ChangeEvent;
@@ -16,7 +15,7 @@ import jadex.service.*;
 public class MasterAgent extends MicroAgent
 {
 	/** Logging support */
-    private static Logger logger = Logger.getLogger (Device.class.getName ());
+    static Logger logger = Logger.getLogger (MasterAgent.class.getName ());
 	
 	/** Services */
 	HelloService hs;
@@ -24,11 +23,11 @@ public class MasterAgent extends MicroAgent
 	ReceiveNewGoalService gs;
 	GoalReachedService gr;
 	
-	/** Global blackboard */
+	/** Blackboard */
 	Board board;
 	
-	@Override
-	public void agentCreated() {
+	@Override public void agentCreated()
+	{
 		board = new Board();
 
 		hs = new HelloService(getExternalAccess());
@@ -41,14 +40,16 @@ public class MasterAgent extends MicroAgent
 		addDirectService(gs);
 		addDirectService(gr);
 		
-		hs.send(getComponentIdentifier().toString(), "", "Hello");
+		hs.send(""+getComponentIdentifier(), "", "Hello");
 
-		logger.info("Sent Hello "+getComponentIdentifier().toString());
+		logger.info(""+getComponentIdentifier()+" sending hello ");
 	}
 
-	@Override
-	public void executeBody() {
-		/** Register to HelloService */
+	@Override public void executeBody()
+	{
+		/**
+		 *  Register to HelloService
+		 */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -59,12 +60,16 @@ public class MasterAgent extends MicroAgent
 					{
 						Object[] content = (Object[])event.getValue();
 						StringBuffer buf = new StringBuffer();
-						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2].toString());
+						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(" ").append(content[2].toString());
 						
-						logger.info("Receiving "+buf.toString()+", I am "+getComponentIdentifier().toString());
+						logger.info(""+getComponentIdentifier()+" receiving "+buf);
 						
 						if (board.getObject((String)content[1]) == null) {
-							board.addObject((String)content[1], new BoardObject());
+							BoardObject bo = new BoardObject();
+							bo.setName((String)content[2]);
+							
+							board.addObject((String)content[1], bo);
+							logger.info(""+getComponentIdentifier()+" adding to board: "+(String)content[1]);
 						}
 					}
 				});
@@ -72,7 +77,9 @@ public class MasterAgent extends MicroAgent
 			}
 		});
 		
-		/** Register to Position update service */
+		/**
+		 *  Register to Position update service
+		 */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -85,14 +92,16 @@ public class MasterAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2]);
 						
-						logger.finer("Receiving "+buf.toString()+" "+getComponentIdentifier().toString());
+						logger.finer(""+getComponentIdentifier()+" receiving "+buf);
 					}
 				});
 				return null;
 			}
 		});
 		
-		/** Register to goal reached service */
+		/**
+		 *  Register to goal reached service
+		 */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -105,7 +114,7 @@ public class MasterAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(" "+content[2].toString());
 						
-						logger.info("Receiving goal reached "+buf.toString()+" "+getComponentIdentifier().toString());
+						logger.info(""+getComponentIdentifier()+" receiving goal reached "+buf);
 						
 					}
 				});
@@ -113,15 +122,31 @@ public class MasterAgent extends MicroAgent
 			}
 		});
 		
-		/** Send a 1st goal */
-		waitFor(5000, new IComponentStep()
-		{
-			public Object execute(IInternalAccess ia)
-			{
-				gs.send(getComponentIdentifier().toString(), "all", new Position(-6.5,-1.5,0));
-				return null;
-			}
-		});
+//		/**
+//		 * Request all robot agents.
+//		 * Do it periodically.
+//		 */
+//		final IComponentStep step = new IComponentStep()
+//		{
+//			public Object execute(IInternalAccess ia)
+//			{
+//				pingAllAgents();
+//				
+//				waitFor(30000,this);
+//				return null;
+//			}
+//		};
+//		waitForTick(step);
+//		
+//		/** Send a 1st goal */
+//		waitFor(5000, new IComponentStep()
+//		{
+//			public Object execute(IInternalAccess ia)
+//			{
+//				gs.send(getComponentIdentifier().toString(), "all", new Position(-6.5,-1.5,0));
+//				return null;
+//			}
+//		});
 		
 //		final IComponentStep step = new IComponentStep()
 //		{
@@ -133,14 +158,19 @@ public class MasterAgent extends MicroAgent
 //		};
 //		waitForTick(step);
 	}
+	public void pingAllAgents()
+	{
+		getHelloService().send(""+getComponentIdentifier(), "", "ping");
 
-	@Override
-	public void agentKilled() {
+		logger.info(""+getComponentIdentifier()+" pinging all agents");
+	}
+	@Override public void agentKilled()
+	{
 		board.clear();
 
-		hs.send(getComponentIdentifier().toString(), "", "Bye");
+		hs.send(""+getComponentIdentifier(), "", "Bye");
 
-		logger.info("Sent bye "+getComponentIdentifier().toString());
+		logger.info(""+getComponentIdentifier()+" sending bye");
 	}
 
 	public HelloService getHelloService() { return hs; }
@@ -153,7 +183,13 @@ public class MasterAgent extends MicroAgent
 		
 	}
 	void goToRobot(Position goalPos, String robotName) {
-		gs.send(getComponentIdentifier().toString(), robotName, new Position(goalPos));
+		gs.send(""+getComponentIdentifier(), robotName, new Position(goalPos));
+	}
+	protected Board getBoard() {
+		return board;
 	}
 
+	public Logger getLogger() {
+		return logger;
+	}
 }

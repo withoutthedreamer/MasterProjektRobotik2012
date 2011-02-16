@@ -32,8 +32,7 @@ public class HelloService extends BasicService implements IHelloService {
 	protected IMicroExternalAccess agent;
 	
 	/** The listeners. */
-	@SuppressWarnings("rawtypes")
-	protected List listeners;
+	protected List<IChangeListener> listeners;
 	
 	//-------- constructors --------
 	
@@ -54,7 +53,7 @@ public class HelloService extends BasicService implements IHelloService {
 	 *  @param name The name.
 	 *  @param text The text.
 	 */
-	public void send(final String name, final String robotName, final Object obj)
+	public void send(final String name, final String robotName, final String obj)
 	{
 		SServiceProvider.getServices(agent.getServiceProvider(), IHelloService.class, true, true)
 			.addResultListener(new DefaultResultListener()
@@ -79,20 +78,18 @@ public class HelloService extends BasicService implements IHelloService {
 	 *  @param name The name.
 	 *  @param text The text.
 	 */
-	@SuppressWarnings("unchecked")
-	public void receive(String name, String robotName, Object obj)
+	public void receive(String name, String robotName, String content)
 	{
 		IChangeListener[] lis = (IChangeListener[])listeners.toArray(new IChangeListener[0]);
 		for(int i=0; i<lis.length; i++)
 		{
-			lis[i].changeOccurred(new ChangeEvent(this, null, new Object[]{name, robotName, obj}));
+			lis[i].changeOccurred(new ChangeEvent(this, null, new Object[]{name, robotName, content}));
 		}
 	}
 	
 	/**
 	 *  Add a change listener.
 	 */
-	@SuppressWarnings("unchecked")
 	public void addChangeListener(IChangeListener listener)
 	{
 		listeners.add(listener);

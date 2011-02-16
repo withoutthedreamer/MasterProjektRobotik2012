@@ -16,11 +16,12 @@ import device.DeviceNode;
 import device.ILocalizeListener;
 import device.IPlannerListener;
 import robot.NavRobot;
+import robot.Robot;
 
 public class NavAgent extends MicroAgent
 {
 	/** Logging support */
-    private static Logger logger = Logger.getLogger (NavAgent.class.getName ());
+    static Logger logger = Logger.getLogger (NavAgent.class.getName ());
 
 	/** Services */
 	HelloService hs;
@@ -31,8 +32,7 @@ public class NavAgent extends MicroAgent
 	DeviceNode deviceNode = null;
 	NavRobot robot = null;
 		
-	@Override
-	public void agentCreated()
+	@Override public void agentCreated()
 	{
 		hs = new HelloService(getExternalAccess());
 		ps = new SendPositionService(getExternalAccess());
@@ -52,13 +52,16 @@ public class NavAgent extends MicroAgent
 		robot = new NavRobot(deviceNode);
 		robot.setRobotId((String)getArgument("name"));
 		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), Math.toRadians((Double)getArgument("Yaw"))));
-				
-		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Hello");
-		logger.info("Sent Hello "+getComponentIdentifier().toString());
+		
+		sendHello();
+	}
+	
+	void sendHello() {
+		hs.send(""+getComponentIdentifier(), robot.getRobotId(), Robot.class.getName());
+		logger.info(""+getComponentIdentifier()+" sending hello");
 	}
 
-	@Override
-	public void executeBody()
+	@Override public void executeBody()
 	{
 		/** Agent is worthless if underlying robot or devices fail */
 		if (robot == null || deviceNode == null) {
@@ -75,9 +78,9 @@ public class NavAgent extends MicroAgent
 					robot.getPlanner().addIsDoneListener(new IPlannerListener()
 					{
 						@Override public void callWhenIsDone() {
-							gr.send(getComponentIdentifier().toString(), robot.getRobotId(),robot.getPlanner().getGoal());
+							gr.send(""+getComponentIdentifier(), robot.getRobotId(),robot.getPlanner().getGoal());
 
-							logger.finest((String)getArgument("name")+" reached goal "+robot.getPlanner().getGoal().toString());
+							logger.info(""+getComponentIdentifier()+(String)getArgument("name")+" reached goal "+robot.getPlanner().getGoal());
 						}
 					});
 				}
@@ -96,7 +99,7 @@ public class NavAgent extends MicroAgent
 						@Override public void newPositionAvailable(Position newPose) {
 							ps.send(getComponentIdentifier().toString(), robot.getRobotId(), newPose);
 
-							logger.finest("Sending position "+getComponentIdentifier()+" "+newPose);
+							logger.finest(""+getComponentIdentifier()+" sending position "+newPose);
 						}
 					});
 				}
@@ -131,9 +134,36 @@ public class NavAgent extends MicroAgent
 				return null;
 			}
 		});
+	
+		/**
+		 *  Register to HelloService
+		 */
+		scheduleStep(new IComponentStep()
+		{
+			public Object execute(IInternalAccess ia)
+			{
+				getHelloService().addChangeListener(new IChangeListener()
+				{
+					public void changeOccurred(ChangeEvent event)
+					{
+						Object[] content = (Object[])event.getValue();
+						StringBuffer buf = new StringBuffer();
+						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(" ").append(content[2].toString());
+												
+						/** Check for reply request */
+						if (((String)content[2]).equalsIgnoreCase("ping")) {
+
+							logger.info(""+getComponentIdentifier()+" receiving "+buf);
+
+							sendHello();
+						}
+					}
+				});
+				return null;
+			}
+		});
 	}
-	@Override
-	public void agentKilled() {
+	@Override public void agentKilled() {
 		
 		robot.shutdown();
 		deviceNode.shutdown();
@@ -152,11 +182,14 @@ public class NavAgent extends MicroAgent
 		IArgument[] args = {
 				new Argument("port", "Player", "Integer", new Integer(6665)),
 				new Argument("name", "Robot", "String", "r0"),
-				new Argument("X", "Meter", "Double", new Double(-6)),
-				new Argument("Y", "Meter", "Double", new Double(-5)),
+				new Argument("X", "Meter", "Double", new Double(-21.0)),
+				new Argument("Y", "Meter", "Double", new Double(4.0)),
 				new Argument("Yaw", "Degree", "Double", new Double(0))
 		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a navigation agent.", null, args, null);
+	}
+	public Logger getLogger() {
+		return logger;
 	}
 }
