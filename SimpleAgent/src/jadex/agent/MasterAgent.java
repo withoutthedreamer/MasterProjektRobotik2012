@@ -92,6 +92,14 @@ public class MasterAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2]);
 						
+						BoardObject bo = board.getObject((String)content[1]); 
+						if (bo != null) {
+							Position pose = (Position)content[2];
+							if (pose != null) {
+								bo.setPosition(pose);
+							}
+						}
+						
 						logger.finer(""+getComponentIdentifier()+" receiving "+buf);
 					}
 				});
@@ -114,6 +122,14 @@ public class MasterAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(" "+content[2].toString());
 						
+						BoardObject bo = board.getObject((String)content[1]); 
+						if (bo != null) {
+							Position pose = (Position)content[2];
+							if (pose != null) {
+								if (bo.getGoal() != null)
+									bo.getGoal().setPosition(new Position(0,0,0));
+							}
+						}
 						logger.info(""+getComponentIdentifier()+" receiving goal reached "+buf);
 						
 					}

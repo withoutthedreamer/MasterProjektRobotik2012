@@ -3,6 +3,7 @@ package data;
 public class BoardObject {
 	
 	Goal goal;
+	Position position;
 	double distanceGoal;
 	String name;
 	
@@ -34,6 +35,14 @@ public class BoardObject {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Position getPosition() {
+		return position;
+	}
+
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 
 }

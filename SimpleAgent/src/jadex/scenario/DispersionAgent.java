@@ -13,8 +13,11 @@ import robot.Robot;
 import data.BoardObject;
 import data.Position;
 import jadex.agent.MasterAgent;
+import jadex.bridge.Argument;
+import jadex.bridge.IArgument;
 import jadex.bridge.IComponentStep;
 import jadex.bridge.IInternalAccess;
+import jadex.micro.MicroAgentMetaInfo;
 
 /**
  * @author sebastian
@@ -47,7 +50,7 @@ public class DispersionAgent extends MasterAgent {
 				getBoard().clear();
 				pingAllAgents();
 				
-				waitFor(10000,this);
+				waitFor((Integer)getArgument("pingInterval"),this);
 				return null;
 			}
 		});
@@ -86,12 +89,24 @@ public class DispersionAgent extends MasterAgent {
 						}
 					}
 				}
-				waitFor(30000,this);
+				
+				if ((Integer)getArgument("dispersionInterval") != -1)
+					waitFor((Integer)getArgument("dispersionInterval"),this);
+				
 				return null;
 			}
 		});
 	}
 	@Override public void agentKilled() {
 		super.agentKilled();
+	}
+	public static MicroAgentMetaInfo getMetaInfo()
+	{
+		IArgument[] args = {
+				new Argument("pingInterval", "Time between pings in ms", "Integer", new Integer(30000)),
+				new Argument("dispersionInterval", "Time between dispersions in ms", "Integer", new Integer(60000)),
+		};
+		
+		return new MicroAgentMetaInfo("This agent starts up a dispersion scenario.", null, args, null);
 	}
 }
