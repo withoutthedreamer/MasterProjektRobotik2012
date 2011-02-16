@@ -3,8 +3,6 @@
  */
 package jadex.scenario;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -74,6 +72,7 @@ public class DispersionAgent extends MasterAgent {
 
 				/**
 				 *  Loop through dispersion points
+				 *  and find the nearest robot.
 				 */
 				Iterator<Entry<String, BoardObject>> it = getBoard().getSet().iterator();
 				
@@ -85,7 +84,7 @@ public class DispersionAgent extends MasterAgent {
 					if (it.hasNext()) {
 						String key = it.next().getKey();
 						
-						/** Check if it is a navigation agent */
+						/** Check if it is a robot agent */
 						if ( getBoard().getObject(key).getName().equals(Robot.class.getName()) )
 						{
 							/** Check for the robot distance to goal */

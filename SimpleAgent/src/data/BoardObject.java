@@ -6,10 +6,15 @@ public class BoardObject {
 	Position position;
 	double distanceGoal;
 	String name;
+	long timestamp;
+	long timeout = 30000;
 	
-	public BoardObject(){}
+	public BoardObject(){
+		updateAccessTime();
+	}
 	
 	public BoardObject (Goal newGoal) {
+		this();
 		goal = newGoal;
 	}
 
@@ -18,6 +23,7 @@ public class BoardObject {
 	}
 
 	public void setDistanceGoal(int distanceGoal) {
+		updateAccessTime();
 		this.distanceGoal = distanceGoal;
 	}
 
@@ -26,6 +32,7 @@ public class BoardObject {
 	}
 
 	public void setGoal(Goal goal) {
+		updateAccessTime();
 		this.goal = goal;
 	}
 
@@ -34,6 +41,7 @@ public class BoardObject {
 	}
 
 	public void setName(String name) {
+		updateAccessTime();
 		this.name = name;
 	}
 
@@ -42,7 +50,25 @@ public class BoardObject {
 	}
 
 	public void setPosition(Position position) {
+		updateAccessTime();
 		this.position = position;
 	}
+	void updateAccessTime() {
+		timestamp = System.currentTimeMillis();		
+	}
 
+	/**
+	 * @return The timestamp when this @see BoardObject was last accessed (write).
+	 */
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public long getTimeout() {
+		return timeout;
+	}
+
+	public void setTimeout(long timeout) {
+		this.timeout = timeout;
+	}
 }
