@@ -7,7 +7,7 @@
 	name="uhh1" package="jadex.scenario">
 
 	<arguments>
-		<argument name="portStart"> 6665 </argument>
+		<argument name="portStart" typename="Integer"> 6665 </argument>
 	</arguments>
 
 	<componenttypes>

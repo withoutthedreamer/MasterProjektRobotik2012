@@ -163,8 +163,8 @@ public class Robot extends Device implements IRobot {
 		else
 			if (posi != null)
 				posi.setPosition(newPosition);
-			else
-				position.setPosition(newPosition);
+
+		position.setPosition(newPosition);
 		
 		/** Is the robot simulated ? */
 		if (robotId != null && simu != null) {
@@ -178,14 +178,14 @@ public class Robot extends Device implements IRobot {
 	 */
 	@Override
 	public Position getPosition()
-	{
+	{		
 		if (localizer != null)
-			return localizer.getPosition();
+			position.setPosition( localizer.getPosition() );
 		else
 			if (posi != null)
-				return posi.getPosition();
-			else
-				return new Position(position);
+				position.setPosition( posi.getPosition() );
+
+		return new Position(position);
 	}
 	@Override
 	public void shutdown()

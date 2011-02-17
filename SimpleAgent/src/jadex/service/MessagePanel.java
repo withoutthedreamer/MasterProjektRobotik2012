@@ -73,14 +73,14 @@ public class MessagePanel extends JPanel
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				ConsoleAgent ca = (ConsoleAgent)ia;
+				final ConsoleAgent ca = (ConsoleAgent)ia;
 				ca.getHelloService().addChangeListener(new IChangeListener()
 				{
 					public void changeOccurred(ChangeEvent event)
 					{
 						Object[] content = (Object[])event.getValue();
 						StringBuffer buf = new StringBuffer();
-						buf.append("[").append(content[0].toString()).append("|HelloService").append("]: ").append(content[1].toString()).append(" says: ").append(content[2].toString()).append(lf);
+						buf.append("[").append(content[0].toString()).append("|").append(ca.getHelloService().getClass().getName()).append("]: ").append(content[1].toString()).append(" says: ").append(content[2].toString()).append(lf);
 												
 						ta.append(buf.toString());
 						scrollToEnd(main);
@@ -95,14 +95,14 @@ public class MessagePanel extends JPanel
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				ConsoleAgent ca = (ConsoleAgent)ia;
+				final ConsoleAgent ca = (ConsoleAgent)ia;
 				ca.getSendPositionService().addChangeListener(new IChangeListener()
 				{
 					public void changeOccurred(ChangeEvent event)
 					{
 						Object[] content = (Object[])event.getValue();
 						StringBuffer buf = new StringBuffer();
-						buf.append("[").append(content[0].toString()).append("|PoseUpdateService").append("]: ").append(content[1].toString()).append(" says: ").append(content[2]).append(lf);
+						buf.append("[").append(content[0].toString()).append("|").append(ca.getSendPositionService().getClass().getName()).append("]: ").append(content[1].toString()).append(" says: ").append(content[2]).append(lf);
 						
 						ta.append(buf.toString());
 						scrollToEnd(main);
@@ -117,14 +117,14 @@ public class MessagePanel extends JPanel
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				ConsoleAgent ca = (ConsoleAgent)ia;
+				final ConsoleAgent ca = (ConsoleAgent)ia;
 				ca.getGoalReachedService().addChangeListener(new IChangeListener()
 				{
 					public void changeOccurred(ChangeEvent event)
 					{
 						Object[] content = (Object[])event.getValue();
 						StringBuffer buf = new StringBuffer();
-						buf.append("[").append(content[0].toString()).append("|GoalReachedService").append("]: ").append(content[1].toString()).append(" says: ").append(content[2].toString()).append(lf);						
+						buf.append("[").append(content[0].toString()).append("|").append(ca.getGoalReachedService().getClass().getName()).append("]: ").append(content[1].toString()).append(" says: ").append(content[2].toString()).append(lf);						
 
 						ta.append(buf.toString());
 						scrollToEnd(main);
@@ -139,14 +139,14 @@ public class MessagePanel extends JPanel
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				ConsoleAgent ca = (ConsoleAgent)ia;
+				final ConsoleAgent ca = (ConsoleAgent)ia;
 				ca.getReceiveNewGoalService().addChangeListener(new IChangeListener()
 				{
 					public void changeOccurred(ChangeEvent event)
 					{
 						Object[] content = (Object[])event.getValue();
 						StringBuffer buf = new StringBuffer();
-						buf.append("[").append(content[0].toString()).append("|NewGoalService").append("]: ").append(content[1].toString()).append(" heading ").append(content[2].toString()).append(lf);
+						buf.append("[").append(content[0].toString()).append("|").append(ca.getReceiveNewGoalService().getClass().getName()).append("]: ").append(content[1].toString()).append(" heading ").append(content[2].toString()).append(lf);
 						
 						ta.append(buf.toString());
 						scrollToEnd(main);

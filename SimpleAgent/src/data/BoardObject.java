@@ -7,7 +7,7 @@ public class BoardObject {
 	double distanceGoal;
 	String name;
 	long timestamp;
-	long timeout = 30000;
+	long timeout = 3600000;
 	
 	public BoardObject(){
 		updateAccessTime();

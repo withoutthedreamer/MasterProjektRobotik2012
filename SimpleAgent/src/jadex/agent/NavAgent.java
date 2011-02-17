@@ -61,6 +61,12 @@ public class NavAgent extends MicroAgent
 		logger.info(""+getComponentIdentifier()+" sending hello");
 	}
 
+	void sendPosition(Position newPose) {
+		ps.send(getComponentIdentifier().toString(), robot.getRobotId(), newPose);
+
+		logger.finest(""+getComponentIdentifier()+" sending position "+newPose);
+	}
+	
 	@Override public void executeBody()
 	{
 		/** Agent is worthless if underlying robot or devices fail */
@@ -68,7 +74,9 @@ public class NavAgent extends MicroAgent
 			killAgent();
 		}
 		
-		/** Register planner callback */
+		/**
+		 *  Register planner callback
+		 */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -87,7 +95,10 @@ public class NavAgent extends MicroAgent
 				return null;
 			}
 		});
-		/** Register localizer callback */
+		
+		/**
+		 *  Register localizer callback
+		 */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -97,9 +108,7 @@ public class NavAgent extends MicroAgent
 					robot.getLocalizer().addListener(new ILocalizeListener()
 					{
 						@Override public void newPositionAvailable(Position newPose) {
-							ps.send(getComponentIdentifier().toString(), robot.getRobotId(), newPose);
-
-							logger.finest(""+getComponentIdentifier()+" sending position "+newPose);
+							sendPosition(newPose);
 						}
 					});
 				}
@@ -107,7 +116,9 @@ public class NavAgent extends MicroAgent
 			}
 		});
 
-		/** Register new goal event callback */
+		/**
+		 *  Register new goal event callback
+		 */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
@@ -153,7 +164,7 @@ public class NavAgent extends MicroAgent
 						/** Check for reply request */
 						if (((String)content[2]).equalsIgnoreCase("ping")) {
 
-							logger.info(""+getComponentIdentifier()+" receiving "+buf);
+							logger.finer(""+getComponentIdentifier()+" receiving "+buf);
 
 							sendHello();
 						}
@@ -162,7 +173,30 @@ public class NavAgent extends MicroAgent
 				return null;
 			}
 		});
+	
+		/**
+		 *  Register to Position update service
+		 */
+		scheduleStep(new IComponentStep()
+		{
+			public Object execute(IInternalAccess ia)
+			{
+				getSendPositionService().addChangeListener(new IChangeListener()
+				{
+					public void changeOccurred(ChangeEvent event)
+					{
+						Object[] content = (Object[])event.getValue();
+						
+						/** Sending position on request */
+						if (((String)content[1]).equals("request"))
+							sendPosition(robot.getPosition());
+					}
+				});
+				return null;
+			}
+		});
 	}
+	
 	@Override public void agentKilled() {
 		
 		robot.shutdown();

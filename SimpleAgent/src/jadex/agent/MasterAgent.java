@@ -64,12 +64,15 @@ public class MasterAgent extends MicroAgent
 						
 						logger.info(""+getComponentIdentifier()+" receiving "+buf);
 						
-						if (board.getObject((String)content[1]) == null) {
+						String id = (String)content[1];
+						String name = (String)content[2];
+						
+						if (board.getObject(id) == null) {
 							BoardObject bo = new BoardObject();
-							bo.setName((String)content[2]);
+							bo.setName(name);
 							
-							board.addObject((String)content[1], bo);
-							logger.info(""+getComponentIdentifier()+" adding to board: "+(String)content[1]);
+							board.addObject(id, bo);
+							logger.info(""+getComponentIdentifier()+" adding to board: "+id);
 						}
 					}
 				});
@@ -92,14 +95,15 @@ public class MasterAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(content[2]);
 						
-						BoardObject bo = board.getObject((String)content[1]); 
-						if (bo != null) {
-							Position pose = (Position)content[2];
-							if (pose != null) {
-								bo.setPosition(pose);
-							}
-						}
+						String id = (String)content[1];
+						Position p = (Position)content[2];
 						
+						BoardObject bo = board.getObject(id); 
+						
+						if (bo != null && p != null) {
+							bo.setPosition(p);
+						}
+
 						logger.finer(""+getComponentIdentifier()+" receiving "+buf);
 					}
 				});

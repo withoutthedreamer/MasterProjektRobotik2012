@@ -3,6 +3,8 @@
  */
 package jadex.scenario;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
@@ -38,7 +40,7 @@ public class DispersionAgent extends MasterAgent {
 		super.executeBody();
 
 		/**
-		 * Request all robot agents.
+		 * Request all available robot agents.
 		 * Do it periodically.
 		 */
 		scheduleStep(new IComponentStep()
@@ -53,33 +55,47 @@ public class DispersionAgent extends MasterAgent {
 			}
 		});
 		
-		/** Assign random goal positions */
+		/**
+		 * Request all positions of available robot agents.
+		 */
 		scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				getLogger().info("Checking agents on network");
-//				ArrayList<Integer> positions = new ArrayList<Integer>();
-//			
-//				/**
-//				 *  Create a sorted number array
-//				 */
-//				for (int i=0; i<dispersionPoints.length; i++)
-//					positions.add(i);
-//				
-//				Collections.shuffle(positions);
-//				getLogger().info("Shuffle positions: "+positions);
+				requestAllPositions();
+				return null;
+			}
+		});
 
+		/**
+		 *  Assign goal positions
+		 */
+		scheduleStep(new IComponentStep()
+		{
+			public Object execute(IInternalAccess ia)
+			{
+//				getLogger().info("Checking agents on network");
+				ArrayList<Integer> positions = new ArrayList<Integer>();
+			
+				/** Create a sorted number array */
+				for (int i=0; i<dispersionPoints.length; i++)
+					positions.add(i);
+				/** Randomize the positions, that it is not always the same */ // TODO Heuristics
+				Collections.shuffle(positions);
+				getLogger().info("Shuffle positions: "+positions);
+
+				/** Get the board objects */
+				Iterator<Entry<String, BoardObject>> it = getBoard().getSet().iterator();
+				
 				/**
 				 *  Loop through dispersion points
 				 *  and find the nearest robot.
 				 */
-				Iterator<Entry<String, BoardObject>> it = getBoard().getSet().iterator();
-				
-				for (int i=0; i<dispersionPoints.length; i++) {
-					Position curGoal = dispersionPoints[i];
+//				for (int i=0; i<dispersionPoints.length; i++) {
+				for (int i=0; i<positions.size(); i++) {
+					Position curGoal = dispersionPoints[positions.get(i)];
 					double minGoalDistance = Double.MAX_VALUE;
-					String minDistRobot = "";
+					String minDistRobot = null;
 					
 					if (it.hasNext()) {
 						String key = it.next().getKey();
@@ -100,9 +116,12 @@ public class DispersionAgent extends MasterAgent {
 							}
 						}
 					}
-					getReceiveNewGoalService().send(""+getComponentIdentifier(), minDistRobot, curGoal);
-					
-					getLogger().info("Sending goal: "+curGoal+" to "+minDistRobot);					
+					/** Did we found an apropriate robot agent */
+					if (minDistRobot != null) {
+						getReceiveNewGoalService().send(""+getComponentIdentifier(), minDistRobot, curGoal);
+
+						getLogger().info("Sending goal: "+curGoal+" to "+minDistRobot);
+					}
 				}
 				
 				if ((Integer)getArgument("dispersionInterval") != -1)
@@ -111,6 +130,11 @@ public class DispersionAgent extends MasterAgent {
 				return null;
 			}
 		});
+	}
+	protected void requestAllPositions() {
+		getSendPositionService().send(""+getComponentIdentifier(), "request", null);
+
+		getLogger().info(""+getComponentIdentifier()+" requesting all positions");		
 	}
 	@Override public void agentKilled() {
 		super.agentKilled();
