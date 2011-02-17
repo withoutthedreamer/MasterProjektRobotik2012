@@ -83,16 +83,24 @@ public class Board
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
 	}
+	/**
+	 * Not public methods must be called here!
+	 * Due to recursion.
+	 */
 	void removeIfObsolete(String key) {
-		long bots = getObject(key).getTimestamp();
+		long bots = objectHm.get(key).getTimestamp(); /** Board Object TimeStamp */
 		long curTime = System.currentTimeMillis();
 		
 		/** Check for BoardObject and Board timeout */
-		if ( ((bots + getObject(key).getTimeout()) < curTime) || ((bots + getTimeout()) < curTime) )
+		if ( ((bots + objectHm.get(key).getTimeout()) < curTime) || ((bots + getTimeout()) < curTime) )
 		{
-			removeObject(key);
+			objectHm.remove(key);
 		}
 	}
+	/**
+	 * Not public methods must be called here!
+	 * Due to recursion.
+	 */
 	void removeIfObsolete() {
 		/** loop through board objects */
 		Iterator<Entry<String, BoardObject>> it = objectHm.entrySet().iterator();
