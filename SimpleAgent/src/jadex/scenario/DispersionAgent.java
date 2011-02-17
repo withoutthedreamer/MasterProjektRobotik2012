@@ -45,7 +45,7 @@ public class DispersionAgent extends MasterAgent {
 		{
 			public Object execute(IInternalAccess ia)
 			{
-				getBoard().clear();
+//				getBoard().clear();
 				pingAllAgents();
 				
 				waitFor((Integer)getArgument("pingInterval"),this);

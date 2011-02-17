@@ -20,15 +20,16 @@ public class Position2d extends RobotDevice
 		
 	public Position2d(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
+		pos = new Position();
 	}
 	/**
 	 * Updates the position device's settings at ~10 Hz
 	 * Is only called by the run() method!
 	 */
 	protected void update() {
-		// Check for sonar readings ready
+		/** Check for sonar readings ready */
 		if ( ((javaclient3.Position2DInterface) device).isDataReady() ){
-			// Update odometry if updated externally
+			/** Update odometry if updated externally */
 			if (setOdometry != null) {				
 				((javaclient3.Position2DInterface) device).setOdometry(new PlayerPose(
 						setOdometry.getX(),
@@ -36,13 +37,18 @@ public class Position2d extends RobotDevice
 						setOdometry.getYaw()));
 				setOdometry = null;
 			} else {
-				// Request current position
+				/** Request current position */
 				PlayerPosition2dData poseData = ((javaclient3.Position2DInterface) device).getData();
-				pos = new Position(poseData.getPos().getPx(),
-						poseData.getPos().getPy(),
-						poseData.getPos().getPa());
+				if (poseData != null) {
+					PlayerPose pose = poseData.getPos();
+					if (pose != null) {
+						pos.setX(pose.getPx());
+						pos.setY(pose.getPy());
+						pos.setYaw(pose.getPa());
+					}
+				}
 			}
-			// Set new speed
+			/** Set new speed */
 			if (isNewSpeed == true) {
 				isNewSpeed = false;
 				((javaclient3.Position2DInterface) device).setSpeed(speed, turnrate);
@@ -54,15 +60,16 @@ public class Position2d extends RobotDevice
 	 * @return Last known robot position.
 	 */
 	public Position getPosition() {
-		return this.pos;
+		return new Position(pos);
 	}
 	/**
 	 * 
 	 * @param pos New robot @ref Position for odometry device.
 	 */
 	public void setPosition (Position pos) {
-//		this.pos = pos;
-		setOdometry = pos;
+		if (pos != null) {
+			setOdometry = new Position(pos);
+		}
 	}
 	/**
 	 * 

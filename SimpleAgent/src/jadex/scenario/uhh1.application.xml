@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <H3> Multiple Robot Scenario </H3> Starts robot agents. -->
+<applicationtype xmlns="http://jadex.sourceforge.net/jadex-application"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-application
+						http://jadex.sourceforge.net/jadex-application-2.0.xsd"
+	name="uhh1" package="jadex.scenario">
+
+	<arguments>
+		<argument name="portStart"> 6665 </argument>
+	</arguments>
+
+	<componenttypes>
+		<componenttype name="Nav0" filename="jadex/agent/NavAgent.class"
+			master="true" />
+		<componenttype name="Nav1" filename="jadex/agent/NavAgent.class"
+			master="true" />
+		<componenttype name="Nav2" filename="jadex/agent/NavAgent.class"
+			master="true" />
+	</componenttypes>
+
+	<applications>
+		
+		<application name="1 Robot">
+			<components>
+				<component type="Nav0" name="Nav0">
+					<arguments>
+						<argument name="port"> $args.portStart </argument>
+						<argument name="name"> "r0" </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="2 Robots">
+			<components>
+				<component type="Nav0" name="Nav0">
+					<arguments>
+						<argument name="port"> $args.portStart </argument>
+						<argument name="name"> "r0" </argument>
+					</arguments>
+				</component>
+				<component type="Nav1" name="Nav1">
+					<arguments>
+						<argument name="port"> $args.portStart+2 </argument>
+						<argument name="name"> "r1" </argument>
+						<argument name="Y"> 3.0 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="3 Robots">
+			<components>
+				<component type="Nav0" name="Nav0">
+					<arguments>
+						<argument name="port"> $args.portStart </argument>
+						<argument name="name"> "r0" </argument>
+					</arguments>
+				</component>
+				<component type="Nav1" name="Nav1">
+					<arguments>
+						<argument name="port"> $args.portStart+2 </argument>
+						<argument name="name"> "r1" </argument>
+						<argument name="Y"> 3.0 </argument>
+					</arguments>
+				</component>
+				<component type="Nav2" name="Nav2">
+					<arguments>
+						<argument name="port"> $args.portStart+4 </argument>
+						<argument name="name"> "r2" </argument>
+						<argument name="Y"> 2.0 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+	</applications>
+
+</applicationtype>

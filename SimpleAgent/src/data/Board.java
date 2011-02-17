@@ -95,7 +95,7 @@ public class Board
 	}
 	void removeIfObsolete() {
 		/** loop through board objects */
-		Iterator<Entry<String, BoardObject>> it = getIterator();
+		Iterator<Entry<String, BoardObject>> it = objectHm.entrySet().iterator();
 		while (it.hasNext()) {
 			Map.Entry<String, BoardObject> me = it.next();
 			String key = me.getKey();

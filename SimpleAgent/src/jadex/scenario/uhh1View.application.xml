@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <H3> Multiple Robot Scenario </H3> Starts view agents. -->
+<applicationtype xmlns="http://jadex.sourceforge.net/jadex-application"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-application
+						http://jadex.sourceforge.net/jadex-application-2.0.xsd"
+	name="uhh1View" package="jadex.scenario">
+
+	<arguments>
+		<argument name="portStart"> 6600 </argument>
+	</arguments>
+
+	<componenttypes>
+		<componenttype name="View0" filename="jadex/agent/ViewAgent.class"
+			master="true" />
+		<componenttype name="View1" filename="jadex/agent/ViewAgent.class"
+			master="true" />
+		<componenttype name="View2" filename="jadex/agent/ViewAgent.class"
+			master="true" />
+	</componenttypes>
+
+	<applications>
+
+		<application name="1 Robot">
+			<components>
+				<component type="View0" name="View0">
+					<arguments>
+						<argument name="port"> $args.portStart </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+		
+		<application name="2 Robots">
+			<components>
+				<component type="View0" name="View0">
+					<arguments>
+						<argument name="port"> $args.portStart </argument>
+					</arguments>
+				</component>
+				<component type="View1" name="View1">
+					<arguments>
+						<argument name="port"> $args.portStart+1 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="3 Robots">
+			<components>
+				<component type="View0" name="View0">
+					<arguments>
+						<argument name="port"> $args.portStart </argument>
+					</arguments>
+				</component>
+				<component type="View1" name="View1">
+					<arguments>
+						<argument name="port"> $args.portStart+1 </argument>
+					</arguments>
+				</component>
+				<component type="View2" name="View2">
+					<arguments>
+						<argument name="port"> $args.portStart+2 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+	</applications>
+
+</applicationtype>

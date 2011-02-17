@@ -35,7 +35,13 @@ robot
 robot
 (
   name "r1"
-  pose [ -22 4 0 180 ] 
+  pose [ -21 3 0 0 ] 
+)
+
+robot
+(
+  name "r2"
+  pose [ -21 2 0 0 ] 
 )
 
 # Place some blobs
