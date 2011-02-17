@@ -126,7 +126,10 @@ public class Board
 		while (it.hasNext()) {
 			Entry<String, BoardObject> entry = it.next();
 			
-			if (entry.getValue().getName().equals(topic));
+			String boTopic = entry.getValue().getName(); 
+			
+//			if (boTopic.equals(topic) == true);
+			if (boTopic.equalsIgnoreCase(topic) == true)
 				topicKeys.add(entry.getKey());
 		}
 		

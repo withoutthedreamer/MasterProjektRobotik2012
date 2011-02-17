@@ -67,7 +67,7 @@ public class MasterAgent extends MicroAgent
 						String id = (String)content[1];
 						String name = (String)content[2];
 						
-						if (board.getObject(id) == null) {
+						if (id != "" && board.getObject(id) == null) {
 							BoardObject bo = new BoardObject();
 							bo.setName(name);
 							

@@ -77,17 +77,23 @@ public class DispersionAgent extends MasterAgent {
 				/** Create a sorted number array */
 				for (int i=0; i<dispersionPoints.length; i++)
 					positions.add(i);
-
+				
 				/** Get all robots */
 				ArrayList<String> robotKeys = getBoard().getTopicList(Robot.class.getName());
 				Collections.shuffle(robotKeys);
+				
+				getLogger().finer("Shuffle robots: "+robotKeys);
 
+				/**
+				 * Assigne a goal to each robot
+				 */
 				for (int i=0; i<robotKeys.size(); i++) {
 
-					int nearestGoal = -1;
+					int goalIndex = -1;
+					Position nearestGoal = null;
 					Position curGoal = null;
 
-					/** Get the robot object */
+					/** Get the robot board object */
 					BoardObject bo = getBoard().getObject(robotKeys.get(i)); 
 
 					/** Check for the robot distance to goal */
@@ -96,9 +102,10 @@ public class DispersionAgent extends MasterAgent {
 						Position robotPose = bo.getPosition();
 
 						if (robotPose != null) {
+							
+							getLogger().finer("Robot pose: "+robotPose);
 
 							double minGoalDistance = Double.MAX_VALUE;
-
 
 							for (int i1=0; i1<positions.size(); i1++) {
 								curGoal = dispersionPoints[positions.get(i1)];
@@ -107,19 +114,23 @@ public class DispersionAgent extends MasterAgent {
 
 								if (minGoalDistance > robotDist) {
 									minGoalDistance = robotDist;
-									nearestGoal = i1;
+									goalIndex = i1;
+									nearestGoal = curGoal;
 								}
 							}
 						}
 					}
 
-					/** Did we found an apropriate robot goal */
-					if (nearestGoal >= 0 && curGoal != null) {
-						getReceiveNewGoalService().send(""+getComponentIdentifier(), robotKeys.get(i), curGoal);
+					/** Did we found an appropriate robot goal */
+					if (nearestGoal != null) {
+						getLogger().finer("Nearest goal is "+nearestGoal+" index: "+positions.get(goalIndex));
+						
+						getReceiveNewGoalService().send(""+getComponentIdentifier(), robotKeys.get(i), nearestGoal);
 
-						getLogger().info("Sending goal: "+curGoal+" to "+robotKeys.get(i));
+						getLogger().finer("Sending goal: "+nearestGoal+" to "+robotKeys.get(i));
+					
 						/** Remove goal from list */
-						positions.remove(nearestGoal);
+						positions.remove(goalIndex);
 					}
 
 				}
