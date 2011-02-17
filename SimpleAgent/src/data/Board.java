@@ -1,5 +1,6 @@
 package data;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -109,5 +110,26 @@ public class Board
 			String key = me.getKey();
 			removeIfObsolete(key);
 		}
+	}
+	/**
+	 * @param topic String identifying the topic.
+	 * @return An @see ArrayList of all board keys belonging to the given topic.
+	 * Usually the topic is the Object class name.
+	 */
+	public ArrayList<String> getTopicList (String topic) {
+		removeIfObsolete();
+		
+		ArrayList<String> topicKeys = new ArrayList<String>();
+		
+		Iterator<Entry<String, BoardObject>> it = getIterator();
+		
+		while (it.hasNext()) {
+			Entry<String, BoardObject> entry = it.next();
+			
+			if (entry.getValue().getName().equals(topic));
+				topicKeys.add(entry.getKey());
+		}
+		
+		return topicKeys;
 	}
 }

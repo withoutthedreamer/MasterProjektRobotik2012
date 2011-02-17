@@ -5,8 +5,6 @@ package jadex.scenario;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map.Entry;
 
 import robot.Robot;
 
@@ -24,7 +22,7 @@ import jadex.micro.MicroAgentMetaInfo;
  *
  */
 public class DispersionAgent extends MasterAgent {
-	
+
 	/** Strategic important points on the map */
 	Position[] dispersionPoints = {
 			new Position(-21,4,0), /** Top */
@@ -47,14 +45,14 @@ public class DispersionAgent extends MasterAgent {
 		{
 			public Object execute(IInternalAccess ia)
 			{
-//				getBoard().clear();
+				//				getBoard().clear();
 				pingAllAgents();
-				
+
 				waitFor((Integer)getArgument("pingInterval"),this);
 				return null;
 			}
 		});
-		
+
 		/**
 		 * Request all positions of available robot agents.
 		 */
@@ -74,59 +72,61 @@ public class DispersionAgent extends MasterAgent {
 		{
 			public Object execute(IInternalAccess ia)
 			{
-//				getLogger().info("Checking agents on network");
 				ArrayList<Integer> positions = new ArrayList<Integer>();
-			
+
 				/** Create a sorted number array */
 				for (int i=0; i<dispersionPoints.length; i++)
 					positions.add(i);
-				/** Randomize the positions, that it is not always the same */ // TODO Heuristics
-				Collections.shuffle(positions);
-				getLogger().info("Shuffle positions: "+positions);
 
-				/** Get the board objects */
-				Iterator<Entry<String, BoardObject>> it = getBoard().getSet().iterator();
-				
-				/**
-				 *  Loop through dispersion points
-				 *  and find the nearest robot.
-				 */
-//				for (int i=0; i<dispersionPoints.length; i++) {
-				for (int i=0; i<positions.size(); i++) {
-					Position curGoal = dispersionPoints[positions.get(i)];
-					double minGoalDistance = Double.MAX_VALUE;
-					String minDistRobot = null;
-					
-					if (it.hasNext()) {
-						String key = it.next().getKey();
-						
-						/** Check if it is a robot agent */
-						if ( getBoard().getObject(key).getName().equals(Robot.class.getName()) )
-						{
-							/** Check for the robot distance to goal */
-							if (getBoard().getObject(key) != null) {
-								if (getBoard().getObject(key).getPosition() != null) {
-									double robotDist = getBoard().getObject(key).getPosition().distanceTo(curGoal);
+				/** Get all robots */
+				ArrayList<String> robotKeys = getBoard().getTopicList(Robot.class.getName());
+				Collections.shuffle(robotKeys);
 
-									if (minGoalDistance > robotDist) {
-										minGoalDistance = robotDist;
-										minDistRobot = key;
-									}
+				for (int i=0; i<robotKeys.size(); i++) {
+
+					int nearestGoal = -1;
+					Position curGoal = null;
+
+					/** Get the robot object */
+					BoardObject bo = getBoard().getObject(robotKeys.get(i)); 
+
+					/** Check for the robot distance to goal */
+					if (bo != null) {
+
+						Position robotPose = bo.getPosition();
+
+						if (robotPose != null) {
+
+							double minGoalDistance = Double.MAX_VALUE;
+
+
+							for (int i1=0; i1<positions.size(); i1++) {
+								curGoal = dispersionPoints[positions.get(i1)];
+
+								double robotDist = robotPose.distanceTo(curGoal);
+
+								if (minGoalDistance > robotDist) {
+									minGoalDistance = robotDist;
+									nearestGoal = i1;
 								}
 							}
 						}
 					}
-					/** Did we found an apropriate robot agent */
-					if (minDistRobot != null) {
-						getReceiveNewGoalService().send(""+getComponentIdentifier(), minDistRobot, curGoal);
 
-						getLogger().info("Sending goal: "+curGoal+" to "+minDistRobot);
+					/** Did we found an apropriate robot goal */
+					if (nearestGoal >= 0 && curGoal != null) {
+						getReceiveNewGoalService().send(""+getComponentIdentifier(), robotKeys.get(i), curGoal);
+
+						getLogger().info("Sending goal: "+curGoal+" to "+robotKeys.get(i));
+						/** Remove goal from list */
+						positions.remove(nearestGoal);
 					}
+
 				}
-				
+
 				if ((Integer)getArgument("dispersionInterval") != -1)
 					waitFor((Integer)getArgument("dispersionInterval"),this);
-				
+
 				return null;
 			}
 		});
@@ -145,7 +145,7 @@ public class DispersionAgent extends MasterAgent {
 				new Argument("pingInterval", "Time between pings in ms", "Integer", new Integer(30000)),
 				new Argument("dispersionInterval", "Time between dispersions in ms", "Integer", new Integer(60000)),
 		};
-		
+
 		return new MicroAgentMetaInfo("This agent starts up a dispersion scenario.", null, args, null);
 	}
 }
