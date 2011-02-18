@@ -2,53 +2,62 @@ package device;
 
 public class Gripper extends RobotDevice {
 
-	@SuppressWarnings("unused")
-	private int goalState = 1;
-	private int curState = 0;
-	
-	protected static enum stateType {
+	/**
+	 * Taken from the player IF documantation.
+	 */
+	public static enum stateType {
 		OPEN,
-		CLOSE,
+		CLOSED,
+		MOVING,
 		ERROR
 	}
+	stateType state;
 
 	public Gripper(DeviceNode roboClient, Device device) {
 		super(roboClient, device);
-		setSleepTime(1000);
+		
+		state = stateType.ERROR;
 	}
+	
 	protected void update () {
-		if ( ((javaclient3.GripperInterface) device).isDataReady() ) {			
-			curState = ((javaclient3.GripperInterface) device).getData().getState();
-//			grip.setGripper(goalState);
+		int pState = -1;
+
+		if ( ((javaclient3.GripperInterface) device).isDataReady() )
+		{	
+			pState = ((javaclient3.GripperInterface) device).getData().getState();
+
+			switch (pState) {
+			case 1:  state = stateType.OPEN;  break;
+			case 2:  state = stateType.CLOSED; break;
+			case 3:  state = stateType.MOVING;  break;
+			case 4:  state = stateType.ERROR; break;
+
+			default: state = stateType.ERROR; break;
+			}
 		}
 	}
+
 	public void stop () {
-		// stop
-		this.goalState = 3;
+		((javaclient3.GripperInterface) device).stop();
 	}
 	public void open () {
-		// open
-		this.goalState = 1;
+		((javaclient3.GripperInterface) device).open();
+//		while (getState() != stateType.OPEN)
+			try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	public void close () {
-		// close
-		this.goalState = 2;
+		((javaclient3.GripperInterface) device).close();
+//		while (getState() != stateType.CLOSED)
+			try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	public void lift () {
-		this.goalState = 4;
+		((javaclient3.GripperInterface) device).store();
 	}
 	public void release () {
-		this.goalState = 5;
+		((javaclient3.GripperInterface) device).retrieve();
 	}
-	// Taken from player gripper IF doc
+
 	public stateType getState() {
-		stateType state = stateType.ERROR;
-		
-		switch (curState) {
-			case 1:  state = stateType.OPEN;  break;
-			case 2:  state = stateType.CLOSE; break;
-			default: state = stateType.ERROR; break;
-		}
 		return state;
 	}
 }
