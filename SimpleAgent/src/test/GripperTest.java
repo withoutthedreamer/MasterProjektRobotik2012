@@ -37,6 +37,7 @@ public class GripperTest {
 	 */
 	@Test
 	public void testStop() {
+	    System.out.println("Test stop..");
 		gripper.stop();
 	}
 
@@ -45,7 +46,8 @@ public class GripperTest {
 	 */
 	@Test
 	public void testOpen() {
-		gripper.open();
+	    System.out.println("Test open..");
+	    gripper.open();
 		assertTrue( getState() == Gripper.stateType.OPEN );
 	}
 
@@ -54,7 +56,8 @@ public class GripperTest {
 	 */
 	@Test
 	public void testClose() {
-		gripper.close();
+	    System.out.println("Test close..");
+	    gripper.close();
 		assertTrue( getState() == Gripper.stateType.CLOSED );
 	}
 
@@ -63,7 +66,8 @@ public class GripperTest {
 	 */
 	@Test
 	public void testLift() {
-		gripper.lift();
+	    System.out.println("Test lift..");
+	    gripper.lift();
 		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 
@@ -72,7 +76,8 @@ public class GripperTest {
 	 */
 	@Test
 	public void testRelease() {
-		gripper.release();
+	    System.out.println("Test release..");
+	    gripper.release();
 		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 

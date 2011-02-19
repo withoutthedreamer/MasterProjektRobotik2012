@@ -19,8 +19,8 @@ import java.util.logging.Logger;
  */
 public class DeviceNode extends Device {
 
-	// Logging support
-    private static Logger logger = Logger.getLogger (DeviceNode.class.getName ());
+	/** Logging support */
+    Logger logger = Logger.getLogger (DeviceNode.class.getName ());
 
 	/** A list of all connected robot clients of this node */
 	CopyOnWriteArrayList<PlayerClient> playerClientList = null;
@@ -182,6 +182,12 @@ public class DeviceNode extends Device {
 							dev = new Planner(new DeviceNode(playerClient), new Device(name, host, port, Indes));
 						}
 						break;
+
+					case IDevice.DEVICE_ACTARRAY_CODE :
+					    dev = new Actarray(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
+
+					case IDevice.DEVICE_DIO_CODE :
+					    dev = new Dio(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
 
 					default: break;
 					}
