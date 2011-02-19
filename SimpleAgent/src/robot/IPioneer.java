@@ -21,7 +21,9 @@ public interface IPioneer {
 		ALL
 	}
 	
-	final double VEL       = 0.3;///< Normal_advance_speed in meters per sec.
+	final double MAXSPEED = 0.4; /** Normal_advance_speed in meters per sec. */
+	final double MINSPEED = 0.05; /** Minimal speed set */
+	final double MINTURNRATE = 0.05; /** Minimal turnrate set */
 	final double TURN_RATE = 40; ///< Max wall following turnrate in deg per sec.
 	/// Low values: Smoother trajectory but more
 	/// restricted

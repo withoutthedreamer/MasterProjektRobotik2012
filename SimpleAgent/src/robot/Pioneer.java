@@ -20,20 +20,64 @@ public class Pioneer extends Robot implements IPioneer
 		super(roboDevices);
 	}
 	
-	@Override
-	protected void update() {
-		// Sensor read is done asynchronously
-		plan();
-		execute();
+	@Override protected void update()
+	{
+//		planLeftWallfollow();
+
+	    setCurSpeed(getSpeed());
+		setCurTurnrate(getTurnrate());
+	}
+	public void stop()
+	{
+	    setTurnrate(0.0);
+	    setSpeed(0.0);
+	    setCurSpeed(0.0);
+	    setCurTurnrate(0.0);
 	}
 
+	/**
+	 * Tries to set the speed given and performs collision avoidance.
+	 * The actual speed might be lower due to obstacles.
+	 * @param maxSpeed
+	 */
+	protected void setCurSpeed(double maxSpeed)
+	{
+	    if (getPosi() != null) {
+	        /** Set speed depending on the obstacle distance */
+	        double saveSpeed = calcspeed(maxSpeed);
+	        
+	        if (Math.abs(saveSpeed) > MINSPEED)
+	            getPosi().setSpeed(saveSpeed);
+	        else
+	            getPosi().setSpeed(0.0);
+	    }
+	    
+	}
+	/**
+	 * Tries to set the turnrate given and performs collision avoidance.
+	 * The actual turnrate might be lower due to obstacles.
+	 * @param maxTurnrate
+	 */
+	protected void setCurTurnrate(double maxTurnrate)
+	{
+	    if (getPosi() != null) {
+	        /** Set turnrate depending on the obstacle distance */
+	        double saveTurnrate = checkrotate(maxTurnrate);
+	        
+	        if (Math.abs(saveTurnrate) > MINTURNRATE)
+	            getPosi().setTurnrate(saveTurnrate);
+	        else
+	            getPosi().setTurnrate(0.0);
+	    }
+	}
+	
 	@SuppressWarnings("unused")
-	protected void plan () {
+	protected void planLeftWallfollow () {
 		double tmp_turnrate = 0.;
 
-		if (isDebugSonar && this.sonar != null){
-			double[] sonarValues = this.sonar.getRanges();	
-			int 	sonarCount  = this.sonar.getCount();
+		if (isDebugSonar && getSonar() != null){
+			double[] sonarValues = getSonar().getRanges();	
+			int 	sonarCount  = getSonar().getCount();
 
 			System.out.println();
 			for(int i=0; i< sonarCount; i++)
@@ -41,24 +85,24 @@ public class Pioneer extends Robot implements IPioneer
 		}
 
 		// (Left) Wall following
-		turnrate = wallfollow();
+		setTurnrate( wallfollow() );
 		// Collision avoidance overrides other turnrate if neccessary!
 		// May change this.turnrate or this.currentState
-		turnrate = collisionAvoid();
+		setTurnrate( collisionAvoid() );
 
 		// Set speed dependend on the wall distance
-		speed = calcspeed();
+		setSpeed( calcspeed(getSpeed()) );
 
 		// Check if rotating is safe
 		// tune turnrate controlling here
-		tmp_turnrate = checkrotate();
+		tmp_turnrate = checkrotate(getTurnrate());
 
 		// Fusion of the vectors makes a smoother trajectory
 		//		this.turnrate = (tmp_turnrate + this.turnrate) / 2;
 		double weight = 0.5;
-		this.turnrate = weight*tmp_turnrate + (1-weight)*this.turnrate;
+		setTurnrate( weight*tmp_turnrate + (1-weight)*getTurnrate() );
 		if (isDebugState) {
-			System.out.printf("turnrate/speed/state:\t%5.2f\t%5.2f\t%s\n", this.turnrate, this.speed, this.currentState.toString());
+			System.out.printf("turnrate/speed/state:\t%5.2f\t%5.2f\t%s\n", getTurnrate(), getSpeed(), currentState.toString());
 		}
 		if (isDebugDistance) {
 			if (this.laser != null) {
@@ -114,10 +158,10 @@ public class Pioneer extends Robot implements IPioneer
 	 * @return Minimum distance in range.
 	 */
 	protected final double getDistanceLas ( int minAngle, int maxAngle ) {
-		double minDist         = LPMAX; ///< Min distance in the arc.
-		double distCurr        = LPMAX; ///< Current distance of a laser beam
+		double minDist         = LPMAX; /** Min distance in the arc. */
+		double distCurr        = LPMAX; /** Current distance of a laser beam */
 
-		if (laser != null) {
+		if (getLaser() != null) {
 			if ( !(minAngle<0 || maxAngle<0 || minAngle>=maxAngle || minAngle>=LMAXANGLE || maxAngle>LMAXANGLE ) ) {
 
 				final int minBIndex = (int)(minAngle/DEGPROBEAM); ///< Beam index of min deg.
@@ -125,11 +169,11 @@ public class Pioneer extends Robot implements IPioneer
 				double sumDist     = 0.; ///< Sum of BEAMCOUNT beam's distance.
 				double averageDist = LPMAX; ///< Average of BEAMCOUNT beam's distance.
 
-				// Read dynamic laser data
-				int		laserCount  = laser.getCount();
-				double[] laserValues = laser.getRanges();
+				/** Read dynamic laser data */
+				int		laserCount  = getLaser().getCount();
+				double[] laserValues = getLaser().getRanges();
 
-				// Consistence check for error laser readings
+				// Consistency check for error laser readings
 				if (minBIndex<laserCount && maxBIndex<laserCount) {
 					for (int beamIndex=minBIndex; beamIndex<maxBIndex; beamIndex++) {
 						distCurr = laserValues[beamIndex];
@@ -178,9 +222,9 @@ public class Pioneer extends Robot implements IPioneer
 		double[] sonarValues;
 		int 	sonarCount  = 0;
 
-		if (sonar != null) {
-			sonarValues = sonar.getRanges();
-			sonarCount  = sonar.getCount();
+		if (getSonar() != null) {
+			sonarValues = getSonar().getRanges();
+			sonarCount  = getSonar().getCount();
 			if (sonarCount > 0) {
 				// Check for dynamic sonar availability
 				for (int i=16; i>0; i--) {
@@ -240,13 +284,13 @@ public class Pioneer extends Robot implements IPioneer
 
 		// do simple (left) wall following
 		//do naiv calculus for turnrate; weight dist vector
-		turnrate = Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 );
+		setTurnrate( Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 ) );
 
 		// Normalize turnrate
-		if (turnrate > Math.toRadians(TURN_RATE)) {
-			turnrate = Math.toRadians(TURN_RATE);
+		if (getTurnrate() > Math.toRadians(TURN_RATE)) {
+			setTurnrate( Math.toRadians(TURN_RATE) );
 		} else if (this.turnrate < -Math.toRadians(TURN_RATE)) {
-			turnrate = -Math.toRadians(TURN_RATE);
+			setTurnrate( -Math.toRadians(TURN_RATE) );
 		}
 
 		// TODO implement wall searching behavior
@@ -257,11 +301,11 @@ public class Pioneer extends Robot implements IPioneer
 		DistL     >= WALLLOSTDIST  &&
 		DistLRear >= WALLLOSTDIST     )
 		{
-			turnrate = 0.;
+			setTurnrate( 0. );
 			currentState = StateType.WALL_SEARCHING;
 		}
 
-		return turnrate;
+		return getTurnrate();
 	}
 
 	/**
@@ -284,28 +328,62 @@ public class Pioneer extends Robot implements IPioneer
 			// Turn right as long we want left wall following
 			return -Math.toRadians(STOP_ROT);
 		} else {
-			return turnrate;
+			return getTurnrate();
 		}
 	}
 
-	// TODO Code review
-	protected final double calcspeed ()
+	/**
+	 * Calculates a safe speed regarding collision avoiding obstacles.
+	 * The Speed will be zero if to near to any obstacle.
+	 * @param maxSpeed The speed being trying to set.
+	 * @return The safe speed.
+	 */
+	protected final double calcspeed (double maxSpeed)
 	{
 		double tmpMinDistFront = Math.min(getDistance(viewDirectType.LEFTFRONT), Math.min(getDistance(viewDirectType.FRONT), getDistance(viewDirectType.RIGHTFRONT)));
 		double tmpMinDistBack  = Math.min(getDistance(viewDirectType.LEFTREAR), Math.min(getDistance(viewDirectType.BACK), getDistance(viewDirectType.RIGHTREAR)));
-		double speed = VEL;
+		double speed = maxSpeed;
 
-		if (tmpMinDistFront < WALLFOLLOWDIST) {
-			speed = VEL * (tmpMinDistFront/WALLFOLLOWDIST);
+		/**
+		 * Check forward direction
+		 */
+		if (maxSpeed > 0.0)
+		{
+		    if (tmpMinDistFront < WALLFOLLOWDIST)
+		    {
+		        speed = maxSpeed * (tmpMinDistFront/WALLFOLLOWDIST);
 
-			// Do not turn back if there is a wall!
-			if (tmpMinDistFront<0 && tmpMinDistBack<0)
-				//tmpMinDistBack<tmpMinDistFront ? speed=(VEL*tmpMinDistFront)/(tmpMinDistFront+tmpMinDistBack) : speed;
-				if (tmpMinDistBack < tmpMinDistFront){
-					speed = (VEL*tmpMinDistFront)/(tmpMinDistFront+tmpMinDistBack);
-				}
-			//speed=(VEL*(tmpMinDistBack-tmpMinDistFront))/SHAPE_DIST;
-			//tmpMinDistBack<tmpMinDistFront ? speed=(VEL*(tmpMinDistFront-tmpMinDistBack))/WALLFOLLOWDIST : speed;
+		        /** Do not turn back if there is a wall! */
+		        if (tmpMinDistFront<0 && tmpMinDistBack<0)
+		        {
+		            if (tmpMinDistBack < tmpMinDistFront)
+		            {
+		                speed = (maxSpeed*tmpMinDistFront)/(tmpMinDistFront+tmpMinDistBack);
+		            }
+		        }
+		    }
+		}
+		else
+		{
+		    /**
+	         * Check backward direction
+	         */
+		    if (maxSpeed < 0.0)
+		    {
+		        if (tmpMinDistBack < WALLFOLLOWDIST)
+		        {
+		            speed = maxSpeed * (tmpMinDistBack/WALLFOLLOWDIST);
+
+		            /** Do not turn forward if there is a wall! */
+		            if (tmpMinDistBack<0 && tmpMinDistFront<0)
+		            {
+		                if (tmpMinDistFront < tmpMinDistBack)
+		                {
+		                    speed = (maxSpeed*tmpMinDistBack)/(tmpMinDistBack+tmpMinDistFront);
+		                }
+		            }
+		        }
+		    }
 		}
 		return speed;
 	}
@@ -318,19 +396,24 @@ public class Pioneer extends Robot implements IPioneer
 	 * set to zero)
 	 * @return Safe turnrate.
 	 */
-	// TODO Code review
-	protected final double checkrotate ()
+	protected final double checkrotate (double maxTurnrate)
 	{
-		double saveTurnrate = 0.;
+		double saveTurnrate = maxTurnrate;
 
-		if (turnrate < 0) { // Right turn
+		/**
+		 * Check for a right turn.
+		 */
+		if (maxTurnrate < 0) {
 			if (getDistance(viewDirectType.LEFTREAR) < 0) {
 				saveTurnrate = 0;
 			}
 			if (getDistance(viewDirectType.RIGHT) < 0) {
 				saveTurnrate = 0;
 			}
-		} else if (turnrate > 0){ // Left turn
+		/**
+		 * Check for a left turn.
+		 */
+		} else if (maxTurnrate > 0){
 			if (getDistance(viewDirectType.RIGHTREAR) < 0) {
 				saveTurnrate = 0;
 			}

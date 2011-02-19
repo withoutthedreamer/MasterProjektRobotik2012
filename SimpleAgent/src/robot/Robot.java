@@ -32,8 +32,8 @@ public class Robot extends Device implements IRobot {
 	Blobfinder bloFi = null;
 	Simulation simu = null;
 	
-	double speed = -1.0;
-	double turnrate = -1.0;
+	double speed = 0.0;
+	double turnrate = 0.0;
 	Position position = null;
 	Position goal = null;
 
@@ -119,15 +119,15 @@ public class Robot extends Device implements IRobot {
 		}
 	}
 		
-	/**
-	 * Command the motors
-	 */
-	protected final void execute() {
-		if (posi != null) {
-			posi.setSpeed(speed);
-			posi.setTurnrate(turnrate);
-		}
-	}
+//	/**
+//	 * Command the motors
+//	 */
+//	protected final void execute() {
+//		if (posi != null) {
+//			posi.setSpeed(speed);
+//			posi.setTurnrate(turnrate);
+//		}
+//	}
 	/**
 	 * Sets a goal if the robot possesses a navigation device. 
 	 * @param newGoal New @ref Position goal.
@@ -207,4 +207,73 @@ public class Robot extends Device implements IRobot {
 	public Localize getLocalizer() {
 		return localizer;
 	}
+	/**
+	 * @return The @see Gripper @see Device or 'null' if no such device.
+	 */
+	public Gripper getGripper() {
+	    return gripper;
+	}
+
+    /**
+     * @return the posi
+     */
+    public Position2d getPosi() {
+        return posi;
+    }
+
+    /**
+     * @return the laser
+     */
+    public Ranger getLaser() {
+        return laser;
+    }
+
+    /**
+     * @return the sonar
+     */
+    public Ranger getSonar() {
+        return sonar;
+    }
+
+    /**
+     * @return the bloFi
+     */
+    public Blobfinder getBloFi() {
+        return bloFi;
+    }
+
+    /**
+     * @return the simu
+     */
+    public Simulation getSimu() {
+        return simu;
+    }
+
+    /**
+     * @return the speed
+     */
+    public double getSpeed() {
+        return speed;
+    }
+
+    /**
+     * @return the turnrate
+     */
+    public double getTurnrate() {
+        return turnrate;
+    }
+
+    /**
+     * @param speed the speed to set
+     */
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    /**
+     * @param turnrate the turnrate to set
+     */
+    public void setTurnrate(double turnrate) {
+        this.turnrate = turnrate;
+    }
 }
