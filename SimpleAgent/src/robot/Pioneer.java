@@ -4,7 +4,7 @@
  */
 package robot;
 
-import device.*;
+import device.Device;
 
 /**
  * This class represents a minimal or standard coniguration
@@ -16,16 +16,27 @@ import device.*;
  */
 public class Pioneer extends Robot implements IPioneer
 {	
-	public Pioneer (Device roboDevices) {
+    StateType currentState = StateType.SET_SPEED;
+
+    public Pioneer (Device roboDevices) {
 		super(roboDevices);
 	}
 	
 	@Override protected void update()
 	{
-//		planLeftWallfollow();
+	    debugSensorData();
 
-	    setCurSpeed(getSpeed());
-		setCurTurnrate(getTurnrate());
+	    if (getCurrentState() == StateType.LWALL_FOLLOWING || 
+	            getCurrentState() == StateType.COLLISION_AVOIDANCE)
+	    {
+	        setCurSpeed(IPioneer.MAXSPEED);
+            setCurTurnrate( planLeftWallfollow() );
+	    }
+	    else
+	    {
+	        setCurSpeed(getSpeed());
+	        setCurTurnrate(getTurnrate());
+	    }
 	}
 	public void stop()
 	{
@@ -71,82 +82,29 @@ public class Pioneer extends Robot implements IPioneer
 	    }
 	}
 	
-	@SuppressWarnings("unused")
-	protected void planLeftWallfollow () {
-		double tmp_turnrate = 0.;
-
-		if (isDebugSonar && getSonar() != null){
-			double[] sonarValues = getSonar().getRanges();	
-			int 	sonarCount  = getSonar().getCount();
-
-			System.out.println();
-			for(int i=0; i< sonarCount; i++)
-				System.out.println("Sonar " + i + ": " + sonarValues[i]);
-		}
+	protected double planLeftWallfollow ()
+	{
+		double newTurnrate;
 
 		// (Left) Wall following
-		setTurnrate( wallfollow() );
+		newTurnrate = wallfollow();
 		// Collision avoidance overrides other turnrate if neccessary!
 		// May change this.turnrate or this.currentState
-		setTurnrate( collisionAvoid() );
+		newTurnrate = collisionAvoid(newTurnrate);
 
 		// Set speed dependend on the wall distance
-		setSpeed( calcspeed(getSpeed()) );
+//		setSpeed( calcspeed(getSpeed()) );
 
 		// Check if rotating is safe
 		// tune turnrate controlling here
-		tmp_turnrate = checkrotate(getTurnrate());
+//		tmp_turnrate = checkrotate(getTurnrate());
 
 		// Fusion of the vectors makes a smoother trajectory
 		//		this.turnrate = (tmp_turnrate + this.turnrate) / 2;
-		double weight = 0.5;
-		setTurnrate( weight*tmp_turnrate + (1-weight)*getTurnrate() );
-		if (isDebugState) {
-			System.out.printf("turnrate/speed/state:\t%5.2f\t%5.2f\t%s\n", getTurnrate(), getSpeed(), currentState.toString());
-		}
-		if (isDebugDistance) {
-			if (this.laser != null) {
-				System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
-				System.out.printf("%5.2f", getDistanceLas(LMIN,  LMAX)-HORZOFFSET);	System.out.print("\t");
-				System.out.printf("%5.2f", getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);	System.out.print("\t");
-				System.out.printf("%5.2f", getDistanceLas(FMIN,  FMAX));				System.out.print("\t");
-				System.out.printf("%5.2f", getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);	System.out.print("\t");
-				System.out.printf("%5.2f", getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
-				System.out.println("\t" + " XXXX" + "\t" + " XXXX" + "\t" + " XXXX");
-			} else {
-				System.out.println("No laser available!");
-			}
-
-			if (this.sonar != null) {
-				double[] sonarValues = this.sonar.getRanges();		
-				System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
-				System.out.printf("%5.2f", Math.min(sonarValues[15],sonarValues[0]));	System.out.print("\t");
-				System.out.printf("%5.2f", Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
-				System.out.printf("%5.2f", Math.min(sonarValues[3], sonarValues[4]));   System.out.print("\t");
-				System.out.printf("%5.2f", Math.min(sonarValues[5], sonarValues[6]));   System.out.print("\t");
-				System.out.printf("%5.2f", Math.min(sonarValues[7], sonarValues[8]));   System.out.print("\t");
-				System.out.printf("%5.2f", Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET); System.out.print("\t");
-				System.out.printf("%5.2f", Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET); System.out.print("\t");
-				System.out.printf("%5.2f\n", Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
-			} else {
-				System.out.println("No sonar available!");
-			}
-
-			System.out.print("Shape (l/lf/f/rf/r/rb/b/lb):\t");
-			System.out.printf("%5.2f", getDistance(viewDirectType.LEFT)); System.out.print("\t");
-			System.out.printf("%5.2f", getDistance(viewDirectType.LEFTFRONT));  System.out.print("\t");
-			System.out.printf("%5.2f", getDistance(viewDirectType.FRONT));      System.out.print("\t");
-			System.out.printf("%5.2f", getDistance(viewDirectType.RIGHTFRONT)); System.out.print("\t");
-			System.out.printf("%5.2f", getDistance(viewDirectType.RIGHT));      System.out.print("\t");
-			System.out.printf("%5.2f", getDistance(viewDirectType.RIGHTREAR));  System.out.print("\t");
-			System.out.printf("%5.2f", getDistance(viewDirectType.BACK));       System.out.print("\t");
-			System.out.printf("%5.2f\n", getDistance(viewDirectType.LEFTREAR));
-		}
-		if (isDebugPosition) {
-			System.out.printf("%5.2f", posi.getPosition().getX());	System.out.print("\t");
-			System.out.printf("%5.2f", posi.getPosition().getY());	System.out.print("\t");
-			System.out.printf("%5.2f\n", java.lang.Math.toDegrees(posi.getPosition().getYaw()));
-		}
+//		double weight = 0.5;
+//		setTurnrate( weight*newTurnrate + (1-weight)*getTurnrate() );
+//		setTurnrate(newTurnrate);
+		return newTurnrate;
 	}
 
 	/**
@@ -265,7 +223,7 @@ public class Pioneer extends Robot implements IPioneer
 		}
 	}
 
-	/**
+    /**
 	 * Calculates the turnrate from range measurement and minimum wall follow
 	 * distance.
 	 * @return Turnrate to follow wall.
@@ -275,22 +233,23 @@ public class Pioneer extends Robot implements IPioneer
 		double DistLFov  = 0;
 		double DistL     = 0;
 		double DistLRear = 0;
+		double newTurnrate;
 
 		// As long global goal is WF set it by default
 		// Will potentially be overridden by higher prior behaviours
-		currentState = StateType.LWALL_FOLLOWING;
+		setCurrentState( StateType.LWALL_FOLLOWING );
 
 		DistLFov  = getDistance(viewDirectType.LEFTFRONT);
 
 		// do simple (left) wall following
 		//do naiv calculus for turnrate; weight dist vector
-		setTurnrate( Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 ) );
+		newTurnrate = Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 );
 
 		// Normalize turnrate
-		if (getTurnrate() > Math.toRadians(TURN_RATE)) {
-			setTurnrate( Math.toRadians(TURN_RATE) );
-		} else if (this.turnrate < -Math.toRadians(TURN_RATE)) {
-			setTurnrate( -Math.toRadians(TURN_RATE) );
+		if (newTurnrate > Math.toRadians(TURN_RATE)) {
+		    newTurnrate = Math.toRadians(TURN_RATE);
+		} else if (newTurnrate < -Math.toRadians(TURN_RATE)) {
+		    newTurnrate = -Math.toRadians(TURN_RATE);
 		}
 
 		// TODO implement wall searching behavior
@@ -301,17 +260,17 @@ public class Pioneer extends Robot implements IPioneer
 		DistL     >= WALLLOSTDIST  &&
 		DistLRear >= WALLLOSTDIST     )
 		{
-			setTurnrate( 0. );
-			currentState = StateType.WALL_SEARCHING;
+		    newTurnrate = 0.0;
+			setCurrentState( StateType.WALL_SEARCHING );
 		}
 
-		return getTurnrate();
+		return newTurnrate;
 	}
 
 	/**
 	 * Biased by left wall following
 	 */
-	protected final double collisionAvoid ()
+	protected final double collisionAvoid (double checkTurnrate)
 	{
 		// Scan FOV for Walls
 		double distLeftFront  = getDistance(viewDirectType.LEFTFRONT);
@@ -324,11 +283,11 @@ public class Pioneer extends Robot implements IPioneer
 		if ((distFrontLeft  < STOP_WALLFOLLOWDIST) ||
 				(distFrontRight < STOP_WALLFOLLOWDIST)   )
 		{
-			currentState = StateType.COLLISION_AVOIDANCE;
+		    setCurrentState( StateType.COLLISION_AVOIDANCE );
 			// Turn right as long we want left wall following
 			return -Math.toRadians(STOP_ROT);
 		} else {
-			return getTurnrate();
+			return checkTurnrate;
 		}
 	}
 
@@ -423,5 +382,80 @@ public class Pioneer extends Robot implements IPioneer
 		}
 		return saveTurnrate;
 	}
+
+    /**
+     * @return the currentState
+     */
+    public StateType getCurrentState() {
+        return currentState;
+    }
+
+    /**
+     * @param currentState the currentState to set
+     */
+    public void setCurrentState(StateType currentState) {
+        this.currentState = currentState;
+    }
+
+    @SuppressWarnings("unused")
+    private void debugSensorData()
+    {
+        if (isDebugSonar && getSonar() != null){
+            double[] sonarValues = getSonar().getRanges();  
+            int     sonarCount  = getSonar().getCount();
+    
+            System.out.println();
+            for(int i=0; i< sonarCount; i++)
+                System.out.println("Sonar " + i + ": " + sonarValues[i]);
+        }
+    
+        if (isDebugState) {
+            System.out.printf("turnrate/speed/state:\t%5.2f\t%5.2f\t%s\n", getTurnrate(), getSpeed(), currentState.toString());
+        }
+        if (isDebugDistance) {
+            if (this.laser != null) {
+                System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
+                System.out.printf("%5.2f", getDistanceLas(LMIN,  LMAX)-HORZOFFSET); System.out.print("\t");
+                System.out.printf("%5.2f", getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);    System.out.print("\t");
+                System.out.printf("%5.2f", getDistanceLas(FMIN,  FMAX));                System.out.print("\t");
+                System.out.printf("%5.2f", getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);    System.out.print("\t");
+                System.out.printf("%5.2f", getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
+                System.out.println("\t" + " XXXX" + "\t" + " XXXX" + "\t" + " XXXX");
+            } else {
+                System.out.println("No laser available!");
+            }
+    
+            if (this.sonar != null) {
+                double[] sonarValues = this.sonar.getRanges();      
+                System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");
+                System.out.printf("%5.2f", Math.min(sonarValues[15],sonarValues[0]));   System.out.print("\t");
+                System.out.printf("%5.2f", Math.min(sonarValues[1], sonarValues[2]));   System.out.print("\t");
+                System.out.printf("%5.2f", Math.min(sonarValues[3], sonarValues[4]));   System.out.print("\t");
+                System.out.printf("%5.2f", Math.min(sonarValues[5], sonarValues[6]));   System.out.print("\t");
+                System.out.printf("%5.2f", Math.min(sonarValues[7], sonarValues[8]));   System.out.print("\t");
+                System.out.printf("%5.2f", Math.min(sonarValues[9], sonarValues[10])-MOUNTOFFSET); System.out.print("\t");
+                System.out.printf("%5.2f", Math.min(sonarValues[11],sonarValues[12])-MOUNTOFFSET); System.out.print("\t");
+                System.out.printf("%5.2f\n", Math.min(sonarValues[13],sonarValues[14])-MOUNTOFFSET);
+            } else {
+                System.out.println("No sonar available!");
+            }
+    
+            System.out.print("Shape (l/lf/f/rf/r/rb/b/lb):\t");
+            System.out.printf("%5.2f", getDistance(viewDirectType.LEFT)); System.out.print("\t");
+            System.out.printf("%5.2f", getDistance(viewDirectType.LEFTFRONT));  System.out.print("\t");
+            System.out.printf("%5.2f", getDistance(viewDirectType.FRONT));      System.out.print("\t");
+            System.out.printf("%5.2f", getDistance(viewDirectType.RIGHTFRONT)); System.out.print("\t");
+            System.out.printf("%5.2f", getDistance(viewDirectType.RIGHT));      System.out.print("\t");
+            System.out.printf("%5.2f", getDistance(viewDirectType.RIGHTREAR));  System.out.print("\t");
+            System.out.printf("%5.2f", getDistance(viewDirectType.BACK));       System.out.print("\t");
+            System.out.printf("%5.2f\n", getDistance(viewDirectType.LEFTREAR));
+        }
+        if (isDebugPosition) {
+            System.out.printf("%5.2f", posi.getPosition().getX());  System.out.print("\t");
+            System.out.printf("%5.2f", posi.getPosition().getY());  System.out.print("\t");
+            System.out.printf("%5.2f\n", java.lang.Math.toDegrees(posi.getPosition().getYaw()));
+        }
+        
+    }
 }
 

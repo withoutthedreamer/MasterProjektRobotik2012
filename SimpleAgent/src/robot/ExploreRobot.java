@@ -41,29 +41,30 @@ public class ExploreRobot extends Pioneer {
 		}
 	}
 
-	@Override protected void planLeftWallfollow ()
+	@Override protected double planLeftWallfollow ()
 	{
-		double tmp_turnrate = 0.;
+		double newTurnrate = 0.;
+        double newTurnrate2 = 0.;
 
 		blobsearch();
 
 		// (Left) Wall following
-		turnrate = wallfollow();
+		newTurnrate = wallfollow();
 		// Collision avoidance overrides other turnrate if neccessary!
 		// May change this.turnrate or this.currentState
-		turnrate = collisionAvoid();
+		newTurnrate = collisionAvoid(newTurnrate);
 
 		// Set speed dependend on the wall distance
-		speed = calcspeed(speed);
+//		setSpeed( calcspeed(speed) );
 
 		// Check if rotating is safe
 		// tune turnrate controlling here
-		tmp_turnrate = checkrotate(turnrate);
+		newTurnrate2 = checkrotate(newTurnrate);
 
 		// Fusion of the vectors makes a smoother trajectory
 		//		this.turnrate = (tmp_turnrate + this.turnrate) / 2;
 		double weight = 0.5;
-		turnrate = weight*tmp_turnrate + (1-weight)*turnrate;
+		return weight*newTurnrate + (1-weight)*newTurnrate2;
 	}
 	
 	public void setBlackboard (Blackboard bb)

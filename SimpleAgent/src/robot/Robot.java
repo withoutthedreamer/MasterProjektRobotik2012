@@ -3,7 +3,6 @@ package robot;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import robot.IPioneer.StateType;
 import data.Position;
 import device.Blobfinder;
 import device.Device;
@@ -36,8 +35,6 @@ public class Robot extends Device implements IRobot {
 	double turnrate = 0.0;
 	Position position = null;
 	Position goal = null;
-
-	StateType currentState;
 	
 	String robotId = null;
 
