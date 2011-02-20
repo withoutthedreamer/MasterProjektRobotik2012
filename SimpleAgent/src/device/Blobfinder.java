@@ -1,7 +1,10 @@
 package device;
 
+import javaclient3.BlobfinderInterface;
+
 import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
 import data.BlobfinderBlob;
+
 import java.util.concurrent.*;
 
 public class Blobfinder extends RobotDevice
@@ -17,35 +20,35 @@ public class Blobfinder extends RobotDevice
 		blobs = new CopyOnWriteArrayList<BlobfinderBlob>();
 	}
 	// Only to be called @~10Hz
-	@Override
-	protected void update () {
-		if (((javaclient3.BlobfinderInterface) device).isDataReady()) {
-		// TODO else case
-		count = ((javaclient3.BlobfinderInterface) device).getData().getBlobs_count();
-		
-		if (count > 0) {
-			for (int i = 0; i<count; i++) {
-				PlayerBlobfinderBlob unblob = ((javaclient3.BlobfinderInterface) device).getData().getBlobs()[i];
-				// envelope for new blob
-				BlobfinderBlob inblob = new BlobfinderBlob(
-						unblob.getColor(),
-						unblob.getArea(),
-						unblob.getX(),
-						unblob.getY(),
-						unblob.getLeft(),
-						unblob.getRight(),
-						unblob.getTop(),
-						unblob.getBottom(),
-						unblob.getRange()	);
-				
-				if (i >= blobs.size()) {
-					blobs.add(inblob);
-				} else {
-					blobs.set(i, inblob);
-				}
-			}
-		}
-		}
+	@Override protected void update ()
+	{
+	    if (((BlobfinderInterface) device).isDataReady()) {
+	        // TODO else case
+	        count = ((BlobfinderInterface) device).getData().getBlobs_count();
+
+	        if (count > 0) {
+	            for (int i = 0; i<count; i++) {
+	                PlayerBlobfinderBlob unblob = ((BlobfinderInterface) device).getData().getBlobs()[i];
+	                // envelope for new blob
+	                BlobfinderBlob inblob = new BlobfinderBlob(
+	                        unblob.getColor(),
+	                        unblob.getArea(),
+	                        unblob.getX(),
+	                        unblob.getY(),
+	                        unblob.getLeft(),
+	                        unblob.getRight(),
+	                        unblob.getTop(),
+	                        unblob.getBottom(),
+	                        unblob.getRange()	);
+
+	                if (i >= blobs.size()) {
+	                    blobs.add(inblob);
+	                } else {
+	                    blobs.set(i, inblob);
+	                }
+	            }
+	        }
+	    }
 	}
 	
 	public CopyOnWriteArrayList<BlobfinderBlob> getBlobs () {

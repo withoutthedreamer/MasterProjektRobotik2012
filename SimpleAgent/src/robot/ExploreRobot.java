@@ -16,11 +16,11 @@ public class ExploreRobot extends Pioneer {
 		super(roboDevices);
 	}
 	protected final void blobsearch() {
-		if (this.bloFi == null ) { return; }
-		int count = this.bloFi.getCount();
+		if (getBloFi() == null ) { return; }
+		int count = getBloFi().getCount();
 		if (count > 0) {
 			for (int i=0; i<count; i++) {
-				CopyOnWriteArrayList<BlobfinderBlob> blobs = bloFi.getBlobs(); 
+				CopyOnWriteArrayList<BlobfinderBlob> blobs = getBloFi().getBlobs(); 
 //				if (blobs.capacity() > i) {
 				if (blobs.size() > i) {
 					BlobfinderBlob ablob = blobs.get(i);
