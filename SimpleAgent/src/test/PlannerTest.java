@@ -56,7 +56,7 @@ public class PlannerTest extends TestCase {
 		Position pose = new Position(-6,-5,Math.toRadians(90));
 		
 		simu.setPositionOf("r0", pose);
-		while(simu.getPositionOf("r0").isNearTo(pose) != true);
+		while(simu.getPositionOf("r0").isNearTo(pose, 2, Math.toRadians(10)) != true);
 		
 		// Planner does not currently provide set position service.
 		assertTrue(localizer.setPosition(pose));		

@@ -3,7 +3,7 @@
  */
 package test;
 
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import device.DeviceNode;
  * @author sebastian
  *
  */
-public class PioneerTest {
+public class PioneerTest extends TestCase {
 
     static DeviceNode dn;
     static Pioneer pion;

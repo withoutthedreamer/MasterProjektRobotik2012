@@ -3,11 +3,11 @@
  */
 package test;
 
-import static org.junit.Assert.*;
-
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.Set;
+
+import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -18,7 +18,7 @@ import data.BoardObject;
  * @author sebastian
  *
  */
-public class BoardTest {
+public class BoardTest extends TestCase {
 
 	static Board b;
 	static BoardObject bo;

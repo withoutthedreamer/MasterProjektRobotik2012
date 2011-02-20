@@ -3,7 +3,7 @@
  */
 package test;
 
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -16,7 +16,7 @@ import device.IDevice;
  * @author sebastian
  *
  */
-public class GripperTest {
+public class GripperTest extends TestCase {
 
 	static DeviceNode deviceNode;
 	static Gripper gripper;

@@ -3,7 +3,7 @@
  */
 package test;
 
-import static org.junit.Assert.*;
+import junit.framework.TestCase;
 
 import org.junit.Test;
 
@@ -13,7 +13,7 @@ import data.Position;
  * @author sebastian
  *
  */
-public class PositionTest {
+public class PositionTest extends TestCase {
 
     /**
      * Test method for {@link data.Position#Position(double, double, double)}.

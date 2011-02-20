@@ -4,14 +4,12 @@ package data;
  * Represents a 2D position in the simulator
  * @author sebastian
  */
-public class Position {
-
-	double x  = 0.;
-	double y  = 0.;
-	double yaw= 0.;
-	final static double epsilonPos = 2.0; // meters
-	final static double epsilonRot = Math.toRadians(45); // radians
-
+public class Position
+{
+	double x;
+	double y;
+	double yaw;
+	
 	/**
 	 * Constructor creates a Position
 	 * @param x X coordinate.
@@ -19,35 +17,28 @@ public class Position {
 	 * @param yaw Orientation in radians.
 	 */
 	public Position(double x, double y, double yaw) {
-		this.x  = x;
-		this.y  = y;
-		this.yaw= yaw;
+	    setPosition(x, y, yaw);
 	}
 	/**
 	 * Creates a Position with coordinates (0., 0., 0.).
 	 */
 	public Position() {
-		x=0.;
-		y=0.;
-		yaw=0.;
+	    setPosition(0., 0., 0.);
 	}
 	/**
 	 * Creates a copy position of the given one. 
 	 * @param position The position to copy.
 	 */
 	public Position(Position position){
-		this(position.getX(),position.getY(),position.getYaw());
+        setPosition(position);
 	}
 	/**
 	 * Sets this position's coordinates to the ones from the given position.
-	 * @param pos The position to take the coordinates from.
+	 * @param position The position to take the coordinates from.
 	 */
-	public void setPosition (Position pos) {
-		if (pos != null) {
-			this.x = pos.getX();
-			this.y = pos.getY();
-			this.yaw = pos.getYaw();
-		}
+	public void setPosition (Position position) {
+		if (position != null)
+			setPosition(position.getX(), position.getY(), position.getYaw());
 	}
 	/**
 	 * Sets this position coordinates to the primitives given.
@@ -91,19 +82,28 @@ public class Position {
 		return String.format("(%5.2f,%5.2f,%3.0f)",this.x, this.y, Math.toDegrees(this.yaw));
 	}
 	/**
-	 * @depreciated Use @see Position#distanceTo(Position) instead.
-	 * @param pose
-	 * @return
+	 * Calculates if the position is near to the given one considering
+	 * the given epsilons.
+	 * 
+	 * @param pose The distant position.
+	 * @param poseEpsilon The positive planar epsilon in meters.
+	 * @param angleEpsilon The positive angle epsilon in radians.
+	 * @return true if positions are near, false else.
 	 */
-	public boolean isNearTo(Position pose){
-		if (pose != null) {
-			if ((Math.abs(x   - pose.getX())   < epsilonPos) &&
-				(Math.abs(y   - pose.getY())   < epsilonPos) &&
-				(Math.abs(yaw - pose.getYaw()) < epsilonRot)   ) {
-				return true;
-			}
-		}
-		return false;
+	public boolean isNearTo(Position pose, double poseEpsilon, double angleEpsilon)
+	{
+	    if (pose != null)
+	    {
+	        if (
+	            (Math.abs(x - pose.getX()) < poseEpsilon) &&
+	            (Math.abs(y - pose.getY()) < poseEpsilon) &&
+	            (Math.abs(yaw - pose.getYaw()) < angleEpsilon)
+	        )
+	        {
+	            return true;
+	        }
+	    }
+	    return false;
 	}
 	/**
 	 * Compares this position to the given one.

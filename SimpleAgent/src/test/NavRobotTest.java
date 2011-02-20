@@ -65,7 +65,11 @@ public class NavRobotTest extends TestCase {
 	public void testGetPositionAtGoal() {
 		try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
 		
-		assertTrue(robot.getPosition().isNearTo(new Position(-6.5,-2,Math.toRadians(75))));
+		Position robotPose = robot.getPosition();
+		Position goalPose = new Position(-6.5,-2,Math.toRadians(75));
+		
+		System.out.println(robotPose+" "+goalPose);
+		assertTrue(robot.getPosition().isNearTo(goalPose, 2, Math.toRadians(30)));
 	}
 	@Test
 	public void testShutdown() {

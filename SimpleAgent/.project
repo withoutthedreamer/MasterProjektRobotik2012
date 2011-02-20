@@ -161,4 +161,14 @@
 			<locationURI>PARENT-1-PROJECT_LOC/stage_local/bitmaps/tams_corr_orig_cut_q.png</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>GRAPHVIZ_HOME</name>
+			<value>file:/opt/local/bin</value>
+		</variable>
+		<variable>
+			<name>PATH</name>
+			<value>$%7BGRAPHVIZ_HOME%7D</value>
+		</variable>
+	</variableList>
 </projectDescription>
