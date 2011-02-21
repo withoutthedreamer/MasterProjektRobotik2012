@@ -40,6 +40,9 @@ public class Pioneer extends Robot implements IPioneer
 	}
 	public void stop()
 	{
+	    if (getPlanner() != null)
+	        getPlanner().stop();
+	    
 	    setTurnrate(0.0);
 	    setSpeed(0.0);
 	    setCurSpeed(0.0);

@@ -4,7 +4,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-application
 						http://jadex.sourceforge.net/jadex-application-2.0.xsd"
-	name="uhh1" package="jadex.scenario">
+	name="robots" package="jadex.scenario">
 
 	<arguments>
 		<argument name="portStart" typename="Integer"> 6665 </argument>

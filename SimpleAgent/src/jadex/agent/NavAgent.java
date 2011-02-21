@@ -228,4 +228,11 @@ public class NavAgent extends MicroAgent
 	public Logger getLogger() {
 		return logger;
 	}
+
+    /**
+     * @return the robot
+     */
+    protected NavRobot getRobot() {
+        return robot;
+    }
 }

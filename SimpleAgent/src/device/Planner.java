@@ -161,7 +161,7 @@ public class Planner extends RobotDevice
 		return isValidGoal();
 	}
 	public Position getGoal() {
-		return new Position(goal);
+		return new Position(globalGoal);
 	}
 	/**
 	 * @depreciated Use @Localize#setPosition instead.
