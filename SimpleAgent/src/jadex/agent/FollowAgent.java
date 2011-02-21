@@ -1,11 +1,10 @@
 /**
  * 
  */
-package jadex.scenario;
+package jadex.agent;
 
 import data.Position;
 import device.ILocalizeListener;
-import jadex.agent.NavAgent;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.bridge.IComponentStep;
