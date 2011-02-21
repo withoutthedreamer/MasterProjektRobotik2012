@@ -44,14 +44,15 @@ public class NavAgent extends MicroAgent
 		addDirectService(gs);
 		addDirectService(gr);
 
+		String host = (String)getArgument("host");
 		Integer port = (Integer)getArgument("port");
 		/** Get the device node */
-		deviceNode = new DeviceNode(new Object[] {"localhost",port, "localhost",port+1});
+		deviceNode = new DeviceNode(new Object[] {host,port, host,port+1});
 		deviceNode.runThreaded();
 
 		robot = new NavRobot(deviceNode);
 		robot.setRobotId((String)getArgument("name"));
-		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), Math.toRadians((Double)getArgument("Yaw"))));
+		robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), Math.toRadians((Double)getArgument("Angle"))));
 		
 		sendHello();
 	}
@@ -214,11 +215,12 @@ public class NavAgent extends MicroAgent
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
 		IArgument[] args = {
+                new Argument("host", "Player", "String", "localhost"),
 				new Argument("port", "Player", "Integer", new Integer(6665)),
 				new Argument("name", "Robot", "String", "r0"),
 				new Argument("X", "Meter", "Double", new Double(-21.0)),
 				new Argument("Y", "Meter", "Double", new Double(4.0)),
-				new Argument("Yaw", "Degree", "Double", new Double(0))
+				new Argument("Angle", "Degree", "Double", new Double(0.0))
 		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a navigation agent.", null, args, null);

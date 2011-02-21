@@ -22,15 +22,12 @@ public class ViewAgent extends MicroAgent {
 	/** Services */
 	HelloService hs;
 	SendPositionService ps;
-
-	protected static String port = "6600";
 	
-	// API to the simulator (gui)
+	/** API to the simulator (gui) */
 	protected Simulation simu = null;
 	protected DeviceNode deviceNode = null;
 	
-	@Override
-	public void agentCreated()
+	@Override public void agentCreated()
 	{
 		hs = new HelloService(getExternalAccess());
 		ps = new SendPositionService(getExternalAccess());
@@ -38,14 +35,13 @@ public class ViewAgent extends MicroAgent {
 		addDirectService(hs);
 		addDirectService(ps);
 
-		deviceNode = new DeviceNode("localhost", (Integer)getArgument("port"));
+		deviceNode = new DeviceNode((String)getArgument("host"), (Integer)getArgument("port"));
 		deviceNode.runThreaded();
 		
 		hs.send(getComponentIdentifier().toString(), "", "Hello");
 	}
 
-	@Override
-	public void executeBody()
+	@Override public void executeBody()
 	{
 		scheduleStep(new IComponentStep()
 		{
@@ -76,18 +72,15 @@ public class ViewAgent extends MicroAgent {
 			}
 		});
 	}
-	@Override
-	public void agentKilled() {
+	@Override public void agentKilled() {
 		deviceNode.shutdown();
 		hs.send(getComponentIdentifier().toString(), "", "Bye");
 	}
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
 		IArgument[] args = {
-//				new Argument("requires player", "dummy", "Boolean", new Boolean(true)),
-//				new Argument("player path", "dummy", "String", playerPath),
-				new Argument("port", "dummy", "Integer", new Integer(port))};
-//				new Argument("player config", "dummy", "String", "/Users/sebastian/robotcolla/SimpleAgent/player/uhhsimu1.cfg")};
+                new Argument("host", "Player", "String", "localhost"),
+				new Argument("port", "Player", "Integer", new Integer(6600))};
 		
 		return new MicroAgentMetaInfo("This agent starts up a view agent.", null, args, null);
 	}
