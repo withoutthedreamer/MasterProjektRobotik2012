@@ -102,7 +102,7 @@ public class Device implements IDevice, Runnable
 			thread.start();
 			while (thread.isAlive() == false);
 
-			logger.info("Running "+this.getClass().toString()+" in "+thread.getName());
+			logger.fine("Running "+this.getClass().toString()+" in "+thread.getName());
 		}
 	}
 
@@ -131,7 +131,7 @@ public class Device implements IDevice, Runnable
 		}
 		isRunning = false;    /** sync with setNotThreaded */
 		
-		logger.info("Shutdown "+this.getClass().toString()+" in "+thread.getName());
+		logger.fine("Shutdown "+this.getClass().toString()+" in "+thread.getName());
 	}
 	public synchronized void shutdown()
 	{
