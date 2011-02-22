@@ -30,6 +30,9 @@ public class GripperTest extends TestCase {
 		gripper = (Gripper) deviceNode.getDevice(new Device(IDevice.DEVICE_GRIPPER_CODE, null, -1, -1));
 		assertNotNull(gripper);
 
+//		testClose();
+//		testRelease();
+		
 		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	/**
@@ -91,7 +94,12 @@ public class GripperTest extends TestCase {
 		
 		return state;
 	}
+	public void testLiftWithObject() {
+		gripper.liftWithObject();
+	}
 	@Test public void testShutdown() {
+//		testClose();
+//		testLift();
 		deviceNode.shutdown();
 	}
 
