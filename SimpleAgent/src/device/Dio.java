@@ -33,7 +33,7 @@ public class Dio extends RobotDevice {
     
     public int getInput (int index)
     {
-        if ( ((DIOInterface) getDevice() ).isDataReady() == true )
+//        if ( ((DIOInterface) getDevice() ).isDataReady() == true )
         {
             PlayerDioData data = ((DIOInterface) getDevice() ).getData();
             
@@ -41,10 +41,14 @@ public class Dio extends RobotDevice {
             {
                 int count = data.getCount();
                 int digIn = data.getDigin();
-                logger.severe("Got digin count: "+count+" with bits: "+digIn);
+                logger.info("Got digin count: "+count+" with bits: "+Integer.toBinaryString(digIn));
                                 
                 if (0 <= index && index < count) {
-                    return ( digIn & (1<<index) );
+                	int bit = digIn & (1<<index);
+                	if (bit > 0)
+                		return 1;
+                	else
+                		return 0;
                 }
             }
         }

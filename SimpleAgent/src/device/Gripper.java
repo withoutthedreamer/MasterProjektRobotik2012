@@ -43,10 +43,11 @@ public class Gripper extends RobotDevice
 	    Dio dio = getDio();
 	    
 	    if (dio != null)
-	        if (dio.getInput(4)==1 && dio.getInput(5)==1 )
-	            logger.config("Got Dio input on index 4 and 5");
+	    	/** Some thing between the paddles ? */
+	        if (dio.getInput(3)==1 || dio.getInput(2)==1 )
+	            logger.info("Something is between the paddles");
 	        else
-	            logger.config("Dio input failed on index 4 or 5");
+	            logger.info("Nothing between the paddles");
 	    
 	    /** Close paddles */
 	    close();
@@ -54,6 +55,8 @@ public class Gripper extends RobotDevice
 	    Actarray aa = getActarray();
 	    if (aa != null)
 	        aa.moveHome(0);
+	    else
+            logger.config("Actarray not found");
 	}
 	
 	public void release ()
@@ -62,6 +65,8 @@ public class Gripper extends RobotDevice
 	    
 	    if (aa != null)
 	        aa.moveTo(0, 0);
+	    else
+            logger.config("Actarray not found");
 	    
 	    /** Open paddles */
 	    open();

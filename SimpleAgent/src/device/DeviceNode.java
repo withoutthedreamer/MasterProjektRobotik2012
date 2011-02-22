@@ -152,42 +152,42 @@ public class DeviceNode extends Device {
 					{
 					case IDevice.DEVICE_POSITION2D_CODE :
 						if (Indes == 0)
-							dev = new Position2d(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
+							dev = new Position2d(this, new Device(name, host, port, Indes)); break;
 
 					case IDevice.DEVICE_RANGER_CODE : 
-						dev = new Ranger(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
+						dev = new Ranger(this, new Device(name, host, port, Indes)); break;
 						
 					case IDevice.DEVICE_BLOBFINDER_CODE :
-						dev = new Blobfinder(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
+						dev = new Blobfinder(this, new Device(name, host, port, Indes)); break;
 	
 					case IDevice.DEVICE_GRIPPER_CODE : 
-						dev = new Gripper(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
-
+						dev = new Gripper(this, new Device(name, host, port, Indes)); break;
+						
 					case IDevice.DEVICE_SONAR_CODE : 
-						dev = new RangerSonar(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
+						dev = new RangerSonar(this, new Device(name, host, port, Indes)); break;
 
 					case IDevice.DEVICE_LASER_CODE : 
-						dev = new RangerLaser(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
+						dev = new RangerLaser(this, new Device(name, host, port, Indes)); break;
 
 					case IDevice.DEVICE_LOCALIZE_CODE : 
-						dev = new Localize(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
+						dev = new Localize(this, new Device(name, host, port, Indes)); break;
 	
 					case IDevice.DEVICE_SIMULATION_CODE : 
-						dev = new Simulation(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break; 
+						dev = new Simulation(this, new Device(name, host, port, Indes)); break; 
 
 					case IDevice.DEVICE_PLANNER_CODE :
 						try {
-						dev = new Planner(new DeviceNode(playerClient), new Device(name, host, port, Indes));
+						dev = new Planner(this, new Device(name, host, port, Indes));
 						} catch (IllegalStateException e) {
-							dev = new Planner(new DeviceNode(playerClient), new Device(name, host, port, Indes));
+							dev = new Planner(this, new Device(name, host, port, Indes));
 						}
 						break;
 
 					case IDevice.DEVICE_ACTARRAY_CODE :
-					    dev = new Actarray(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
+					    dev = new Actarray(this, new Device(name, host, port, Indes)); break;
 
 					case IDevice.DEVICE_DIO_CODE :
-					    dev = new Dio(new DeviceNode(playerClient), new Device(name, host, port, Indes)); break;
+					    dev = new Dio(this, new Device(name, host, port, Indes)); break;
 
 					default: break;
 					}
