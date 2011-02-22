@@ -16,6 +16,7 @@ import device.DeviceNode;
 import device.ILocalizeListener;
 import device.IPlannerListener;
 import robot.NavRobot;
+import robot.Pioneer;
 import robot.Robot;
 
 public class NavAgent extends MicroAgent
@@ -30,7 +31,7 @@ public class NavAgent extends MicroAgent
 	GoalReachedService gr;
 	
 	DeviceNode deviceNode = null;
-	NavRobot robot = null;
+	Pioneer robot = null;
 		
 	@Override public void agentCreated()
 	{
@@ -232,7 +233,24 @@ public class NavAgent extends MicroAgent
     /**
      * @return the robot
      */
-    protected NavRobot getRobot() {
+    protected Pioneer getRobot() {
         return robot;
     }
+    protected void setRobot(Pioneer newRobot) {
+    	robot = newRobot;
+    }
+
+	/**
+	 * @return the deviceNode
+	 */
+	protected DeviceNode getDeviceNode() {
+		return deviceNode;
+	}
+
+	/**
+	 * @param deviceNode the deviceNode to set
+	 */
+	protected void setDeviceNode(DeviceNode deviceNode) {
+		this.deviceNode = deviceNode;
+	}
 }
