@@ -171,7 +171,13 @@ public class Device implements IDevice, Runnable
 		return deviceList;
 	}
 	
-	public synchronized final void addToDeviceList(Device dev) {
+	/**
+     * @param deviceList the deviceList to set
+     */
+    protected final void setDeviceList(ConcurrentLinkedQueue<Device> deviceList) {
+        this.deviceList = deviceList;
+    }
+    public synchronized final void addToDeviceList(Device dev) {
 
 		/** Check if it has other devices linked */
 		Iterator<Device> iter = dev.getDeviceIterator(); 

@@ -27,7 +27,15 @@ public class RobotDevice extends Device
 		
 		try
 		{
-			this.device = devNode.getClient().requestInterface (name, deviceNumber, PlayerConstants.PLAYER_OPEN_MODE);
+//			this.device = devNode.getClient().requestInterface (device.getName(), device.getDeviceNumber(), PlayerConstants.PLAYER_OPEN_MODE);
+		    this.device = devNode.getDeviceNode
+		    (
+		        device.getHost(), device.getPort()
+		    ).getClient
+		        ().requestInterface
+        		    (
+        		        device.getName(), device.getDeviceNumber(), PlayerConstants.PLAYER_OPEN_MODE
+        		    );
 			
 			if(this.device == null)
 			{
