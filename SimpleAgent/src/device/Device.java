@@ -157,10 +157,13 @@ public class Device implements IDevice, Runnable
 		/** Stop all devices */
 		if (deviceList.size() > 0)
 		{
-			Iterator<Device> deviceIterator = deviceList.iterator();
-			while (deviceIterator.hasNext())
+		    /**
+		     * Loop through Device List in reverse order
+		     */
+			Object[] devList = deviceList.toArray();
+			for (int i=devList.length-1; i>=0; i--)
 			{
-				Device device = deviceIterator.next();
+			    Device device = (Device)devList[i];
 				
 				/** Stop device */
 				device.shutdown();
