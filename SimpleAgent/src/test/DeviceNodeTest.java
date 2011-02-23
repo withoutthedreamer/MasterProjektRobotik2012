@@ -63,16 +63,16 @@ public class DeviceNodeTest extends TestCase {
 		testRunThreaded();
 		
 		// Create a node only for client passing
-		DeviceNode node = new DeviceNode(deviceNode.getClient());
+//		DeviceNode node = new DeviceNode(deviceNode.getClient());
 		
-		assertNotNull(node);
-		
-		// Should not start an own thread
-		node.runThreaded();
-		assertFalse(node.isThreaded());
-
-		node.shutdown();
-		assertTrue(deviceNode.isThreaded());
+//		assertNotNull(node);
+//		
+//		// Should not start an own thread
+//		node.runThreaded();
+//		assertFalse(node.isThreaded());
+//
+//		node.shutdown();
+//		assertTrue(deviceNode.isThreaded());
 		
 		testShutdown();
 	}

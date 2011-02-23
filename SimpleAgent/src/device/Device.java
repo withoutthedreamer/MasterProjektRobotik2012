@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 public class Device implements IDevice, Runnable
 {
 	/** Logging support */
-    private static Logger logger = Logger.getLogger (Device.class.getName ());
+    Logger logger = Logger.getLogger (Device.class.getName ());
 
 	protected ConcurrentLinkedQueue<Device> deviceList = null;
 	
@@ -28,8 +28,13 @@ public class Device implements IDevice, Runnable
 		deviceList = new ConcurrentLinkedQueue<Device>();
 	}
 	/**
-	 * This constructor is used to create a data device object
-	 * and has no internal devicelist or thread
+     * This constructor is used to create a data device object
+     * and has no internal devicelist or thread
+     *
+	 * @param name The Device id.
+	 * @param host The host to which this Device is connected.
+	 * @param port The port to which this Device is connected.
+	 * @param devNum The Device number (aka index) of the Device.
 	 */
 	public Device (int name, String host, int port, int devNum)
 	{
@@ -49,6 +54,7 @@ public class Device implements IDevice, Runnable
 		this(device.getName(), device.getHost(), device.getPort(), device.getDeviceNumber());
 	}
 	/**
+	 * @depreciated
 	 * This constructor adds all devices of the devices in the list
 	 * to its internal device list.
 	 * @param aDeviceList The list of devices that contain devices.
@@ -102,7 +108,7 @@ public class Device implements IDevice, Runnable
 			thread.start();
 			while (thread.isAlive() == false);
 
-			logger.fine("Running "+this.getClass().toString()+" in "+thread.getName());
+			logger.info("Running "+this.getClass().toString()+" in "+thread.getName());
 		}
 	}
 
@@ -131,7 +137,7 @@ public class Device implements IDevice, Runnable
 		}
 		isRunning = false;    /** sync with setNotThreaded */
 		
-		logger.fine("Shutdown "+this.getClass().toString()+" in "+thread.getName());
+		logger.info("Shutdown "+this.getClass().toString()+" in "+thread.getName());
 	}
 	public synchronized void shutdown()
 	{
@@ -267,4 +273,10 @@ public class Device implements IDevice, Runnable
 	public boolean isThreaded() {
 		return isThreaded;
 	}
+    /**
+     * @return the logger
+     */
+    public Logger getLogger() {
+        return logger;
+    }
 }
