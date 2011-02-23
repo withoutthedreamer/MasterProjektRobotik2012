@@ -11,7 +11,7 @@ public class DeviceNodeTest extends TestCase {
 	static DeviceNode deviceNode = null;
 
 	@Test
-	public void testDeviceNodeStringInteger() {
+	public void testDeviceNode1Node() {
 		deviceNode = new DeviceNode("localhost", 6665);
 		assertNotNull(deviceNode);
 	}
@@ -31,8 +31,17 @@ public class DeviceNodeTest extends TestCase {
 	}
 
 	@Test
-	public void testDeviceNode3Robots() {
-//		deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666});
+	public void testDeviceNode2Nodes() {
+	    deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666});
+	    assertNotNull(deviceNode);
+
+	    testRunThreaded();
+
+	    testShutdown();
+	}
+
+	@Test
+	public void testDeviceNode3Nodes() {
 		deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666, "localhost",6667});
 		assertNotNull(deviceNode);
 		
@@ -40,6 +49,27 @@ public class DeviceNodeTest extends TestCase {
 			
 		testShutdown();
 	}
+
+	@Test
+    public void testDeviceNode6Nodes() {
+	    deviceNode = new DeviceNode
+	    (
+            new Object[]
+           {
+                "localhost",6665,
+                "localhost",6666,
+                "localhost",6667,
+                "localhost",6668,
+                "localhost",6669,
+                "localhost",6670
+           }
+	    );
+        assertNotNull(deviceNode);
+        
+        testRunThreaded();
+            
+        testShutdown();
+    }
 
 	@Test
 	public void testDeviceNodeAddDevices() {
@@ -54,27 +84,5 @@ public class DeviceNodeTest extends TestCase {
 		testRunThreaded();
 
 		testShutdown();
-	}
-	
-	@Test
-	public void testDeviceNodePlayerClient() {
-		
-		testDeviceNodeStringInteger();
-		testRunThreaded();
-		
-		// Create a node only for client passing
-//		DeviceNode node = new DeviceNode(deviceNode.getClient());
-		
-//		assertNotNull(node);
-//		
-//		// Should not start an own thread
-//		node.runThreaded();
-//		assertFalse(node.isThreaded());
-//
-//		node.shutdown();
-//		assertTrue(deviceNode.isThreaded());
-		
-		testShutdown();
-	}
-
+	}	
 }

@@ -1,6 +1,5 @@
 package test;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import junit.framework.TestCase;
@@ -30,7 +29,6 @@ public class PlannerTest extends TestCase {
     @Test public void testInit() {
 		deviceNode = new DeviceNode("localhost", 6666);
 		assertNotNull(deviceNode);
-		deviceNode.getClient().getLogger().setLevel(Level.FINEST);
 		
 		DeviceNode deviceNode2 = new DeviceNode("localhost", 6665);
 		assertNotNull(deviceNode2);
@@ -38,10 +36,7 @@ public class PlannerTest extends TestCase {
 		deviceNode.addDevicesOf(deviceNode2);
 
 		deviceNode.runThreaded();
-		
-		assertEquals(deviceNode.isRunning(), true);
-		assertEquals(deviceNode.isThreaded(), true);
-		
+				
 		planner = (Planner) deviceNode.getDevice(new Device(IDevice.DEVICE_PLANNER_CODE, null, -1, -1));
 		localizer = (Localize) deviceNode.getDevice(new Device(IDevice.DEVICE_LOCALIZE_CODE, null, -1, -1));
 		simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
