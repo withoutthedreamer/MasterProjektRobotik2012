@@ -198,8 +198,11 @@ public class DeviceNode extends Device {
 					case IDevice.DEVICE_SONAR_CODE : 
 						dev = new RangerSonar(this, new Device(name, host, port, Indes)); break;
 
-					case IDevice.DEVICE_LASER_CODE : 
-						dev = new RangerLaser(this, new Device(name, host, port, Indes)); break;
+					case IDevice.DEVICE_LASER_CODE :
+					    /** Use legacy laser only when no ranger is present */
+					    if (getDevice(new Device(IDevice.DEVICE_RANGER_CODE,null,-1,1)) == null)
+					        dev = new RangerLaser(this, new Device(name, host, port, Indes));
+					    break;
 
 					case IDevice.DEVICE_LOCALIZE_CODE : 
 						dev = new Localize(this, new Device(name, host, port, Indes)); break;
