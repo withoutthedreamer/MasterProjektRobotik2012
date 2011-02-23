@@ -24,12 +24,9 @@ public class DeviceNode extends Device {
 
 	/** A list of all connected robot clients of this node */
 	CopyOnWriteArrayList<PlayerClient> playerClientList = null;
-	
-//	CopyOnWriteArrayList<DeviceNode> deviceNodeList;
-	
+		
 	private DeviceNode () {
 		playerClientList = new CopyOnWriteArrayList<PlayerClient>();
-//		deviceNodeList = new CopyOnWriteArrayList<DeviceNode>();
 	}
 	
 	/**
@@ -80,22 +77,16 @@ public class DeviceNode extends Device {
 	void InitRobotClient(String host, Integer port) throws IllegalStateException {
 		try
 		{
-//			this.host = host;
-//			this.port = port;
-			
 			PlayerClient client = new PlayerClient (host, port);
-			/** Do not add a playerclient as this is a root DeviceNode */
-//			playerClientList.add( client );
+			/** Do not add a @see PlayerClient as this is a root DeviceNode */
 			
-			/** Create a new DeviceNode with the playerclient */
+			/** Create a new DeviceNode with the PlayerClient */
             DeviceNode devNode = new DeviceNode(client);
             devNode.setHost(host);
             devNode.setPort(port);
             /** Push requires no sleep time */
             devNode.setSleepTime(0);
             /** Add it to the internal DeviceNode list */
-//            deviceNodeList.add(devNode);
-//            addToDeviceList(devNode);
             getDeviceList().add(devNode);
 
             /** Requires that above call has internally updated device list already! */
@@ -105,8 +96,6 @@ public class DeviceNode extends Device {
 
 			/** Get the devices available */
 			client.requestDataDeliveryMode(PlayerConstants.PLAYER_DATAMODE_PUSH);
-//			/** Push requires no sleep time */
-//			setSleepTime(0);
 		}
 		catch (PlayerException e)
 		{
@@ -114,26 +103,7 @@ public class DeviceNode extends Device {
 		    throw new IllegalStateException();
 		}		
 	}
-//	@Override
-//	public void runThreaded()
-//	{
-//	    /**
-//	     *  Start all children DeviceNodes
-//	     */
-//	    for (int i=0; i<deviceNodeList.size(); i++) {
-//	        deviceNodeList.get(i).runThreaded();
-//	    }
-//	    /**
-//	     * Start all devices connected to this DeviceNode
-//	     */
-//		if (getDeviceList().size() > 0) {
-//			super.runThreaded();
-//			Iterator<PlayerClient> it = playerClientList.iterator();
-//			while (it.hasNext()) { it.next().runThreaded(-1, -1); }
-//		}
-//	}
-	@Override
-	protected void update()
+	@Override protected void update()
 	{
 		Iterator<PlayerClient> it = playerClientList.iterator();
 		while (it.hasNext()) { it.next().readAll(); }
@@ -141,23 +111,19 @@ public class DeviceNode extends Device {
 	/**
 	 * Shutdown robot client and clean up
 	 */
-	@Override
-	public void shutdown ()
+	@Override public void shutdown ()
 	{
-//	    /**
-//	     * Stop all children DeviceNodes
-//	     */
-//	    for (int i=0; i<deviceNodeList.size(); i++) {
-//            deviceNodeList.get(i).shutdown();
-//        }	    
-//		if (isThreaded() == true) {
-			super.shutdown();
-			Iterator<PlayerClient> it = playerClientList.iterator();
-			while (it.hasNext()) { it.next().close(); }
-//		}
-//		super.shutdown();
+	    /**
+	     * Shutdown devices in device list first,
+	     * as they keep reading from the playerclient(s)
+	     */
+	    super.shutdown();
+	    
+	    /** Shutdown the PlayerClients */
+	    Iterator<PlayerClient> it = playerClientList.iterator();
+	    while (it.hasNext()) { it.next().close(); }
 	}
-	
+
 	/**
 	 * Connects to known devices of the underlying robot service.
 	 * @param playerClient
@@ -173,61 +139,69 @@ public class DeviceNode extends Device {
 			if (pDevListAddr != null) {
 
 				int devCount = pDevList.getDeviceCount();
-				for (int i=0; i<devCount; i++) {
+				for (int i=0; i<devCount; i++)
+				{
+                    Device dev = null;
 
-					int name = pDevListAddr[i].getInterf();
-					int Indes = pDevListAddr[i].getIndex();
-					// port will be taken from this object's field
-					// host will be taken from this object's field
-					Device dev = null;
-					switch (name)
+				    /**
+				     * Read device information.
+				     * Host and port are arguments.
+				     */
+					int devId = pDevListAddr[i].getInterf();
+					int devIdx = pDevListAddr[i].getIndex();
+				
+					switch (devId)
 					{
 					case IDevice.DEVICE_POSITION2D_CODE :
-						if (Indes == 0)
-							dev = new Position2d(this, new Device(name, host, port, Indes)); break;
+						if (devIdx == 0)
+							dev = new Position2d(this, new Device(devId, host, port, devIdx)); break;
 
 					case IDevice.DEVICE_RANGER_CODE : 
-						dev = new Ranger(this, new Device(name, host, port, Indes)); break;
+						dev = new Ranger(this, new Device(devId, host, port, devIdx)); break;
 						
 					case IDevice.DEVICE_BLOBFINDER_CODE :
-						dev = new Blobfinder(this, new Device(name, host, port, Indes)); break;
+						dev = new Blobfinder(this, new Device(devId, host, port, devIdx)); break;
 	
 					case IDevice.DEVICE_GRIPPER_CODE : 
-						dev = new Gripper(this, new Device(name, host, port, Indes)); break;
+						dev = new Gripper(this, new Device(devId, host, port, devIdx)); break;
 						
 					case IDevice.DEVICE_SONAR_CODE : 
-						dev = new RangerSonar(this, new Device(name, host, port, Indes)); break;
+						dev = new RangerSonar(this, new Device(devId, host, port, devIdx)); break;
 
 					case IDevice.DEVICE_LASER_CODE :
 					    /** Use legacy laser only when no ranger is present */
 					    if (getDevice(new Device(IDevice.DEVICE_RANGER_CODE,null,-1,1)) == null)
-					        dev = new RangerLaser(this, new Device(name, host, port, Indes));
+					        dev = new RangerLaser(this, new Device(devId, host, port, devIdx));
 					    break;
 
 					case IDevice.DEVICE_LOCALIZE_CODE : 
-						dev = new Localize(this, new Device(name, host, port, Indes)); break;
+						dev = new Localize(this, new Device(devId, host, port, devIdx)); break;
 	
 					case IDevice.DEVICE_SIMULATION_CODE : 
-						dev = new Simulation(this, new Device(name, host, port, Indes)); break; 
+						dev = new Simulation(this, new Device(devId, host, port, devIdx)); break; 
 
 					case IDevice.DEVICE_PLANNER_CODE :
 						try {
-						dev = new Planner(this, new Device(name, host, port, Indes));
+						dev = new Planner(this, new Device(devId, host, port, devIdx));
 						} catch (IllegalStateException e) {
-							dev = new Planner(this, new Device(name, host, port, Indes));
+							dev = new Planner(this, new Device(devId, host, port, devIdx));
 						}
 						break;
 
 					case IDevice.DEVICE_ACTARRAY_CODE :
-					    dev = new Actarray(this, new Device(name, host, port, Indes)); break;
+					    dev = new Actarray(this, new Device(devId, host, port, devIdx)); break;
 
 					case IDevice.DEVICE_DIO_CODE :
-					    dev = new Dio(this, new Device(name, host, port, Indes)); break;
+					    dev = new Dio(this, new Device(devId, host, port, devIdx)); break;
 
 					default: break;
 					}
-					if (dev != null) {
-//						deviceList.add(dev);
+					
+					/**
+					 * Add new device to device list.
+					 */
+					if (dev != null)
+					{
 						getDeviceList().add(dev);
 					}
 				}
@@ -239,21 +213,19 @@ public class DeviceNode extends Device {
 	 * 
 	 * @return PlayerClient reference
 	 */
-	public PlayerClient getClient() {
+	public PlayerClient getPlayerClient() {
 		if (playerClientList.size() > 0) {
 			return playerClientList.get(0);
 		} else {
 			return null;
 		}
 	}
-//	public PlayerClient getPlayerClient(String host, int port) {
-//	    for (int i=0; i<playerClientList.size(); i++) {
-//	        // TODO check also host
-//	        if(playerClientList.get(i).getPortNumber() == port)
-//	            return playerClientList.get(i);
-//	    }
-//	    return null;
-//	}
+	/**
+	 * Checks the internal device list for matching DeviceNodes.
+	 * @param host The host address.
+	 * @param port The host port.
+	 * @return The wanted DeviceNode or null if not found.
+	 */
 	public DeviceNode getDeviceNode(String host, int port)
 	{
 	    Iterator<Device> devIt = getDeviceList().iterator();
@@ -267,29 +239,6 @@ public class DeviceNode extends Device {
 	            }
 	        }
 	    }
-//	    
-//	    for (int i=0; i<deviceNodeList.size(); i++)
-//	    {
-//	        if (
-//	                deviceNodeList.get(i).getHost().equals(host) &&
-//	                deviceNodeList.get(i).getPort() == port
-//	           )
-//	        {
-//	            return deviceNodeList.get(i);
-//	        }
-//	    }
 	    return null;
 	}
-//	/**
-//	 * Finds the @see PlayerDevice of this DeviceNode (if any).
-//	 * @param id The @see IDevice code.
-//	 * @param devNumber The device number aka index.
-//	 * @param playerMode The Player mode, normally 'open mode'
-//	 * @return The PlayerDevice if found, null else.
-//	 */
-//	public PlayerDevice getDevice (int id, int devNumber, short playerMode) {
-//	    return ((RobotDevice) getDevice (
-//	                new Device(id,null,-1,devNumber)
-//	           )).getDevice();
-//	}
 }

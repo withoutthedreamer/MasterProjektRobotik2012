@@ -9,7 +9,7 @@ import javaclient3.structures.PlayerConstants;
 public class RobotDevice extends Device
 {
 	/** Logging support */
-    static Logger logger = Logger.getLogger (RobotDevice.class.getName ());
+    Logger logger = Logger.getLogger (RobotDevice.class.getName ());
     
     /**
      * DeviceNode to which this device is connected.
@@ -21,30 +21,30 @@ public class RobotDevice extends Device
 
 	public RobotDevice () {}
 	
-	public RobotDevice (DeviceNode devNode, Device device)
+	public RobotDevice (DeviceNode devNode, Device devTemplate)
 	{
-		super(device);
-		
-		try
+		super(devTemplate);
+		    
+		deviceNode = devNode;
+
+        if (deviceNode == null)
+            throw new IllegalStateException("DeviceNode is null");
+
+        /** Get the actual DeviceNode on this' host and port */
+        DeviceNode myNode = deviceNode.getDeviceNode ( devTemplate.getHost(), devTemplate.getPort() );
+        
+        if (myNode == null)
+            throw new IllegalStateException("DeviceNode is null");
+
+        try
 		{
-//			this.device = devNode.getClient().requestInterface (device.getName(), device.getDeviceNumber(), PlayerConstants.PLAYER_OPEN_MODE);
-		    this.device = devNode.getDeviceNode
-		    (
-		        device.getHost(), device.getPort()
-		    ).getClient
-		        ().requestInterface
-        		    (
-        		        device.getName(), device.getDeviceNumber(), PlayerConstants.PLAYER_OPEN_MODE
-        		    );
-			
-			if(this.device == null)
-			{
+            device = myNode.getPlayerClient().requestInterface
+            (
+                devTemplate.getName(), devTemplate.getDeviceNumber(), PlayerConstants.PLAYER_OPEN_MODE
+            );
+
+            if(device == null)
 				throw new IllegalStateException();
-			}
-			else
-			{
-			    deviceNode = devNode;
-			}
 		}
 		catch ( PlayerException e )
 		{
