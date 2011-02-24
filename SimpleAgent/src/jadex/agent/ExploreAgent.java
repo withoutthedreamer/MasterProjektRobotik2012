@@ -1,51 +1,58 @@
 package jadex.agent;
 
+import robot.ExploreRobot;
 import data.Position;
 import device.DeviceNode;
-import jadex.service.GoalReachedService;
+import jadex.bridge.Argument;
+import jadex.bridge.IArgument;
+import jadex.micro.MicroAgentMetaInfo;
 import jadex.service.HelloService;
-import jadex.service.ReceiveNewGoalService;
 import jadex.service.SendPositionService;
-import robot.*;
 
-public class ExploreAgent extends NavAgent {
+public class ExploreAgent extends WallfollowAgent {
 	
 	@Override public void agentCreated()
 	{
-		hs = new HelloService(getExternalAccess());
-		ps = new SendPositionService(getExternalAccess());
-		gs = new ReceiveNewGoalService(getExternalAccess());
-		gr = new GoalReachedService(getExternalAccess());
+	    hs = new HelloService(getExternalAccess());
+        ps = new SendPositionService(getExternalAccess());
 
-		addDirectService(hs);
-		addDirectService(ps);
-		addDirectService(gs);
-		addDirectService(gr);
+        addDirectService(hs);
+        addDirectService(ps);
 
-		String host = (String)getArgument("host");
-		Integer port = (Integer)getArgument("port");
-		/** Get the device node */
-		setDeviceNode( new DeviceNode(new Object[] {host,port, host,port+1}) );
-		getDeviceNode().runThreaded();
+        String host = (String)getArgument("host");
+        Integer port = (Integer)getArgument("port");
+       
+        /** Get the device node */
+        setDeviceNode( new DeviceNode(new Object[] {host,port, host,port+1}) );
+        getDeviceNode().runThreaded();
 
-		setRobot( new ExploreRobot(getDeviceNode()) );
-		getRobot().runThreaded();
-		
-		getRobot().setRobotId((String)getArgument("name"));
-		getRobot().setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), Math.toRadians((Double)getArgument("Angle"))));
-		
-		sendHello();
+        setRobot( new ExploreRobot(deviceNode) );
+        getRobot().setRobotId((String)getArgument("name"));
+       
+        /**
+         *  Check if a particular position is set
+         */
+        Position setPose = new Position(
+                (Double)getArgument("X"),
+                (Double)getArgument("Y"),
+                (Double)getArgument("Angle"));
+        
+        if ( setPose.equals(new Position(0,0,0)) == false )
+            getRobot().setPosition(setPose);         
+        
+        sendHello();
 	}
-	
-	@Override public void executeBody()
-	{
-		super.executeBody();
-        getRobot().setCurrentState(IPioneer.StateType.LWALL_FOLLOWING);
-
-	}
-	@Override public void agentKilled()
-	{
-		getRobot().stop();
-		super.agentKilled();
-	}
+	public static MicroAgentMetaInfo getMetaInfo()
+    {
+        IArgument[] args = {
+                new Argument("host", "Player", "String", "localhost"),
+                new Argument("port", "Player", "Integer", new Integer(6665)),
+                new Argument("name", "Robot", "String", "r0"),
+                new Argument("X", "Meter", "Double", new Double(0.0)),
+                new Argument("Y", "Meter", "Double", new Double(0.0)),
+                new Argument("Angle", "Degree", "Double", new Double(0.0))
+        };
+        
+        return new MicroAgentMetaInfo("This agent starts up an explore agent.", null, args, null);
+    }
 }

@@ -3,7 +3,8 @@
  */
 package jadex.agent;
 
-import robot.ExploreRobot;
+import robot.Pioneer;
+import robot.IPioneer;
 import robot.Robot;
 import data.Position;
 import device.DeviceNode;
@@ -25,13 +26,12 @@ import jadex.service.SendPositionService;
  */
 public class WallfollowAgent extends MicroAgent
 {
-
         /** Services */
         HelloService hs;
         SendPositionService ps;
                 
         DeviceNode deviceNode;
-        ExploreRobot robot;
+        Pioneer robot;
             
         @Override public void agentCreated()
         {
@@ -48,7 +48,7 @@ public class WallfollowAgent extends MicroAgent
             deviceNode = new DeviceNode(new Object[] {host,port, host,port+1});
             deviceNode.runThreaded();
 
-            robot = new ExploreRobot(deviceNode);
+            robot = new Pioneer(deviceNode);
             robot.setRobotId((String)getArgument("name"));
            
             /**
@@ -146,6 +146,19 @@ public class WallfollowAgent extends MicroAgent
                     return null;
                 }
             });
+            
+            /**
+             * Init wall following
+             */
+            scheduleStep(new IComponentStep()
+            {
+                public Object execute(IInternalAccess ia)
+                {
+                    robot.setCurrentState(IPioneer.StateType.LWALL_FOLLOWING);
+                    robot.runThreaded();
+                    return null;
+                }
+            });
         }
         
         @Override public void agentKilled()
@@ -170,13 +183,34 @@ public class WallfollowAgent extends MicroAgent
                     new Argument("Angle", "Degree", "Double", new Double(0.0))
             };
             
-            return new MicroAgentMetaInfo("This agent starts up a navigation agent.", null, args, null);
+            return new MicroAgentMetaInfo("This agent starts up a wallfollow agent.", null, args, null);
         }
         
         /**
          * @return the robot
          */
-        protected ExploreRobot getRobot() {
+        protected Pioneer getRobot() {
             return robot;
+        }
+
+        /**
+         * @return the deviceNode
+         */
+        protected DeviceNode getDeviceNode() {
+            return deviceNode;
+        }
+
+        /**
+         * @param deviceNode the deviceNode to set
+         */
+        protected void setDeviceNode(DeviceNode deviceNode) {
+            this.deviceNode = deviceNode;
+        }
+
+        /**
+         * @param robot the robot to set
+         */
+        protected void setRobot(Pioneer robot) {
+            this.robot = robot;
         }
 }

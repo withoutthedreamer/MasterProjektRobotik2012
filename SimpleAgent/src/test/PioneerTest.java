@@ -74,7 +74,7 @@ public class PioneerTest extends TestCase {
     }
     @Test public void testWallfollow() {
         pion.setCurrentState(IPioneer.StateType.LWALL_FOLLOWING);
-        try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
+        try { Thread.sleep(30000); } catch (InterruptedException e) { e.printStackTrace(); }
 
     }
     @Test public void testSetSpeed3() {
