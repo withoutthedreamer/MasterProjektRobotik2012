@@ -7,7 +7,8 @@
 	name="robots" package="jadex.scenario">
 
 	<arguments>
-		<argument name="portStart" typename="Integer"> 6665 </argument>
+		<argument name="port" typename="Integer"> 6665 </argument>
+		<argument name="host" typename="String"> "localhost" </argument>
 	</arguments>
 
 	<componenttypes>
@@ -25,7 +26,8 @@
 			<components>
 				<component type="Nav0" name="Nav0">
 					<arguments>
-						<argument name="port"> $args.portStart </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
 						<argument name="name"> "r0" </argument>
 					</arguments>
 				</component>
@@ -36,15 +38,16 @@
 			<components>
 				<component type="Nav0" name="Nav0">
 					<arguments>
-						<argument name="port"> $args.portStart </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
 						<argument name="name"> "r0" </argument>
 					</arguments>
 				</component>
 				<component type="Nav1" name="Nav1">
 					<arguments>
-						<argument name="port"> $args.portStart+2 </argument>
+						<argument name="port"> $args.port+2 </argument>
+						<argument name="host"> $args.host </argument>
 						<argument name="name"> "r1" </argument>
-						<argument name="Y"> 3.0 </argument>
 					</arguments>
 				</component>
 			</components>
@@ -54,22 +57,23 @@
 			<components>
 				<component type="Nav0" name="Nav0">
 					<arguments>
-						<argument name="port"> $args.portStart </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
 						<argument name="name"> "r0" </argument>
 					</arguments>
 				</component>
 				<component type="Nav1" name="Nav1">
 					<arguments>
-						<argument name="port"> $args.portStart+2 </argument>
+						<argument name="port"> $args.port+2 </argument>
+						<argument name="host"> $args.host </argument>
 						<argument name="name"> "r1" </argument>
-						<argument name="Y"> 3.0 </argument>
 					</arguments>
 				</component>
 				<component type="Nav2" name="Nav2">
 					<arguments>
-						<argument name="port"> $args.portStart+4 </argument>
+						<argument name="port"> $args.port+4 </argument>
+						<argument name="host"> $args.host </argument>
 						<argument name="name"> "r2" </argument>
-						<argument name="Y"> 2.0 </argument>
 					</arguments>
 				</component>
 			</components>

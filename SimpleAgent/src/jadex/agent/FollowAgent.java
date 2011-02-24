@@ -131,8 +131,8 @@ public class FollowAgent extends NavAgent {
                 new Argument("host", "Player", "String", "localhost"),
                 new Argument("port", "Player", "Integer", new Integer(6667)),
                 new Argument("name", "Robot", "String", "r1"),
-                new Argument("X", "Meter", "Double", new Double(-21.0)),
-                new Argument("Y", "Meter", "Double", new Double(3.0)),
+                new Argument("X", "Meter", "Double", new Double(0.0)),
+                new Argument("Y", "Meter", "Double", new Double(0.0)),
                 new Argument("Angle", "Degree", "Double", new Double(0.0)),
                 new Argument("minDistance", "Meter", "Double", new Double(2.0)),
                 new Argument("updateInterval", "ms", "Integer", new Integer(5000))

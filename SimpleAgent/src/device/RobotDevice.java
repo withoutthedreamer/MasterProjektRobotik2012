@@ -66,4 +66,11 @@ public class RobotDevice extends Device
     public DeviceNode getDeviceNode() {
         return deviceNode;
     }
+
+    /**
+     * @return the logger
+     */
+    public Logger getLogger() {
+        return logger;
+    }
 }

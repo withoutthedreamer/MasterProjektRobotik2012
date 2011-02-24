@@ -10,11 +10,11 @@ import java.util.concurrent.*;
 
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.simulation.PlayerSimulationPose2dReq;
+import javaclient3.SimulationInterface;
 
 /**
  * Stage Gui to draw online robot(s) position
  * @author sebastian
- *
  */
 public class Simulation extends RobotDevice {
 		
@@ -34,8 +34,6 @@ public class Simulation extends RobotDevice {
 		
 		objList = new ConcurrentHashMap<String, Position>();	
 		isDirtyList = new ConcurrentHashMap<String, Boolean>();
-		
-//		setSleepTime(1000);
 	}
 	/**
 	 * Returns a Singleton instance of the Gui
@@ -62,8 +60,7 @@ public class Simulation extends RobotDevice {
 	}
 	
 	// TODO Currently only 'static' objects should be modified
-	@Override
-	protected void update ()
+	@Override protected void update ()
 	{
 		Set<Entry<String,Position>> set = objList.entrySet();
 		Iterator<Entry<String, Position>> i = set.iterator();
@@ -78,15 +75,19 @@ public class Simulation extends RobotDevice {
 				Position pos = (Position)me.getValue();
 				PlayerPose pp = new PlayerPose(pos.getX(), pos.getY(), pos.getYaw());
 				
-				((javaclient3.SimulationInterface) device).set2DPose(key, pp);
+				((SimulationInterface) device).set2DPose(key, pp);
 			}
 			else
 			{
-				((javaclient3.SimulationInterface) device).get2DPose (key);
+			    try {
+			        ((SimulationInterface) device).get2DPose (key);
+			    } catch (Exception e) {
+			        getLogger().severe("Failed reading 2d position");
+			    }
 								
-				if (((javaclient3.SimulationInterface) device).isPose2DReady())
+				if (((SimulationInterface) device).isPose2DReady())
 				{
-					PlayerSimulationPose2dReq pose = ((javaclient3.SimulationInterface) device).getSimulationPose2D();
+					PlayerSimulationPose2dReq pose = ((SimulationInterface) device).getSimulationPose2D();
 					PlayerPose pPose = pose.getPose();
 					if (pPose != null) {
 						Position curPose = new Position(
@@ -98,16 +99,15 @@ public class Simulation extends RobotDevice {
 					
 				}
 			}
-			/** Wait for simulation sync before updating a new object */
-			try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
+//			/** Wait for simulation sync before updating a new object */
+//			try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
 		}
 	}
 
 	/**
 	 * Shutdown Gui and clean up
 	 */
-	@Override
-	public void shutdown () {
+	@Override public void shutdown () {
 		super.shutdown();
 		objList.clear();
 		isDirtyList.clear();

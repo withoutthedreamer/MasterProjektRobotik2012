@@ -20,7 +20,7 @@ public class DeviceNodeTest extends TestCase {
 	public void testRunThreaded() {
 		deviceNode.runThreaded();
 		assertTrue(deviceNode.isThreaded());
-		try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 		/** Check machine load. Must not be at ~100% */
 	}
 

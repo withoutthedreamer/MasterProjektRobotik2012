@@ -27,6 +27,11 @@ public class DeviceNode extends Device {
 		
 	private DeviceNode () {
 		playerClientList = new CopyOnWriteArrayList<PlayerClient>();
+		
+		/**
+		 * If this DeviceNode needs doing something alter sleep time later.
+		 */
+		setSleepTime(Long.MAX_VALUE);
 	}
 	
 	/**
@@ -106,7 +111,11 @@ public class DeviceNode extends Device {
 	@Override protected void update()
 	{
 		Iterator<PlayerClient> it = playerClientList.iterator();
-		while (it.hasNext()) { it.next().readAll(); }
+        try {
+            while (it.hasNext()) { it.next().readAll(); }
+        } catch (Exception e) {
+            logger.severe("Failed reading PlayerClient");
+        }
 	}
 	/**
 	 * Shutdown robot client and clean up

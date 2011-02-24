@@ -4,10 +4,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-application
 						http://jadex.sourceforge.net/jadex-application-2.0.xsd"
-	name="robotsDisplay" package="jadex.scenario">
+	name="robotDisplay" package="jadex.scenario">
 
 	<arguments>
-		<argument name="portStart" typename="Integer"> 6600 </argument>
+		<argument name="port" typename="Integer"> 6600 </argument>
+		<argument name="host" typename="String"> "localhost" </argument>
 	</arguments>
 
 	<componenttypes>
@@ -21,46 +22,52 @@
 
 	<applications>
 
-		<application name="1 Robot">
+		<application name="1 Display">
 			<components>
 				<component type="View0" name="View0">
 					<arguments>
-						<argument name="port"> $args.portStart </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
 					</arguments>
 				</component>
 			</components>
 		</application>
 		
-		<application name="2 Robots">
+		<application name="2 Displays">
 			<components>
 				<component type="View0" name="View0">
 					<arguments>
-						<argument name="port"> $args.portStart </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
 					</arguments>
 				</component>
 				<component type="View1" name="View1">
 					<arguments>
-						<argument name="port"> $args.portStart+1 </argument>
+						<argument name="port"> $args.port+1 </argument>
+						<argument name="host"> $args.host </argument>
 					</arguments>
 				</component>
 			</components>
 		</application>
 
-		<application name="3 Robots">
+		<application name="3 Displays">
 			<components>
 				<component type="View0" name="View0">
 					<arguments>
-						<argument name="port"> $args.portStart </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
 					</arguments>
 				</component>
 				<component type="View1" name="View1">
 					<arguments>
-						<argument name="port"> $args.portStart+1 </argument>
+						<argument name="port"> $args.port+1 </argument>
+						<argument name="host"> $args.host </argument>
 					</arguments>
 				</component>
 				<component type="View2" name="View2">
 					<arguments>
-						<argument name="port"> $args.portStart+2 </argument>
+						<argument name="port"> $args.port+2 </argument>
+						<argument name="host"> $args.host </argument>
 					</arguments>
 				</component>
 			</components>

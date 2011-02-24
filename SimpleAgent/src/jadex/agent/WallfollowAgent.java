@@ -50,7 +50,17 @@ public class WallfollowAgent extends MicroAgent
 
             robot = new ExploreRobot(deviceNode);
             robot.setRobotId((String)getArgument("name"));
-            robot.setPosition(new Position((Double)getArgument("X"), (Double)getArgument("Y"), Math.toRadians((Double)getArgument("Angle"))));
+           
+            /**
+             *  Check if a particular position is set
+             */
+            Position setPose = new Position(
+                    (Double)getArgument("X"),
+                    (Double)getArgument("Y"),
+                    (Double)getArgument("Angle"));
+            
+            if ( setPose.equals(new Position(0,0,0)) == false )
+                robot.setPosition(setPose);         
             
             sendHello();
         }
@@ -155,8 +165,8 @@ public class WallfollowAgent extends MicroAgent
                     new Argument("host", "Player", "String", "localhost"),
                     new Argument("port", "Player", "Integer", new Integer(6665)),
                     new Argument("name", "Robot", "String", "r0"),
-                    new Argument("X", "Meter", "Double", new Double(-21.0)),
-                    new Argument("Y", "Meter", "Double", new Double(4.0)),
+                    new Argument("X", "Meter", "Double", new Double(0.0)),
+                    new Argument("Y", "Meter", "Double", new Double(0.0)),
                     new Argument("Angle", "Degree", "Double", new Double(0.0))
             };
             

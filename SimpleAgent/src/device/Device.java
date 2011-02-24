@@ -12,9 +12,9 @@ public class Device implements IDevice, Runnable
 	protected ConcurrentLinkedQueue<Device> deviceList = null;
 	
 	int name = -1;
-	String host = "0";
-	int port = 0;
-	int deviceNumber = 0;
+	String host = null;
+	int port = -1;
+	int deviceNumber = -1;
 	
 	/** Every class of this type has it's own thread */
 	protected Thread thread = new Thread ( this );
@@ -88,7 +88,7 @@ public class Device implements IDevice, Runnable
 	public synchronized void runThreaded()
 	{
 		if (thread.isAlive() != true) {
-			// Start all devices
+			/** Start all devices */
 			if (deviceList != null && deviceList.size() > 0)
 			{
 				Iterator<Device> deviceIterator = deviceList.iterator();
@@ -97,7 +97,7 @@ public class Device implements IDevice, Runnable
 				{
 					Device device = deviceIterator.next();
 
-					// Start device
+					/** Start device */
 					device.runThreaded();
 					while (device.thread.isAlive() == false);
 				}
@@ -112,8 +112,7 @@ public class Device implements IDevice, Runnable
 		}
 	}
 
-	@Override
-	public void run()
+	@Override public void run()
 	{
 	    isRunning = true;
 		while ( ! thread.isInterrupted() && isThreaded == true)
@@ -143,15 +142,20 @@ public class Device implements IDevice, Runnable
 	{
 		long delayCount = 0;
 		
+		/** Sync with run() method */
 		isThreaded = false;
+		
+		/** Interrupt in case it is sleeping */
+		thread.interrupt();
         
-		while (isRunning == true) /** wait to exit run loop */
+		/** wait to exit run loop */
+		while (isRunning == true)
 		{
 			delayCount += 1;
 			if (delayCount > 2)
 				logger.fine("Shutdown delayed " + this.getClass().getName());
 			
-            try { Thread.sleep (100); } catch (Exception e) { }
+            try { Thread.sleep (10); } catch (Exception e) { }
 		}
 		
 		/** Stop all devices */
@@ -236,7 +240,10 @@ public class Device implements IDevice, Runnable
 		return found;
 	}
 	public String getHost() {
-		return host;
+	    if (host != null)
+	        return host;
+	    else
+	        return "";
 	}
 	public void setHost(String host) {
 		this.host = host;
