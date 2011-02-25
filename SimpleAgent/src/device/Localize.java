@@ -45,11 +45,14 @@ public class Localize extends RobotDevice
 			PlayerLocalizeHypoth[] hypList = ((javaclient3.LocalizeInterface) device).getData().getHypoths();
 			if (hypList.length > 0) {
 				/** Only first hypothesis is interessting (for now) */
-				PlayerPose curPos = hypList[0].getMean();
-				if (curPos != null) {
-					getPosition.setX(curPos.getPx());
-					getPosition.setY(curPos.getPy());
-					getPosition.setYaw(curPos.getPa());
+				PlayerLocalizeHypoth hyp1 = hypList[0];
+				if (hyp1 != null) {
+					PlayerPose curPos = hyp1.getMean();
+					if (curPos != null) {
+						getPosition.setX(curPos.getPx());
+						getPosition.setY(curPos.getPy());
+						getPosition.setYaw(curPos.getPa());
+					}
 				}
 			}
 			

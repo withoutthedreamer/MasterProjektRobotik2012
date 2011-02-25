@@ -108,7 +108,7 @@ public class Device implements IDevice, Runnable
 			thread.start();
 			while (thread.isAlive() == false);
 
-			logger.info("Running "+this.getClass().toString()+" in "+thread.getName());
+			logger.fine("Running "+this.getClass().toString()+" in "+thread.getName());
 		}
 	}
 
@@ -134,9 +134,8 @@ public class Device implements IDevice, Runnable
 				}
 				// else if (SLEEPTIME < 0) do nothing				
 		}
+		logger.fine("Shutdown "+this.getClass().toString()+" in "+thread.getName());
 		isRunning = false;    /** sync with setNotThreaded */
-		
-		logger.info("Shutdown "+this.getClass().toString()+" in "+thread.getName());
 	}
 	public synchronized void shutdown()
 	{
@@ -153,7 +152,7 @@ public class Device implements IDevice, Runnable
 		{
 			delayCount += 1;
 			if (delayCount > 2)
-				logger.fine("Shutdown delayed " + this.getClass().getName());
+				logger.finer("Shutdown delayed " + this.getClass().getName());
 			
             try { Thread.sleep (10); } catch (Exception e) { }
 		}
