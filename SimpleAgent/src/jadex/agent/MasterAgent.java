@@ -42,7 +42,7 @@ public class MasterAgent extends MicroAgent
 		
 		hs.send(""+getComponentIdentifier(), "", "Hello");
 
-		logger.info(""+getComponentIdentifier()+" sending hello ");
+		logger.fine(""+getComponentIdentifier()+" sending hello ");
 	}
 
 	@Override public void executeBody()
@@ -190,7 +190,7 @@ public class MasterAgent extends MicroAgent
 
 		hs.send(""+getComponentIdentifier(), "", "Bye");
 
-		logger.info(""+getComponentIdentifier()+" sending bye");
+		logger.fine(""+getComponentIdentifier()+" sending bye");
 	}
 
 	public HelloService getHelloService() { return hs; }

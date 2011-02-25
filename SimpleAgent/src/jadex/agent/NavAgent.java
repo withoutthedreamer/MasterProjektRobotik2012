@@ -70,7 +70,7 @@ public class NavAgent extends MicroAgent
 	
 	void sendHello() {
 		hs.send(""+getComponentIdentifier(), robot.getRobotId(), Robot.class.getName());
-		logger.info(""+getComponentIdentifier()+" sending hello");
+		logger.fine(""+getComponentIdentifier()+" sending hello");
 	}
 
 	void sendPosition(Position newPose) {
@@ -215,7 +215,7 @@ public class NavAgent extends MicroAgent
 		deviceNode.shutdown();
 		
 		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Bye");
-		logger.info("Bye "+getComponentIdentifier());
+		logger.fine("Bye "+getComponentIdentifier());
 	}
 	
 	public HelloService getHelloService() { return hs; }

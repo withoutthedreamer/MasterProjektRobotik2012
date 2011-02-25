@@ -144,8 +144,9 @@ public class Device implements IDevice, Runnable
 		/** Sync with run() method */
 		isThreaded = false;
 		
-		/** Interrupt in case it is sleeping */
-		thread.interrupt();
+		/** Interrupt in case it is sleeping too long */
+		if (getSleepTime() > 10000)
+			thread.interrupt();
         
 		/** wait to exit run loop */
 		while (isRunning == true)
