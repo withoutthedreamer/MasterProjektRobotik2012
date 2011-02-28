@@ -114,28 +114,35 @@ public class Device implements IDevice, Runnable
 
 	@Override public void run()
 	{
-	    isRunning = true;
-		while ( ! thread.isInterrupted() && isThreaded == true)
-		{
-			/** Do sub-class specific stuff */
-			update();
-			
-			if (SLEEPTIME > 0)
-			{
-				try { Thread.sleep ( SLEEPTIME ); }
-				catch (InterruptedException e) {
-					isThreaded = false;
-				}
-			}
-			else
-				if (SLEEPTIME == 0)
-				{
-					Thread.yield();
-				}
-				// else if (SLEEPTIME < 0) do nothing				
-		}
-		logger.fine("Shutdown "+this.getClass().toString()+" in "+thread.getName());
-		isRunning = false;    /** sync with setNotThreaded */
+	    try
+	    { 
+	        isRunning = true;
+	        while ( ! thread.isInterrupted() && isThreaded == true)
+	        {
+	            /** Do sub-class specific stuff */
+	            update();
+
+	            if (SLEEPTIME > 0)
+	            {
+	                Thread.sleep ( SLEEPTIME );
+	            }
+	            else
+	                if (SLEEPTIME == 0)
+	                {
+	                    Thread.yield();
+	                }
+	            // else if (SLEEPTIME < 0) do nothing				
+	        }
+	    }
+	    catch (Exception e)
+	    { 
+	        isThreaded = false; /** Thread is interrupted */
+	    }
+	    finally
+	    {
+	        logger.fine("Shutdown "+this.getClass().toString()+" in "+thread.getName());
+	        isRunning = false;    /** sync with setNotThreaded */
+	    }
 	}
 	public synchronized void shutdown()
 	{

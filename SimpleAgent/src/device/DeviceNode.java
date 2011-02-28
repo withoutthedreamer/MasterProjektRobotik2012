@@ -111,11 +111,7 @@ public class DeviceNode extends Device {
 	@Override protected void update()
 	{
 		Iterator<PlayerClient> it = playerClientList.iterator();
-        try {
-            while (it.hasNext()) { it.next().readAll(); }
-        } catch (Exception e) {
-            logger.severe("Failed reading PlayerClient");
-        }
+		while (it.hasNext()) { it.next().readAll(); }
 	}
 	/**
 	 * Shutdown robot client and clean up

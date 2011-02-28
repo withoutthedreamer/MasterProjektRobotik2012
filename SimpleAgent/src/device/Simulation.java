@@ -79,11 +79,7 @@ public class Simulation extends RobotDevice {
 			}
 			else
 			{
-			    try {
-			        ((SimulationInterface) device).get2DPose (key);
-			    } catch (Exception e) {
-			        getLogger().severe("Failed reading 2d position");
-			    }
+			    ((SimulationInterface) device).get2DPose (key);
 								
 				if (((SimulationInterface) device).isPose2DReady())
 				{
@@ -96,11 +92,8 @@ public class Simulation extends RobotDevice {
 								pPose.getPa());
 						objList.put(key, curPose);
 					}
-					
 				}
 			}
-//			/** Wait for simulation sync before updating a new object */
-//			try { Thread.sleep(50); } catch (InterruptedException e) { thread.interrupt(); }
 		}
 	}
 
