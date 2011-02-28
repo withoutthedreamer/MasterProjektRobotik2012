@@ -4,7 +4,6 @@
 package jadex.agent;
 
 import robot.Pioneer;
-import robot.IPioneer;
 import robot.Robot;
 import data.Position;
 import device.DeviceNode;
@@ -154,7 +153,7 @@ public class WallfollowAgent extends MicroAgent
             {
                 public Object execute(IInternalAccess ia)
                 {
-                    robot.setCurrentState(IPioneer.StateType.LWALL_FOLLOWING);
+                    robot.setWallfollow();
                     robot.runThreaded();
                     return null;
                 }

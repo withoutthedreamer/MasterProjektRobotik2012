@@ -3,7 +3,7 @@ include "map.inc"
 include "devices.inc"
 
 resolution 0.05 # meters per pixel
-threads 2
+#threads 1
 
 # configure the GUI window
 window

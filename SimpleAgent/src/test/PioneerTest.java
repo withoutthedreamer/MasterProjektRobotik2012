@@ -7,7 +7,6 @@ import junit.framework.TestCase;
 
 import org.junit.Test;
 
-import robot.IPioneer;
 import robot.Pioneer;
 import device.DeviceNode;
 
@@ -73,12 +72,12 @@ public class PioneerTest extends TestCase {
         assertTrue(pion.getSpeed() == 0.0);
     }
     @Test public void testWallfollow() {
-        pion.setCurrentState(IPioneer.StateType.LWALL_FOLLOWING);
+        pion.setWallfollow();
         try { Thread.sleep(30000); } catch (InterruptedException e) { e.printStackTrace(); }
 
     }
     @Test public void testSetSpeed3() {
-        pion.setCurrentState(IPioneer.StateType.SET_SPEED);
+        pion.setCommand();
         testSetSpeed();
     }
     @Test public void testShutdown() {

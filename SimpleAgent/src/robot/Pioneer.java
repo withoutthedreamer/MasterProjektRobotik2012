@@ -38,10 +38,15 @@ public class Pioneer extends Robot implements IPioneer
 	        setCurTurnrate(getTurnrate());
 	    }
 	}
+	/**
+	 * Stops the robot motion immediately.
+	 */
 	public void stop()
 	{
 	    if (getPlanner() != null)
 	        getPlanner().stop();
+	    
+	    getPosi().disableMotor();
 	    
 	    setTurnrate(0.0);
 	    setSpeed(0.0);
@@ -396,8 +401,17 @@ public class Pioneer extends Robot implements IPioneer
     /**
      * @param currentState the currentState to set
      */
-    public void setCurrentState(StateType currentState) {
+    void setCurrentState(StateType currentState) {
         this.currentState = currentState;
+    }
+    public void setWallfollow() {
+        getPosi().enableMotor();
+        setCurrentState(StateType.LWALL_FOLLOWING);
+    }
+
+    public void setCommand() {
+        getPosi().enableMotor();
+        setCurrentState(StateType.SET_SPEED);        
     }
 
     @SuppressWarnings("unused")
