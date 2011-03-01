@@ -134,12 +134,17 @@ public class Device implements IDevice, Runnable
 	            // else if (SLEEPTIME < 0) do nothing				
 	        }
 	    }
+        catch(InterruptedException ie)
+        {
+            /** Sleep interrupted */
+        }
 	    catch (Exception e)
 	    { 
-	        isThreaded = false; /** Thread is interrupted */
+	        e.printStackTrace();
 	    }
 	    finally
 	    {
+            isThreaded = false; /** Thread is interrupted */
 	        logger.fine("Shutdown "+this.getClass().toString()+" in "+thread.getName());
 	        isRunning = false;    /** sync with setNotThreaded */
 	    }

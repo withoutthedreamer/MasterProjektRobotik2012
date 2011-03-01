@@ -34,12 +34,12 @@ public class Position2d extends RobotDevice
 	protected void update()
 	{
 		/** Check for sonar readings ready */
-		if ( ((Position2DInterface) device).isDataReady() )
+		if ( ((Position2DInterface) getDevice()).isDataReady() )
 		{
 			/** Update odometry if updated externally */
 			if (setOdometry != null)
 			{				
-				((Position2DInterface) device).setOdometry(new PlayerPose(
+				((Position2DInterface) getDevice()).setOdometry(new PlayerPose(
 						setOdometry.getX(),
 						setOdometry.getY(),
 						setOdometry.getYaw()));
@@ -48,7 +48,7 @@ public class Position2d extends RobotDevice
 			else
 			{
 				/** Request current position */
-				PlayerPosition2dData poseData = ((Position2DInterface) device).getData();
+				PlayerPosition2dData poseData = ((Position2DInterface) getDevice()).getData();
 				if (poseData != null)
 				{
 					PlayerPose pose = poseData.getPos();
@@ -60,12 +60,12 @@ public class Position2d extends RobotDevice
 					}
 				}
 			}
-			/** Set new speed */
-			if (isNewSpeed == true)
-			{
-				isNewSpeed = false;
-				((Position2DInterface) device).setSpeed(speed, turnrate);
-			}
+//			/** Set new speed */
+//			if (isNewSpeed == true)
+//			{
+//				isNewSpeed = false;
+//				((Position2DInterface) getDevice()).setSpeed(speed, turnrate);
+//			}
 		}
 	}
 	/**
@@ -78,7 +78,7 @@ public class Position2d extends RobotDevice
 	}
 	/**
 	 * 
-	 * @param pos New robot @ref Position for odometry device.
+	 * @param pos New robot @see Position for odometry device.
 	 */
 	public void setPosition (Position pos)
 	{
@@ -105,6 +105,24 @@ public class Position2d extends RobotDevice
 		this.speed = speed;
 	}
 	/**
+	 * Sets the speed and turnrate immediately.
+	 * @param newSpeed The new speed.
+	 * @param newTurnrate The new turnrate.
+	 */
+	synchronized void setSpeed (double newSpeed, double newTurnrate)
+	{
+        ((Position2DInterface) getDevice()).setSpeed(newSpeed, newTurnrate);
+	}
+	/**
+	 * Forces to command the motors immediately.
+	 * I will take the speed and turnrate currently set.
+	 */
+	synchronized public void syncSpeed()
+	{
+	    setSpeed(getSpeed(), getTurnrate());
+	    isNewSpeed = false;
+	}
+	/**
 	 * Sets the motors turnrate.
 	 * @param turnrate New robot turnrate (rad/s).
 	 */
@@ -124,15 +142,15 @@ public class Position2d extends RobotDevice
 	/**
 	 * Enable the robots motors.
 	 */
-	public void enableMotor()
+	synchronized public void enableMotor()
 	{
-        ((Position2DInterface) device).setMotorPower(1);
+        ((Position2DInterface) getDevice()).setMotorPower(1);
 	}
 	/**
 	 * Disable the robots motors.
 	 */
-	public void disableMotor()
+	synchronized public void disableMotor()
 	{
-        ((Position2DInterface) device).setMotorPower(0);
+        ((Position2DInterface) getDevice()).setMotorPower(0);
 	}
 }

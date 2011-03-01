@@ -90,7 +90,8 @@ public class WallfollowAgent extends MicroAgent
                     {
                         robot.getLocalizer().addListener(new ILocalizeListener()
                         {
-                            @Override public void newPositionAvailable(Position newPose) {
+                            @Override public void newPositionAvailable(Position newPose)
+                            {
                                 sendPosition(newPose);
                             }
                         });
@@ -115,7 +116,8 @@ public class WallfollowAgent extends MicroAgent
                             buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(" ").append(content[2].toString());
                                                     
                             /** Check for reply request */
-                            if (((String)content[2]).equalsIgnoreCase("ping")) {
+                            if (((String)content[2]).equalsIgnoreCase("ping"))
+                            {
                                 sendHello();
                             }
                         }
@@ -138,8 +140,9 @@ public class WallfollowAgent extends MicroAgent
                             Object[] content = (Object[])event.getValue();
                             
                             /** Sending position on request */
-                            if (((String)content[1]).equals("request"))
+                            if (((String)content[1]).equals("request")) {
                                 sendPosition(robot.getPosition());
+                            }
                         }
                     });
                     return null;
@@ -162,6 +165,7 @@ public class WallfollowAgent extends MicroAgent
         
         @Override public void agentKilled()
         {    
+            robot.stop();
             robot.shutdown();
             deviceNode.shutdown();
             
