@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import robot.Pioneer;
+import robot.IPioneer;
 import device.DeviceNode;
 
 /**
@@ -33,6 +34,7 @@ public class PioneerTest extends TestCase {
      * Test method for {@link robot.Robot#setSpeed(double)}.
      */
     @Test public void testSetSpeed() {
+        pion.setCommand();
         pion.setSpeed(0.4);
         pion.setTurnrate(0.0);
         
@@ -43,6 +45,7 @@ public class PioneerTest extends TestCase {
     }
 
     @Test public void testSetSpeed2() {
+        pion.setCommand();
         pion.setSpeed(-0.4);
         pion.setTurnrate(0.0);
         
@@ -56,12 +59,14 @@ public class PioneerTest extends TestCase {
      */
     @Test public void testSetTurnrate() {
         testStop();
+        pion.setCommand();
         pion.setTurnrate(0.4);
         try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
         
         assertTrue(pion.getTurnrate() > 0.0);
     }
     @Test public void testSetTurnrate2() {
+        pion.setCommand();
         pion.setTurnrate(-0.4);
         try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
         
@@ -73,6 +78,7 @@ public class PioneerTest extends TestCase {
     }
     @Test public void testWallfollow() {
         pion.setWallfollow();
+        assertTrue(pion.getCurrentState() == IPioneer.StateType.LWALL_FOLLOWING);
         try { Thread.sleep(30000); } catch (InterruptedException e) { e.printStackTrace(); }
 
     }

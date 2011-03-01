@@ -1,71 +1,92 @@
 package robot;
 
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Logger;
 
-import data.BbNote;
-import data.BlobfinderBlob;
 import device.Blackboard;
 import device.Device;
 
-public class ExploreRobot extends Pioneer {
-	
+public class ExploreRobot extends Pioneer
+{
+	/** Logging support */
+    Logger logger = Logger.getLogger (ExploreRobot.class.getName ());
+
 	protected Blackboard blackboard = null;
 
 	public ExploreRobot(Device roboDevices)
 	{
 		super(roboDevices);
+		// TODO add behaviour blobsearching
 	}
-	protected final void blobsearch() {
-		if (getBloFi() == null ) { return; }
-		int count = getBloFi().getCount();
-		if (count > 0) {
-			for (int i=0; i<count; i++) {
-				CopyOnWriteArrayList<BlobfinderBlob> blobs = getBloFi().getBlobs(); 
-//				if (blobs.capacity() > i) {
-				if (blobs.size() > i) {
-					BlobfinderBlob ablob = blobs.get(i);
-					// Seen from this position
-					ablob.setDiscovered(this.getPosition());
-					BbNote note = new BbNote();
-					note.setGoal(this.getPosition());
-					note.setPose(this.getPosition());
-					//				note.setTrackable(tracked2);
-					if (blackboard != null) {
-						blackboard.add(BlobfinderBlob.getColorString(ablob.getColor()), note);
-					} else {
-						System.out.print(this.toString() + " @ " + this.getPosition().toString());
-						System.out.println(" found blob @ " + ablob.toString());
-					}
-				}
-			}
-		}
-	}
-
-	@Override protected double planLeftWallfollow ()
-	{
-		double newTurnrate = 0.;
-        double newTurnrate2 = 0.;
-
-		blobsearch();
-
-		// (Left) Wall following
-		newTurnrate = wallfollow();
-		// Collision avoidance overrides other turnrate if neccessary!
-		// May change this.turnrate or this.currentState
-		newTurnrate = collisionAvoid(newTurnrate);
-
-		// Set speed dependend on the wall distance
-//		setSpeed( calcspeed(speed) );
-
-		// Check if rotating is safe
-		// tune turnrate controlling here
-		newTurnrate2 = checkrotate(newTurnrate);
-
-		// Fusion of the vectors makes a smoother trajectory
-		//		this.turnrate = (tmp_turnrate + this.turnrate) / 2;
-		double weight = 0.5;
-		return weight*newTurnrate + (1-weight)*newTurnrate2;
-	}
+	
+//	@Override protected void update()
+//    {
+//        debugSensorData();
+//        
+//        StateType curState = getCurrentState();
+//        
+//        switch (curState)
+//        {
+//            case WALL_SEARCHING :
+//    
+//            case LWALL_FOLLOWING :
+//          
+//            case COLLISION_AVOIDANCE :
+//                updateSpeed( MAXSPEED );
+//                updateTurnrate( planLeftWallfollow() );
+//                updatePosi();
+////                blobsearch();
+//                
+//                break;
+//           
+//            case SET_SPEED :
+//                updateSpeed(getSpeed());
+//                updateTurnrate(getTurnrate());
+//                updatePosi();
+//                break;
+//
+//            default :
+//                updateStop();
+//                break;
+//        }
+//    }
+	
+//	final void blobsearch()
+//	{
+//	    if (getBloFi() != null )
+//	    {
+//	        /** Check how many different blobs are currently seen by the device */
+//	        int count = getBloFi().getCount();
+//	        
+//	        if (count > 0)
+//	        {
+//	            for (int i=0; i<count; i++)
+//	            {
+//	                /** Get the current blobs */
+//	                CopyOnWriteArrayList<BlobfinderBlob> blobs = getBloFi().getBlobs(); 
+//
+//	                if (blobs.size() > i)
+//	                {
+//	                    /** Device knows more blobs than currently seen. */
+//	                    BlobfinderBlob ablob = blobs.get(i);
+//	                    
+//	                    // Seen from this position TODO more exactly
+//	                    Position blobPose = getPosition();
+//	                    ablob.setDiscovered( blobPose );
+//	                    BbNote note = new BbNote();
+//	                    note.setGoal( blobPose );
+//	                    note.setPose( blobPose );
+//
+//	                    if (blackboard != null) {
+//	                        blackboard.add(BlobfinderBlob.getColorString(ablob.getColor()), note);
+//	                    } else {
+//	                       logger.fine(""+blobPose);
+//	                       logger.fine(""+ablob);
+//	                    }
+//	                }
+//	            }
+//	        }
+//	    }
+//	}
 	
 	public void setBlackboard (Blackboard bb)
 	{

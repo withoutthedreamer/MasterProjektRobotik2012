@@ -79,7 +79,7 @@ public class Position
 	 * 
 	 */
 	public String toString() {
-		return String.format("(%5.2f,%5.2f,%3.0f)",this.x, this.y, Math.toDegrees(this.yaw));
+		return String.format("(%5.2f|%5.2f|%3.0f)",x, y, Math.toDegrees(yaw));
 	}
 	/**
 	 * Calculates if the position is near to the given one considering
@@ -180,5 +180,18 @@ public class Position
 	            angle += 2*Math.PI;
 
 	    return angle;
+	}
+	/**
+	 * Considers this position in polor coordinates.
+	 * Take x value as range and yaw as angle.
+	 * @return This position's cartesian coordinates.
+	 */
+	public Position getCartesianCoordinates()
+	{
+	    return new Position(
+    	    x * Math.cos(yaw),
+    	    x * Math.sin(yaw),
+    	    0.0);
+	    
 	}
 }

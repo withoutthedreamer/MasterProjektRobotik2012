@@ -116,7 +116,7 @@ public class Pioneer extends Robot implements IPioneer
 	 * The actual turnrate might be lower due to obstacles.
 	 * @param maxTurnrate
 	 */
-	protected void updateTurnrate(double maxTurnrate)
+	void updateTurnrate(double maxTurnrate)
 	{
 	    if (getPosi() != null)
 	    {
@@ -133,7 +133,7 @@ public class Pioneer extends Robot implements IPioneer
 	 * Plan a left wall follow trajectory.
 	 * @return The new turnrate regarding the left wall (if any).
 	 */
-	protected double planLeftWallfollow ()
+	double planLeftWallfollow ()
 	{
 		double newTurnrate;
 
@@ -157,7 +157,7 @@ public class Pioneer extends Robot implements IPioneer
 	 * @param maxAngle Maximum angle to check (degree).
 	 * @return Minimum distance in range.
 	 */
-	protected final double getDistanceLas ( int minAngle, int maxAngle )
+	final double getMinLasRange ( int minAngle, int maxAngle )
 	{
 		double minDist  = LPMAX; /** Minimal distance in the arc. */
 		double distCurr = LPMAX; /** Current distance of a ranger beam. */
@@ -221,7 +221,44 @@ public class Pioneer extends Robot implements IPioneer
 		}
 		return minDist;
 	}
+	/**
+	 * If there are less valid range values than @see SONARCOUNT
+	 * than the array contains fake (max) values.
+	 * @return The sonar range values.
+	 */
+	final double[] getSonarRanges() {
+	    
+	    double[] sonarValues = null;
+        int sonarCount = 0;
 
+        if (getSonar() != null)
+        {
+            /** Read recent sonar data */
+            sonarValues = getSonar().getRanges();
+            sonarCount  = getSonar().getCount();
+        }
+        /** In case we get a sonar count == 0 */
+        if (sonarCount < 1)
+        {
+            sonarValues = new double[SONARCOUNT];
+        }
+        
+        /** Check for dynamic sonar ranger availability. */
+        for (int i=SONARCOUNT; i>0; i--)
+        {
+            /** Fill not available ranges with max values. */
+            if (i > sonarCount)
+            {
+                sonarValues[i-1] = SONARMAX;
+            }
+            else
+            {
+                break;
+            }
+        }
+        
+        return sonarValues;
+	}
 	/**
 	 * Returns the minimum distance of the given view direction.
 	 * Robot shape shall be considered here by weighted SHAPE_DIST.
@@ -230,45 +267,18 @@ public class Pioneer extends Robot implements IPioneer
 	 * @param viewDirection Robot view direction
 	 * @return Minimum distance of requested view Direction.
 	 */
-	protected final double getDistance( viewDirectType viewDirection )
+	final double getDistance( viewDirectType viewDirection )
 	{		
-	    double[] sonarValues = null;
-	    int sonarCount = 0;
-
-	    if (getSonar() != null)
-	    {
-	        /** Read recent sonar data */
-	        sonarValues = getSonar().getRanges();
-	        sonarCount  = getSonar().getCount();
-	    }
-	    /** In case we get a sonar count == 0 */
-	    if (sonarCount < 1)
-	    {
-	        sonarValues = new double[SONARCOUNT];
-	    }
-	    
-	    /** Check for dynamic sonar ranger availability. */
-	    for (int i=SONARCOUNT; i>0; i--)
-	    {
-	        /** Fill not available ranges with max values. */
-	        if (i > sonarCount)
-	        {
-	            sonarValues[i-1] = SONARMAX;
-	        }
-	        else
-	        {
-	            break;
-	        }
-	    }
+	    double[] sonarValues = getSonarRanges();
 	    
 		/** Scan safety areas for walls. */
 		switch (viewDirection)
 		{
-    		case LEFT      : return Math.min(getDistanceLas(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
-    		case RIGHT     : return Math.min(getDistanceLas(RMIN,  RMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST);
-    		case FRONT     : return Math.min(getDistanceLas(FMIN,  FMAX)            -SHAPE_DIST, Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST);
-    		case RIGHTFRONT: return Math.min(getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST);
-    		case LEFTFRONT : return Math.min(getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST);
+    		case LEFT      : return Math.min(getMinLasRange(LMIN,  LMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[0], sonarValues[15])-SHAPE_DIST);
+    		case RIGHT     : return Math.min(getMinLasRange(RMIN,  RMAX) -HORZOFFSET-SHAPE_DIST, Math.min(sonarValues[7], sonarValues[8]) -SHAPE_DIST);
+    		case FRONT     : return Math.min(getMinLasRange(FMIN,  FMAX)            -SHAPE_DIST, Math.min(sonarValues[3], sonarValues[4]) -SHAPE_DIST);
+    		case RIGHTFRONT: return Math.min(getMinLasRange(RFMIN, RFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[5], sonarValues[6]) -SHAPE_DIST);
+    		case LEFTFRONT : return Math.min(getMinLasRange(LFMIN, LFMAX)-DIAGOFFSET-SHAPE_DIST, Math.min(sonarValues[1], sonarValues[2]) -SHAPE_DIST);
     		case BACK      : return Math.min(sonarValues[11], sonarValues[12])-MOUNTOFFSET-SHAPE_DIST; /** Sorry, only sonar at rear. */
     		case LEFTREAR  : return Math.min(sonarValues[13], sonarValues[14])-MOUNTOFFSET-SHAPE_DIST; /** Sorry, only sonar at rear. */
     		case RIGHTREAR : return Math.min(sonarValues[9] , sonarValues[10])-MOUNTOFFSET-SHAPE_DIST; /** Sorry, only sonar at rear. */
@@ -516,11 +526,11 @@ public class Pioneer extends Robot implements IPioneer
         if (isDebugDistance) {
             if (getLaser() != null) {
                 System.out.print("Laser (l/lf/f/rf/r/rb/b/lb):\t");
-                System.out.printf("%5.2f", getDistanceLas(LMIN,  LMAX)-HORZOFFSET); System.out.print("\t");
-                System.out.printf("%5.2f", getDistanceLas(LFMIN, LFMAX)-DIAGOFFSET);    System.out.print("\t");
-                System.out.printf("%5.2f", getDistanceLas(FMIN,  FMAX));                System.out.print("\t");
-                System.out.printf("%5.2f", getDistanceLas(RFMIN, RFMAX)-DIAGOFFSET);    System.out.print("\t");
-                System.out.printf("%5.2f", getDistanceLas(RMIN,  RMAX) -HORZOFFSET);
+                System.out.printf("%5.2f", getMinLasRange(LMIN,  LMAX)-HORZOFFSET); System.out.print("\t");
+                System.out.printf("%5.2f", getMinLasRange(LFMIN, LFMAX)-DIAGOFFSET);    System.out.print("\t");
+                System.out.printf("%5.2f", getMinLasRange(FMIN,  FMAX));                System.out.print("\t");
+                System.out.printf("%5.2f", getMinLasRange(RFMIN, RFMAX)-DIAGOFFSET);    System.out.print("\t");
+                System.out.printf("%5.2f", getMinLasRange(RMIN,  RMAX) -HORZOFFSET);
                 System.out.println("\t" + " XXXX" + "\t" + " XXXX" + "\t" + " XXXX");
             } else {
                 System.out.println("No laser available!");

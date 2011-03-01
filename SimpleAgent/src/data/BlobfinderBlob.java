@@ -125,10 +125,29 @@ public class BlobfinderBlob {
 	public static String getColorString(int color2) {
 		return colorhm.get(color2);
 	}
-	public String toString() {
-		return "(" +
-			new Double(this.x).toString() + ","
-			+ new Double(this.y).toString() + ","
-			+ colorhm.get(this.color) + ")";
+	public String toString()
+	{
+		return "Blob("
+    		+ x + "," 
+    		+ y + ","
+    		+ colorhm.get(color) + ","
+    		+ left + ","
+    		+ right + ","
+    		+ top + ","
+    		+ bottom + ","
+    		+ area + ","
+    		+ range
+    		+ ")";
 	}
+    /**
+     * Returns the angle of the blob relative to the given camera pose.
+     * @param cameraAngle (radians) The camera angle.
+     * @param imageWidth The horizontal camera resolution.
+     * @return The angle (radians) relative to the camera 0 angle.
+     */
+	public double getAngle(double cameraAngle, int imageWidth)
+    {
+	    // TODO review
+        return ((Math.abs((right-left)/2)+left)/imageWidth) * cameraAngle - (cameraAngle/2);
+    }
 }

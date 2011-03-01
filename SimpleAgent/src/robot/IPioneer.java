@@ -2,7 +2,7 @@ package robot;
 
 public interface IPioneer
 {
-	static enum StateType
+	public static enum StateType
 	{
 		LWALL_FOLLOWING,
 		RWALL_FOLLOWING,
