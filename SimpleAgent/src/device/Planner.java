@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 import data.Position;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.planner.PlayerPlannerData;
+import javaclient3.PlannerInterface;
 
 public class Planner extends RobotDevice
 {
@@ -48,7 +49,7 @@ public class Planner extends RobotDevice
 		setSleepTime(500);
 
 		/** Disable motion */
-		((javaclient3.PlannerInterface) this.device).setRobotMotion(0);
+		((PlannerInterface) getDevice()).setRobotMotion(0);
 
 		/** Let the planner still to refresh its internal data */
 		isStopped = false;
@@ -58,10 +59,10 @@ public class Planner extends RobotDevice
 //		if(isStopped == true) return;
 
 		/** Check for ready planner data */
-		if (((javaclient3.PlannerInterface) device).isDataReady()) {
+		if (((PlannerInterface) getDevice()).isDataReady()) {
 
 			/** request recent planner data */
-			ppd = ((javaclient3.PlannerInterface) device).getData ();
+			ppd = ((PlannerInterface) getDevice()).getData ();
 
 			/** Check for a valid path */
 			if (ppd.getValid() == new Integer(1).byteValue())
@@ -113,15 +114,15 @@ public class Planner extends RobotDevice
 			if(isNewGoal)
 			{
 				isNewGoal = false;
-				((javaclient3.PlannerInterface) device).setGoal(new PlayerPose(
+				((PlannerInterface) getDevice()).setGoal(new PlayerPose(
 						goal.getX(),
 						goal.getY(),
 						goal.getYaw()));
 			}
 			else /** Get current goal */
 			{
-				if (((javaclient3.PlannerInterface) device).isReadyWaypointData() == true) {
-					poseTemp = ((javaclient3.PlannerInterface) device).getData().getGoal();
+				if (((PlannerInterface) getDevice()).isReadyWaypointData() == true) {
+					poseTemp = ((PlannerInterface) getDevice()).getData().getGoal();
 					if (poseTemp != null) {
 						goal.setX(poseTemp.getPx());
 						goal.setY(poseTemp.getPy());
@@ -152,7 +153,7 @@ public class Planner extends RobotDevice
 		isDone = false;
 		isStopped = false;
 		// enable motion
-		((javaclient3.PlannerInterface) device).setRobotMotion(1);
+		((PlannerInterface) getDevice()).setRobotMotion(1);
 
 		try { Thread.sleep(getSleepTime()*2); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
 
@@ -194,7 +195,7 @@ public class Planner extends RobotDevice
 		isStopped  = true;
 		
 		// disable motion
-		((javaclient3.PlannerInterface) device).setRobotMotion(0);
+		((PlannerInterface) getDevice()).setRobotMotion(0);
 
 		return true;
 	}
