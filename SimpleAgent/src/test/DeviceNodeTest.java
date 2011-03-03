@@ -3,56 +3,32 @@ package test;
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
+import org.junit.After;
 import org.junit.Test;
 
 import device.DeviceNode;
 
-public class DeviceNodeTest extends TestCase {
+public class DeviceNodeTest extends TestCase
+{
+	DeviceNode deviceNode;
 
-	static DeviceNode deviceNode = null;
-
-	@Test
-	public void testDeviceNode1Node() {
+	@Test public void testDeviceNode1Node()
+	{
 		deviceNode = new DeviceNode("localhost", 6665);
-		assertNotNull(deviceNode);
 	}
 
-	@Test
-	public void testRunThreaded() {
-		deviceNode.runThreaded();
-		assertTrue(deviceNode.isThreaded());
-		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
-		/** Check machine load. Must not be at ~100% */
-	}
-
-	@Test
-	public void testShutdown() {
-		deviceNode.shutdown();
-		assertFalse(deviceNode.isThreaded());
-	}
-
-	@Test
-	public void testDeviceNode2Nodes() {
+	@Test public void testDeviceNode2Nodes()
+	{
 	    deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666});
-	    assertNotNull(deviceNode);
-
-	    testRunThreaded();
-
-	    testShutdown();
 	}
 
-	@Test
-	public void testDeviceNode3Nodes() {
+	@Test public void testDeviceNode3Nodes()
+	{
 		deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666, "localhost",6667});
-		assertNotNull(deviceNode);
-		
-		testRunThreaded();
-			
-		testShutdown();
 	}
 
-	@Test
-    public void testDeviceNode6Nodes() {
+	@Test public void testDeviceNode6Nodes()
+	{
 	    deviceNode = new DeviceNode
 	    (
             new Object[]
@@ -65,25 +41,16 @@ public class DeviceNodeTest extends TestCase {
                 "localhost",6670
            }
 	    );
-        assertNotNull(deviceNode);
-        
-        testRunThreaded();
-            
-        testShutdown();
     }
 
-	@Test public void testDeviceNodeAddDevices() {
+	@Test public void testDeviceNodeAddDevices()
+	{
 		deviceNode = new DeviceNode("localhost", 6665);
-		assertNotNull(deviceNode);
 		
 		DeviceNode devNode2 = new DeviceNode("localhost", 6666);
 		assertNotNull(devNode2);
 		
 		deviceNode.addDevicesOf(devNode2);
-
-		testRunThreaded();
-
-		testShutdown();
 	}	
 	
 	/** To use JUnit  test suite */
@@ -91,4 +58,21 @@ public class DeviceNodeTest extends TestCase {
     { 
        return new JUnit4TestAdapter(DeviceNodeTest.class); 
     }
+
+    /**
+	 * @throws java.lang.Exception
+	 */
+    @After protected void tearDown() throws Exception
+    {
+	    assertNotNull(deviceNode);
+
+    	deviceNode.runThreaded();
+		assertTrue(deviceNode.isThreaded());
+		
+		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+		/** Check machine load. Must not be at ~100% */
+
+		deviceNode.shutdown();
+		assertFalse(deviceNode.isThreaded());
+	}
 }

@@ -44,8 +44,21 @@ public class BlobfinderBlob {
 		colorhm.put(0xFFC0CB,"pink");
 	}
 
+	/**
+	 * Creates a colored blob with the given properties.
+	 * @param color The color of the blob, e.g. 0xRRGGBB.
+	 * @param area The area of the blob in the camera image (pixel).
+	 * @param x Pixel coordinate.
+	 * @param y Pixel coordinate.
+	 * @param left Left most pixel in image.
+	 * @param right Right most pixel in image.
+	 * @param top Top most pixel in image.
+	 * @param bottom Bottom most pixel in image.
+	 * @param range Range to the blob center (meter). 
+	 */
 	public BlobfinderBlob(int color, int area, int x, int y, int left,
-			int right, int top, int bottom, float range) {
+			int right, int top, int bottom, float range)
+	{
 		this.color = color;
 		this.area = area;
 		this.x = x;
