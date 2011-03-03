@@ -3,6 +3,7 @@
  */
 package test;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -103,4 +104,9 @@ public class GripperTest extends TestCase {
 		deviceNode.shutdown();
 	}
 
+	/** To use JUnit  test suite */
+    public static JUnit4TestAdapter suite()
+    { 
+       return new JUnit4TestAdapter(GripperTest.class); 
+    }
 }

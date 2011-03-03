@@ -7,6 +7,8 @@ import static org.junit.Assert.*;
 
 import java.util.Iterator;
 
+import junit.framework.JUnit4TestAdapter;
+
 import org.junit.Test;
 
 import device.Device;
@@ -114,4 +116,9 @@ public class DeviceTest {
         assertFalse(dev.isThreaded());
     }
 
+    /** To use JUnit  test suite */
+    public static JUnit4TestAdapter suite()
+    { 
+       return new JUnit4TestAdapter(DeviceTest.class); 
+    }
 }

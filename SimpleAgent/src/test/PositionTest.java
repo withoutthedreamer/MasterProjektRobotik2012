@@ -3,6 +3,7 @@
  */
 package test;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -145,4 +146,9 @@ public class PositionTest extends TestCase {
         assertTrue(pose2.getGlobalCoordinates(pose).equals(new Position(1.,1.,-Math.PI)));
     }
 
+    /** To use JUnit  test suite */
+    public static JUnit4TestAdapter suite()
+    { 
+       return new JUnit4TestAdapter(PositionTest.class); 
+    }
 }

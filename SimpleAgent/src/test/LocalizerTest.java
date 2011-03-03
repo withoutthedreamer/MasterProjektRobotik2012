@@ -3,6 +3,7 @@ package test;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -96,4 +97,9 @@ public class LocalizerTest extends TestCase {
 		assertFalse(localizer.isRunning());
 	}
 
+	/** To use JUnit  test suite */
+    public static JUnit4TestAdapter suite()
+    { 
+       return new JUnit4TestAdapter(LocalizerTest.class); 
+    }
 }

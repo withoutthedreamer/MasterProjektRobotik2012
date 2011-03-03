@@ -4,6 +4,7 @@
 package test;
 
 import javaclient3.GripperInterface;
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -49,7 +50,14 @@ public class RobotDeviceTest extends TestCase
 	public void testGetDeviceNode() {
 		assertTrue(gripper.getDeviceNode() == deviceNode);
 	}
+	
 	@Test public void testShutdown() {
 		deviceNode.shutdown();
 	}
+	
+	/** To use JUnit  test suite */
+    public static JUnit4TestAdapter suite()
+    { 
+       return new JUnit4TestAdapter(RobotDeviceTest.class); 
+    }
 }

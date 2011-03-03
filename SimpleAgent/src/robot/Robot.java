@@ -16,155 +16,187 @@ import device.RangerLaser;
 import device.RangerSonar;
 import device.Simulation;
 
-public class Robot extends Device implements IRobot {
-
+/**
+ * The Robot class presents a robot that can move in 2 dimensions, i.e. in x and y direction.
+ * It will dynamically use if possible any devices from a device node given.
+ * A robot can have a current location and a goal position (global coordinate system).
+ * 
+ * @author sebastian
+ */
+public class Robot extends Device implements IRobot
+{
 	/**
-	 *  Standard devices
+	 *  List of devices this robot can use if any of them are present.
+	 *  They will be detected in a dynamical way during runtime.
 	 */
 	// TODO dynamic array
-	Position2d posi = null;
-	Ranger laser = null;
-	Ranger sonar = null;
-	Planner planner = null;
-	Localize localizer = null;
-	Gripper gripper = null;
-	Blobfinder bloFi = null;
-	Simulation simu = null;
+	Position2d posi;
+	Ranger laser;
+	Ranger sonar;
+	Planner planner;
+	Localize localizer;
+	Gripper gripper;
+	Blobfinder bloFi;
+	Simulation simu;
 	
 	double speed = 0.0;
 	double turnrate = 0.0;
-	Position position = null;
-	Position goal = null;
+	
+	Position position;
+	Position goal;
 	
 	String robotId = null;
 
-	public Robot(){
+	/**
+	 * Creates a Robot with initialized position and goal.
+	 */
+	public Robot()
+	{
 		position = new Position();
 		goal = new Position();
 	}
 	
 	/**
 	 * This constructor has to be overwritten in any subclasses!
+	 * It will parse all devices from the given device and connects
+	 * it to the internal device list.
 	 */
-	public Robot (Device roboDevices) {
+	public Robot (Device deviceNode)
+	{
 		this();
 		
 		/** Make the devices available */
-		connectDevices(roboDevices.getDeviceList());
+		connectDevices(deviceNode.getDeviceList());
 	}
-	
-	public String getRobotId() {
+	/**
+	 * @return The robot's Id string.
+	 */
+	public String getRobotId()
+	{
 		return robotId;
 	}
-
-	public void setRobotId(String name) {
-		this.robotId = name;
+	/**
+	 * Sets this robot's string identifier.
+	 * @param name The robot identifier.
+	 */
+	public void setRobotId(String name)
+	{
+		robotId = name;
 	}
 
 	/**
 	 * Initiate standard variables to this robot for the devices
 	 * Note that if there are duplicate devices in the list
 	 * always the last one of the same device code will be chosen!
-	 * @param deviceList 
+	 * @param deviceList The device list to search for applicable devices.
 	 */
-	void connectDevices (ConcurrentLinkedQueue<Device> deviceList) {
-		
-		if (deviceList != null) {
+	void connectDevices (ConcurrentLinkedQueue<Device> deviceList)
+	{	
+		if (deviceList != null)
+		{
 			Iterator<Device> devIt = deviceList.iterator();
 
-			if (devIt != null) {
-				while (devIt.hasNext()) {
+			if (devIt != null)
+			{
+				while (devIt.hasNext())
+				{
 					Device dev = devIt.next();
 
 					switch (dev.getName())
 					{
-					case IDevice.DEVICE_POSITION2D_CODE :
-						posi = (Position2d) dev; break;
-
-					case IDevice.DEVICE_RANGER_CODE : 
-						if (dev.getDeviceNumber() == 0) {
-							sonar = (Ranger) dev; break;
-						} else {
-							laser = (Ranger) dev; break;
-						}
-
-					case IDevice.DEVICE_SONAR_CODE : 
-						sonar = (RangerSonar) dev; break;
-
-					case IDevice.DEVICE_LASER_CODE : 
-						laser = (RangerLaser) dev; break;
-
-					case IDevice.DEVICE_PLANNER_CODE :
-						planner = (Planner) dev; break;
-							
-					case IDevice.DEVICE_LOCALIZE_CODE :
-						localizer = (Localize) dev; break;
-							
-					case IDevice.DEVICE_BLOBFINDER_CODE :
-						bloFi = (Blobfinder) dev; break;
-	
-					case IDevice.DEVICE_GRIPPER_CODE : 
-						gripper = (Gripper) dev; break;
-						
-					case IDevice.DEVICE_SIMULATION_CODE : 
-						simu = (Simulation) dev; break; 
-
-					default: break;
+    					case IDevice.DEVICE_POSITION2D_CODE :
+    						posi = (Position2d) dev; break;
+    
+    					case IDevice.DEVICE_RANGER_CODE : 
+    						if (dev.getDeviceNumber() == 0)
+    						{
+    							sonar = (Ranger) dev; break;
+    						}
+    						else
+    						{
+    							laser = (Ranger) dev; break;
+    						}
+    
+    					case IDevice.DEVICE_SONAR_CODE : 
+    						sonar = (RangerSonar) dev; break;
+    
+    					case IDevice.DEVICE_LASER_CODE : 
+    						laser = (RangerLaser) dev; break;
+    
+    					case IDevice.DEVICE_PLANNER_CODE :
+    						planner = (Planner) dev; break;
+    							
+    					case IDevice.DEVICE_LOCALIZE_CODE :
+    						localizer = (Localize) dev; break;
+    							
+    					case IDevice.DEVICE_BLOBFINDER_CODE :
+    						bloFi = (Blobfinder) dev; break;
+    	
+    					case IDevice.DEVICE_GRIPPER_CODE : 
+    						gripper = (Gripper) dev; break;
+    						
+    					case IDevice.DEVICE_SIMULATION_CODE : 
+    						simu = (Simulation) dev; break; 
+    
+    					default: break;
 					}
 				}
 			}
 		}
 	}
 		
-//	/**
-//	 * Command the motors
-//	 */
-//	protected final void execute() {
-//		if (posi != null) {
-//			posi.setSpeed(speed);
-//			posi.setTurnrate(turnrate);
-//		}
-//	}
 	/**
 	 * Sets a goal if the robot possesses a navigation device. 
-	 * @param newGoal New @ref Position goal.
+	 * @param newGoal New @see Position goal.
 	 */
-	@Override
-	public void setGoal(Position newGoal)
+	@Override public void setGoal(Position newGoal)
 	{
 		if (planner != null)
+		{
 			planner.setGoal(newGoal);
+		}
 		else
+		{
 			goal.setPosition(newGoal);
+		}
 	}
 	/**
-	 * @return Current goal @ref Position or null.
+	 * @return Current goal @see Position or null.
 	 */
-	@Override
-	public Position getGoal()
+	@Override public Position getGoal()
 	{
 		if (planner != null)
+		{
 			return planner.getGoal();
+		}
 		else
+		{
 			return new Position(goal);
+		}
 	}
 	/**
 	 * Sets the position if the robot possesses an position device.
-	 * @param newPosition New @ref Position.
+	 * @param newPosition New @see Position.
 	 */
-	@Override
-	public void setPosition(Position newPosition)
+	@Override public void setPosition(Position newPosition)
 	{
 		if (localizer != null)
+		{
 			localizer.setPosition(newPosition);
+		}
 		else
+		{
 			if (posi != null)
+			{
 				posi.setPosition(newPosition);
+			}
+		}
 
 		position.setPosition(newPosition);
 		
 		/** Is the robot simulated ? */
-		if (robotId != null && simu != null) {
+		if (robotId != null && simu != null)
+		{
 			/** Set the position of the robot simulation */
 			simu.setPositionOf(robotId, newPosition);
 		}
@@ -173,104 +205,123 @@ public class Robot extends Device implements IRobot {
 	/**
 	 * @return Current robot @see Position or null.
 	 */
-	@Override
-	public Position getPosition()
+	@Override public Position getPosition()
 	{		
 		if (localizer != null)
+		{
 			position.setPosition( localizer.getPosition() );
+		}
 		else
+		{
 			if (posi != null)
+			{
 				position.setPosition( posi.getPosition() );
+			}
+		}
 
 		return new Position(position);
 	}
-	@Override
-	public void shutdown()
+	@Override public void shutdown()
 	{
 		if (planner != null)
+		{
 			planner.stop();
+		}
+		
 		super.shutdown();
 	}
 	/**
 	 * Returns the current Planner.
 	 * @return The @see Planner or 'null' if no one is available.
 	 */
-	public Planner getPlanner() {
+	public Planner getPlanner()
+	{
 		return planner;
 	}
 	/**
 	 * @return the current @see Localize @see Device or 'null' if no such device.
 	 */
-	public Localize getLocalizer() {
+	public Localize getLocalizer()
+	{
 		return localizer;
 	}
 	/**
 	 * @return The @see Gripper @see Device or 'null' if no such device.
 	 */
-	public Gripper getGripper() {
+	public Gripper getGripper()
+	{
 	    return gripper;
 	}
 
     /**
      * @return the posi
      */
-    public Position2d getPosi() {
+    public Position2d getPosi()
+    {
         return posi;
     }
 
     /**
      * @return the laser
      */
-    public Ranger getLaser() {
+    public Ranger getLaser()
+    {
         return laser;
     }
 
     /**
      * @return the sonar
      */
-    public Ranger getSonar() {
+    public Ranger getSonar()
+    {
         return sonar;
     }
 
     /**
      * @return the bloFi
      */
-    public Blobfinder getBloFi() {
+    public Blobfinder getBloFi()
+    {
         return bloFi;
     }
 
     /**
      * @return the simu
      */
-    public Simulation getSimu() {
+    public Simulation getSimu()
+    {
         return simu;
     }
 
     /**
      * @return the speed
      */
-    public double getSpeed() {
+    public double getSpeed()
+    {
         return speed;
     }
 
     /**
      * @return the turnrate
      */
-    public double getTurnrate() {
+    public double getTurnrate()
+    {
         return turnrate;
     }
 
     /**
      * @param speed the speed to set
      */
-    public void setSpeed(double speed) {
+    public void setSpeed(double speed)
+    {
         this.speed = speed;
     }
 
     /**
      * @param turnrate the turnrate to set
      */
-    public void setTurnrate(double turnrate) {
+    public void setTurnrate(double turnrate)
+    {
         this.turnrate = turnrate;
     }
 }

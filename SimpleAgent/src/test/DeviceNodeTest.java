@@ -1,5 +1,6 @@
 package test;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -71,8 +72,7 @@ public class DeviceNodeTest extends TestCase {
         testShutdown();
     }
 
-	@Test
-	public void testDeviceNodeAddDevices() {
+	@Test public void testDeviceNodeAddDevices() {
 		deviceNode = new DeviceNode("localhost", 6665);
 		assertNotNull(deviceNode);
 		
@@ -85,4 +85,10 @@ public class DeviceNodeTest extends TestCase {
 
 		testShutdown();
 	}	
+	
+	/** To use JUnit  test suite */
+    public static JUnit4TestAdapter suite()
+    { 
+       return new JUnit4TestAdapter(DeviceNodeTest.class); 
+    }
 }

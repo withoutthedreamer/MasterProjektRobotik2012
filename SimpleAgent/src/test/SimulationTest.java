@@ -1,5 +1,6 @@
 package test;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -89,5 +90,11 @@ public class SimulationTest extends TestCase {
 		assertEquals(simu.isThreaded(), false);
 		assertEquals(simu.getObjListCount(), 0);
 		assertEquals(simu.getIsDirtyListCount(), 0);
+	}
+
+	/** To use JUnit  test suite */
+	public static JUnit4TestAdapter suite()
+	{ 
+	   return new JUnit4TestAdapter(SimulationTest.class); 
 	}
 }

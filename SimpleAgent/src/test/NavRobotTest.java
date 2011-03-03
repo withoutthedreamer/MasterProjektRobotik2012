@@ -1,5 +1,6 @@
 package test;
 
+import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
 import org.junit.Test;
@@ -80,4 +81,9 @@ public class NavRobotTest extends TestCase {
 		assertFalse(deviceNode.isThreaded());
 	}
 
+	/** To use JUnit  test suite */
+    public static JUnit4TestAdapter suite()
+    { 
+       return new JUnit4TestAdapter(NavRobotTest.class); 
+    }
 }

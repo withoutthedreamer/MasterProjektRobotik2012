@@ -4,25 +4,50 @@ import java.util.Iterator;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
+/**
+ * A Device represents an abstract entity, i.e. device node, that can have
+ * other devices in its internal list. It will start and shutdown
+ * these devices (if any) and itself in a dedicated thread per device.
+ * 
+ * @author sebastian
+ */
 public class Device implements IDevice, Runnable
 {
 	/** Logging support */
     Logger logger = Logger.getLogger (Device.class.getName ());
 
-	protected ConcurrentLinkedQueue<Device> deviceList = null;
+    /**
+     * The internal device list can contain other devices.
+     * For example if there is a device hierarchy.
+     */
+	ConcurrentLinkedQueue<Device> deviceList;
 	
+	/**
+	 * If it is an abstract device the following fields are not set.
+	 */
+	/** The numerical identifiers of this device. */
 	int name = -1;
+	/** The host string, i.e. network name. */
 	String host = null;
+	/** The port number, i.e. host port. */
 	int port = -1;
+	/** The numerical device number. */
 	int deviceNumber = -1;
 	
 	/** Every class of this type has it's own thread */
-	protected Thread thread = new Thread ( this );
+	Thread thread = new Thread ( this );
 
+	/** The periodical idle time in ms this device sleeps between action cycles. */
 	long SLEEPTIME = 100;
-	private boolean isRunning = false;
-	private boolean isThreaded = false;
 	
+	/** Indicating if this device is currently in an action cycle. */
+	boolean isRunning = false;
+	/** Indicating if this device is started in its own thread. */
+	boolean isThreaded = false;
+	
+	/**
+	 * Creates a Device and initializes the internal device list.
+	 */
 	public Device()
 	{
 		deviceList = new ConcurrentLinkedQueue<Device>();
@@ -46,7 +71,7 @@ public class Device implements IDevice, Runnable
 		deviceNumber = devNum;
 	}
 	/**
-	 * 
+	 * Creates a device with the given properties.
 	 * @param device A device template to create a new device
 	 */
 	public Device (Device device)
@@ -59,10 +84,14 @@ public class Device implements IDevice, Runnable
 	 * to its internal device list.
 	 * @param aDeviceList The list of devices that contain devices.
 	 */
-	public Device (Device[] aDeviceList) {
+	public Device (Device[] aDeviceList)
+	{
 		this();
-		if (aDeviceList != null) {
-			for (int i=0; i<aDeviceList.length; i++) {
+		
+		if (aDeviceList != null)
+		{
+			for (int i=0; i<aDeviceList.length; i++)
+			{
 				addDevicesOf(aDeviceList[i]);
 			}
 		}
@@ -72,10 +101,14 @@ public class Device implements IDevice, Runnable
 	 * to the internal device list of this device.
 	 * @param yad A device containing other devices.
 	 */
-	public void addDevicesOf ( Device yad ) {
-		if (yad != null && deviceList != null) {
+	public void addDevicesOf ( Device yad )
+	{
+		if (yad != null && deviceList != null)
+		{
 			Iterator<Device> devIt = yad.getDeviceIterator();
-			while (devIt.hasNext()) {
+			
+			while (devIt.hasNext())
+			{
 				deviceList.add(devIt.next());
 			}
 		}
@@ -85,9 +118,13 @@ public class Device implements IDevice, Runnable
 	 */
 	protected void update() {}
 
+	/**
+	 * Starts this device (and its sub-devices) in a thread each.
+	 */
 	public synchronized void runThreaded()
 	{
-		if (thread.isAlive() != true) {
+		if (thread.isAlive() != true)
+		{
 			/** Start all devices */
 			if (deviceList != null && deviceList.size() > 0)
 			{
@@ -99,19 +136,28 @@ public class Device implements IDevice, Runnable
 
 					/** Start device */
 					device.runThreaded();
-					while (device.thread.isAlive() == false);
+//					while (device.thread.isAlive() == false);
+					while (device.isThreaded() == false)
+					{
+		                try { Thread.sleep (10); } catch (InterruptedException e) { e.printStackTrace(); }
+					}
+					
 				}
 			}
 
 			isThreaded  = true;
 
 			thread.start();
-			while (thread.isAlive() == false);
+//			while (thread.isAlive() == false);
+//			while (isThreaded() == false);
 
 			logger.fine("Running "+this.getClass().toString()+" in "+thread.getName());
 		}
 	}
 
+	/**
+	 * Manages the periodical action cycles and idle times.
+	 */
 	@Override public void run()
 	{
 	    try
@@ -149,6 +195,10 @@ public class Device implements IDevice, Runnable
 	        isRunning = false;    /** sync with setNotThreaded */
 	    }
 	}
+	
+	/**
+	 * Shuts down this (and any sub-) device.
+	 */
 	public synchronized void shutdown()
 	{
 		long delayCount = 0;
@@ -167,7 +217,7 @@ public class Device implements IDevice, Runnable
 			if (delayCount > 2)
 				logger.finer("Shutdown delayed " + this.getClass().getName());
 			
-            try { Thread.sleep (10); } catch (Exception e) { }
+            try { Thread.sleep (10); } catch (Exception e) { e.printStackTrace(); }
 		}
 		
 		/** Stop all devices */
@@ -189,32 +239,45 @@ public class Device implements IDevice, Runnable
 		}
 	}
 	/**
-	 * Returns a list of devices that this robot client provides
-	 * @return Device list
+	 * Returns a list of devices that this robot client provides.
+	 * @return The device list.
 	 */
-	public final ConcurrentLinkedQueue<Device> getDeviceList() {
+	public final ConcurrentLinkedQueue<Device> getDeviceList()
+	{
 		return deviceList;
 	}
 	
 	/**
      * @param deviceList the deviceList to set
      */
-    protected final void setDeviceList(ConcurrentLinkedQueue<Device> deviceList) {
+    protected final void setDeviceList(ConcurrentLinkedQueue<Device> deviceList)
+    {
         this.deviceList = deviceList;
     }
-    public synchronized final void addToDeviceList(Device dev) {
-
+    
+    /**
+     * Adds the devices of the given device node to this one.
+     * @param dev The device node containing other devices.
+     */
+    public synchronized final void addToDeviceList(Device dev)
+    {
 		/** Check if it has other devices linked */
 		Iterator<Device> iter = dev.getDeviceIterator(); 
-		if (iter != null) {
+		
+		if (iter != null)
+		{
 			while (iter.hasNext()) {
 				/** Add the device to internal list */	
 				addToDeviceList(dev);
 			}
 		}
+		
 		deviceList.add(dev);
 	}
 	
+    /**
+     * @return An iterator of the internal device list.
+     */
 	public final Iterator<Device> getDeviceIterator() {
 		if (deviceList != null) {
 			return (Iterator<Device>) deviceList.iterator();
@@ -223,16 +286,18 @@ public class Device implements IDevice, Runnable
 		}
 	}
 	/**
-	 * 
+	 * Searches the internal device list for the device with the properties given.
 	 * @param dev Device template (0 or null for args not to take care of).
 	 * @return A device matching the given template when found in list, null otherwise.
 	 */
-	public final Device getDevice (Device dev) {
+	public final Device getDevice (Device dev)
+	{
 		int name = dev.getName();
 		int number = dev.getDeviceNumber();
 		Device found = null;
 		
 		Iterator<Device> it = getDeviceIterator();
+		
 		while (it.hasNext())
 		{
 			Device curDev = it.next();
@@ -251,54 +316,107 @@ public class Device implements IDevice, Runnable
 		}
 		return found;
 	}
-	public String getHost() {
+	/**
+	 * @return This device' host string.
+	 */
+	public String getHost()
+	{
 	    if (host != null)
 	        return host;
 	    else
 	        return "";
 	}
-	public void setHost(String host) {
+	/**
+	 * Sets this device' host string.
+	 * @param host The host string.
+	 */
+	public void setHost(String host)
+	{
 		this.host = host;
 	}
-	public int getPort() {
+	/**
+	 * @return This device' host port.
+	 */
+	public int getPort()
+	{
 		return port;
 	}
-	public void setPort(int port) {
+	/**
+	 * Sets this device' host port.
+	 * @param port
+	 */
+	public void setPort(int port)
+	{
 		this.port = port;
 	}
-	public int getName() {
+	/**
+	 * @return This device' numerical identifier.
+	 */
+	public int getName()
+	{
 		return name;
 	}
+	/**
+	 * Sets this device' numerical identifier.
+	 * @param name The identifier.
+	 */
 	public void setName(int name) {
 		this.name = name;
 	}
-
-	public int getDeviceNumber() {
+	/**
+	 * @return The device number.
+	 */
+	public int getDeviceNumber()
+	{
 		return deviceNumber;
 	}
-	public String getThreadName() {
-		if (thread != null) {
+	/**
+	 * @return This device' thread name.
+	 */
+	public String getThreadName()
+	{
+		if (thread != null)
+		{
 			return thread.getName();
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 	}
-	public void setSleepTime(long time) {
+	/**
+	 * @param time The idle time of this device.
+	 */
+	public void setSleepTime(long time)
+	{
 		this.SLEEPTIME = time;
 	}
-	public long getSleepTime() {
+	/**
+	 * @return This device' idle time.
+	 */
+	public long getSleepTime()
+	{
 		return SLEEPTIME;
 	}
-	public boolean isRunning() {
+	/**
+	 * @return true if this device is currently doing something (action cycle).
+	 */
+	public boolean isRunning()
+	{
 		return isRunning;
 	}
-	public boolean isThreaded() {
+	/**
+	 * @return true if this device is threaded, false else.
+	 */
+	public boolean isThreaded()
+	{
 		return isThreaded;
 	}
     /**
-     * @return the logger
+     * @return The logger.
      */
-    public Logger getLogger() {
+    public Logger getLogger()
+    {
         return logger;
     }
 }
