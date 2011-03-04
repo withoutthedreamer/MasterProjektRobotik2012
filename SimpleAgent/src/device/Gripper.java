@@ -6,6 +6,11 @@ import java.util.logging.Logger;
 
 import javaclient3.GripperInterface;
 
+/**
+ * A Gripper device represents a mechanical actuator consisting of
+ * typically two paddles that can open/close and lift/release to manipulate some objects.
+ * @author sebastian
+ */
 public class Gripper extends RobotDevice
 {
     /** Logging support */
@@ -29,9 +34,10 @@ public class Gripper extends RobotDevice
 	boolean timeout;
 
 	/**
-	 * Taken from the player IF documantation.
+	 * Taken from the player IF documentation.
 	 */
-	public static enum stateType {
+	public static enum stateType
+	{
 		OPEN,
 		CLOSED,
 		MOVING,
@@ -39,115 +45,138 @@ public class Gripper extends RobotDevice
 		DOWN,
 		ERROR
 	}
-
-	public Gripper(DeviceNode deviceNode, Device device) {
+	
+	/**
+	 * Creates a Gripper object.
+	 * @param deviceNode The device node containing this device.
+	 * @param device This device' properties.
+	 */
+	public Gripper(DeviceNode deviceNode, Device device)
+	{
 		super(deviceNode, device);
 	}
 	
-	@Override protected void update () {}
-
-	public void stop () {
-		((GripperInterface) device).stop();
+	/**
+	 * Stops the gripper current motion (if any).
+	 */
+	public void stop ()
+	{
+		((GripperInterface) getDevice()).stop();
 	}
-	public void open () {
+	/**
+	 * Opens the gripper's paddles.
+	 * If available sensors are used to determine when the paddles are open.
+	 */
+	public void open ()
+	{
 		updateDio();
 		
-		((GripperInterface) device).open();
+		((GripperInterface) getDevice()).open();
 		
-		if (dio != null) {
-			while (dio.getInput(0) != 0) {
+		if (getDio() != null) {
+			while (getDio().getInput(0) != 0) {
 				try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
 			}
 		} else
 			try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
-	public void close () {
-		((GripperInterface) device).close();
+	/**
+	 * Close the gripper's paddles.
+	 */
+	public void close ()
+	{
+		((GripperInterface) getDevice()).close();
 
 		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
+	/**
+	 * Lift the gripper's paddles (if supported).
+	 */
 	public void lift ()
 	{
 		updateActarray();
 		updateDio();
 
-		if (dio != null)
+		if (getDio() != null)
 	    	/** Some thing between the paddles ? */
-	    	if (dio.getInput(3)==1 || dio.getInput(2)==1 ) {
+	    	if (getDio().getInput(3)==1 || getDio().getInput(2)==1 ) {
 	    		logger.info("Something is between the paddles");
 	    	} else
 	            logger.info("Nothing between the paddles");
 
-	    if (aa != null) {
+	    if (getAa() != null) {
 	    	/** Lift up */
-	        aa.moveHome(0);
+	        getAa().moveHome(0);
 	    }
 	   	   
-//		if (dio != null) {
-//			while (dio.getInput(1) != 0) {
-//				try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
-//			}
-//		} else
-			try { Thread.sleep(4000); } catch (InterruptedException e) { e.printStackTrace(); }
+	    try { Thread.sleep(4000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
-	
+	/**
+	 * Release the gripper's paddles (if supported).
+	 * Use sensors to determine if paddles are released (if available).
+	 */
 	public void release ()
 	{
 		updateActarray();
 		updateDio();
 
 		/** Lift down */
-	    if (aa != null) {
-	        aa.moveTo(0, 0);
+	    if (getAa() != null)
+	    {
+	        getAa().moveTo(0, 0);
 	    }
 	   
-	    if (dio != null) {
-	    	while (dio.getInput(1) != 0) {
+	    if (getDio() != null)
+	    {
+	    	while (getDio().getInput(1) != 0)
+	    	{
 	    		try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
 	    	}
 	    } else
 	    	try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
     }
-	
+	/**
+	 * During runtime checks if an actarray device is available, typically used to lift/release the paddles.
+	 */
 	void updateActarray()
 	{				
-		if (aa == null) {
-			aa = (Actarray) getDeviceNode().getDevice(new Device(IDevice.DEVICE_ACTARRAY_CODE, null,-1,-1));
+		if (getAa() == null)
+		{
+			setAa( (Actarray) getDeviceNode().getDevice(new Device(IDevice.DEVICE_ACTARRAY_CODE, null,-1,-1)) );
 
-			if (aa == null) {
+			if (getAa() == null)
+			{
 				logger.info("No Actarray device found");
-				aa = new Actarray();
 			}
 		}
 	}
+	/**
+	 * During runtime checks if an dio device is available, typically used to sensor gripper states.
+	 * Normally that is supported by some photo diodes.
+	 */
 	void updateDio()
 	{
-		if (dio == null) {
-			dio = (Dio) getDeviceNode().getDevice(new Device(IDevice.DEVICE_DIO_CODE,null,-1,-1));
+		if (getDio() == null)
+		{
+			setDio( (Dio) getDeviceNode().getDevice(new Device(IDevice.DEVICE_DIO_CODE,null,-1,-1)) );
 
-			if (dio == null) {
+			if (getDio() == null)
+			{
 				logger.info("No Dio device found");
-				dio = new Dio();
 			}
 		}
 	}
-
-	public stateType getState() {
+	/**
+	 * @return The current state the gripper is in.
+	 */
+	public stateType getState()
+	{
 	    stateType state = stateType.ERROR;
 	    int pState = -1;
 
-        if ( ((GripperInterface) device).isDataReady() ) {
-//	    if (dio != null)
-//        {   
-	    	pState = ((GripperInterface) device).getData().getState();
-//	    	if (dio.getInput(1) == 1)
-//	    		state = stateType.MOVING;
-//	    	else {
-//	    		if (dio.getInput(0) == 1)
-//	    			state = stateType.OPEN;
-//	    		else
-//	    			state = stateType.CLOSED;
-//	    	}
+        if ( ((GripperInterface) getDevice()).isDataReady() )
+        {
+	    	pState = ((GripperInterface) getDevice()).getData().getState();
 
             switch (pState) {
             case 1:  state = stateType.OPEN;  break;
@@ -157,7 +186,8 @@ public class Gripper extends RobotDevice
             default: state = stateType.ERROR; break;
             }
         }
-		return state;
+		
+        return state;
 	}
 
 	/**
@@ -180,8 +210,28 @@ public class Gripper extends RobotDevice
 	public Dio getDio() {
 		return dio;
 	}
-	public void liftWithObject() {
-		if (dio != null) {
+	/**
+     * @param aa the aa to set
+     */
+    protected void setAa(Actarray aa) {
+        this.aa = aa;
+    }
+
+    /**
+     * @param dio the dio to set
+     */
+    protected void setDio(Dio dio) {
+        this.dio = dio;
+    }
+
+    /**
+     * Sets up the gripper to only close and lift paddles when an object is sensed between the paddles.
+     */
+    public void liftWithObject()
+    {
+        updateDio();
+
+		if (getDio() != null) {
 
 			open();
 			
@@ -196,13 +246,14 @@ public class Gripper extends RobotDevice
 
 			}, 20000);
 
-			while (dio.getInput(2)==0 && dio.getInput(3)==0 && timeout == false) {
+			while (getDio().getInput(2)==0 && getDio().getInput(3)==0 && timeout == false)
+			{
 				try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
 			}
 
 			/** Some object */
-			if (timeout == false) {
-
+			if (timeout == false)
+			{
 				close();
 				lift();
 			}

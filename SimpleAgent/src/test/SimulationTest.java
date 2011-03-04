@@ -1,9 +1,11 @@
 package test;
 
 import junit.framework.JUnit4TestAdapter;
-import junit.framework.TestCase;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import data.Position;
 import device.Device;
@@ -11,30 +13,38 @@ import device.DeviceNode;
 import device.IDevice;
 import device.Simulation;
 
-public class SimulationTest extends TestCase {
-	
+public class SimulationTest
+{	
 	static Simulation simu = null;
 	static DeviceNode deviceNode = null;
 
-	@Test
-	public void testConstructor() {
-		deviceNode = new DeviceNode("localhost", 6665);	
-		assertNotNull(deviceNode);
+	@BeforeClass public static void setUpBeforeClass() throws Exception
+	{
+	    deviceNode = new DeviceNode("localhost", 6665); 
+        assertNotNull(deviceNode);
 
-		deviceNode.runThreaded();
-//		assertEquals(deviceNode.isRunning(), true);
-		assertEquals(deviceNode.isThreaded(), true);
-		
-		simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
-		
-		assertNotNull(simu);
-		assertEquals(simu.getClass(),Simulation.class);
-		assertEquals(simu.isRunning(), true);
-		assertEquals(simu.isThreaded(), true);
+        deviceNode.runThreaded();
+        assertEquals(deviceNode.isThreaded(), true);
+        
+        simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
+        
+        assertNotNull(simu);
+        assertEquals(simu.getClass(),Simulation.class);
+        assertEquals(simu.isRunning(), true);
+        assertEquals(simu.isThreaded(), true);	    
 	}
+   
+	@AfterClass public static void tearDownAfterClass() throws Exception
+    {
+        deviceNode.shutdown();
+        
+        assertEquals(simu.isRunning(), false);
+        assertEquals(simu.isThreaded(), false);
+        assertEquals(simu.getObjListCount(), 0);
+        assertEquals(simu.getIsDirtyListCount(), 0);
+    }
 
-	@Test
-	public void testInitPositionOf()
+	@Test public void testInitPositionOf()
 	{
 		int before = simu.getObjListCount();
 		int before1 = simu.getIsDirtyListCount();
@@ -49,8 +59,8 @@ public class SimulationTest extends TestCase {
 		assertEquals(before1+1, simu.getIsDirtyListCount());
 	}
 
-	@Test
-	public void testSetPositionOf() {
+	@Test public void testSetPositionOf()
+	{
 		Position pose = new Position (-7,-7,0);
 		Position pose2 = new Position (-6,-7,0);
 		
@@ -79,17 +89,6 @@ public class SimulationTest extends TestCase {
 			// Pause to verify position in gui window
 			try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
-	}
-
-	@Test
-	public void testShutdown() {
-		
-		deviceNode.shutdown();
-		
-		assertEquals(simu.isRunning(), false);
-		assertEquals(simu.isThreaded(), false);
-		assertEquals(simu.getObjListCount(), 0);
-		assertEquals(simu.getIsDirtyListCount(), 0);
 	}
 
 	/** To use JUnit  test suite */

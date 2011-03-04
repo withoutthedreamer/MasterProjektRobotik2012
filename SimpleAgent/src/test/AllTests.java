@@ -26,14 +26,14 @@ public class AllTests
 
 		/** System tests */
 		suite.addTest(DeviceNodeTest.suite());
-//		suite.addTest(RobotDeviceTest.suite());  
-//		suite.addTest(SimulationTest.suite());  
-//		suite.addTest(PlannerTest.suite());  
-//		suite.addTest(PioneerTest.suite());  
-//		suite.addTest(NavRobotTest.suite());  
-//		suite.addTest(LocalizerTest.suite());  
-//		suite.addTest(GripperTest.suite());  
-//		suite.addTest(ExploreRobotTest.suite());
+		suite.addTest(RobotDeviceTest.suite());  
+		suite.addTest(SimulationTest.suite());  
+        suite.addTest(LocalizerTest.suite());  
+		suite.addTest(PlannerTest.suite());  
+		suite.addTest(PioneerTest.suite());  
+		suite.addTest(NavRobotTest.suite());  
+        suite.addTest(ExploreRobotTest.suite());
+		suite.addTest(GripperTest.suite());  
 
 		return suite;
 	}

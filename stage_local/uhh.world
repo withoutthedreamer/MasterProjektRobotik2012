@@ -38,6 +38,12 @@ robot
   pose [ -6 -7 0 0 ]
 )
 
+robot
+(
+  name "r2"
+  pose [ -6 6 0 0 ]
+)
+
 # Place some blobs
 blob (
   pose [ 7 -5 0 0]

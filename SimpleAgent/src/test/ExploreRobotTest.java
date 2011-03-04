@@ -4,30 +4,33 @@
 package test;
 
 import junit.framework.JUnit4TestAdapter;
-import junit.framework.TestCase;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import robot.ExploreRobot;
 import data.BlobfinderBlob;
 import data.Position;
+import device.Device;
 import device.DeviceNode;
 import device.IBlobfinderListener;
+import device.IDevice;
+import device.Simulation;
 
 /**
  * @author sebastian
  *
  */
-public class ExploreRobotTest extends TestCase
+public class ExploreRobotTest
 {
     static DeviceNode dn;
     static ExploreRobot robot;
     
-    /**
-     * Test method for {@link robot.ExploreRobot#ExploreRobot(device.Device)}.
-     */
-    @Test public void testExploreRobot() {
-        dn = new DeviceNode(new Object[]{"localhost", 6665, "localhost", 6666});
+    @BeforeClass public static void setUpBeforeClass() throws Exception
+    {
+        dn = new DeviceNode(new Object[]{"localhost", 6669, "localhost", 6670});
         dn.runThreaded();
         
         robot = new ExploreRobot(dn);
@@ -35,6 +38,28 @@ public class ExploreRobotTest extends TestCase
         
         robot.runThreaded();
         assertTrue(robot.isThreaded());
+        
+        /** Set the robots init pose */
+        robot.setPosition(new Position(-6.,6.,0.));
+        /** Correct it in the simulation */
+        DeviceNode simuDev = new DeviceNode("localhost", 6665);
+        simuDev.runThreaded();
+        Simulation simu = (Simulation) simuDev.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE,null,-1,-1));
+        simu.setPositionOf("r2", new Position(-6,6,0));
+        /** Position some blobs */
+        simu.setPositionOf("green", new Position(0,5,0));
+        simu.setPositionOf("black", new Position(-4,6,0));
+        simu.setPositionOf("red", new Position(-4,4,0));
+        simuDev.shutdown();
+        
+        try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+      
+    }
+    @AfterClass public static void tearDownAfterClass() throws Exception
+    {
+        robot.stop();
+        robot.shutdown();
+        dn.shutdown();
     }
 
     /**
@@ -67,13 +92,6 @@ public class ExploreRobotTest extends TestCase
         
         robot.setWallfollow();
         try { Thread.sleep(50000); } catch (InterruptedException e) { e.printStackTrace(); }
-    }
-
-    @Test public void testShutdown()
-    {
-        robot.stop();
-        robot.shutdown();
-        dn.shutdown();
     }
 
     /** To use JUnit  test suite */
