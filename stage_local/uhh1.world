@@ -1,6 +1,8 @@
 # Project world file
 include "map.inc"
 include "devices.inc"
+# defines the models used in the lab
+include "/usr/local/share/stage/worlds/uoa_robotics_lab_models.inc"
 
 resolution 0.05 # meters per pixel
 #threads 2
@@ -19,6 +21,7 @@ window
 # load an environment bitmap
 floorplan
 (
+  name "tams_floor"
   size [62.95 15.6 0.800]
   pose [0 0 0 0]
   bitmap "bitmaps/tams_compl_red_map.png"
@@ -60,3 +63,42 @@ blob (
   color "black"
   name "black"
 )
+
+# Place some furniture
+define t table ()
+
+define c1 chair1 ()
+
+define c2 chair2 ()
+
+define cab bigCabin ()
+
+# Place the tables and chairs according to the real lab
+#Tables top right
+t(pose [ -19.5 6.65 0.000 90.0 ])
+c2(pose [ -19.0 6.3 0.000 90.0 ])
+t(pose [ -20.5 6.65 0.000 -90.0 ])
+c2(pose [ -21.0 6.3 0.000 -90.0 ])
+t(pose [ -20.0 5.4 0.000 0.0 ])
+c2(pose [ -19.9 4.8 0.000 0.0 ])
+#
+#Tables top left
+t(pose [ -23.5 6.65 0.000 90.0 ])
+c2(pose [ -23.0 6.3 0.000 90.0 ])
+t(pose [ -24.5 6.65 0.000 -90.0 ])
+c2(pose [ -25.0 6.3 0.000 -90.0 ])
+t(pose [ -24.0 5.4 0.000 0.0 ])
+c2(pose [ -24.0 4.8 0.000 0.0 ])
+
+# Tables right
+t(pose [ -17.4 1.5 0.000 -90.0 ])
+t(pose [ -17.4 3.0 0.000 -90.0 ])
+# Tables left
+t(pose [ -26.5 1.5 0.000 90.0 ])
+t(pose [ -26.5 3.1 0.000 90.0 ])
+
+# Capboard right
+cab(pose [ -16.95 5.89 0.000 -90.0 ])
+
+# Capboard left
+cab(pose [ -26.6 4.85 0.000 90.0 ])
