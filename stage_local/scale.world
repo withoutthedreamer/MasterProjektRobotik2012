@@ -6,7 +6,7 @@ include "pioneer_gps.inc"
 include "map.inc"
 include "/usr/local/share/stage/worlds/sick.inc"
 
-resolution 0.02    # resolution of the underlying raytrace mode
+resolution 0.05    # resolution of the underlying raytrace mode
 
 #speedup -1 # as fast as possible
 
@@ -20,9 +20,10 @@ window
   center [-0.464 1.570]
   rotate [ 58.500 17.500 ]
   scale 53.439 
+
   interval 50
 
-  #show_data 1              # 1=on 0=off
+  show_data 1              # 1=on 0=off
 )
 
 floorplan
