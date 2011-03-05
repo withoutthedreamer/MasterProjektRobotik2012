@@ -39,13 +39,22 @@ public class Pioneer extends Robot implements IPioneer
             case LWALL_FOLLOWING :
     	  
     	    case COLLISION_AVOIDANCE :
-                updateSpeed( MAXSPEED );
-                updateTurnrate( planLeftWallfollow() );
+    	    	setSpeed( calcspeed( MAXSPEED ) );
+                updateSpeed( getSpeed() );
+                setTurnrate( updateLeftWallfollow() );
+//              updateTurnrate( planLeftWallfollow() );
+//        		updateTurnrate( collisionAvoid( getTurnrate() ) );
+                setTurnrate( collisionAvoid( getTurnrate() ) );
+                setTurnrate( checkrotate( getTurnrate() ) );
+        		updateTurnrate( getTurnrate() );
+
                 updatePosi();
     	        break;
     	   
     	    case SET_SPEED :
+    	    	setSpeed( calcspeed( getSpeed() ) );
     	        updateSpeed(getSpeed());
+                setTurnrate( checkrotate( getTurnrate() ) );
                 updateTurnrate(getTurnrate());
                 updatePosi();
     	        break;
@@ -97,17 +106,23 @@ public class Pioneer extends Robot implements IPioneer
 	 * The actual speed might be lower due to obstacles.
 	 * @param maxSpeed
 	 */
-	void updateSpeed(double maxSpeed)
+	void updateSpeed(double saveSpeed)
 	{
 	    if (getPosi() != null)
 	    {
-	        /** Set speed depending on the obstacle distance */
-	        double saveSpeed = calcspeed(maxSpeed);
+//	        /** Set speed depending on the obstacle distance */
+//	        double saveSpeed = calcspeed(maxSpeed);
 	        
 	        if (Math.abs(saveSpeed) > MINSPEED)
+	        {
 	            getPosi().setSpeed(saveSpeed);
+	        	setSpeed( saveSpeed );
+	        }
 	        else
+	        {
 	            getPosi().setSpeed(0.0);
+	            setSpeed( 0.0 );
+	        }
 	    }
 	    
 	}
@@ -116,39 +131,25 @@ public class Pioneer extends Robot implements IPioneer
 	 * The actual turnrate might be lower due to obstacles.
 	 * @param maxTurnrate
 	 */
-	void updateTurnrate(double maxTurnrate)
+	void updateTurnrate(double saveTurnrate)
 	{
 	    if (getPosi() != null)
 	    {
-	        /** Set turnrate depending on the obstacle distance */
-	        double saveTurnrate = checkrotate(maxTurnrate);
+//	        /** Set turnrate depending on the obstacle distance */
+//	        double saveTurnrate = checkrotate(maxTurnrate);
 	        
 	        if (Math.abs(saveTurnrate) > MINTURNRATE)
+	        {
 	            getPosi().setTurnrate(saveTurnrate);
+	            setTurnrate( saveTurnrate ); 
+	        }
 	        else
+	        {
 	            getPosi().setTurnrate(0.0);
+	            setTurnrate( 0.0 );
+	        }
 	    }
 	}
-	/**
-	 * Plan a left wall follow trajectory.
-	 * @return The new turnrate regarding the left wall (if any).
-	 */
-	double planLeftWallfollow ()
-	{
-		double newTurnrate;
-
-		/** (Left) Wall following */
-		newTurnrate = wallfollow();
-		
-		/**
-		 * Collision avoidance overrides other turnrate if necessary!
-		 * May change turnrate or current state.
-		 */
-		newTurnrate = collisionAvoid(newTurnrate);
-
-		return newTurnrate;
-	}
-
 	/**
 	 * Returns the minimum distance of the given arc.
 	 * Algorithm calculates the average of BEAMCOUNT beams
@@ -307,19 +308,40 @@ public class Pioneer extends Robot implements IPioneer
 	    return sonarValues;
 	}
 
-    /**
+//    /**
+//		 * Plan a left wall follow trajectory.
+//		 * @return The new turnrate regarding the left wall (if any).
+//		 */
+//		double planLeftWallfollow ()
+//		{
+//			double newTurnrate;
+//	
+//			/** (Left) Wall following */
+//			newTurnrate = wallfollow();
+//			
+//	//		/**
+//	//		 * Collision avoidance overrides other turnrate if necessary!
+//	//		 * May change turnrate or current state.
+//	//		 */
+//	//		newTurnrate = collisionAvoid(newTurnrate);
+//	
+//			return newTurnrate;
+//		}
+
+	/**
+	 * Plan a left wall follow trajectory.
 	 * Calculates the turnrate from range measurement and minimum wall follow
 	 * distance.
-	 * @return Turnrate to follow wall.
+	 * @return The new turnrate regarding the left wall (if any).
 	 */
-	final double wallfollow ()
+	final double updateLeftWallfollow ()
 	{
 		double DistLFov  = 0;
 		double DistL     = 0;
 		double DistLRear = 0;
 		double newTurnrate;
 
-		DistLFov  = getDistance(viewDirectType.LEFTFRONT);
+		DistLFov = getDistance(viewDirectType.LEFTFRONT);
 
 		/**
 		 * Do simple (left) wall following
@@ -338,7 +360,6 @@ public class Pioneer extends Robot implements IPioneer
 		        newTurnrate = -Math.toRadians(MAXTURNRATE);
 		    }
 
-		// TODO implement wall searching behavior
 		DistL     = getDistance(viewDirectType.LEFT);
 		DistLRear = getDistance(viewDirectType.LEFTREAR);
 		
@@ -350,11 +371,17 @@ public class Pioneer extends Robot implements IPioneer
 		    newTurnrate = 0.0;
 			setCurrentState( StateType.WALL_SEARCHING );
 		}
+		else
+		{
+			setCurrentState( StateType.LWALL_FOLLOWING );
+		}
 
 		return newTurnrate;
 	}
 
 	/**
+	 * Collision avoidance overrides other turnrate if necessary!
+	 * May change turnrate or current state.
 	 * Biased by left wall following
 	 */
 	final double collisionAvoid (double checkTurnrate)
@@ -370,6 +397,7 @@ public class Pioneer extends Robot implements IPioneer
 		if ((distFrontLeft  < STOP_WALLFOLLOWDIST) ||
 			(distFrontRight < STOP_WALLFOLLOWDIST)   )
 		{
+			// TODO make a random maneuver when stuck
 		    setCurrentState( StateType.COLLISION_AVOIDANCE );
 			/** Turn right as long we want left wall following. */
 			return -Math.toRadians(STOP_ROT);

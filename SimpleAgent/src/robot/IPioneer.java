@@ -71,7 +71,7 @@ public interface IPioneer
 	 *  Debugging
 	 */
 	static boolean isDebugLaser = false;
-	static boolean isDebugState = false;
+	static boolean isDebugState = true;
 	static boolean isDebugSonar = false;
 	static boolean isDebugDistance = false;
 	static boolean isDebugPosition = false;
