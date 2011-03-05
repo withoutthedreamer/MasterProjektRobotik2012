@@ -44,6 +44,12 @@ define rob fancypioneer2dx  # alternative with more complex polygons
  fancysicklaser( ) 
 
  #ctrl "expand_pioneer" 
+ #ctrl "expand_swarm" 
+ #ctrl "wander" 
+ #ctrl "dynamic" # many boxes
+ #ctrl "fasr" # requires fiducial
+ #ctrl "fasr2" # requires fiducial
+ #ctrl "pioneer_flocking" # requires fiducial
 )
 
 define redrob rob( color "red" )
