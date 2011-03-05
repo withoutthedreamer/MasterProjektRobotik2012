@@ -4,7 +4,7 @@ include "devices.inc"
 # defines the models used in the lab
 include "/usr/local/share/stage/worlds/uoa_robotics_lab_models.inc"
 
-resolution 0.05 # meters per pixel
+resolution 0.01 # meters per pixel
 #threads 2
 
 # configure the GUI window
