@@ -26,7 +26,11 @@ public class Pioneer extends Robot implements IPioneer
 		super(roboDevices);
 	}
 	
-	@Override protected void update()
+	/**
+	 * Checks the robot's current state and performs appropriate actions.
+	 * Implements a subsumption architecture for robot behaviors.
+	 */
+    @Override protected void update()
 	{
 	    debugSensorData();
 	    
@@ -39,31 +43,41 @@ public class Pioneer extends Robot implements IPioneer
             case LWALL_FOLLOWING :
     	  
     	    case COLLISION_AVOIDANCE :
-    	    	setSpeed( calcspeed( MAXSPEED ) );
-                updateSpeed( getSpeed() );
-                setTurnrate( updateLeftWallfollow() );
-//              updateTurnrate( planLeftWallfollow() );
-//        		updateTurnrate( collisionAvoid( getTurnrate() ) );
-                setTurnrate( collisionAvoid( getTurnrate() ) );
-                setTurnrate( checkrotate( getTurnrate() ) );
-        		updateTurnrate( getTurnrate() );
-
-                updatePosi();
+    	    {
+                setTurnrate( getLeftWallfollow( MAXTURNRATE ) );
+                setTurnrate( getCollisionAvoid( getTurnrate() ) );
+                setTurnrate( getSafeTurnrate( getTurnrate() ) );
+                setSpeed( getSafeSpeed( MAXSPEED ) );
+               
+                commandMotors( getSpeed(), getTurnrate() );
     	        break;
-    	   
+    	    }
     	    case SET_SPEED :
-    	    	setSpeed( calcspeed( getSpeed() ) );
-    	        updateSpeed(getSpeed());
-                setTurnrate( checkrotate( getTurnrate() ) );
-                updateTurnrate(getTurnrate());
-                updatePosi();
+    	    {
+    	        double safeSpeed = getSafeSpeed( getSpeed() );
+    	        double safeTurnrate = getSafeTurnrate( getTurnrate() );
+
+    	        commandMotors( safeSpeed, safeTurnrate );
     	        break;
-    	  
+    	    }
     	    default :
+    	    {
     	        updateStop();
     	        break;
+    	    }
 	    }
 	}
+    /**
+     * Sets the motor speed and syncs the underlying positioning device.
+     * @param newSpeed The new speed to command.
+     * @param newTurnrate The new turnrate to command.
+     */
+    void commandMotors(double newSpeed, double newTurnrate)
+    {
+        updateSpeed( newSpeed );
+        updateTurnrate( newTurnrate );
+        updatePosi();
+    }
 	/**
 	 * Updates the motor speed immediately.
 	 */
@@ -102,7 +116,7 @@ public class Pioneer extends Robot implements IPioneer
 	}
 
 	/**
-	 * Tries to set the speed given and performs collision avoidance.
+	 * Tries to set the speed given.
 	 * The actual speed might be lower due to obstacles.
 	 * @param maxSpeed
 	 */
@@ -110,24 +124,19 @@ public class Pioneer extends Robot implements IPioneer
 	{
 	    if (getPosi() != null)
 	    {
-//	        /** Set speed depending on the obstacle distance */
-//	        double saveSpeed = calcspeed(maxSpeed);
-	        
 	        if (Math.abs(saveSpeed) > MINSPEED)
 	        {
 	            getPosi().setSpeed(saveSpeed);
-	        	setSpeed( saveSpeed );
 	        }
 	        else
 	        {
 	            getPosi().setSpeed(0.0);
-	            setSpeed( 0.0 );
 	        }
 	    }
 	    
 	}
 	/**
-	 * Tries to set the turnrate given and performs collision avoidance.
+	 * Tries to set the turnrate given.
 	 * The actual turnrate might be lower due to obstacles.
 	 * @param maxTurnrate
 	 */
@@ -135,18 +144,13 @@ public class Pioneer extends Robot implements IPioneer
 	{
 	    if (getPosi() != null)
 	    {
-//	        /** Set turnrate depending on the obstacle distance */
-//	        double saveTurnrate = checkrotate(maxTurnrate);
-	        
 	        if (Math.abs(saveTurnrate) > MINTURNRATE)
 	        {
 	            getPosi().setTurnrate(saveTurnrate);
-	            setTurnrate( saveTurnrate ); 
 	        }
 	        else
 	        {
 	            getPosi().setTurnrate(0.0);
-	            setTurnrate( 0.0 );
 	        }
 	    }
 	}
@@ -308,33 +312,13 @@ public class Pioneer extends Robot implements IPioneer
 	    return sonarValues;
 	}
 
-//    /**
-//		 * Plan a left wall follow trajectory.
-//		 * @return The new turnrate regarding the left wall (if any).
-//		 */
-//		double planLeftWallfollow ()
-//		{
-//			double newTurnrate;
-//	
-//			/** (Left) Wall following */
-//			newTurnrate = wallfollow();
-//			
-//	//		/**
-//	//		 * Collision avoidance overrides other turnrate if necessary!
-//	//		 * May change turnrate or current state.
-//	//		 */
-//	//		newTurnrate = collisionAvoid(newTurnrate);
-//	
-//			return newTurnrate;
-//		}
-
 	/**
 	 * Plan a left wall follow trajectory.
 	 * Calculates the turnrate from range measurement and minimum wall follow
 	 * distance.
 	 * @return The new turnrate regarding the left wall (if any).
 	 */
-	final double updateLeftWallfollow ()
+	final double getLeftWallfollow (double maxTurnrate)
 	{
 		double DistLFov  = 0;
 		double DistL     = 0;
@@ -350,14 +334,14 @@ public class Pioneer extends Robot implements IPioneer
 		newTurnrate = Math.atan( (COS45*DistLFov - WALLFOLLOWDIST ) * 4 );
 
 		/** Normalize turnrate */
-		if (newTurnrate > Math.toRadians(MAXTURNRATE))
+		if (newTurnrate > Math.toRadians(maxTurnrate))
 		{
-		    newTurnrate = Math.toRadians(MAXTURNRATE);
+		    newTurnrate = Math.toRadians(maxTurnrate);
 		}
 		else
-		    if (newTurnrate < -Math.toRadians(MAXTURNRATE))
+		    if (newTurnrate < -Math.toRadians(maxTurnrate))
 		    {
-		        newTurnrate = -Math.toRadians(MAXTURNRATE);
+		        newTurnrate = -Math.toRadians(maxTurnrate);
 		    }
 
 		DistL     = getDistance(viewDirectType.LEFT);
@@ -384,7 +368,7 @@ public class Pioneer extends Robot implements IPioneer
 	 * May change turnrate or current state.
 	 * Biased by left wall following
 	 */
-	final double collisionAvoid (double checkTurnrate)
+	final double getCollisionAvoid (double checkTurnrate)
 	{
 		/** Scan FOV for Walls. */
 		double distLeftFront  = getDistance(viewDirectType.LEFTFRONT);
@@ -414,7 +398,7 @@ public class Pioneer extends Robot implements IPioneer
 	 * @param maxSpeed The speed being trying to set.
 	 * @return The safe speed.
 	 */
-	final double calcspeed (double maxSpeed)
+	final double getSafeSpeed (double maxSpeed)
 	{
 		double tmpMinDistFront = Math.min(getDistance(viewDirectType.LEFTFRONT), Math.min(getDistance(viewDirectType.FRONT), getDistance(viewDirectType.RIGHTFRONT)));
 		double tmpMinDistBack  = Math.min(getDistance(viewDirectType.LEFTREAR), Math.min(getDistance(viewDirectType.BACK), getDistance(viewDirectType.RIGHTREAR)));
@@ -472,7 +456,7 @@ public class Pioneer extends Robot implements IPioneer
 	 * set to zero)
 	 * @return Safe turnrate.
 	 */
-	final double checkrotate (double maxTurnrate)
+	final double getSafeTurnrate (double maxTurnrate)
 	{
 		double saveTurnrate = maxTurnrate;
 
