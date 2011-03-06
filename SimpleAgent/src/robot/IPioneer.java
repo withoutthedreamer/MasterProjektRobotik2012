@@ -9,7 +9,8 @@ public interface IPioneer
 		COLLISION_AVOIDANCE,
 		WALL_SEARCHING,
 		SET_SPEED,
-		STOPPED
+		STOPPED,
+		STUCK_ESCAPING
 	}
     	
 	static enum viewDirectType
@@ -26,8 +27,8 @@ public interface IPioneer
 	}
 	
 	final double MAXSPEED = 0.4; /** Normal_advance_speed in meters per sec. */
-	final double MINSPEED = 0.05; /** Minimal speed set */
-	final double MINTURNRATE = 0.03; /** Minimal turnrate set */
+	final double MINSPEED = 0.00; /** Minimal speed set */
+	final double MINTURNRATE = 0.00; /** Minimal turnrate set */
 	final double MAXTURNRATE = 40; /** Max wall following turnrate in deg per sec.  */
 	/** Low values: Smoother trajectory but more restricted  */
 	final double STOP_ROT  = 30; /** Stop rotation speed.  */
@@ -60,7 +61,7 @@ public interface IPioneer
 	final double INV_COS45 = 1.19236329284; /** 1/COS45  */
 	final double DIAGOFFSET  = 0.1;  /** Laser to sonar diagonal offset in meters.  */
 	final double HORZOFFSET  = 0.15; /** Laser to sonar horizontal offset in meters.  */
-	final double MOUNTOFFSET = 0.1;  /** Sonar vertical offset at back for laptop mount.  */
+	final double MOUNTOFFSET = 0.0;  /** Sonar vertical offset at back for laptop mount.  */
 	final int LMIN  = 175;/** LEFT min angle.       */  final int LMAX  = 239; /** LEFT max angle.  */
 	final int LFMIN = 140;/** LEFTFRONT min angle.  */  final int LFMAX = 175; /** LEFTFRONT max angle.  */
 	final int FMIN  = 100;/** FRONT min angle.      */  final int FMAX  = 140; /** FRONT max angle.  */
@@ -71,7 +72,7 @@ public interface IPioneer
 	 *  Debugging
 	 */
 	static boolean isDebugLaser = false;
-	static boolean isDebugState = true;
+	static boolean isDebugState = false;
 	static boolean isDebugSonar = false;
 	static boolean isDebugDistance = false;
 	static boolean isDebugPosition = false;

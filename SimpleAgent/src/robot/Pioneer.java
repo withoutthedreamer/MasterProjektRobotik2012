@@ -4,6 +4,10 @@
  */
 package robot;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import data.Position;
 import device.Device;
 
 /**
@@ -17,6 +21,13 @@ import device.Device;
 public class Pioneer extends Robot implements IPioneer
 {	
     StateType currentState = StateType.SET_SPEED;
+    
+    /** Watchdog timer for stuck checking */
+    boolean timerIsArmed = false;
+    boolean timerIsOccured = false;
+    Timer timer;
+    Position lastPosition;
+
 
     /**
      * Creates a Pioneer robot object.
@@ -46,6 +57,7 @@ public class Pioneer extends Robot implements IPioneer
     	    {
                 setTurnrate( getLeftWallfollow( MAXTURNRATE ) );
                 setTurnrate( getCollisionAvoid( getTurnrate() ) );
+                setTurnrate( getEscapeWhenStuck( getTurnrate() ) );
                 setTurnrate( getSafeTurnrate( getTurnrate() ) );
                 setSpeed( getSafeSpeed( MAXSPEED ) );
                
@@ -60,6 +72,19 @@ public class Pioneer extends Robot implements IPioneer
     	        commandMotors( safeSpeed, safeTurnrate );
     	        break;
     	    }
+    	    case STUCK_ESCAPING :
+    	    {
+    	        setTurnrate(-Math.toRadians(MAXTURNRATE));
+                setSpeed( getSafeSpeed( -MAXSPEED ) );
+                setTurnrate( getSafeTurnrate( getTurnrate() ) );
+               
+                commandMotors( getSpeed(), getTurnrate() );
+                
+                if (getSafeSpeed( MAXSPEED) >= MAXSPEED*0.5)
+                    setCurrentState(StateType.LWALL_FOLLOWING);
+                
+    	        break;
+    	    }
     	    default :
     	    {
     	        updateStop();
@@ -67,6 +92,35 @@ public class Pioneer extends Robot implements IPioneer
     	    }
 	    }
 	}
+    double getEscapeWhenStuck(double newTurnrate)
+    {
+        if (timerIsArmed == false)
+        {
+            timerIsArmed = true;
+            lastPosition = getPosition();
+            timer = new Timer();
+            timer.schedule(new TimerTask()
+            {
+                public void run()
+                {
+                    timerIsArmed = false;
+
+                    if (lastPosition.distanceTo(getPosition()) < 0.2 )
+                    {
+                        timerIsOccured = true;
+                    }
+                }
+            }, 2000);
+
+        }
+        if (timerIsOccured == true)
+        {
+            timerIsOccured = false;
+            setCurrentState(StateType.STUCK_ESCAPING);
+        }
+        
+        return newTurnrate;
+    }
     /**
      * Sets the motor speed and syncs the underlying positioning device.
      * @param newSpeed The new speed to command.
