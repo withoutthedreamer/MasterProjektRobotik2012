@@ -165,7 +165,7 @@ public class Planner extends RobotDevice
 		return new Position(globalGoal);
 	}
 	/**
-	 * @depreciated Use @Localize#setPosition instead.
+	 * @deprecated Use @Localize#setPosition instead.
 	 * @param position
 	 */
 	public synchronized void setPosition(Position position) {

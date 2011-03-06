@@ -43,7 +43,7 @@ public class TestService extends BasicService implements IService {
 	/**
 	 *  Tell something.
 	 *  @param name The name.
-	 *  @param text The text.
+	 *  @param obj The text.
 	 */
 	public void send(final String name, final Object obj)
 	{
@@ -68,7 +68,7 @@ public class TestService extends BasicService implements IService {
 	/**
 	 *  Hear something.
 	 *  @param name The name.
-	 *  @param text The text.
+	 *  @param obj The text.
 	 */
 	@SuppressWarnings("unchecked")
 	public void receive(String name, Object obj)

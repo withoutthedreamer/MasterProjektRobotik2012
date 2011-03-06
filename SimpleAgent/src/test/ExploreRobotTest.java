@@ -62,9 +62,6 @@ public class ExploreRobotTest
         dn.shutdown();
     }
 
-    /**
-     * Test method for {@link robot.ExploreRobot#blobsearch()}.
-     */
     @Test public void testBlobsearch()
     {
         /** Add blob callback */

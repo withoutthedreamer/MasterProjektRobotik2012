@@ -50,7 +50,8 @@ public class SendPositionService extends BasicService implements ISendPositionSe
 	/**
 	 *  Tell something.
 	 *  @param name The name.
-	 *  @param text The text.
+	 *  @param robotName The robot name.
+	 *  @param obj The @see Position.
 	 */
 	public void send(final String name,final String robotName, final Object obj)
 	{
@@ -75,7 +76,8 @@ public class SendPositionService extends BasicService implements ISendPositionSe
 	/**
 	 *  Hear something.
 	 *  @param name The name.
-	 *  @param text The text.
+     *  @param robotName The robot name.
+     *  @param obj The @see Position.
 	 */
 	@SuppressWarnings("unchecked")
 	public void receive(String name, String robotName, Object obj)

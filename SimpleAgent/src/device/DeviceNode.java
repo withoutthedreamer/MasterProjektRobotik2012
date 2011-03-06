@@ -38,8 +38,6 @@ public class DeviceNode extends Device {
 	 * Constructor for a RobotClient.
 	 * @param host The host name where the server is to connect to.
 	 * @param port The port of the server listening for a client.
-	 * @param clientId Robot id.
-	 * @throws Exception
 	 */
 	public DeviceNode (String host, Integer port) 
 	{

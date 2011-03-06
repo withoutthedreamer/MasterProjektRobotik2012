@@ -37,9 +37,9 @@ public class Simulation extends RobotDevice {
 	}
 	/**
 	 * Returns a Singleton instance of the Gui
-	 * @param name Host name (or IP) of the player server. 
-	 * @param port Port of the player server.
-	 * @return Gui instance.
+	 * @param roboClient The device node containing the simulation device. 
+	 * @param device
+	 * @return The simulation instance.
 	 */
 	public static Simulation getInstance (DeviceNode roboClient, Device device)
 	{

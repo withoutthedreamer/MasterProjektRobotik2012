@@ -51,7 +51,8 @@ public class HelloService extends BasicService implements IHelloService {
 	/**
 	 *  Tell something.
 	 *  @param name The name.
-	 *  @param text The text.
+	 *  @param robotName The text.
+	 *  @param obj
 	 */
 	public void send(final String name, final String robotName, final String obj)
 	{
@@ -76,7 +77,8 @@ public class HelloService extends BasicService implements IHelloService {
 	/**
 	 *  Hear something.
 	 *  @param name The name.
-	 *  @param text The text.
+	 *  @param robotName The text.
+	 *  @param content The string content.
 	 */
 	public void receive(String name, String robotName, String content)
 	{

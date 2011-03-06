@@ -33,8 +33,7 @@ public class Tracker extends Device {
 	/**
 	 * Returns a Singleton instance of the tracker.
 	 * @param simu Simulator that contains objects to be updated.
-	 * @param simuObjs Vector of objects to be followed.
-	 * @return Instace of the tracker
+	 * @return Instance of the tracker
 	 */
 	public static Tracker getInstance (Simulation simu)
 	{

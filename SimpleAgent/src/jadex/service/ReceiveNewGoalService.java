@@ -48,7 +48,8 @@ public class ReceiveNewGoalService extends BasicService implements IReceiveNewGo
 	/**
 	 *  Tell something.
 	 *  @param name The name.
-	 *  @param text The text.
+	 *  @param robotName The robot name.
+	 *  @param obj A new goal.
 	 */
 	public void send(final String name, final String robotName, final Object obj)
 	{
@@ -73,7 +74,8 @@ public class ReceiveNewGoalService extends BasicService implements IReceiveNewGo
 	/**
 	 *  Hear something.
 	 *  @param name The name.
-	 *  @param text The text.
+	 *  @param robotName The robot name.
+	 *  @param obj The new goal.
 	 */
 	@SuppressWarnings("unchecked")
 	public void receive(String name, String robotName, Object obj)

@@ -172,7 +172,7 @@ public class Pioneer extends Robot implements IPioneer
 	/**
 	 * Tries to set the speed given.
 	 * The actual speed might be lower due to obstacles.
-	 * @param maxSpeed
+	 * @param saveSpeed The speed to set.
 	 */
 	void updateSpeed(double saveSpeed)
 	{
@@ -192,7 +192,7 @@ public class Pioneer extends Robot implements IPioneer
 	/**
 	 * Tries to set the turnrate given.
 	 * The actual turnrate might be lower due to obstacles.
-	 * @param maxTurnrate
+	 * @param saveTurnrate The turnrate to set.
 	 */
 	void updateTurnrate(double saveTurnrate)
 	{

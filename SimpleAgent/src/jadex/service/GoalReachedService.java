@@ -48,7 +48,8 @@ public class GoalReachedService extends BasicService implements IGoalReachedServ
 	/**
 	 *  Tell something.
 	 *  @param name The name.
-	 *  @param text The text.
+	 *  @param robotName The text.
+	 *  @param obj The goal reached.
 	 */
 	public void send(final String name, final String robotName, final Object obj)
 	{
@@ -73,7 +74,7 @@ public class GoalReachedService extends BasicService implements IGoalReachedServ
 	/**
 	 *  Hear something.
 	 *  @param name The name.
-	 *  @param text The text.
+	 *  @param obj The text.
 	 */
 	@SuppressWarnings("unchecked")
 	public void receive(String name, String robotName, Object obj)

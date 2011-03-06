@@ -11,7 +11,8 @@ public interface IReceiveNewGoalService extends IService
 	/**
 	 *  Hear something.
 	 *  @param name The name of the sender.
-	 *  @param text The text message.
+	 *  @param robotName The robot name.
+	 *  @param content The new goal.
 	 */
 	public void receive(String name, String robotName, Object content);
 		

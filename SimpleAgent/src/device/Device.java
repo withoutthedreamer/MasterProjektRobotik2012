@@ -79,7 +79,7 @@ public class Device implements IDevice, Runnable
 		this(device.getName(), device.getHost(), device.getPort(), device.getDeviceNumber());
 	}
 	/**
-	 * @depreciated
+	 * @deprecated
 	 * This constructor adds all devices of the devices in the list
 	 * to its internal device list.
 	 * @param aDeviceList The list of devices that contain devices.
