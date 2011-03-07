@@ -28,7 +28,7 @@ public class PioneerTest
         dn = new DeviceNode("localhost", 6665);
         dn.runThreaded();
         
-        pion = new Pioneer(dn);
+        pion = new Pioneer(dn.getDeviceListArray());
         assertNotNull(pion);
         
         pion.runThreaded();

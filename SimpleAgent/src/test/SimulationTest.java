@@ -64,7 +64,7 @@ public class SimulationTest
 		Position pose = new Position (-7,-7,0);
 		Position pose2 = new Position (-6,-7,0);
 		
-		for (int i=1; i<11; i++)
+		for (int i=1; i<12; i++)
 		{	
 			simu.setPositionOf("r0", pose);
 			assertEquals(simu.getPositionOf("r0").equals(pose), true);

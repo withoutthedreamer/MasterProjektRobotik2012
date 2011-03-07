@@ -76,7 +76,12 @@ public class Device implements IDevice, Runnable
 	 */
 	public Device (Device device)
 	{
-		this(device.getName(), device.getHost(), device.getPort(), device.getDeviceNumber());
+	    this (
+            device.getName(),
+            device.getHost(),
+            device.getPort(),
+            device.getDeviceNumber()
+	    );
 	}
 	/**
 	 * @deprecated
@@ -123,7 +128,7 @@ public class Device implements IDevice, Runnable
 	 */
 	public synchronized void runThreaded()
 	{
-		if (thread.isAlive() != true)
+	    if (isThreaded() != true)
 		{
 			/** Start all devices */
 			if (deviceList != null && deviceList.size() > 0)
@@ -136,34 +141,38 @@ public class Device implements IDevice, Runnable
 
 					/** Start device */
 					device.runThreaded();
-//					while (device.thread.isAlive() == false);
+
+					/** Wait for device to be started to avoid device start order race conditions */
 					while (device.isThreaded() == false)
 					{
 		                try { Thread.sleep (10); } catch (InterruptedException e) { e.printStackTrace(); }
 					}
-					
 				}
 			}
 
 			isThreaded  = true;
 
 			thread.start();
-//			while (thread.isAlive() == false);
-//			while (isThreaded() == false);
 
-			logger.fine("Running "+this.getClass().toString()+" in "+thread.getName());
+			logger.fine("Running "+getClass().toString()+" in "+thread.getName());
 		}
 	}
 
 	/**
 	 * Manages the periodical action cycles and idle times.
+	 * @throws IllegalStateException When updating the device fails.
 	 */
-	@Override public void run()
+	@Override public void run() throws IllegalStateException
 	{
 	    try
 	    { 
 	        isRunning = true;
-	        while ( ! thread.isInterrupted() && isThreaded == true)
+	      
+	        /**
+	         * The device' run loop.
+	         * This has to stay as optimized as possible.
+	         */
+	        while (isThreaded == true)
 	        {
 	            /** Do sub-class specific stuff */
 	            update();
@@ -177,7 +186,7 @@ public class Device implements IDevice, Runnable
 	                {
 	                    Thread.yield();
 	                }
-	            // else if (SLEEPTIME < 0) do nothing				
+	            /** else if (SLEEPTIME < 0) do nothing */				
 	        }
 	    }
         catch(InterruptedException ie)
@@ -186,13 +195,14 @@ public class Device implements IDevice, Runnable
         }
 	    catch (Exception e)
 	    { 
-	        e.printStackTrace();
+	        throw new IllegalStateException("Error updating device "+toString());
 	    }
 	    finally
 	    {
+            isRunning = false; /** sync with setNotThreaded */
             isThreaded = false; /** Thread is interrupted */
-	        logger.fine("Shutdown "+this.getClass().toString()+" in "+thread.getName());
-	        isRunning = false;    /** sync with setNotThreaded */
+	     
+            logger.fine("Shutdown "+this.getClass().toString()+" in "+thread.getName());
 	    }
 	}
 	
@@ -201,32 +211,38 @@ public class Device implements IDevice, Runnable
 	 */
 	public synchronized void shutdown()
 	{
-		long delayCount = 0;
+	    if (isThreaded() == true)
+	    {
+	        long delayCount = 0;
+
+	        /** Sync with run() method */
+	        isThreaded = false;
+
+	        /** Interrupt in case it is sleeping too long */
+	        if (getSleepTime() > 10000)
+	            thread.interrupt();
+
+	        /** wait to exit run loop */
+	        while (isRunning() == true)
+	        {
+	            delayCount += 1;
+	            if (delayCount > 2)
+	                logger.finer("Shutdown delayed " + getClass().getName());
+
+	            try { Thread.sleep (10); } catch (Exception e) { e.printStackTrace(); }
+	        }
+	    }
 		
-		/** Sync with run() method */
-		isThreaded = false;
-		
-		/** Interrupt in case it is sleeping too long */
-		if (getSleepTime() > 10000)
-			thread.interrupt();
-        
-		/** wait to exit run loop */
-		while (isRunning == true)
-		{
-			delayCount += 1;
-			if (delayCount > 2)
-				logger.finer("Shutdown delayed " + this.getClass().getName());
-			
-            try { Thread.sleep (10); } catch (Exception e) { e.printStackTrace(); }
-		}
-		
-		/** Stop all devices */
+	    /** Stop all devices */
 		if (deviceList.size() > 0)
 		{
 		    /**
-		     * Loop through Device List in reverse order
+		     * Loop through Device List in reverse order.
+		     * That's important to to handle device dependencies correctly.
+		     * E.g. a @see RobotDevice depends on a @see DeviceNode.
 		     */
 			Object[] devList = deviceList.toArray();
+			
 			for (int i=devList.length-1; i>=0; i--)
 			{
 			    Device device = (Device)devList[i];
@@ -234,6 +250,7 @@ public class Device implements IDevice, Runnable
 				/** Stop device */
 				device.shutdown();
 			}
+			
 			/** empty device list */
 			deviceList.clear();
 		}
@@ -253,6 +270,13 @@ public class Device implements IDevice, Runnable
     protected final void setDeviceList(ConcurrentLinkedQueue<Device> deviceList)
     {
         this.deviceList = deviceList;
+    }
+    /**
+     * @return A Device array list of the internal devices (if any)
+     */
+    public final Device[] getDeviceListArray()
+    { 
+        return deviceList.toArray(new Device[deviceList.size()]);
     }
     
     /**
@@ -278,10 +302,14 @@ public class Device implements IDevice, Runnable
     /**
      * @return An iterator of the internal device list.
      */
-	public final Iterator<Device> getDeviceIterator() {
-		if (deviceList != null) {
+	public final Iterator<Device> getDeviceIterator()
+	{
+		if (deviceList != null)
+		{
 			return (Iterator<Device>) deviceList.iterator();
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 	}
@@ -309,7 +337,9 @@ public class Device implements IDevice, Runnable
 					{
 						found = curDev;
 					}
-				} else {
+				}
+				else
+				{
 					found = curDev;
 				}
 			}

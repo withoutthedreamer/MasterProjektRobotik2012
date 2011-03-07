@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
+import data.Host;
+
 /**
  * Client API to the robot server.
  * Whatever the server is, this class is the basic interface
@@ -17,15 +19,19 @@ import java.util.logging.Logger;
  * @author sebastian
  *
  */
-public class DeviceNode extends Device {
-
+public class DeviceNode extends Device
+{
 	/** Logging support */
     Logger logger = Logger.getLogger (DeviceNode.class.getName ());
 
 	/** A list of all connected robot clients of this node */
 	CopyOnWriteArrayList<PlayerClient> playerClientList = null;
 		
-	private DeviceNode () {
+	/**
+	 * Creates a plain device node with an internal PlayerClient list.
+	 */
+	private DeviceNode()
+	{
 		playerClientList = new CopyOnWriteArrayList<PlayerClient>();
 		
 		/**
@@ -35,6 +41,7 @@ public class DeviceNode extends Device {
 	}
 	
 	/**
+	 * @deprecated Use {@link #DeviceNode(Host[])} instead.
 	 * Constructor for a RobotClient.
 	 * @param host The host name where the server is to connect to.
 	 * @param port The port of the server listening for a client.
@@ -45,39 +52,71 @@ public class DeviceNode extends Device {
 		InitRobotClient( host, new Integer(port) );
 	}
 	/**
+	 * @deprecated Use {@link #DeviceNode(Host[])} instead.
 	 * Accepts a list of following structure:
 	 * String "hostname",Integer port
 	 * All clients on the list will be instantiated on the hosts and ports given.
 	 * @param origin
 	 */
-	public DeviceNode (final Object[] origin){
-		this();
-		if (origin != null) {
-		int count = origin.length;
-		if (count % 2 == 0) {
-			for (int i=0; i<count; i+=2) {
-				InitRobotClient( (String) origin[i], (Integer) origin[i+1] );
-			}
-		}
-		}
+	public DeviceNode (final Object[] origin)
+	{
+	    this();
+	    if (origin != null)
+	    {
+	        int count = origin.length;
+	        if (count % 2 == 0)
+	        {
+	            for (int i=0; i<count; i+=2)
+	            {
+	                InitRobotClient( (String) origin[i], (Integer) origin[i+1] );
+	            }
+	        }
+	    }
 	}
 	/**
+	 * Creates a device node containing all devices found on the given hosts.
+	 * @param hostList The host list to search devices.
+	 */
+	public DeviceNode (Host[] hostList)
+	{
+	    this();
+	    
+	    for (int i=0; i<hostList.length; i++)
+	    {
+	        InitRobotClient(hostList[i].getHostName(), hostList[i].getPortNumber());
+	    }
+	}
+	/**
+	 * @deprecated
 	 * Just for passing a PlayerClient reference.
 	 * No instantiation is made.
 	 * @param client
 	 */
-	public DeviceNode (final PlayerClient client) {
+	public DeviceNode (final PlayerClient client)
+	{
 		this();
 		playerClientList.add(client);
 	}
 	/**
+	 * Creates a device node that contains only the devices given (if any of them are found on the given hosts).
+	 * If a found device matches any given device property it will be connected to.
+	 * Note that only the device first found matching the properties will be connected.
+	 * @param hostList The host list to search devices.
+	 * @param devList The device properties to match any devices on the given hosts.
+	 */
+	public DeviceNode (Host[] hostList, Device[] devList)
+	{
+	    //TODO implement
+	}
+	/**
 	 * Connects to the underlying robot service and retrieves a list of all devices.
 	 * Only to be called by root DeviceNode!
-	 * @param host
-	 * @param port
-	 * @throws IllegalStateException
+	 * @param host The host this device node runs on.
+	 * @param port The host's port.
+	 * @throws IllegalStateException When connecting to underlying robot client layer fails.
 	 */
-	void InitRobotClient(String host, Integer port) throws IllegalStateException {
+	void InitRobotClient(String host, Integer port) throws IllegalStateException
+	{
 		try
 		{
 			PlayerClient client = new PlayerClient (host, port);
@@ -102,10 +141,14 @@ public class DeviceNode extends Device {
 		}
 		catch (PlayerException e)
 		{
-		    logger.severe("Connecting");
-		    throw new IllegalStateException();
+		    String log = "Could not connect to PlayerClient at "+host+":"+port;
+		    logger.severe(log);
+		    throw new IllegalStateException(log);
 		}		
 	}
+	/**
+	 * Reads the underlying robot client data when available.
+	 */
 	@Override protected void update()
 	{
 		Iterator<PlayerClient> it = playerClientList.iterator();
@@ -114,7 +157,7 @@ public class DeviceNode extends Device {
 	/**
 	 * Shutdown robot client and clean up
 	 */
-	@Override public void shutdown ()
+	@Override public void shutdown()
 	{
 	    /**
 	     * Shutdown devices in device list first,
@@ -213,13 +256,16 @@ public class DeviceNode extends Device {
 	}
 
 	/**
-	 * 
-	 * @return PlayerClient reference
+	 * @return The primary PlayerClient.
 	 */
-	public PlayerClient getPlayerClient() {
-		if (playerClientList.size() > 0) {
+	public PlayerClient getPlayerClient()
+	{
+		if (playerClientList.size() > 0)
+		{
 			return playerClientList.get(0);
-		} else {
+		}
+		else
+		{
 			return null;
 		}
 	}
@@ -233,15 +279,26 @@ public class DeviceNode extends Device {
 	{
 	    Iterator<Device> devIt = getDeviceList().iterator();
 	    /** Search all DeviceNodes */
-	    while (devIt.hasNext()) {
+	    while (devIt.hasNext())
+	    {
 	        Device dev = devIt.next();
-	        if (dev.getClass() == DeviceNode.class) {
+	        if (dev.getClass() == DeviceNode.class)
+	        {
 	            /** Check for wanted DeviceNode */
-	            if (dev.getHost().equals(host) && dev.getPort() == port) {
+	            if (dev.getHost().equals(host) && dev.getPort() == port)
+	            {
 	                return (DeviceNode) dev;
 	            }
 	        }
 	    }
 	    return null;
 	}
+
+    /**
+     * @return The object's string.
+     */
+    @Override public String toString()
+    {
+        return ""+getClass().getName()+"@"+getHost()+":"+getPort();
+    }
 }

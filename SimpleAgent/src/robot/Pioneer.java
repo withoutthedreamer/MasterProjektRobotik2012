@@ -30,12 +30,21 @@ public class Pioneer extends Robot implements IPioneer
 
 
     /**
+     * @deprecated Use @see #Pioneer(Device[]) instead.
      * Creates a Pioneer robot object.
      * @param roboDevices The robot devices this robot can access.
      */
     public Pioneer (Device roboDevices) {
 		super(roboDevices);
 	}
+    /**
+     * Creates a Pioneer robot.
+     * @param roboDevList The device list provided to this robot.
+     */
+    public Pioneer (Device[] roboDevList)
+    {
+        super(roboDevList);
+    }
 	
 	/**
 	 * Checks the robot's current state and performs appropriate actions.

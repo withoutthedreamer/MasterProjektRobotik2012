@@ -1,8 +1,5 @@
 package robot;
 
-import java.util.Iterator;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import data.Position;
 import device.Blobfinder;
 import device.Device;
@@ -57,6 +54,7 @@ public class Robot extends Device implements IRobot
 	}
 	
 	/**
+	 * @deprecated Use @see Robot#Robot(Device[]) instead.
 	 * This constructor has to be overwritten in any subclasses!
 	 * It will parse all devices from the given device and connects
 	 * it to the internal device list.
@@ -66,7 +64,17 @@ public class Robot extends Device implements IRobot
 		this();
 		
 		/** Make the devices available */
-		connectDevices(deviceNode.getDeviceList());
+		connectDevices( deviceNode.getDeviceListArray() );
+	}
+	/**
+	 * Creates a robot and provides the given devices to it.
+	 * @param robotDevList The provided devices.
+	 */
+	public Robot (Device[] robotDevList)
+	{
+	    this();
+	    
+	    connectDevices(robotDevList);
 	}
 	/**
 	 * @return The robot's Id string.
@@ -90,59 +98,54 @@ public class Robot extends Device implements IRobot
 	 * always the last one of the same device code will be chosen!
 	 * @param deviceList The device list to search for applicable devices.
 	 */
-	void connectDevices (ConcurrentLinkedQueue<Device> deviceList)
+	public void connectDevices (Device[] deviceList)
 	{	
-		if (deviceList != null)
-		{
-			Iterator<Device> devIt = deviceList.iterator();
+	    if (deviceList != null && deviceList.length > 0)
+	    {
+	        for (int i=0; i<deviceList.length; i++)
+	        {
+	            Device dev = deviceList[i];
 
-			if (devIt != null)
-			{
-				while (devIt.hasNext())
-				{
-					Device dev = devIt.next();
+	            switch (dev.getName())
+	            {
+	            case IDevice.DEVICE_POSITION2D_CODE :
+	                posi = (Position2d) dev; break;
 
-					switch (dev.getName())
-					{
-    					case IDevice.DEVICE_POSITION2D_CODE :
-    						posi = (Position2d) dev; break;
-    
-    					case IDevice.DEVICE_RANGER_CODE : 
-    						if (dev.getDeviceNumber() == 0)
-    						{
-    							sonar = (Ranger) dev; break;
-    						}
-    						else
-    						{
-    							laser = (Ranger) dev; break;
-    						}
-    
-    					case IDevice.DEVICE_SONAR_CODE : 
-    						sonar = (RangerSonar) dev; break;
-    
-    					case IDevice.DEVICE_LASER_CODE : 
-    						laser = (RangerLaser) dev; break;
-    
-    					case IDevice.DEVICE_PLANNER_CODE :
-    						planner = (Planner) dev; break;
-    							
-    					case IDevice.DEVICE_LOCALIZE_CODE :
-    						localizer = (Localize) dev; break;
-    							
-    					case IDevice.DEVICE_BLOBFINDER_CODE :
-    						bloFi = (Blobfinder) dev; break;
-    	
-    					case IDevice.DEVICE_GRIPPER_CODE : 
-    						gripper = (Gripper) dev; break;
-    						
-    					case IDevice.DEVICE_SIMULATION_CODE : 
-    						simu = (Simulation) dev; break; 
-    
-    					default: break;
-					}
-				}
-			}
-		}
+	            case IDevice.DEVICE_RANGER_CODE : 
+	                if (dev.getDeviceNumber() == 0)
+	                {
+	                    sonar = (Ranger) dev; break;
+	                }
+	                else
+	                {
+	                    laser = (Ranger) dev; break;
+	                }
+
+	            case IDevice.DEVICE_SONAR_CODE : 
+	                sonar = (RangerSonar) dev; break;
+
+	            case IDevice.DEVICE_LASER_CODE : 
+	                laser = (RangerLaser) dev; break;
+
+	            case IDevice.DEVICE_PLANNER_CODE :
+	                planner = (Planner) dev; break;
+
+	            case IDevice.DEVICE_LOCALIZE_CODE :
+	                localizer = (Localize) dev; break;
+
+	            case IDevice.DEVICE_BLOBFINDER_CODE :
+	                bloFi = (Blobfinder) dev; break;
+
+	            case IDevice.DEVICE_GRIPPER_CODE : 
+	                gripper = (Gripper) dev; break;
+
+	            case IDevice.DEVICE_SIMULATION_CODE : 
+	                simu = (Simulation) dev; break; 
+
+	            default: break;
+	            }
+	        }
+	    }
 	}
 		
 	/**
@@ -323,5 +326,10 @@ public class Robot extends Device implements IRobot
     public void setTurnrate(double turnrate)
     {
         this.turnrate = turnrate;
+    }
+
+    @Override public String toString()
+    {
+        return ""+getClass().getName()+" "+getRobotId();
     }
 }
