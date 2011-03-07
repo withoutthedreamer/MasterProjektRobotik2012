@@ -7,6 +7,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
@@ -20,7 +21,7 @@ public class SimulationTest
 
 	@BeforeClass public static void setUpBeforeClass() throws Exception
 	{
-	    deviceNode = new DeviceNode("localhost", 6665); 
+	    deviceNode = new DeviceNode(new Host("localhost", 6665)); 
         assertNotNull(deviceNode);
 
         deviceNode.runThreaded();

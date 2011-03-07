@@ -6,48 +6,68 @@ import junit.framework.TestCase;
 import org.junit.After;
 import org.junit.Test;
 
+import data.Host;
+import device.Device;
 import device.DeviceNode;
+import device.IDevice;
 
 public class DeviceNodeTest extends TestCase
 {
 	DeviceNode deviceNode;
 
+	@Test public void testDeviceNodeTemplate()
+	{
+	    deviceNode = new DeviceNode(new Host("localhost", 6665), new Device(IDevice.DEVICE_POSITION2D_CODE,"localhost",6665,0));
+	    
+	    Device[] dl = deviceNode.getDeviceListArray();
+	    for (int i=0; i<dl.length; i++)
+	    {
+	        System.out.println(""+dl[i]);
+	    }
+	}
+	
 	@Test public void testDeviceNode1Node()
 	{
-		deviceNode = new DeviceNode("localhost", 6665);
+		deviceNode = new DeviceNode(new Host("localhost", 6665));
 	}
 
 	@Test public void testDeviceNode2Nodes()
 	{
-	    deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666});
+	    deviceNode = new DeviceNode (
+	            new Host[] {
+                    new Host("localhost",6665),
+                    new Host("localhost",6666)
+	            });
 	}
 
 	@Test public void testDeviceNode3Nodes()
 	{
-		deviceNode = new DeviceNode(new Object[] {"localhost",6665, "localhost",6666, "localhost",6667});
+	    deviceNode = new DeviceNode (
+	            new Host[] {
+    	            new Host("localhost",6665),
+    	            new Host("localhost",6666),
+    	            new Host("localhost",6667)
+	            });
 	}
 
 	@Test public void testDeviceNode6Nodes()
 	{
-	    deviceNode = new DeviceNode
-	    (
-            new Object[]
-           {
-                "localhost",6665,
-                "localhost",6666,
-                "localhost",6667,
-                "localhost",6668,
-                "localhost",6669,
-                "localhost",6670
-           }
-	    );
+	    deviceNode = new DeviceNode (
+            new Host[] {
+                new Host("localhost",6665),
+                new Host("localhost",6666),
+                new Host("localhost",6667),
+                new Host("localhost",6668),
+                new Host("localhost",6669),
+                new Host("localhost",6670)
+            });
     }
 
 	@Test public void testDeviceNodeAddDevices()
 	{
-		deviceNode = new DeviceNode("localhost", 6665);
+		deviceNode = new DeviceNode(new Host("localhost", 6665));
 		
-		DeviceNode devNode2 = new DeviceNode("localhost", 6666);
+		DeviceNode devNode2 = new DeviceNode(new Host("localhost", 6666));
 		assertNotNull(devNode2);
 		
 		deviceNode.addDevicesOf(devNode2);

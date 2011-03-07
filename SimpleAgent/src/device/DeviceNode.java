@@ -87,6 +87,13 @@ public class DeviceNode extends Device
 	    }
 	}
 	/**
+     * See {@link #DeviceNode(Host[])}.
+	 */
+	public DeviceNode(Host host)
+	{
+	    this(new Host[]{host});
+	}
+	/**
 	 * @deprecated
 	 * Just for passing a PlayerClient reference.
 	 * No instantiation is made.
@@ -106,7 +113,24 @@ public class DeviceNode extends Device
 	 */
 	public DeviceNode (Host[] hostList, Device[] devList)
 	{
-	    //TODO implement
+	    this();
+	    
+	    for (int i=0; i<hostList.length; i++)
+	    {
+	        InitRobotClientEmpty(hostList[i], devList);
+	    }
+    }
+	public DeviceNode (Host host, Device dev)
+	{
+	    this(new Host[]{host}, new Device[]{dev});
+	}
+	public DeviceNode (Host host, Device[] devList)
+	{
+	    this(new Host[]{host}, devList); 
+	}
+	public DeviceNode (Host[] hostList, Device dev)
+	{
+	    this(hostList, new Device[]{dev});
 	}
 	/**
 	 * Connects to the underlying robot service and retrieves a list of all devices.
@@ -145,6 +169,37 @@ public class DeviceNode extends Device
 		    logger.severe(log);
 		    throw new IllegalStateException(log);
 		}		
+	}
+	void InitRobotClientEmpty(Host aHost, Device[] aDevList) throws IllegalStateException
+	{
+	    try
+        {
+            PlayerClient client = new PlayerClient (aHost.getHostName(), aHost.getPortNumber());
+            /** Do not add a @see PlayerClient as this is a root DeviceNode */
+            
+            /** Create a new DeviceNode with the PlayerClient */
+            DeviceNode devNode = new DeviceNode(client);
+            devNode.setHost(aHost.getHostName());
+            devNode.setPort(aHost.getPortNumber());
+            /** Push requires no sleep time */
+            devNode.setSleepTime(0);
+            /** Add it to the internal DeviceNode list */
+            getDeviceList().add(devNode);
+
+            /** Requires that above call has internally updated device list already! */
+            /** Add devices of that client to internal list */
+            updateDeviceListTemplate(client, aHost, aDevList);
+            client.setNotThreaded();
+
+            /** Get the devices available */
+            client.requestDataDeliveryMode(PlayerConstants.PLAYER_DATAMODE_PUSH);
+        }
+        catch (PlayerException e)
+        {
+            String log = "Could not connect to PlayerClient at "+host+":"+port;
+            logger.severe(log);
+            throw new IllegalStateException(log);
+        }       
 	}
 	/**
 	 * Reads the underlying robot client data when available.
@@ -254,6 +309,39 @@ public class DeviceNode extends Device
 			}
 		}
 	}
+	//TODO implement
+	private void updateDeviceListTemplate(PlayerClient playerClient, Host aHost, Device[] devList)
+    {
+        PlayerDeviceDevlist pDevList = playerClient.getPDDList();
+        if (pDevList != null) {
+
+            PlayerDevAddr[] pDevListAddr = pDevList.getDevList();
+            if (pDevListAddr != null) {
+
+                int devCount = pDevList.getDeviceCount();
+                for (int i=0; i<devCount; i++)
+                {
+                    /**
+                     * Read device information.
+                     * Host and port are arguments.
+                     */
+                    int devId = pDevListAddr[i].getInterf();
+                    int devIdx = pDevListAddr[i].getIndex();
+                
+                    Device dev = new Device(devId, aHost.getHostName(), aHost.getPortNumber(), devIdx);
+                    
+                    if (dev.isInList(devList) == true)
+                    {
+                        /**
+                         * Add new device to device list.
+                         */
+                        getDeviceList().add(new RobotDevice(this, dev));
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
 	/**
 	 * @return The primary PlayerClient.

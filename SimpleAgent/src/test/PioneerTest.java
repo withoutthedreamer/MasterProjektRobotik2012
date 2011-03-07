@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 
 import robot.Pioneer;
 import robot.IPioneer;
+import data.Host;
 import device.DeviceNode;
 
 /**
@@ -25,7 +26,7 @@ public class PioneerTest
     
     @BeforeClass public static void setUpBeforeClass() throws Exception
     {
-        dn = new DeviceNode("localhost", 6665);
+        dn = new DeviceNode(new Host("localhost", 6665));
         dn.runThreaded();
         
         pion = new Pioneer(dn.getDeviceListArray());

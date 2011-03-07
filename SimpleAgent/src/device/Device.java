@@ -449,4 +449,71 @@ public class Device implements IDevice, Runnable
     {
         return logger;
     }
+    @Override public String toString()
+    {
+        return ""+getDeviceNumber()+","+getHost()+":"+getPort()+":"+getDeviceNumber()+"("+getSleepTime()+"ms)";
+    }
+    /**
+     * Compares a Device according to its properties to another one
+     * @param aDevice The device to compare to.
+     * @return true if they equal, false else.
+     */
+    public boolean equals(Device aDevice)
+    {
+        if (
+            getName() == aDevice.getName() &&
+            getHost().equals(aDevice.getHost()) == true &&
+            getPort() == aDevice.getPort() &&
+            getDeviceNumber() == aDevice.getDeviceNumber()
+        )
+        {
+            return true;
+        }
+        else
+        {
+            return false;   
+        }
+    }
+    /**
+     * Matches this device with the given one.
+     * It compares the explicitly set device properties only.
+     * Disabled properties will be ignored.
+     * @param aDevice The device to match against.
+     * @return true if the device matches, false else.
+     */
+    public boolean matches(Device aDevice)
+    {
+        if ( getName() == aDevice.getName() || getName() == -1 || aDevice.getName() == -1 )
+        {
+            if ( getHost().equals(aDevice.getHost()) == true || getHost() == null || aDevice.getHost() == null )
+            {
+                if ( getPort() == aDevice.getPort() || getPort() == -1 || aDevice.getPort() == -1 )
+                {
+                    if ( getDeviceNumber() == aDevice.getDeviceNumber() || getDeviceNumber() == -1 || aDevice.getDeviceNumber() == -1 )
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+      
+        return false;
+    }
+    /**
+     * Checks if this device properties is in the given device list.
+     * @param aDevList The list to search in.
+     * @return true if any device of the list matches, false else.
+     */
+    public boolean isInList(Device[] aDevList)
+    {
+        for (int i=0; i<aDevList.length; i++)
+        {
+            if (matches(aDevList[i]) == true)
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
 }
