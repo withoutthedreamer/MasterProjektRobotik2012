@@ -36,6 +36,26 @@ public class DeviceNodeTest extends TestCase
                 
         assertTrue(dl.length == 3); /** Device node is also in list */ 
 	}
+	@Test public void testDeviceNodeTemplate2a()
+    {
+        Device dev = new Device(IDevice.DEVICE_RANGER_CODE,"localhost",6665,0);
+        
+        deviceNode = new DeviceNode(new Host("localhost", 6665), dev);
+        
+        Device[] dl = deviceNode.getDeviceListArray();
+                
+        assertTrue(dl.length == 2); /** Device node is also in list */ 
+    }
+	@Test public void testDeviceNodeTemplate2b()
+    {
+        Device dev = new Device(IDevice.DEVICE_RANGER_CODE,"localhost",6665,1);
+        
+        deviceNode = new DeviceNode(new Host("localhost", 6665), dev);
+        
+        Device[] dl = deviceNode.getDeviceListArray();
+                
+        assertTrue(dl.length == 2); /** Device node is also in list */ 
+    }
 	@Test public void testDeviceNodeTemplate3()
     {
         Device dev = new Device(IDevice.DEVICE_RANGER_CODE,"localhost",-1,-1);
