@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
+import core.Support;
+
 import data.Host;
 
 /**
@@ -74,6 +76,7 @@ public class DeviceNode extends Device
 	    }
 	}
 	/**
+	 * @deprecated Use {@link #DeviceNode(Host[], Device[])} instead.
 	 * Creates a device node containing all devices found on the given hosts.
 	 * @param hostList The host list to search devices.
 	 */
@@ -86,20 +89,16 @@ public class DeviceNode extends Device
 	        InitRobotClient(hostList[i].getHostName(), hostList[i].getPortNumber());
 	    }
 	}
-	/**
-     * See {@link #DeviceNode(Host[])}.
-	 */
+	/** Convenience wrapper for {@link #DeviceNode(Host[])}. */
 	public DeviceNode(Host host)
 	{
 	    this(new Host[]{host});
 	}
 	/**
-	 * @deprecated
-	 * Just for passing a PlayerClient reference.
-	 * No instantiation is made.
-	 * @param client
+	 * Creates a DeviceNode with the given {@link PlayerClient}.
+	 * @param client The PlayerClient.
 	 */
-	public DeviceNode (final PlayerClient client)
+	DeviceNode (PlayerClient client)
 	{
 		this();
 		playerClientList.add(client);
@@ -117,22 +116,26 @@ public class DeviceNode extends Device
 	    
 	    for (int i=0; i<hostList.length; i++)
 	    {
-	        InitRobotClientEmpty(hostList[i], devList);
+	        initRobotClientTemplate(hostList[i], devList);
 	    }
     }
+	/** Convenience wrapper for {@link #DeviceNode(Host[], Device[])}. */
 	public DeviceNode (Host host, Device dev)
 	{
 	    this(new Host[]{host}, new Device[]{dev});
 	}
+    /** Convenience wrapper for {@link #DeviceNode(Host[], Device[])}. */
 	public DeviceNode (Host host, Device[] devList)
 	{
 	    this(new Host[]{host}, devList); 
 	}
+    /** Convenience wrapper for {@link #DeviceNode(Host[], Device[])}. */
 	public DeviceNode (Host[] hostList, Device dev)
 	{
 	    this(hostList, new Device[]{dev});
 	}
 	/**
+	 * @deprecated Use {@link #initRobotClientTemplate(Host, Device[])} instead.
 	 * Connects to the underlying robot service and retrieves a list of all devices.
 	 * Only to be called by root DeviceNode!
 	 * @param host The host this device node runs on.
@@ -170,7 +173,15 @@ public class DeviceNode extends Device
 		    throw new IllegalStateException(log);
 		}		
 	}
-	void InitRobotClientEmpty(Host aHost, Device[] aDevList) throws IllegalStateException
+	/**
+     * Connects to the underlying robot service and retrieves a list of all devices.
+     * Only devices matching the given template list will be initialized and added.
+     * Only to be called by root DeviceNode!
+     * @param aHost The host this device node runs on.
+     * @param aDevList The device template list.
+     * @throws IllegalStateException When connecting to underlying robot client layer fails.
+     */
+	void initRobotClientTemplate(Host aHost, Device[] aDevList) throws IllegalStateException
 	{
 	    try
         {
@@ -189,6 +200,7 @@ public class DeviceNode extends Device
             /** Requires that above call has internally updated device list already! */
             /** Add devices of that client to internal list */
             updateDeviceListTemplate(client, aHost, aDevList);
+            
             client.setNotThreaded();
 
             /** Get the devices available */
@@ -226,6 +238,7 @@ public class DeviceNode extends Device
 	}
 
 	/**
+	 * @deprecated Use {@link #updateDeviceListTemplate(PlayerClient, Host, Device[])} instead.
 	 * Connects to known devices of the underlying robot service.
 	 * @param playerClient
 	 * @param host
@@ -309,16 +322,24 @@ public class DeviceNode extends Device
 			}
 		}
 	}
-	//TODO implement
+	/**
+	 * Finds devices according to the given device templates.
+	 * @param playerClient The {@link PlayerClient} to search for devices.
+	 * @param aHost The host the PlayerClient is running on.
+	 * @param devList The device template list ({@link Device}).
+	 */
 	private void updateDeviceListTemplate(PlayerClient playerClient, Host aHost, Device[] devList)
     {
         PlayerDeviceDevlist pDevList = playerClient.getPDDList();
-        if (pDevList != null) {
-
+       
+        if (pDevList != null)
+        {
             PlayerDevAddr[] pDevListAddr = pDevList.getDevList();
+          
             if (pDevListAddr != null) {
 
                 int devCount = pDevList.getDeviceCount();
+               
                 for (int i=0; i<devCount; i++)
                 {
                     /**
@@ -328,15 +349,16 @@ public class DeviceNode extends Device
                     int devId = pDevListAddr[i].getInterf();
                     int devIdx = pDevListAddr[i].getIndex();
                 
+                    /** Device with following properties found on PlayerClient */
                     Device dev = new Device(devId, aHost.getHostName(), aHost.getPortNumber(), devIdx);
                     
-                    if (dev.isInList(devList) == true)
+                    if (Support.check(dev) == true && dev.matchesList(devList) == true)
                     {
                         /**
-                         * Add new device to device list.
+                         * Add new device to device list
+                         * as it matches to any of the given templates.
                          */
                         getDeviceList().add(new RobotDevice(this, dev));
-                        break;
                     }
                 }
             }

@@ -102,6 +102,7 @@ public class Device implements IDevice, Runnable
 		}
 	}
 	/**
+	 * @deprecated
 	 * Adds all devices of the given device (if any and without itself)
 	 * to the internal device list of this device.
 	 * @param yad A device containing other devices.
@@ -347,14 +348,11 @@ public class Device implements IDevice, Runnable
 		return found;
 	}
 	/**
-	 * @return This device' host string.
+	 * @return This device' host string, can be null.
 	 */
 	public String getHost()
 	{
-	    if (host != null)
-	        return host;
-	    else
-	        return "";
+	    return host;
 	}
 	/**
 	 * Sets this device' host string.
@@ -451,7 +449,7 @@ public class Device implements IDevice, Runnable
     }
     @Override public String toString()
     {
-        return ""+getDeviceNumber()+","+getHost()+":"+getPort()+":"+getDeviceNumber()+"("+getSleepTime()+"ms)";
+        return ""+getName()+","+getHost()+":"+getPort()+":"+getDeviceNumber()+"("+getSleepTime()+"ms)";
     }
     /**
      * Compares a Device according to its properties to another one
@@ -483,9 +481,12 @@ public class Device implements IDevice, Runnable
      */
     public boolean matches(Device aDevice)
     {
+        if (aDevice == null)
+            return true;
+        
         if ( getName() == aDevice.getName() || getName() == -1 || aDevice.getName() == -1 )
         {
-            if ( getHost().equals(aDevice.getHost()) == true || getHost() == null || aDevice.getHost() == null )
+            if ( getHost() == null || aDevice.getHost() == null || getHost().equals(aDevice.getHost()) == true )
             {
                 if ( getPort() == aDevice.getPort() || getPort() == -1 || aDevice.getPort() == -1 )
                 {
@@ -500,11 +501,11 @@ public class Device implements IDevice, Runnable
         return false;
     }
     /**
-     * Checks if this device properties is in the given device list.
+     * Checks if this device properties matches against any of the given device list.
      * @param aDevList The list to search in.
      * @return true if any device of the list matches, false else.
      */
-    public boolean isInList(Device[] aDevList)
+    public boolean matchesList(Device[] aDevList)
     {
         for (int i=0; i<aDevList.length; i++)
         {
@@ -514,6 +515,27 @@ public class Device implements IDevice, Runnable
             }
         }
         
+        return false;
+    }
+    /**
+     * Checks if this device properties is in the given device list.
+     * @param aDevList The list to search in.
+     * @return true if any device of the list equals, false else.
+     */
+    public boolean isInList(Device[] aDevList)
+    {
+        for (int i=0; i<aDevList.length; i++)
+        {
+            if (equals(aDevList[i]) == true)
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    public boolean isSupported()
+    {
         return false;
     }
 }

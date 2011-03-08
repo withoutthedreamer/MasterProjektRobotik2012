@@ -47,4 +47,10 @@ public class Host
     public void setPortNumber(Integer portNumber) {
         this.portNumber = portNumber;
     }
+
+    @Override public String toString()
+    {
+        return ""+hostName+":"+portNumber;
+    }
+    
 }
