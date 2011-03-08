@@ -507,6 +507,9 @@ public class Device implements IDevice, Runnable
      */
     public boolean matchesList(Device[] aDevList)
     {
+        if (aDevList == null)
+            return true;
+        
         for (int i=0; i<aDevList.length; i++)
         {
             if (matches(aDevList[i]) == true)

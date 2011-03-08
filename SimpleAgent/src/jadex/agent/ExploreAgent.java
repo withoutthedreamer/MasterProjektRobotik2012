@@ -1,16 +1,21 @@
 package jadex.agent;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import robot.ExploreRobot;
+import data.Host;
 import data.Position;
+import device.Device;
 import device.DeviceNode;
+import device.IDevice;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.micro.MicroAgentMetaInfo;
 import jadex.service.HelloService;
 import jadex.service.SendPositionService;
 
-public class ExploreAgent extends WallfollowAgent {
-	
+public class ExploreAgent extends WallfollowAgent
+{	
 	@Override public void agentCreated()
 	{
 	    hs = new HelloService(getExternalAccess());
@@ -21,13 +26,34 @@ public class ExploreAgent extends WallfollowAgent {
 
         String host = (String)getArgument("host");
         Integer port = (Integer)getArgument("port");
+        Integer robotIdx = (Integer)getArgument("index");
+        Boolean hasLaser = (Boolean)getArgument("laser");
+        
+        /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,robotIdx) );
+        devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx) );
+        devList.add( new Device(IDevice.DEVICE_BLOBFINDER_CODE,host,port,robotIdx) );
+//      devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,robotIdx) );
+        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,robotIdx) );
+        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,robotIdx) );
+        
+        if (hasLaser == true)
+            devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx+1));
        
         /** Get the device node */
-        setDeviceNode( new DeviceNode(new Object[] {host,port, host,port+1}) );
+        setDeviceNode( new DeviceNode(
+                new Host[]
+                {
+                    new Host(host,port),
+                    new Host(host,port+1)
+                }, devList.toArray(new Device[devList.size()])));
+            
         getDeviceNode().runThreaded();
 
-        setRobot( new ExploreRobot(deviceNode) );
-        getRobot().setRobotId((String)getArgument("name"));
+        setRobot( new ExploreRobot(deviceNode.getDeviceListArray()) );
+        getRobot().setRobotId("r"+robotIdx);
        
         /**
          *  Check if a particular position is set
@@ -47,10 +73,11 @@ public class ExploreAgent extends WallfollowAgent {
         IArgument[] args = {
                 new Argument("host", "Player", "String", "localhost"),
                 new Argument("port", "Player", "Integer", new Integer(6665)),
-                new Argument("name", "Robot", "String", "r0"),
+                new Argument("index", "Robot index", "Integer", new Integer(0)),
                 new Argument("X", "Meter", "Double", new Double(0.0)),
                 new Argument("Y", "Meter", "Double", new Double(0.0)),
-                new Argument("Angle", "Degree", "Double", new Double(0.0))
+                new Argument("Angle", "Degree", "Double", new Double(0.0)),
+                new Argument("laser", "Laser ranger", "Boolean", new Boolean(true))
         };
         
         return new MicroAgentMetaInfo("This agent starts up an explore agent.", null, args, null);

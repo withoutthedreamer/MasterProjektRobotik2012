@@ -9,7 +9,6 @@ import device.Localize;
 import device.Planner;
 import device.Position2d;
 import device.Ranger;
-import device.RangerLaser;
 import device.RangerSonar;
 import device.Simulation;
 
@@ -75,6 +74,21 @@ public class Robot extends Device implements IRobot
 	    this();
 	    
 	    connectDevices(robotDevList);
+	    
+	    if (getPosi() == null)
+	    {
+	        String log = "No position device found";
+	        getLogger().severe(log);
+	        throw new IllegalStateException(log);
+	    }
+	    if (getSonar() == null)
+	    {
+	        getLogger().info("No sonar ranger device found");
+	    }
+	    if (getLaser() == null)
+	    {
+	        getLogger().info("No laser ranger device found");
+	    }
 	}
 	/**
 	 * @return The robot's Id string.
@@ -108,41 +122,42 @@ public class Robot extends Device implements IRobot
 
 	            switch (dev.getName())
 	            {
-	            case IDevice.DEVICE_POSITION2D_CODE :
-	                posi = (Position2d) dev; break;
-
-	            case IDevice.DEVICE_RANGER_CODE : 
-	                if (dev.getDeviceNumber() == 0)
-	                {
-	                    sonar = (Ranger) dev; break;
-	                }
-	                else
-	                {
-	                    laser = (Ranger) dev; break;
-	                }
-
-	            case IDevice.DEVICE_SONAR_CODE : 
-	                sonar = (RangerSonar) dev; break;
-
-	            case IDevice.DEVICE_LASER_CODE : 
-	                laser = (RangerLaser) dev; break;
-
-	            case IDevice.DEVICE_PLANNER_CODE :
-	                planner = (Planner) dev; break;
-
-	            case IDevice.DEVICE_LOCALIZE_CODE :
-	                localizer = (Localize) dev; break;
-
-	            case IDevice.DEVICE_BLOBFINDER_CODE :
-	                bloFi = (Blobfinder) dev; break;
-
-	            case IDevice.DEVICE_GRIPPER_CODE : 
-	                gripper = (Gripper) dev; break;
-
-	            case IDevice.DEVICE_SIMULATION_CODE : 
-	                simu = (Simulation) dev; break; 
-
-	            default: break;
+    	            case IDevice.DEVICE_POSITION2D_CODE :
+    	                posi = (Position2d) dev; break;
+    
+    	            case IDevice.DEVICE_RANGER_CODE : 
+    	            {
+    	                if (((Ranger) dev).getCount() <= 16)
+    	                {
+    	                    sonar = (Ranger) dev; break;
+    	                }
+    	                else
+    	                {
+    	                    laser = (Ranger) dev; break;
+    	                }
+    	            }
+    	            case IDevice.DEVICE_SONAR_CODE : 
+    	                sonar = (RangerSonar) dev; break;
+    
+    //	            case IDevice.DEVICE_LASER_CODE : 
+    //	                laser = (RangerLaser) dev; break;
+    
+    	            case IDevice.DEVICE_PLANNER_CODE :
+    	                planner = (Planner) dev; break;
+    
+    	            case IDevice.DEVICE_LOCALIZE_CODE :
+    	                localizer = (Localize) dev; break;
+    
+    	            case IDevice.DEVICE_BLOBFINDER_CODE :
+    	                bloFi = (Blobfinder) dev; break;
+    
+    	            case IDevice.DEVICE_GRIPPER_CODE : 
+    	                gripper = (Gripper) dev; break;
+    
+    	            case IDevice.DEVICE_SIMULATION_CODE : 
+    	                simu = (Simulation) dev; break; 
+    
+    	            default: break;
 	            }
 	        }
 	    }

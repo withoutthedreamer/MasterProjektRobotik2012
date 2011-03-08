@@ -75,7 +75,7 @@ public class RobotDevice extends Device
             }
             catch ( PlayerException e )
             {
-                String log = "Error connecting Player device "+toString();
+                String log = "Error connecting robot device "+toString();
                 logger.severe(log);
                 throw new IllegalStateException(log);
             }

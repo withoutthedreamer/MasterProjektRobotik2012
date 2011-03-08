@@ -5,6 +5,12 @@ import java.util.logging.Logger;
 import device.Blackboard;
 import device.Device;
 
+/**
+ * An exploration robot.
+ * It will explore its environment.
+ * 
+ * @author sebastian
+ */
 public class ExploreRobot extends Pioneer
 {
 	/** Logging support */
@@ -12,82 +18,28 @@ public class ExploreRobot extends Pioneer
 
 	protected Blackboard blackboard = null;
 
+	/**
+	 * @deprecated Use {@link #ExploreRobot(Device[])} instead.
+	 * @param roboDevices
+	 */
 	public ExploreRobot(Device roboDevices)
 	{
 		super(roboDevices);
 		// TODO add behaviour blobsearching
 	}
+	/**
+	 * Creates an exploration robot.
+	 * @param devList The devices the robot can use.
+	 */
+	public ExploreRobot(Device[] devList)
+	{
+	    super(devList);
+	}
 	
-//	@Override protected void update()
-//    {
-//        debugSensorData();
-//        
-//        StateType curState = getCurrentState();
-//        
-//        switch (curState)
-//        {
-//            case WALL_SEARCHING :
-//    
-//            case LWALL_FOLLOWING :
-//          
-//            case COLLISION_AVOIDANCE :
-//                updateSpeed( MAXSPEED );
-//                updateTurnrate( planLeftWallfollow() );
-//                updatePosi();
-////                blobsearch();
-//                
-//                break;
-//           
-//            case SET_SPEED :
-//                updateSpeed(getSpeed());
-//                updateTurnrate(getTurnrate());
-//                updatePosi();
-//                break;
-//
-//            default :
-//                updateStop();
-//                break;
-//        }
-//    }
-	
-//	final void blobsearch()
-//	{
-//	    if (getBloFi() != null )
-//	    {
-//	        /** Check how many different blobs are currently seen by the device */
-//	        int count = getBloFi().getCount();
-//	        
-//	        if (count > 0)
-//	        {
-//	            for (int i=0; i<count; i++)
-//	            {
-//	                /** Get the current blobs */
-//	                CopyOnWriteArrayList<BlobfinderBlob> blobs = getBloFi().getBlobs(); 
-//
-//	                if (blobs.size() > i)
-//	                {
-//	                    /** Device knows more blobs than currently seen. */
-//	                    BlobfinderBlob ablob = blobs.get(i);
-//	                    
-//	                    // Seen from this position TODO more exactly
-//	                    Position blobPose = getPosition();
-//	                    ablob.setDiscovered( blobPose );
-//	                    BbNote note = new BbNote();
-//	                    note.setGoal( blobPose );
-//	                    note.setPose( blobPose );
-//
-//	                    if (blackboard != null) {
-//	                        blackboard.add(BlobfinderBlob.getColorString(ablob.getColor()), note);
-//	                    } else {
-//	                       logger.fine(""+blobPose);
-//	                       logger.fine(""+ablob);
-//	                    }
-//	                }
-//	            }
-//	        }
-//	    }
-//	}
-	
+	/**
+	 * @deprecated
+	 * @param bb
+	 */
 	public void setBlackboard (Blackboard bb)
 	{
 		blackboard = bb;

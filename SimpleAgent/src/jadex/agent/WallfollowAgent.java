@@ -3,10 +3,15 @@
  */
 package jadex.agent;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import robot.Pioneer;
 import robot.Robot;
+import data.Host;
 import data.Position;
+import device.Device;
 import device.DeviceNode;
+import device.IDevice;
 import device.ILocalizeListener;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
@@ -42,13 +47,33 @@ public class WallfollowAgent extends MicroAgent
  
             String host = (String)getArgument("host");
             Integer port = (Integer)getArgument("port");
+            Integer robotIdx = (Integer)getArgument("index");
+            Boolean hasLaser = (Boolean)getArgument("laser");
+           
+            /** Device list */
+            CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+            
+            devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,robotIdx) );
+            devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx) );
+//          devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,robotIdx) );
+            devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,robotIdx) );
+            devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,robotIdx) );
+            
+            if (hasLaser == true)
+                devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx+1));
            
             /** Get the device node */
-            deviceNode = new DeviceNode(new Object[] {host,port, host,port+1});
-            deviceNode.runThreaded();
+            setDeviceNode( new DeviceNode(
+                    new Host[]
+                    {
+                        new Host(host,port),
+                        new Host(host,port+1)
+                    }, devList.toArray(new Device[devList.size()])));
+                
+            getDeviceNode().runThreaded();
 
-            robot = new Pioneer(deviceNode);
-            robot.setRobotId((String)getArgument("name"));
+            setRobot( new Pioneer(deviceNode.getDeviceListArray()) );
+            getRobot().setRobotId("r"+robotIdx);
            
             /**
              *  Check if a particular position is set
@@ -180,10 +205,11 @@ public class WallfollowAgent extends MicroAgent
             IArgument[] args = {
                     new Argument("host", "Player", "String", "localhost"),
                     new Argument("port", "Player", "Integer", new Integer(6665)),
-                    new Argument("name", "Robot", "String", "r0"),
+                    new Argument("index", "Robot index", "Integer", new Integer(0)),
                     new Argument("X", "Meter", "Double", new Double(0.0)),
                     new Argument("Y", "Meter", "Double", new Double(0.0)),
-                    new Argument("Angle", "Degree", "Double", new Double(0.0))
+                    new Argument("Angle", "Degree", "Double", new Double(0.0)),
+                    new Argument("laser", "Laser ranger", "Boolean", new Boolean(true))
             };
             
             return new MicroAgentMetaInfo("This agent starts up a wallfollow agent.", null, args, null);

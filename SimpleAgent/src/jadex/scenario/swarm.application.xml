@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <H3> Swarm Scenario </H3> Starts a robot swarm. -->
+<applicationtype xmlns="http://jadex.sourceforge.net/jadex-application"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-application
+						http://jadex.sourceforge.net/jadex-application-2.0.xsd"
+	name="swarm" package="jadex.scenario">
+
+	<arguments>
+		<argument name="port" typename="Integer"> 6665 </argument>
+		<argument name="host" typename="String"> "localhost" </argument>
+		<argument name="laser" typename="Boolean"> false </argument>
+	</arguments>
+
+	<componenttypes>
+		<componenttype name="Wallfollow0" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow1" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow2" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow3" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow4" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow5" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow6" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow7" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow8" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow9" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow10" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow11" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow12" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow13" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow14" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow15" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow16" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow17" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow18" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow19" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow20" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow21" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow22" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow23" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow24" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow25" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow26" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow27" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow28" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow29" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow30" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow31" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow32" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow33" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow34" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow35" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow36" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow37" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow38" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow39" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow40" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow41" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow42" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow43" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow44" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow45" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow46" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow47" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow48" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow49" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow50" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow51" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow52" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow53" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow54" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow55" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow56" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow57" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow58" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow59" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow60" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow61" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow62" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow63" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow64" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow65" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow66" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow67" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow68" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow69" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow70" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow71" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow72" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow73" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow74" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow75" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow76" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow77" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow78" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow79" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow80" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow81" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow82" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow83" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow84" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow85" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow86" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow87" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow88" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow89" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow90" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow91" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow92" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow93" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow94" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow95" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow96" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow97" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow98" filename="jadex/agent/WallfollowAgent.class" master="true" />
+		<componenttype name="Wallfollow99" filename="jadex/agent/WallfollowAgent.class" master="true" />
+	</componenttypes>
+
+	<applications>
+		
+		<application name="10 Wallfollow">
+			<components>
+				<component type="Wallfollow0" name="Wallfollow0"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 0 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow1" name="Wallfollow1"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 1 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow2" name="Wallfollow2"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 2 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow3" name="Wallfollow3"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 3 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow4" name="Wallfollow4"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 4 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow5" name="Wallfollow5"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 5 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow6" name="Wallfollow6"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 6 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow7" name="Wallfollow7"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 7 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow8" name="Wallfollow8"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 8 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow9" name="Wallfollow9"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 9 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow10" name="Wallfollow10"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 10 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+			</components>
+		</application>
+
+		<application name="50 Wallfollow">
+			<components>
+				<component type="Wallfollow0" name="Wallfollow0"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 0 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow1" name="Wallfollow1"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 1 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow2" name="Wallfollow2"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 2 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow3" name="Wallfollow3"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 3 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow4" name="Wallfollow4"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 4 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow5" name="Wallfollow5"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 5 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow6" name="Wallfollow6"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 6 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow7" name="Wallfollow7"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 7 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow8" name="Wallfollow8"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 8 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow9" name="Wallfollow9"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 9 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow10" name="Wallfollow10"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 10 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow11" name="Wallfollow11"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 11 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow12" name="Wallfollow12"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 12 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow13" name="Wallfollow13"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 13 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow14" name="Wallfollow14"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 14 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow15" name="Wallfollow15"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 15 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow16" name="Wallfollow16"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 16 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow17" name="Wallfollow17"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 17 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow18" name="Wallfollow18"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 18 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow19" name="Wallfollow19"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 19 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow20" name="Wallfollow20"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 20 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow21" name="Wallfollow21"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 21 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow22" name="Wallfollow22"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 22 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow23" name="Wallfollow23"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 23 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow24" name="Wallfollow24"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 24 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow25" name="Wallfollow25"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 25 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow26" name="Wallfollow26"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 26 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow27" name="Wallfollow27"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 27 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow28" name="Wallfollow28"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 28 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow29" name="Wallfollow29"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 29 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow30" name="Wallfollow30"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 30 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow31" name="Wallfollow31"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 31 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow32" name="Wallfollow32"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 32 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow33" name="Wallfollow33"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 33 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow34" name="Wallfollow34"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 34 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow35" name="Wallfollow35"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 35 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow36" name="Wallfollow36"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 36 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow37" name="Wallfollow37"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 37 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow38" name="Wallfollow38"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 38 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow39" name="Wallfollow39"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 39 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow40" name="Wallfollow40"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 40 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow41" name="Wallfollow41"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 41 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow42" name="Wallfollow42"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 42 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow43" name="Wallfollow43"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 43 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow44" name="Wallfollow44"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 44 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow45" name="Wallfollow45"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 45 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow46" name="Wallfollow46"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 46 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow47" name="Wallfollow47"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 47 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow48" name="Wallfollow48"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 48 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow49" name="Wallfollow49"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 49 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+			</components>
+		</application>
+
+		<application name="100 Wallfollow">
+			<components>
+				<component type="Wallfollow0" name="Wallfollow0"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 0 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow1" name="Wallfollow1"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 1 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow2" name="Wallfollow2"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 2 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow3" name="Wallfollow3"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 3 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow4" name="Wallfollow4"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 4 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow5" name="Wallfollow5"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 5 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow6" name="Wallfollow6"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 6 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow7" name="Wallfollow7"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 7 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow8" name="Wallfollow8"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 8 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow9" name="Wallfollow9"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 9 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow10" name="Wallfollow10"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 10 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow11" name="Wallfollow11"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 11 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow12" name="Wallfollow12"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 12 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow13" name="Wallfollow13"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 13 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow14" name="Wallfollow14"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 14 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow15" name="Wallfollow15"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 15 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow16" name="Wallfollow16"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 16 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow17" name="Wallfollow17"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 17 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow18" name="Wallfollow18"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 18 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow19" name="Wallfollow19"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 19 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow20" name="Wallfollow20"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 20 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow21" name="Wallfollow21"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 21 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow22" name="Wallfollow22"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 22 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow23" name="Wallfollow23"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 23 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow24" name="Wallfollow24"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 24 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow25" name="Wallfollow25"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 25 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow26" name="Wallfollow26"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 26 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow27" name="Wallfollow27"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 27 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow28" name="Wallfollow28"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 28 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow29" name="Wallfollow29"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 29 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow30" name="Wallfollow30"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 30 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow31" name="Wallfollow31"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 31 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow32" name="Wallfollow32"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 32 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow33" name="Wallfollow33"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 33 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow34" name="Wallfollow34"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 34 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow35" name="Wallfollow35"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 35 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow36" name="Wallfollow36"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 36 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow37" name="Wallfollow37"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 37 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow38" name="Wallfollow38"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 38 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow39" name="Wallfollow39"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 39 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow40" name="Wallfollow40"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 40 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow41" name="Wallfollow41"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 41 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow42" name="Wallfollow42"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 42 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow43" name="Wallfollow43"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 43 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow44" name="Wallfollow44"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 44 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow45" name="Wallfollow45"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 45 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow46" name="Wallfollow46"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 46 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow47" name="Wallfollow47"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 47 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow48" name="Wallfollow48"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 48 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow49" name="Wallfollow49"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 49 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow50" name="Wallfollow50"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 50 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow51" name="Wallfollow51"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 51 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow52" name="Wallfollow52"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 52 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow53" name="Wallfollow53"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 53 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow54" name="Wallfollow54"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 54 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow55" name="Wallfollow55"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 55 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow56" name="Wallfollow56"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 56 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow57" name="Wallfollow57"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 57 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow58" name="Wallfollow58"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 58 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow59" name="Wallfollow59"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 59 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow60" name="Wallfollow60"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 60 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow61" name="Wallfollow61"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 61 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow62" name="Wallfollow62"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 62 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow63" name="Wallfollow63"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 63 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow64" name="Wallfollow64"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 64 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow65" name="Wallfollow65"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 65 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow66" name="Wallfollow66"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 66 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow67" name="Wallfollow67"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 67 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow68" name="Wallfollow68"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 68 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow69" name="Wallfollow69"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 69 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow70" name="Wallfollow70"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 70 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow71" name="Wallfollow71"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 71 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow72" name="Wallfollow72"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 72 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow73" name="Wallfollow73"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 73 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow74" name="Wallfollow74"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 74 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow75" name="Wallfollow75"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 75 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow76" name="Wallfollow76"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 76 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow77" name="Wallfollow77"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 77 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow78" name="Wallfollow78"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 78 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow79" name="Wallfollow79"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 79 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow80" name="Wallfollow80"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 80 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow81" name="Wallfollow81"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 81 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow82" name="Wallfollow82"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 82 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow83" name="Wallfollow83"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 83 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow84" name="Wallfollow84"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 84 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow85" name="Wallfollow85"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 85 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow86" name="Wallfollow86"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 86 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow87" name="Wallfollow87"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 87 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow88" name="Wallfollow88"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 88 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow89" name="Wallfollow89"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 89 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow90" name="Wallfollow90"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 90 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow91" name="Wallfollow91"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 91 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow92" name="Wallfollow92"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 92 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow93" name="Wallfollow93"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 93 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow94" name="Wallfollow94"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 94 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow95" name="Wallfollow95"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 95 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow96" name="Wallfollow96"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 96 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow97" name="Wallfollow97"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 97 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow98" name="Wallfollow98"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 98 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+				<component type="Wallfollow99" name="Wallfollow99"> <arguments> <argument name="port"> $args.port </argument> <argument name="host"> $args.host </argument> <argument name="index"> 99 </argument> <argument name="laser"> $args.laser </argument> </arguments> </component>
+			</components>
+		</application>
+	</applications>
+
+</applicationtype>

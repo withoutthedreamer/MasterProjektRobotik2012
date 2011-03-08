@@ -10,8 +10,6 @@ import java.util.Iterator;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
-import core.Support;
-
 import data.Host;
 
 /**
@@ -89,7 +87,10 @@ public class DeviceNode extends Device
 	        InitRobotClient(hostList[i].getHostName(), hostList[i].getPortNumber());
 	    }
 	}
-	/** Convenience wrapper for {@link #DeviceNode(Host[])}. */
+	/**
+	 * @deprecated Use {@link #DeviceNode(Host, Device[])} instead.
+	 * Convenience wrapper for {@link #DeviceNode(Host[])}.
+	 */
 	public DeviceNode(Host host)
 	{
 	    this(new Host[]{host});
@@ -208,9 +209,9 @@ public class DeviceNode extends Device
         }
         catch (PlayerException e)
         {
-            String log = "Could not connect to PlayerClient at "+host+":"+port;
-            logger.severe(log);
-            throw new IllegalStateException(log);
+            String log = "Could not connect to PlayerClient at "+aHost.getHostName()+":"+aHost.getPortNumber();
+            logger.info(log);
+//            throw new IllegalStateException(log);
         }       
 	}
 	/**
@@ -322,6 +323,60 @@ public class DeviceNode extends Device
 			}
 		}
 	}
+	Device initDevice(Device devInfo)
+	{
+	    Device dev = null;
+	    int devId = devInfo.getName();
+	    String host = devInfo.getHost();
+	    int port = devInfo.getPort();
+	    int devIdx = devInfo.getDeviceNumber();
+	    
+	    switch (devId)
+        {
+            case IDevice.DEVICE_POSITION2D_CODE :
+                dev = new Position2d(this, new Device(devId, host, port, devIdx)); break;
+    
+            case IDevice.DEVICE_RANGER_CODE : 
+                dev = new Ranger(this, new Device(devId, host, port, devIdx)); break;
+                
+            case IDevice.DEVICE_BLOBFINDER_CODE :
+                dev = new Blobfinder(this, new Device(devId, host, port, devIdx)); break;
+    
+            case IDevice.DEVICE_GRIPPER_CODE : 
+                dev = new Gripper(this, new Device(devId, host, port, devIdx)); break;
+                
+            case IDevice.DEVICE_SONAR_CODE : 
+                dev = new RangerSonar(this, new Device(devId, host, port, devIdx)); break;
+    
+            case IDevice.DEVICE_LASER_CODE :
+                dev = new RangerLaser(this, new Device(devId, host, port, devIdx)); break;
+    
+            case IDevice.DEVICE_LOCALIZE_CODE : 
+                dev = new Localize(this, new Device(devId, host, port, devIdx)); break;
+    
+            case IDevice.DEVICE_SIMULATION_CODE : 
+                dev = new Simulation(this, new Device(devId, host, port, devIdx)); break; 
+    
+            case IDevice.DEVICE_PLANNER_CODE :
+                try {
+                    dev = new Planner(this, new Device(devId, host, port, devIdx));
+                } catch (IllegalStateException e) {
+                    /** TODO Debug this */
+                    dev = new Planner(this, new Device(devId, host, port, devIdx));
+                }
+                break;
+    
+            case IDevice.DEVICE_ACTARRAY_CODE :
+                dev = new Actarray(this, new Device(devId, host, port, devIdx)); break;
+    
+            case IDevice.DEVICE_DIO_CODE :
+                dev = new Dio(this, new Device(devId, host, port, devIdx)); break;
+    
+            default: break;
+        }
+
+	    return dev;
+	}
 	/**
 	 * Finds devices according to the given device templates.
 	 * @param playerClient The {@link PlayerClient} to search for devices.
@@ -352,13 +407,17 @@ public class DeviceNode extends Device
                     /** Device with following properties found on PlayerClient */
                     Device dev = new Device(devId, aHost.getHostName(), aHost.getPortNumber(), devIdx);
                     
-                    if (Support.check(dev) == true && dev.matchesList(devList) == true)
+//                    if (Support.check(dev) == true && dev.matchesList(devList) == true)
+                    if (dev.matchesList(devList) == true)
                     {
                         /**
                          * Add new device to device list
                          * as it matches to any of the given templates.
                          */
-                        getDeviceList().add(new RobotDevice(this, dev));
+//                        getDeviceList().add(new RobotDevice(this, dev));
+                        Device newDev = initDevice(dev);
+                        if (newDev != null)
+                            getDeviceList().add( newDev );
                     }
                 }
             }
