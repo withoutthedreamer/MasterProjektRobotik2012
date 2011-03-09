@@ -10,7 +10,7 @@ resolution 0.05    # resolution of the underlying raytrace mode
 
 #speedup -1 # as fast as possible
 
-#paused 1
+paused 1
 threads 4
 
 # configure the GUI window
@@ -21,9 +21,9 @@ window
   rotate [ 58.500 17.500 ]
   scale 53.439 
 
-  interval 50
+  interval 100
 
-  show_data 1              # 1=on 0=off
+  show_data 0              # 1=on 0=off
 )
 
 floorplan

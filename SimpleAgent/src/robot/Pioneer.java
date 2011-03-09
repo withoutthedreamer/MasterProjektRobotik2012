@@ -170,7 +170,8 @@ public class Pioneer extends Robot implements IPioneer
         if (getPlanner() != null)
 	        getPlanner().stop();
 	    
-	    getPosi().disableMotor();
+        if (getSimu() == null)
+	        getPosi().disableMotor();
 	    
 	    setTurnrate(0.0);
 	    setSpeed(0.0);
@@ -573,13 +574,17 @@ public class Pioneer extends Robot implements IPioneer
     }
     public void setWallfollow()
     {
-        getPosi().enableMotor();
+        if (getSimu() == null)
+            getPosi().enableMotor();
+        
         setCurrentState(StateType.LWALL_FOLLOWING);
     }
 
     public void setCommand()
     {
-        getPosi().enableMotor();
+        if (getSimu() == null)
+            getPosi().enableMotor();
+        
         setCurrentState(StateType.SET_SPEED);        
     }
 

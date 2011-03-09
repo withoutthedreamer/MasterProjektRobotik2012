@@ -6,7 +6,6 @@ package jadex.agent;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import robot.Pioneer;
-import robot.Robot;
 import data.Host;
 import data.Position;
 import device.Device;
@@ -49,30 +48,34 @@ public class WallfollowAgent extends MicroAgent
             Integer port = (Integer)getArgument("port");
             Integer robotIdx = (Integer)getArgument("index");
             Boolean hasLaser = (Boolean)getArgument("laser");
+            Boolean hasPlanner = (Boolean)getArgument("planner");
            
             /** Device list */
             CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
-            
             devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,robotIdx) );
             devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx) );
-//          devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,robotIdx) );
+            devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
             devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,robotIdx) );
             devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,robotIdx) );
             
+            /** Optional laser ranger */
             if (hasLaser == true)
                 devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx+1));
+            
+            /** Host list */
+            CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+            hostList.add(new Host(host,port));
+            
+            /** Optional planner device */
+            if (hasPlanner == true)
+                hostList.add(new Host(host,port+1));
            
             /** Get the device node */
-            setDeviceNode( new DeviceNode(
-                    new Host[]
-                    {
-                        new Host(host,port),
-                        new Host(host,port+1)
-                    }, devList.toArray(new Device[devList.size()])));
+            setDeviceNode( new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()])));
                 
             getDeviceNode().runThreaded();
 
-            setRobot( new Pioneer(deviceNode.getDeviceListArray()) );
+            setRobot( new Pioneer(getDeviceNode().getDeviceListArray()) );
             getRobot().setRobotId("r"+robotIdx);
            
             /**
@@ -84,17 +87,17 @@ public class WallfollowAgent extends MicroAgent
                     (Double)getArgument("Angle"));
             
             if ( setPose.equals(new Position(0,0,0)) == false )
-                robot.setPosition(setPose);         
+                getRobot().setPosition(setPose);         
             
             sendHello();
         }
         
         void sendHello() {
-            hs.send(""+getComponentIdentifier(), robot.getRobotId(), Robot.class.getName());
+            hs.send(""+getComponentIdentifier(), ""+getRobot().getRobotId(), getRobot().getClass().getName());
         }
 
         void sendPosition(Position newPose) {
-            ps.send(getComponentIdentifier().toString(), robot.getRobotId(), newPose);
+            ps.send(""+getComponentIdentifier(), ""+getRobot().getRobotId(), newPose);
         }
         
         @Override public void executeBody()
@@ -209,7 +212,8 @@ public class WallfollowAgent extends MicroAgent
                     new Argument("X", "Meter", "Double", new Double(0.0)),
                     new Argument("Y", "Meter", "Double", new Double(0.0)),
                     new Argument("Angle", "Degree", "Double", new Double(0.0)),
-                    new Argument("laser", "Laser ranger", "Boolean", new Boolean(true))
+                    new Argument("laser", "Laser ranger", "Boolean", new Boolean(true)),
+                    new Argument("planner", "Planner device", "Boolean", new Boolean(true))
             };
             
             return new MicroAgentMetaInfo("This agent starts up a wallfollow agent.", null, args, null);

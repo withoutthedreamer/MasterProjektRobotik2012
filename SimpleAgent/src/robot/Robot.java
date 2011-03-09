@@ -1,5 +1,7 @@
 package robot;
 
+import java.util.logging.Logger;
+
 import data.Position;
 import device.Blobfinder;
 import device.Device;
@@ -21,7 +23,10 @@ import device.Simulation;
  */
 public class Robot extends Device implements IRobot
 {
-	/**
+    /** Logging support */
+    Logger logger = Logger.getLogger (Robot.class.getName ());
+
+    /**
 	 *  List of devices this robot can use if any of them are present.
 	 *  They will be detected in a dynamical way during runtime.
 	 */
@@ -77,17 +82,17 @@ public class Robot extends Device implements IRobot
 	    
 	    if (getPosi() == null)
 	    {
-	        String log = "No position device found";
-	        getLogger().severe(log);
+	        String log = "No position device found "+this;
+	        logger.severe(log);
 	        throw new IllegalStateException(log);
 	    }
 	    if (getSonar() == null)
 	    {
-	        getLogger().info("No sonar ranger device found");
+	        logger.info("No sonar ranger device found "+this);
 	    }
 	    if (getLaser() == null)
 	    {
-	        getLogger().info("No laser ranger device found");
+	        logger.info("No laser ranger device found "+this);
 	    }
 	}
 	/**
@@ -138,7 +143,7 @@ public class Robot extends Device implements IRobot
     	            }
     	            case IDevice.DEVICE_SONAR_CODE : 
     	                sonar = (RangerSonar) dev; break;
-    
+    /** Laser is a legacy device and deprecated */
     //	            case IDevice.DEVICE_LASER_CODE : 
     //	                laser = (RangerLaser) dev; break;
     
@@ -345,6 +350,6 @@ public class Robot extends Device implements IRobot
 
     @Override public String toString()
     {
-        return ""+getClass().getName()+" "+getRobotId();
+        return ""+getRobotId();
     }
 }
