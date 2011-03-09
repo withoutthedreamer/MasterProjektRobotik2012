@@ -1,5 +1,7 @@
 package test;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.AfterClass;
@@ -21,7 +23,19 @@ public class SimulationTest
 
 	@BeforeClass public static void setUpBeforeClass() throws Exception
 	{
-	    deviceNode = new DeviceNode(new Host("localhost", 6665)); 
+	    int port = 6665;
+        String host = "localhost";
+        
+        /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,-1,-1) );
+
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+                
+        /** Get the device node */
+        deviceNode = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
         assertNotNull(deviceNode);
 
         deviceNode.runThreaded();

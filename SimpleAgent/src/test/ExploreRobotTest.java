@@ -3,6 +3,8 @@
  */
 package test;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.AfterClass;
@@ -12,6 +14,7 @@ import static org.junit.Assert.*;
 
 import robot.ExploreRobot;
 import data.BlobfinderBlob;
+import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
@@ -30,11 +33,33 @@ public class ExploreRobotTest
     
     @BeforeClass public static void setUpBeforeClass() throws Exception
     {
-        dn = new DeviceNode(new Object[]{"localhost", 6669, "localhost", 6670});
+        int port = 6669;
+        String host = "localhost";
+        
+        /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,0) );
+        devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,-1) );
+        devList.add( new Device(IDevice.DEVICE_SONAR_CODE,host,port,0) );
+        devList.add( new Device(IDevice.DEVICE_BLOBFINDER_CODE,host,port,0) );
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,-1,-1) );
+        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,0) );
+        /** TODO dummy that player read() will not block on shutdown */
+        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,0) );
+
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+        hostList.add(new Host(host,port+1));
+        hostList.add(new Host(host,6665));
+        
+        /** Get the device node */
+        dn = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
         dn.runThreaded();
         
-        robot = new ExploreRobot(dn);
+        robot = new ExploreRobot(dn.getDeviceListArray());
         assertNotNull(robot);
+        robot.setRobotId("r2");
         
         robot.runThreaded();
         assertTrue(robot.isThreaded());
@@ -42,18 +67,15 @@ public class ExploreRobotTest
         /** Set the robots init pose */
         robot.setPosition(new Position(-6.,6.,0.));
         /** Correct it in the simulation */
-        DeviceNode simuDev = new DeviceNode("localhost", 6665);
-        simuDev.runThreaded();
-        Simulation simu = (Simulation) simuDev.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE,null,-1,-1));
-        simu.setPositionOf("r2", new Position(-6,6,0));
+        Simulation simu = (Simulation) dn.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE,null,-1,-1));
+        assertNotNull(simu);
+        
         /** Position some blobs */
         simu.setPositionOf("green", new Position(0,5,0));
         simu.setPositionOf("black", new Position(-4,6,0));
         simu.setPositionOf("red", new Position(-4,4,0));
-        simuDev.shutdown();
         
         try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
-      
     }
     @AfterClass public static void tearDownAfterClass() throws Exception
     {

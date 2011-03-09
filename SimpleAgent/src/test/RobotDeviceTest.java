@@ -3,6 +3,8 @@
  */
 package test;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import javaclient3.GripperInterface;
 import junit.framework.JUnit4TestAdapter;
 
@@ -11,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;  
 import static org.junit.Assert.*;
 
+import data.Host;
 import device.Device;
 import device.DeviceNode;
 import device.Gripper;
@@ -27,7 +30,19 @@ public class RobotDeviceTest
 
 	@BeforeClass public static void setUpBeforeClass() throws Exception
 	{
-	    deviceNode = new DeviceNode("localhost", 6665);
+	    int port = 6665;
+        String host = "localhost";
+        
+        /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_GRIPPER_CODE,host,port,0) );
+        
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+                
+        /** Get the device node */
+        deviceNode = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
         assertNotNull(deviceNode);
         
         deviceNode.runThreaded();

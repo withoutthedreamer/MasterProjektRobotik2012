@@ -50,7 +50,7 @@ public class SwarmAgent extends NavAgent
             {
                 new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,robotIdx),
                 new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,robotIdx),
-//                new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1)
+                new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1)
             });
         
         deviceNode.runThreaded();
@@ -78,7 +78,6 @@ public class SwarmAgent extends NavAgent
                 new Argument("host", "Robot host", "String", "localhost"),
                 new Argument("port", "Robot port", "Integer", new Integer(6665)),
                 new Argument("index", "Robot index", "Integer", new Integer(0)),
-//                new Argument("name", "Robot", "String", "r0"),
                 new Argument("X", "Meter", "Double", new Double(0.0)),
                 new Argument("Y", "Meter", "Double", new Double(0.0)),
                 new Argument("Angle", "Degree", "Double", new Double(0.0))

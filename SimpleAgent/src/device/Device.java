@@ -155,7 +155,7 @@ public class Device implements IDevice, Runnable
 
 			thread.start();
 
-			logger.fine("Running "+getClass().toString()+" in "+thread.getName());
+			logger.fine("Running "+this+" in "+thread.getName());
 		}
 	}
 
@@ -196,14 +196,14 @@ public class Device implements IDevice, Runnable
         }
 	    catch (Exception e)
 	    { 
-	        throw new IllegalStateException("Error updating device "+toString());
+	        throw new IllegalStateException("Error updating device "+this);
 	    }
 	    finally
 	    {
             isRunning = false; /** sync with setNotThreaded */
             isThreaded = false; /** Thread is interrupted */
 	     
-            logger.fine("Shutdown "+this.getClass().toString()+" in "+thread.getName());
+            logger.fine("Shutdown "+this+" in "+thread.getName());
 	    }
 	}
 	
@@ -227,9 +227,12 @@ public class Device implements IDevice, Runnable
 	        while (isRunning() == true)
 	        {
 	            delayCount += 1;
-	            if (delayCount > 2)
-	                logger.finer("Shutdown delayed " + getClass().getName());
-
+	            
+	            if (delayCount >= 100)
+	            {
+	                logger.finer("Shutdown delayed "+delayCount+" "+ this);
+	            }
+                
 	            try { Thread.sleep (10); } catch (Exception e) { e.printStackTrace(); }
 	        }
 	    }
@@ -344,6 +347,11 @@ public class Device implements IDevice, Runnable
 					found = curDev;
 				}
 			}
+			// TODO use and debug following
+//			if (curDev.matches(dev))
+//			{
+//			    found = curDev;
+//			}
 		}
 		return found;
 	}

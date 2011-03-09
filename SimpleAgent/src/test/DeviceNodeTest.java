@@ -1,5 +1,7 @@
 package test;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;
 
@@ -15,7 +17,29 @@ public class DeviceNodeTest extends TestCase
 {
 	DeviceNode deviceNode;
 
-	@Test public void testDeviceNodeTemplate1()
+	@Test public void testDeviceNodeSimulationOnly()
+	{
+	    Device dev = new Device(IDevice.DEVICE_SIMULATION_CODE,"localhost",6665,0);
+        deviceNode = new DeviceNode(new Host("localhost", 6665), dev);
+        
+        Device[] dl = deviceNode.getDeviceListArray();
+        assertTrue(dl.length == 2); /** Device node is also in list */
+        assertTrue(dev.isInList(dl));       
+	}
+	@Test public void testDeviceNodeLocalizeOnly()
+    {
+	    /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,null,-1,-1) );
+        /** TODO PlayerClient blocks on shutdown when only Localize device is there */
+        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,null,-1,-1) );
+        
+        deviceNode = new DeviceNode(new Host("localhost", 6666), devList.toArray(new Device[devList.size()]));
+        
+        Device[] dl = deviceNode.getDeviceListArray();
+        assertTrue(dl.length == 3); /** Device node is also in list */       
+    }
+@Test public void testDeviceNodeTemplate1()
 	{
 	    Device dev = new Device(IDevice.DEVICE_POSITION2D_CODE,"localhost",6665,0);
 	    
@@ -97,7 +121,7 @@ public class DeviceNodeTest extends TestCase
 	
 	@Test public void testDeviceNode1Node()
 	{
-		deviceNode = new DeviceNode(new Host("localhost", 6665));
+		deviceNode = new DeviceNode(new Host("localhost", 6665), (Device[]) null);
 	}
 
 	@Test public void testDeviceNode2Nodes()

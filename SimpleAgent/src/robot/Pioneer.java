@@ -94,6 +94,8 @@ public class Pioneer extends Robot implements IPioneer
                 
     	        break;
     	    }
+    	    case STOPPED :
+    	        
     	    default :
     	    {
     	        updateStop();
@@ -171,12 +173,13 @@ public class Pioneer extends Robot implements IPioneer
 	        getPlanner().stop();
 	    
         if (getSimu() == null)
-	        getPosi().disableMotor();
-	    
+            if (getPosi() != null)
+                getPosi().disableMotor();
+
 	    setTurnrate(0.0);
 	    setSpeed(0.0);
-	    updateSpeed(0.0);
-	    updateTurnrate(0.0);
+
+        commandMotors( getSpeed(), getTurnrate());
 	}
 
 	/**

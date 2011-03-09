@@ -1,5 +1,8 @@
 package jadex.agent;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
@@ -16,9 +19,8 @@ import jadex.micro.MicroAgentMetaInfo;
 import jadex.service.HelloService;
 import jadex.service.SendPositionService;
 
-public class ViewAgent extends MicroAgent {
-
-
+public class ViewAgent extends MicroAgent
+{
 	/** Services */
 	HelloService hs;
 	SendPositionService ps;
@@ -35,10 +37,22 @@ public class ViewAgent extends MicroAgent {
 		addDirectService(hs);
 		addDirectService(ps);
 
-		deviceNode = new DeviceNode((String)getArgument("host"), (Integer)getArgument("port"));
+		String host = (String)getArgument("host");
+        Integer port = (Integer)getArgument("port");
+
+		/** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
+
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+        
+        /** Get the device node */
+        deviceNode = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
 		deviceNode.runThreaded();
 		
-		hs.send(getComponentIdentifier().toString(), "", "Hello");
+		hs.send(""+getComponentIdentifier(), "", "Hello");
 	}
 
 	@Override public void executeBody()
@@ -80,7 +94,9 @@ public class ViewAgent extends MicroAgent {
 	{
 		IArgument[] args = {
                 new Argument("host", "Player", "String", "localhost"),
-				new Argument("port", "Player", "Integer", new Integer(6600))};
+				new Argument("port", "Player", "Integer", new Integer(6600)),
+                new Argument("robot", "Only track this", "Integer", new Integer(-1))
+		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a view agent.", null, args, null);
 	}

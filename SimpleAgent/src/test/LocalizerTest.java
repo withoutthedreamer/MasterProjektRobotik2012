@@ -2,6 +2,7 @@ package test;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import junit.framework.JUnit4TestAdapter;
 
@@ -10,6 +11,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
@@ -31,7 +33,24 @@ public class LocalizerTest
 
     @BeforeClass public static void setUpBeforeClass() throws Exception
     {
-        deviceNode = new DeviceNode(new Object[]{"localhost",6665, "localhost",6666});
+        int port = 6665;
+        String host = "localhost";
+        
+        /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,0) );
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
+        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,0) );
+        devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,1) );
+        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,0) );
+
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+        hostList.add(new Host(host,port+1));
+        
+        /** Get the device node */
+        deviceNode = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
         assertNotNull(deviceNode);
         
         deviceNode.runThreaded();

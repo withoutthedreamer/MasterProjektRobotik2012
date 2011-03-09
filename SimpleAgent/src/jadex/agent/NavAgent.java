@@ -1,5 +1,6 @@
 package jadex.agent;
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import jadex.bridge.*;
@@ -11,13 +12,15 @@ import jadex.service.GoalReachedService;
 import jadex.service.HelloService;
 import jadex.service.ReceiveNewGoalService;
 import jadex.service.SendPositionService;
+import data.Host;
 import data.Position;
+import device.Device;
 import device.DeviceNode;
+import device.IDevice;
 import device.ILocalizeListener;
 import device.IPlannerListener;
 import robot.NavRobot;
 import robot.Pioneer;
-import robot.Robot;
 
 public class NavAgent extends MicroAgent
 {
@@ -47,12 +50,29 @@ public class NavAgent extends MicroAgent
 
 		String host = (String)getArgument("host");
 		Integer port = (Integer)getArgument("port");
-		/** Get the device node */
-		deviceNode = new DeviceNode(new Object[] {host,port, host,port+1});
+        Integer robotIdx = (Integer)getArgument("index");
+        Boolean hasLaser = (Boolean)getArgument("laser");
+
+        /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,0) ); // TODO why playerclient blocks if not present?
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
+        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,0) );
+        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,0) );
+
+        if (hasLaser == true)
+            devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx+1));
+
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+        
+        /** Get the device node */
+        setDeviceNode( new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()])));
 		deviceNode.runThreaded();
 
-		robot = new NavRobot(deviceNode);
-		robot.setRobotId((String)getArgument("name"));
+		robot = new NavRobot(deviceNode.getDeviceListArray());
+        getRobot().setRobotId("r"+robotIdx);
 		
 		/**
 		 *  Check if a particular position is set
@@ -68,14 +88,15 @@ public class NavAgent extends MicroAgent
 		sendHello();
 	}
 	
-	void sendHello() {
-		hs.send(""+getComponentIdentifier(), robot.getRobotId(), Robot.class.getName());
+	void sendHello()
+	{
+		hs.send(""+getComponentIdentifier(), robot.getRobotId(), robot.getClass().getName());
 		logger.fine(""+getComponentIdentifier()+" sending hello");
 	}
 
-	void sendPosition(Position newPose) {
-		ps.send(getComponentIdentifier().toString(), robot.getRobotId(), newPose);
-
+	void sendPosition(Position newPose)
+	{
+		ps.send(""+getComponentIdentifier(), robot.getRobotId(), newPose);
 		logger.finest(""+getComponentIdentifier()+" sending position "+newPose);
 	}
 	
@@ -209,12 +230,13 @@ public class NavAgent extends MicroAgent
 		});
 	}
 	
-	@Override public void agentKilled() {
-		
+	@Override public void agentKilled()
+	{
+	    robot.stop();
 		robot.shutdown();
 		deviceNode.shutdown();
 		
-		hs.send(getComponentIdentifier().toString(), robot.getRobotId(), "Bye");
+		hs.send(""+getComponentIdentifier(), robot.getRobotId(), "Bye");
 		logger.fine("Bye "+getComponentIdentifier());
 	}
 	
@@ -228,10 +250,11 @@ public class NavAgent extends MicroAgent
 		IArgument[] args = {
                 new Argument("host", "Player", "String", "localhost"),
 				new Argument("port", "Player", "Integer", new Integer(6665)),
-				new Argument("name", "Robot", "String", "r0"),
+                new Argument("index", "Robot index", "Integer", new Integer(0)),
 				new Argument("X", "Meter", "Double", new Double(0.0)),
 				new Argument("Y", "Meter", "Double", new Double(0.0)),
-				new Argument("Angle", "Degree", "Double", new Double(0.0))
+				new Argument("Angle", "Degree", "Double", new Double(0.0)),
+                new Argument("laser", "Laser ranger", "Boolean", new Boolean(true))
 		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a navigation agent.", null, args, null);

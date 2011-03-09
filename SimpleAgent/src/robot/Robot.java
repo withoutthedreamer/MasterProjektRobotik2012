@@ -132,7 +132,8 @@ public class Robot extends Device implements IRobot
     
     	            case IDevice.DEVICE_RANGER_CODE : 
     	            {
-    	                if (((Ranger) dev).getCount() <= 16)
+    	                /** getCount() might be 0 at this time, so try sonar first */
+    	                if (sonar == null)
     	                {
     	                    sonar = (Ranger) dev; break;
     	                }
@@ -350,6 +351,6 @@ public class Robot extends Device implements IRobot
 
     @Override public String toString()
     {
-        return ""+getRobotId();
+        return ""+getClass()+" "+getRobotId();
     }
 }

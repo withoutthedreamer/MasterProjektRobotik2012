@@ -1,5 +1,6 @@
 package test;
 
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import junit.framework.JUnit4TestAdapter;
@@ -9,6 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
@@ -31,14 +33,24 @@ public class PlannerTest
 
 	@BeforeClass public static void setUpBeforeClass() throws Exception
 	{
-	    deviceNode = new DeviceNode("localhost", 6666);
-        assertNotNull(deviceNode);
+	    int port = 6665;
+        String host = "localhost";
         
-        DeviceNode deviceNode2 = new DeviceNode("localhost", 6665);
-        assertNotNull(deviceNode2);
-        
-        deviceNode.addDevicesOf(deviceNode2);
+        /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,0) );
+        devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,1) );
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
+        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,0) );
+        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,0) );
 
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+        hostList.add(new Host(host,port+1));
+        
+        /** Get the device node */
+        deviceNode = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
         deviceNode.runThreaded();
                 
         planner = (Planner) deviceNode.getDevice(new Device(IDevice.DEVICE_PLANNER_CODE, null, -1, -1));

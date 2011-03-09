@@ -23,7 +23,6 @@ public class NavRobotTest
 	
     @BeforeClass public static void setUpBeforeClass() throws Exception
     {
-//        deviceNode = new DeviceNode( new Object[]{"localhost",6665,"localhost",6666} );
         deviceNode = new DeviceNode( new Host[]{new Host("localhost",6665), new Host("localhost",6666)}, (Device[]) null );
         assertNotNull(deviceNode);
         

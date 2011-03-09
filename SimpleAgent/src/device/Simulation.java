@@ -100,10 +100,16 @@ public class Simulation extends RobotDevice {
 	/**
 	 * Shutdown Gui and clean up
 	 */
-	@Override public void shutdown () {
+	@Override public void shutdown ()
+	{
 		super.shutdown();
 		objList.clear();
 		isDirtyList.clear();
+		
+		/**
+		 * TODO if there is no activity on this device the PlayerClient read() blocks
+		 */
+		((SimulationInterface) device).get2DPose ("ByeBye");
 	}
 	/**
 	 * Set a Gui object's position.

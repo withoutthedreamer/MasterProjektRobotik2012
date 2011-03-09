@@ -72,7 +72,6 @@ public class WallfollowAgent extends MicroAgent
            
             /** Get the device node */
             setDeviceNode( new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()])));
-                
             getDeviceNode().runThreaded();
 
             setRobot( new Pioneer(getDeviceNode().getDeviceListArray()) );
@@ -213,7 +212,7 @@ public class WallfollowAgent extends MicroAgent
                     new Argument("Y", "Meter", "Double", new Double(0.0)),
                     new Argument("Angle", "Degree", "Double", new Double(0.0)),
                     new Argument("laser", "Laser ranger", "Boolean", new Boolean(true)),
-                    new Argument("planner", "Planner device", "Boolean", new Boolean(true))
+                    new Argument("planner", "Path planner device", "Boolean", new Boolean(true))
             };
             
             return new MicroAgentMetaInfo("This agent starts up a wallfollow agent.", null, args, null);

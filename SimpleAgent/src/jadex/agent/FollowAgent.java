@@ -17,8 +17,8 @@ import jadex.micro.MicroAgentMetaInfo;
  * @author sebastian
  *
  */
-public class FollowAgent extends NavAgent {
-
+public class FollowAgent extends NavAgent
+{
     Position followPose;
     Position robotPose;
     boolean isNewFollowPose;
@@ -26,7 +26,8 @@ public class FollowAgent extends NavAgent {
     /**
      * @see jadex.agent.NavAgent#agentCreated()
      */
-    @Override public void agentCreated() {
+    @Override public void agentCreated()
+    {
         super.agentCreated();
        
         isNewFollowPose = false;
@@ -37,7 +38,8 @@ public class FollowAgent extends NavAgent {
     /**
      * @see jadex.agent.NavAgent#executeBody()
      */
-    @Override public void executeBody() {
+    @Override public void executeBody()
+    {
         super.executeBody();
 
         /**
@@ -54,7 +56,7 @@ public class FollowAgent extends NavAgent {
                         Object[] content = (Object[])event.getValue();
 
                         /** Sending position on request */
-                        if (((String)content[1]).equals( (String)getArgument("robot") ))
+                        if (((String)content[1]).equals( "r"+(Integer)getArgument("robot") ))
                         {
                             Position curPose = (Position) content[2];
                             
@@ -127,13 +129,14 @@ public class FollowAgent extends NavAgent {
     public static MicroAgentMetaInfo getMetaInfo()
     {
         IArgument[] args = {
-                new Argument("robot", "To follow", "String", "r0"),
+                new Argument("robot", "To follow", "Integer", new Integer(0)),
                 new Argument("host", "Player", "String", "localhost"),
                 new Argument("port", "Player", "Integer", new Integer(6667)),
-                new Argument("name", "Robot", "String", "r1"),
+                new Argument("index", "Robot index", "Integer", new Integer(1)),
                 new Argument("X", "Meter", "Double", new Double(0.0)),
                 new Argument("Y", "Meter", "Double", new Double(0.0)),
                 new Argument("Angle", "Degree", "Double", new Double(0.0)),
+                new Argument("laser", "Laser ranger", "Boolean", new Boolean(true)),
                 new Argument("minDistance", "Meter", "Double", new Double(2.0)),
                 new Argument("updateInterval", "ms", "Integer", new Integer(5000))
         };

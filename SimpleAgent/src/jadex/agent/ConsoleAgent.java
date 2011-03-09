@@ -60,19 +60,5 @@ public class ConsoleAgent extends MicroAgent
 	public HelloService getHelloService() { return hs; }
 	public SendPositionService getSendPositionService() { return ps; }
 	public ReceiveNewGoalService getReceiveNewGoalService() { return gs; }
-	public GoalReachedService getGoalReachedService() { return gr; }
-	
-	//-------- static methods --------
-
-	/**
-	 *  Get the meta information about the agent.
-	 */
-//	public static MicroAgentMetaInfo getMetaInfo()
-//	{
-//		return new MicroAgentMetaInfo("This agent offers a helpline for getting information about missing persons.", null, 
-//			new IArgument[]{}//new Argument("infos", "Initial information records.", "InformationEntry[]")}
-//			, null, null, SUtil.createHashMap(new String[]{"componentviewer.viewerclass"}, new Object[]{"jadex.micro.examples.chat.ChatPanel"}),
-//			null, new Class[]{IMessageService.class});
-//	}
-
+	public GoalReachedService getGoalReachedService() { return gr; }	
 }

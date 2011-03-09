@@ -34,6 +34,9 @@ public class ExploreRobot extends Pioneer
 	public ExploreRobot(Device[] devList)
 	{
 	    super(devList);
+	    
+	    if (getBloFi() == null)
+	        logger.config("No blobfinder device found "+this);
 	}
 	
 	/**

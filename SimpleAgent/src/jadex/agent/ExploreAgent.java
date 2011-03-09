@@ -31,28 +31,27 @@ public class ExploreAgent extends WallfollowAgent
         
         /** Device list */
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
-        
         devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,robotIdx) );
         devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx) );
+        devList.add( new Device(IDevice.DEVICE_SONAR_CODE,host,port,robotIdx) );
         devList.add( new Device(IDevice.DEVICE_BLOBFINDER_CODE,host,port,robotIdx) );
-//      devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,robotIdx) );
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
         devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,robotIdx) );
         devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,robotIdx) );
         
         if (hasLaser == true)
             devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx+1));
        
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+        hostList.add(new Host(host,port+1));
+
         /** Get the device node */
-        setDeviceNode( new DeviceNode(
-                new Host[]
-                {
-                    new Host(host,port),
-                    new Host(host,port+1)
-                }, devList.toArray(new Device[devList.size()])));
-            
+        setDeviceNode( new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()])));
         getDeviceNode().runThreaded();
 
-        setRobot( new ExploreRobot(deviceNode.getDeviceListArray()) );
+        setRobot( new ExploreRobot(getDeviceNode().getDeviceListArray()) );
         getRobot().setRobotId("r"+robotIdx);
        
         /**
