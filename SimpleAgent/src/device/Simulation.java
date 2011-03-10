@@ -109,7 +109,14 @@ public class Simulation extends RobotDevice {
 		/**
 		 * TODO if there is no activity on this device the PlayerClient read() blocks
 		 */
-		((SimulationInterface) device).get2DPose ("ByeBye");
+		try
+		{
+		    ((SimulationInterface) getDevice()).get2DPose ("ByeBye");
+		}
+		catch (Exception e)
+		{
+		    getLogger().severe("Error getting simulation pose "+this);
+		}
 	}
 	/**
 	 * Set a Gui object's position.

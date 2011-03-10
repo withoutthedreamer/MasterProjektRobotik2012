@@ -150,7 +150,16 @@ public class Pioneer extends Robot implements IPioneer
 	{
 	    if (getPosi() != null)
 	    {
-	        getPosi().syncSpeed();
+	        try
+	        {
+	            getPosi().syncSpeed();
+	        } 
+	        catch (Exception e)
+	        {
+	            String log = "Error updating position device "+this;
+	            logger.severe(log);
+//	            throw new IllegalStateException(log);
+	        }
 	    }
 	}
 	/**
@@ -167,19 +176,22 @@ public class Pioneer extends Robot implements IPioneer
 	 */
 	public void stop()
 	{
-        setCurrentState(StateType.STOPPED);
+	    if (getCurrentState().equals(StateType.STOPPED) == false)
+	    {
+	        setCurrentState(StateType.STOPPED);
 
-        if (getPlanner() != null)
-	        getPlanner().stop();
-	    
-        if (getSimu() == null)
-            if (getPosi() != null)
-                getPosi().disableMotor();
+	        if (getPlanner() != null)
+	            getPlanner().stop();
 
-	    setTurnrate(0.0);
-	    setSpeed(0.0);
+	        if (getSimu() == null)
+	            if (getPosi() != null)
+	                getPosi().disableMotor();
 
-        commandMotors( getSpeed(), getTurnrate());
+	        setTurnrate(0.0);
+	        setSpeed(0.0);
+
+	        commandMotors( getSpeed(), getTurnrate());
+	    }
 	}
 
 	/**

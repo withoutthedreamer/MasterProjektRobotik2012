@@ -75,16 +75,17 @@ public class ViewAgent extends MicroAgent
 						Object[] content = (Object[])event.getValue();
 						
 						String robId = (String)content[1];
+						Position newPose = (Position)content[2];
 
 						if (folRobot == null)
 						{
-						    simu.setPositionOf(robId, (Position)content[2]);
+						    simu.setPositionOf(robId, newPose);
 						}
 						else
 						{
 						    if (robId.equals(folRobot))
 						    {
-						        simu.setPositionOf(robId, (Position)content[2]);
+						        simu.setPositionOf(robId, newPose);
 						    }
 						}
 					}

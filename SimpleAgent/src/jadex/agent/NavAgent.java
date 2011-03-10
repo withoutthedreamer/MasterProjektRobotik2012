@@ -99,8 +99,11 @@ public class NavAgent extends MicroAgent
 
 	void sendPosition(Position newPose)
 	{
-		ps.send(""+getComponentIdentifier(), robot.getRobotId(), newPose);
-		logger.finest(""+getComponentIdentifier()+" sending position "+newPose);
+	    if (newPose != null)
+	    {
+    		ps.send(""+getComponentIdentifier(), robot.getRobotId(), newPose);
+    		logger.finest(""+getComponentIdentifier()+" sending position "+newPose);
+	    }
 	}
 	
 	@Override public void executeBody()

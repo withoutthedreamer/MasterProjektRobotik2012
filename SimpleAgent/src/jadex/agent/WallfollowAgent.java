@@ -102,7 +102,10 @@ public class WallfollowAgent extends MicroAgent
 
     void sendPosition(Position newPose)
     {
-        ps.send(""+getComponentIdentifier(), ""+getRobot().getRobotId(), newPose);
+        if (newPose != null)
+        {
+            ps.send(""+getComponentIdentifier(), ""+getRobot().getRobotId(), newPose);
+        }
     }
 
     @Override public void executeBody()
