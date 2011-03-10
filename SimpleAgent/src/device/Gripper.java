@@ -29,6 +29,33 @@ public class Gripper extends RobotDevice
      * 3+2 Paddle photo diodes (2).
      * 1+0 Paddle positions: 1==0: down, 0==0: open. 
      */
+    /**
+     * Copied from JavaClient:
+     * Data: state (PLAYER_GRIPPER_DATA_STATE)
+     * The gripper interface returns 3 values that represent the current
+     * state of the gripper; the format is given below.  Note that the exact
+     * interpretation of this data may vary depending on the details of your
+     * gripper and how it is connected to your robot (e.g., General I/O vs. User
+     * I/O for the Pioneer gripper).
+     * The following list defines how the data can be interpreted for some
+     * Pioneer robots and Stage:
+     * - state (unsigned byte)
+     *   - bit 0: Paddles open
+     *   - bit 1: Paddles closed
+     *   - bit 2: Paddles moving
+     *   - bit 3: Paddles error
+     *   - bit 4: Lift is up
+     *   - bit 5: Lift is down
+     *   - bit 6: Lift is moving
+     *   - bit 7: Lift error
+     * - beams (unsigned byte)
+     *   - bit 0: Gripper limit reached
+     *   - bit 1: Lift limit reached
+     *   - bit 2: Outer beam obstructed
+     *   - bit 3: Inner beam obstructed
+     *   - bit 4: Left paddle open
+     *   - bit 5: Right paddle open
+     */
     Dio dio;
 	
 	boolean timeout;

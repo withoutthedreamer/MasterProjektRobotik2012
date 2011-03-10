@@ -116,7 +116,10 @@ public class FollowAgent extends NavAgent
                 getRobot().setGoal( followPose );
             }
         } else
+        {
+            // TODO check if already stopped
             getRobot().stop();
+        }
     }
 
     /**

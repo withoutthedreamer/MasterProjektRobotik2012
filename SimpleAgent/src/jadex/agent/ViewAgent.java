@@ -29,6 +29,9 @@ public class ViewAgent extends MicroAgent
 	protected Simulation simu = null;
 	protected DeviceNode deviceNode = null;
 	
+	/** Dedicated follow robot, if any */
+	String folRobot = null;
+	
 	@Override public void agentCreated()
 	{
 		hs = new HelloService(getExternalAccess());
@@ -53,6 +56,10 @@ public class ViewAgent extends MicroAgent
 		deviceNode.runThreaded();
 		
 		hs.send(""+getComponentIdentifier(), "", "Hello");
+		
+		int id = (Integer)getArgument("robot");
+		if (id != -1)
+		    folRobot = "r"+id;
 	}
 
 	@Override public void executeBody()
@@ -66,9 +73,20 @@ public class ViewAgent extends MicroAgent
 					public void changeOccurred(ChangeEvent event)
 					{
 						Object[] content = (Object[])event.getValue();
+						
+						String robId = (String)content[1];
 
-						simu.setPositionOf((String)content[1], (Position)content[2]);
-//						System.err.println("View receive: "+(String)content[1]+(Position)content[2]);
+						if (folRobot == null)
+						{
+						    simu.setPositionOf(robId, (Position)content[2]);
+						}
+						else
+						{
+						    if (robId.equals(folRobot))
+						    {
+						        simu.setPositionOf(robId, (Position)content[2]);
+						    }
+						}
 					}
 				});
 				return null;
@@ -86,7 +104,8 @@ public class ViewAgent extends MicroAgent
 			}
 		});
 	}
-	@Override public void agentKilled() {
+	@Override public void agentKilled()
+	{
 		deviceNode.shutdown();
 		hs.send(getComponentIdentifier().toString(), "", "Bye");
 	}

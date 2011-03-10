@@ -94,6 +94,10 @@ public class Robot extends Device implements IRobot
 	    {
 	        logger.info("No laser ranger device found "+this);
 	    }
+	    if (getSimu() == null)
+	    {
+	        logger.info("No simulation device found "+this);
+	    }
 	}
 	/**
 	 * @return The robot's Id string.
@@ -351,6 +355,6 @@ public class Robot extends Device implements IRobot
 
     @Override public String toString()
     {
-        return ""+getClass()+" "+getRobotId();
+        return ""+getClass().getName()+" "+getRobotId();
     }
 }

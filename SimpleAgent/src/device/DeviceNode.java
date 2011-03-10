@@ -407,17 +407,18 @@ public class DeviceNode extends Device
                     /** Device with following properties found on PlayerClient */
                     Device dev = new Device(devId, aHost.getHostName(), aHost.getPortNumber(), devIdx);
                     
-//                    if (Support.check(dev) == true && dev.matchesList(devList) == true)
                     if (dev.matchesList(devList) == true)
                     {
                         /**
                          * Add new device to device list
                          * as it matches to any of the given templates.
                          */
-//                        getDeviceList().add(new RobotDevice(this, dev));
                         Device newDev = initDevice(dev);
                         if (newDev != null)
+                        {
                             getDeviceList().add( newDev );
+                            logger.fine("Added device "+newDev);
+                        }
                     }
                 }
             }

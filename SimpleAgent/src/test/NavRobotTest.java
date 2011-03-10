@@ -1,5 +1,7 @@
 package test;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.AfterClass;
@@ -14,7 +16,6 @@ import data.Position;
 import device.Device;
 import device.DeviceNode;
 import device.IDevice;
-import device.Simulation;
 
 public class NavRobotTest
 {
@@ -23,11 +24,28 @@ public class NavRobotTest
 	
     @BeforeClass public static void setUpBeforeClass() throws Exception
     {
-        deviceNode = new DeviceNode( new Host[]{new Host("localhost",6665), new Host("localhost",6666)}, (Device[]) null );
+        int port = 6665;
+        String host = "localhost";
+        
+        /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,0) );
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
+        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,-1) );
+        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,-1) );
+        devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,-1));
+
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+        hostList.add(new Host(host,port+1));
+
+        deviceNode = new DeviceNode( hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]) );
         assertNotNull(deviceNode);
         
         robot = new NavRobot(deviceNode.getDeviceListArray());
         assertNotNull(robot);
+        robot.setRobotId("r0");
         
         deviceNode.runThreaded();
         assertTrue(deviceNode.isThreaded());
@@ -47,10 +65,7 @@ public class NavRobotTest
     @Test public void testSetPosition()
     {
 		Position pose = new Position(-6,-5,Math.toRadians(90));
-		
-		Simulation simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
-		simu.setPositionOf("r0", pose);
-		
+
 		robot.setPosition(pose);
 	}
 

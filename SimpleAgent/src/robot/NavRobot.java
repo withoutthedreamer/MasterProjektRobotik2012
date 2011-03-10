@@ -24,6 +24,12 @@ public class NavRobot extends Pioneer
 	public NavRobot (Device[] devList)
 	{
 	    super(devList);
+	    
+	    if (getPlanner() == null)
+	        throw new IllegalStateException("No planner device found "+this);
+	    
+	    if (getLocalizer() == null)
+	        throw new IllegalStateException("No localize device found "+this);
 	}
 
 	@Override protected void update () {	/** Robot is planner controlled */	}

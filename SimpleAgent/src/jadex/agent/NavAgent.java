@@ -56,16 +56,19 @@ public class NavAgent extends MicroAgent
         /** Device list */
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
         devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,0) ); // TODO why playerclient blocks if not present?
-        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,null,-1,-1) );
         devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,0) );
         devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,0) );
 
         if (hasLaser == true)
-            devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx+1));
+            devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,-1));
 
         /** Host list */
         CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
         hostList.add(new Host(host,port));
+        hostList.add(new Host(host,port+1));
+        if (port != 6665)
+            hostList.add(new Host(host,6665));
         
         /** Get the device node */
         setDeviceNode( new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()])));
@@ -118,10 +121,11 @@ public class NavAgent extends MicroAgent
 				{
 					robot.getPlanner().addIsDoneListener(new IPlannerListener()
 					{
-						@Override public void callWhenIsDone() {
-							gr.send(""+getComponentIdentifier(), robot.getRobotId(),robot.getPlanner().getGoal());
+						@Override public void callWhenIsDone()
+						{
+							gr.send(""+getComponentIdentifier(), ""+robot,robot.getPlanner().getGoal());
 
-							logger.info(""+getComponentIdentifier()+(String)getArgument("name")+" reached goal "+robot.getPlanner().getGoal());
+							logger.fine(""+getComponentIdentifier()+" "+robot+" reached goal "+robot.getPlanner().getGoal());
 						}
 					});
 				}
@@ -140,7 +144,8 @@ public class NavAgent extends MicroAgent
 				{
 					robot.getLocalizer().addListener(new ILocalizeListener()
 					{
-						@Override public void newPositionAvailable(Position newPose) {
+						@Override public void newPositionAvailable(Position newPose)
+						{
 							sendPosition(newPose);
 						}
 					});
@@ -164,14 +169,16 @@ public class NavAgent extends MicroAgent
 						StringBuffer buf = new StringBuffer();
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString());
 						
-						logger.finer("Receiving "+buf.toString()+" "+getComponentIdentifier().toString());
+						logger.finer("Receiving "+buf+" "+getComponentIdentifier());
 						
 						/** Check if it is this robot's goal */
-						if ( ((String)content[1]).equals((String)getArgument("name")) ||
-							 ((String)content[1]).equals("all") )
+						if (
+						     ((String)content[1]).equals(robot.getRobotId()) ||
+							 ((String)content[1]).equals("all")
+						)
 						{
 							robot.setGoal((Position)content[2]);
-							logger.finest((String)getArgument("name")+" received new goal "+((Position)content[2]).toString());
+							logger.finest(""+robot+" received new goal "+((Position)content[2]));
 						}
 					}
 				});
@@ -222,7 +229,9 @@ public class NavAgent extends MicroAgent
 						
 						/** Sending position on request */
 						if (((String)content[1]).equals("request"))
+						{
 							sendPosition(robot.getPosition());
+						}
 					}
 				});
 				return null;
@@ -236,7 +245,7 @@ public class NavAgent extends MicroAgent
 		robot.shutdown();
 		deviceNode.shutdown();
 		
-		hs.send(""+getComponentIdentifier(), robot.getRobotId(), "Bye");
+		hs.send(""+getComponentIdentifier(), ""+robot, "Bye");
 		logger.fine("Bye "+getComponentIdentifier());
 	}
 	
