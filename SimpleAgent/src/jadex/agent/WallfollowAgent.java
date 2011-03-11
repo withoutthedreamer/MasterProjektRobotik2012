@@ -52,15 +52,18 @@ public class WallfollowAgent extends MicroAgent
         Integer port = (Integer)getArgument("port");
         Integer robotIdx = (Integer)getArgument("index");
         Boolean hasLaser = (Boolean)getArgument("laser");
-        //            Boolean hasPlanner = (Boolean)getArgument("planner");
+        Boolean hasLocalize = (Boolean)getArgument("localize");
 
         /** Device list */
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
         devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,robotIdx) );
         devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx) );
         devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
-        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,robotIdx) );
-        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,robotIdx) );
+        if (hasLocalize == true)
+        {
+            devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,robotIdx) );
+            devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,robotIdx) );
+        }
 
         /** Optional laser ranger */
         if (hasLaser == true)
@@ -71,8 +74,8 @@ public class WallfollowAgent extends MicroAgent
         hostList.add(new Host(host,port));
 
         /** Optional planner device */
-        //            if (hasPlanner == true)
-        hostList.add(new Host(host,port+1));
+        if (hasLocalize == true)
+            hostList.add(new Host(host,port+1));
 
         /** Get the device node */
         setDeviceNode( new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()])));
@@ -110,11 +113,6 @@ public class WallfollowAgent extends MicroAgent
 
     @Override public void executeBody()
     {
-        //            /** Agent is worthless if underlying robot or devices fail */
-        //            if (robot == null || deviceNode == null) {
-        //                killAgent();
-        //            }
-
         /**
          *  Register localizer callback
          */
@@ -131,6 +129,24 @@ public class WallfollowAgent extends MicroAgent
                             sendPosition(newPose);
                         }
                     });
+                }
+                else
+                {
+                    /**
+                     * Read position periodically
+                     */
+                    final IComponentStep step = new IComponentStep()
+                    {
+                        public Object execute(IInternalAccess ia)
+                        {
+                            Position curPose = robot.getPosition();
+                            sendPosition(curPose);
+                            logger.finest("Sending new pose "+curPose+" for "+robot);
+                            waitFor(1000,this);
+                            return null;
+                        }
+                    };
+                    waitForTick(step);
                 }
                 return null;
             }
@@ -222,7 +238,7 @@ public class WallfollowAgent extends MicroAgent
                 new Argument("Y", "Meter", "Double", new Double(0.0)),
                 new Argument("Angle", "Degree", "Double", new Double(0.0)),
                 new Argument("laser", "Laser ranger", "Boolean", new Boolean(true)),
-                //                    new Argument("planner", "Path planner device", "Boolean", new Boolean(true))
+                new Argument("localize", "Localize device", "Boolean", new Boolean(true))
         };
 
         return new MicroAgentMetaInfo("This agent starts up a wallfollow agent.", null, args, null);

@@ -52,13 +52,17 @@ public class NavAgent extends MicroAgent
 		Integer port = (Integer)getArgument("port");
         Integer robotIdx = (Integer)getArgument("index");
         Boolean hasLaser = (Boolean)getArgument("laser");
+        Boolean hasSimu = (Boolean)getArgument("simulation");
+        Integer argDevIdx = (Integer)getArgument("devIndex");
 
         /** Device list */
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
-        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,0) ); // TODO why playerclient blocks if not present?
-        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,null,-1,-1) );
-        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,0) );
-        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,0) );
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,argDevIdx) ); // TODO why playerclient blocks if not present?
+        if (hasSimu == true)
+            devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,null,-1,-1) );
+        
+        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,argDevIdx) );
+        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,argDevIdx) );
 
         if (hasLaser == true)
             devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,-1));
@@ -145,6 +149,10 @@ public class NavAgent extends MicroAgent
 			{
 				if (robot.getLocalizer() != null) /** Does it have a localizer? */
 				{
+				    /**
+				     * Register a localize callback.
+				     * When it is called send the new position.
+				     */
 					robot.getLocalizer().addListener(new ILocalizeListener()
 					{
 						@Override public void newPositionAvailable(Position newPose)
@@ -152,6 +160,24 @@ public class NavAgent extends MicroAgent
 							sendPosition(newPose);
 						}
 					});
+				}
+				else
+				{
+				    /**
+			         * Read position periodically
+			         */
+			        final IComponentStep step = new IComponentStep()
+			        {
+			            public Object execute(IInternalAccess ia)
+			            {
+			                Position curPose = robot.getPosition();
+			                sendPosition(curPose);
+			                logger.finest("Sending new pose "+curPose+" for "+robot);
+			                waitFor(1000,this);
+			                return null;
+			            }
+			        };
+			        waitForTick(step);
 				}
 				return null;
 			}
@@ -205,8 +231,8 @@ public class NavAgent extends MicroAgent
 						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(" ").append(content[2].toString());
 												
 						/** Check for reply request */
-						if (((String)content[2]).equalsIgnoreCase("ping")) {
-
+						if (((String)content[2]).equalsIgnoreCase("ping"))
+						{
 							logger.finer(""+getComponentIdentifier()+" receiving "+buf);
 
 							sendHello();
@@ -263,10 +289,12 @@ public class NavAgent extends MicroAgent
                 new Argument("host", "Player", "String", "localhost"),
 				new Argument("port", "Player", "Integer", new Integer(6665)),
                 new Argument("index", "Robot index", "Integer", new Integer(0)),
+                new Argument("devIndex", "Device index", "Integer", new Integer(0)),
 				new Argument("X", "Meter", "Double", new Double(0.0)),
 				new Argument("Y", "Meter", "Double", new Double(0.0)),
 				new Argument("Angle", "Degree", "Double", new Double(0.0)),
-                new Argument("laser", "Laser ranger", "Boolean", new Boolean(true))
+                new Argument("laser", "Laser ranger", "Boolean", new Boolean(true)),
+                new Argument("simulation", "Simulation device", "Boolean", new Boolean(true))
 		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a navigation agent.", null, args, null);

@@ -4,9 +4,6 @@
  */
 package robot;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import data.Position;
 import device.Device;
 
@@ -23,10 +20,11 @@ public class Pioneer extends Robot implements IPioneer
     StateType currentState = StateType.SET_SPEED;
     
     /** Watchdog timer for stuck checking */
-    boolean timerIsArmed = false;
+//    boolean timerIsArmed = false;
     boolean timerIsOccured = false;
-    Timer timer;
+//    Timer timer;
     Position lastPosition;
+    int stuckCounter = 0;
 
 
     /**
@@ -103,32 +101,50 @@ public class Pioneer extends Robot implements IPioneer
     	    }
 	    }
 	}
+    // TODO check and debug
     double getEscapeWhenStuck(double newTurnrate)
-    {
-        if (timerIsArmed == false)
+    {        
+        if (stuckCounter <= 0)
         {
-            timerIsArmed = true;
             lastPosition = getPosition();
-            timer = new Timer();
-            timer.schedule(new TimerTask()
-            {
-                public void run()
-                {
-                    timerIsArmed = false;
-
-                    if (lastPosition.distanceTo(getPosition()) < 0.2 )
-                    {
-                        timerIsOccured = true;
-                    }
-                }
-            }, 2000);
-
         }
+        else
+        {
+            if (stuckCounter >= 20)
+            {
+                stuckCounter = 0;
+                if (lastPosition.distanceTo(getPosition()) < 0.2 )
+                {
+                    timerIsOccured = true;
+                }
+            }
+        }
+//        if (timerIsArmed == false)
+//        {
+//            timerIsArmed = true;
+//            lastPosition = getPosition();
+//            timer = new Timer();
+//            timer.schedule(new TimerTask()
+//            {
+//                public void run()
+//                {
+//                    timerIsArmed = false;
+//
+//                    if (lastPosition.distanceTo(getPosition()) < 0.2 )
+//                    {
+//                        timerIsOccured = true;
+//                    }
+//                }
+//            }, 2000);
+
+//        }
         if (timerIsOccured == true)
         {
             timerIsOccured = false;
             setCurrentState(StateType.STUCK_ESCAPING);
         }
+        
+        stuckCounter += 1;
         
         return newTurnrate;
     }

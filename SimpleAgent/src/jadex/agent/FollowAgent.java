@@ -25,6 +25,7 @@ public class FollowAgent extends NavAgent
     String folRobot;
     boolean caughtRobot = false;
     long updateInterval;
+    double minToGoalDist;
 
     /**
      * @see jadex.agent.NavAgent#agentCreated()
@@ -38,6 +39,7 @@ public class FollowAgent extends NavAgent
         robotPose = getRobot().getPosition();
         folRobot = "r"+(Integer)getArgument("robot");
         updateInterval = (Integer)getArgument("updateInterval");
+        minToGoalDist = (Double)getArgument("minDistance");
     }
 
     /**
@@ -66,7 +68,8 @@ public class FollowAgent extends NavAgent
                             Position curPose = (Position) content[2];
                             
                             /** Check for new position */
-                            if (followPose.equals(curPose) == false) {
+                            if (followPose.equals(curPose) == false)
+                            {
                                 followPose = curPose;
                                 isNewFollowPose = true;
                             }
@@ -93,6 +96,24 @@ public class FollowAgent extends NavAgent
                         }
                     });
                 }
+                else
+                {
+                    /**
+                     * Read position periodically
+                     */
+                    final IComponentStep step = new IComponentStep()
+                    {
+                        public Object execute(IInternalAccess ia)
+                        {
+                            Position curPose = robot.getPosition();
+                            robotPose = curPose;
+
+                            waitFor(1000,this);
+                            return null;
+                        }
+                    };
+                    waitForTick(step);
+                }
                 return null;
             }
         });
@@ -113,22 +134,31 @@ public class FollowAgent extends NavAgent
    
     public void updateGoal()
     {
-        /** Check for distance to goal */
-        if (robotPose.distanceTo( followPose ) >= (Double)getArgument("minDistance"))
+        /**
+         * Check for distance to goal.
+         */
+        if (robotPose.distanceTo( followPose ) >= minToGoalDist)
         {
             caughtRobot = false;
-            /** Check for new goal */
-            if (isNewFollowPose == true) {
+            /**
+             *  Check for new goal
+             */
+            if (isNewFollowPose == true)
+            {
                 isNewFollowPose = false;
                 getRobot().setGoal( followPose );
             }
         }
         else
         {
+            /**
+             * Goal reached.
+             */
             if (caughtRobot == false)
             {
                 caughtRobot = true;
                 getRobot().stop();
+                
                 logger.info("Caught robot "+folRobot);
             }
         }
@@ -149,10 +179,12 @@ public class FollowAgent extends NavAgent
                 new Argument("host", "Player", "String", "localhost"),
                 new Argument("port", "Player", "Integer", new Integer(6667)),
                 new Argument("index", "Robot index", "Integer", new Integer(1)),
+                new Argument("devIndex", "Device index", "Integer", new Integer(0)),
                 new Argument("X", "Meter", "Double", new Double(0.0)),
                 new Argument("Y", "Meter", "Double", new Double(0.0)),
                 new Argument("Angle", "Degree", "Double", new Double(0.0)),
                 new Argument("laser", "Laser ranger", "Boolean", new Boolean(true)),
+                new Argument("simulation", "Simulation device", "Boolean", new Boolean(true)),
                 new Argument("minDistance", "Meter", "Double", new Double(2.0)),
                 new Argument("updateInterval", "ms", "Integer", new Integer(5000))
         };
@@ -163,7 +195,8 @@ public class FollowAgent extends NavAgent
     /**
      * @return the followPose
      */
-    synchronized Position getFollowPose() {
+    synchronized Position getFollowPose()
+    {
         assert(followPose != null);
         return followPose;
     }
