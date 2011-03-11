@@ -176,8 +176,8 @@ public class Pioneer extends Robot implements IPioneer
 	 */
 	public void stop()
 	{
-	    if (getCurrentState().equals(StateType.STOPPED) == false)
-	    {
+//	    if (getCurrentState().equals(StateType.STOPPED) == false)
+//	    {
 	        setCurrentState(StateType.STOPPED);
 
 	        if (getPlanner() != null)
@@ -191,7 +191,7 @@ public class Pioneer extends Robot implements IPioneer
 	        setSpeed(0.0);
 
 	        commandMotors( getSpeed(), getTurnrate());
-	    }
+//	    }
 	}
 
 	/**

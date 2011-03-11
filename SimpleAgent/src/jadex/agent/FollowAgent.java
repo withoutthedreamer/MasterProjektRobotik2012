@@ -22,6 +22,9 @@ public class FollowAgent extends NavAgent
     Position followPose;
     Position robotPose;
     boolean isNewFollowPose;
+    String folRobot;
+    boolean caughtRobot = false;
+    long updateInterval;
 
     /**
      * @see jadex.agent.NavAgent#agentCreated()
@@ -33,6 +36,8 @@ public class FollowAgent extends NavAgent
         isNewFollowPose = false;
         followPose = getRobot().getPosition();
         robotPose = getRobot().getPosition();
+        folRobot = "r"+(Integer)getArgument("robot");
+        updateInterval = (Integer)getArgument("updateInterval");
     }
 
     /**
@@ -56,7 +61,7 @@ public class FollowAgent extends NavAgent
                         Object[] content = (Object[])event.getValue();
 
                         /** Sending position on request */
-                        if (((String)content[1]).equals( "r"+(Integer)getArgument("robot") ))
+                        if (((String)content[1]).equals( folRobot ))
                         {
                             Position curPose = (Position) content[2];
                             
@@ -99,7 +104,7 @@ public class FollowAgent extends NavAgent
             public Object execute(IInternalAccess ia)
             {
                 updateGoal();
-                waitFor((Integer)getArgument("updateInterval"),this);
+                waitFor(updateInterval,this);
                 return null;
             }
         };
@@ -109,23 +114,31 @@ public class FollowAgent extends NavAgent
     public void updateGoal()
     {
         /** Check for distance to goal */
-        if (robotPose.distanceTo( followPose ) >= (Double)getArgument("minDistance")) {
+        if (robotPose.distanceTo( followPose ) >= (Double)getArgument("minDistance"))
+        {
+            caughtRobot = false;
             /** Check for new goal */
             if (isNewFollowPose == true) {
                 isNewFollowPose = false;
                 getRobot().setGoal( followPose );
             }
-        } else
+        }
+        else
         {
-            // TODO check if already stopped
-            getRobot().stop();
+            if (caughtRobot == false)
+            {
+                caughtRobot = true;
+                getRobot().stop();
+                logger.info("Caught robot "+folRobot);
+            }
         }
     }
 
     /**
      * @see jadex.agent.NavAgent#agentKilled()
      */
-    @Override public void agentKilled() {
+    @Override public void agentKilled()
+    {
         super.agentKilled();
     }
 

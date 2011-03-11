@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- <H3> Hunter and prey scenario </H3> Starts the hunter and prey scenario. -->
+<applicationtype xmlns="http://jadex.sourceforge.net/jadex-application"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-application
+						http://jadex.sourceforge.net/jadex-application-2.0.xsd"
+	name="huntNPrey" package="jadex.scenario">
+
+	<arguments>
+		<argument name="port" typename="Integer"> 6665 </argument>
+		<argument name="host" typename="String"> "localhost" </argument>
+	</arguments>
+
+	<componenttypes>
+		<componenttype name="Escape0" filename="jadex/agent/EscapeAgent.class"
+			master="true" />
+		<componenttype name="Follow0" filename="jadex/agent/FollowAgent.class"
+			master="true" />
+		<componenttype name="Follow1" filename="jadex/agent/FollowAgent.class"
+			master="true" />
+	</componenttypes>
+
+	<applications>
+		
+		<application name="3 Robots, 4 Rooms">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 0 </argument>
+						<argument name="X"> 1.0 </argument>
+						<argument name="Y"> 1.0 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 0 </argument>
+						<argument name="port"> $args.port+2 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 1 </argument>
+						<argument name="updateInterval"> 3000 </argument>
+						<argument name="X"> -7.0 </argument>
+						<argument name="Y"> 7.0 </argument>
+					</arguments>
+				</component>
+				<component type="Follow1" name="Follow1">
+					<arguments>
+						<argument name="robot"> 0 </argument>
+						<argument name="port"> $args.port+4 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 2 </argument>
+						<argument name="updateInterval"> 5000 </argument>
+						<argument name="X"> -7.0 </argument>
+						<argument name="Y"> -3.0 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="3 Robots, Tams floor">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 0 </argument>
+						<argument name="X"> -17.0 </argument>
+						<argument name="Y"> -1.5 </argument>
+						<argument name="Angle"> 180.0 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 0 </argument>
+						<argument name="port"> $args.port+2 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 1 </argument>
+						<argument name="updateInterval"> 3000 </argument>
+						<argument name="X"> -25.0 </argument>
+						<argument name="Y"> 3.5 </argument>
+						<argument name="Angle"> -90.0 </argument>
+					</arguments>
+				</component>
+				<component type="Follow1" name="Follow1">
+					<arguments>
+						<argument name="robot"> 0 </argument>
+						<argument name="port"> $args.port+4 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 2 </argument>
+						<argument name="updateInterval"> 5000 </argument>
+						<argument name="X"> -29.0 </argument>
+						<argument name="Y"> -1.5 </argument>
+						<argument name="Angle"> 0.0 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="3 Robots, Tams floor 2">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 0 </argument>
+						<argument name="X"> -17.0 </argument>
+						<argument name="Y"> -1.5 </argument>
+						<argument name="Angle"> 180.0 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 0 </argument>
+						<argument name="port"> $args.port+2 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 1 </argument>
+						<argument name="updateInterval"> 3000 </argument>
+						<argument name="X"> -10.0 </argument>
+						<argument name="Y"> 4.0 </argument>
+						<argument name="Angle"> -90.0 </argument>
+					</arguments>
+				</component>
+				<component type="Follow1" name="Follow1">
+					<arguments>
+						<argument name="robot"> 0 </argument>
+						<argument name="port"> $args.port+4 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 2 </argument>
+						<argument name="updateInterval"> 5000 </argument>
+						<argument name="X"> 0.0 </argument>
+						<argument name="Y"> -1.5 </argument>
+						<argument name="Angle"> 180.0 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+	</applications>
+
+</applicationtype>
