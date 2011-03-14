@@ -12,17 +12,23 @@ import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.micro.MicroAgentMetaInfo;
 import jadex.service.HelloService;
+import jadex.service.ReceiveNewGoalService;
 import jadex.service.SendPositionService;
 
 public class ExploreAgent extends WallfollowAgent
 {	
-	@Override public void agentCreated()
+    /** Services */
+    ReceiveNewGoalService gs;
+
+    @Override public void agentCreated()
 	{
 	    hs = new HelloService(getExternalAccess());
         ps = new SendPositionService(getExternalAccess());
+        gs = new ReceiveNewGoalService(getExternalAccess());
 
         addDirectService(hs);
         addDirectService(ps);
+        addDirectService(gs);
 
         String host = (String)getArgument("host");
         Integer port = (Integer)getArgument("port");
@@ -67,7 +73,24 @@ public class ExploreAgent extends WallfollowAgent
         
         sendHello();
 	}
-	public static MicroAgentMetaInfo getMetaInfo()
+	
+	/**
+     * @see jadex.agent.WallfollowAgent#executeBody()
+     */
+    @Override public void executeBody()
+    {    
+        super.executeBody();
+        /**
+         * Register to blobfinder
+         */
+        
+        /** Send new goal position */
+        
+    }
+
+    public ReceiveNewGoalService getReceiveNewGoalService() { return gs; }
+
+    public static MicroAgentMetaInfo getMetaInfo()
     {
         IArgument[] args = {
                 new Argument("host", "Player", "String", "localhost"),

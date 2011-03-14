@@ -135,8 +135,13 @@ public class BlobfinderBlob {
 	public void setDiscovered(Position discovered) {
 		this.discovered = discovered;
 	}
+	/** @deprecated use {@link #getColorString()} instead */
 	public static String getColorString(int color2) {
 		return colorhm.get(color2);
+	}
+	public String getColorString()
+	{
+	    return colorhm.get(color);
 	}
 	public String toString()
 	{

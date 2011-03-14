@@ -100,25 +100,30 @@ public class Blobfinder extends RobotDevice
 	}
 	void notifiyListeners(BlobfinderBlob newBlob)
 	{
-	    Iterator<IBlobfinderListener> it = newBlobListeners.iterator();
-	    while (it.hasNext()) { it.next().newBlobFound(newBlob); }
+	    if (newBlob != null)
+	    {
+	        Iterator<IBlobfinderListener> it = newBlobListeners.iterator();
+	        while (it.hasNext()) { it.next().newBlobFound(newBlob); }
+	    }
 	}
 	/**
 	 * Add a new listener to this device.
 	 * The callback is called whenever a new blob is found.
 	 * @param cb The callback method.
+	 * @return 
 	 */
-	public void addBlobListener(IBlobfinderListener cb)
+	public boolean addBlobListener(IBlobfinderListener cb)
 	{
-	    newBlobListeners.addIfAbsent(cb);
+	    return newBlobListeners.addIfAbsent(cb);
     }
 	/**
 	 * Remove a listener to this device.
 	 * @param cb The callback method.
+	 * @return 
 	 */
-    public void removeBlobListener(IBlobfinderListener cb)
+    public boolean removeBlobListener(IBlobfinderListener cb)
     {
-        newBlobListeners.remove(cb);
+        return newBlobListeners.remove(cb);
     }
     /**
      * Clear internal structures.

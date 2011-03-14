@@ -31,7 +31,8 @@ public class AllTests
         suite.addTest(LocalizerTest.suite());  
 		suite.addTest(PlannerTest.suite());  
 		suite.addTest(PioneerTest.suite());  
-		suite.addTest(NavRobotTest.suite());  
+		suite.addTest(NavRobotTest.suite()); 
+		suite.addTest(BlobfinderTest.suite());
         suite.addTest(ExploreRobotTest.suite());
 		suite.addTest(GripperTest.suite());  
 
