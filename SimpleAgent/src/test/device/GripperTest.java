@@ -1,7 +1,7 @@
 /**
  * 
  */
-package test;
+package test.device;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 

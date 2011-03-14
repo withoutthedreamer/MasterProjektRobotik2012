@@ -1,4 +1,4 @@
-package test;
+package test.robot;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,11 +16,15 @@ import data.Position;
 import device.Device;
 import device.DeviceNode;
 import device.IDevice;
+import device.IPlannerListener;
+import device.Simulation;
 
 public class NavRobotTest
 {
 	static NavRobot robot;
 	static DeviceNode deviceNode;
+	static Simulation si;
+	static Position tmpGoalPose;
 	
     @BeforeClass public static void setUpBeforeClass() throws Exception
     {
@@ -52,6 +56,10 @@ public class NavRobotTest
         
         robot.runThreaded();
         assertTrue(robot.isThreaded());
+        
+        si = (Simulation)deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE,null,-1,-1));
+        si.initPositionOf("r0");
+
     }
     @AfterClass public static void tearDownAfterClass() throws Exception
     {
@@ -78,7 +86,9 @@ public class NavRobotTest
 
 	@Test public void testSetGoal()
 	{
-		robot.setGoal(new Position(-6.5,-2,Math.toRadians(75)));
+	    tmpGoalPose = new Position(-6.5,-2,Math.toRadians(75));
+		robot.setGoal(tmpGoalPose);
+		si.setPositionOf("green", tmpGoalPose);
 	}
 
 	@Test public void testGetGoal()
@@ -88,13 +98,33 @@ public class NavRobotTest
 	
 	@Test public void testGetPositionAtGoal()
 	{
-		try { Thread.sleep(10000); } catch (InterruptedException e) { e.printStackTrace(); }
+		try { Thread.sleep(15000); } catch (InterruptedException e) { e.printStackTrace(); }
 		
 		Position robotPose = robot.getPosition();
 		Position goalPose = new Position(-6.5,-2,Math.toRadians(75));
 		
 		System.out.println(robotPose+" "+goalPose);
 		assertTrue(robot.getPosition().isNearTo(goalPose, 2, Math.toRadians(30)));
+	}
+	@Test public void testSetAccurateGoal()
+	{
+	    tmpGoalPose = new Position(-2,-3,0);
+	    robot.setGoal(tmpGoalPose);
+	    
+	    /** Add isDone listener */
+        robot.getPlanner().addIsDoneListener(new IPlannerListener()
+        {
+            @Override public void callWhenIsDone()
+            {
+                double delta = tmpGoalPose.distanceTo(si.getPositionOf("r0"));
+                System.out.println("Planar delta: "+delta);
+//                assertTrue(delta < 1.0);
+            }
+        });
+
+        si.setPositionOf("green", tmpGoalPose);
+        
+        try { Thread.sleep(20000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 
 	/** To use JUnit  test suite */

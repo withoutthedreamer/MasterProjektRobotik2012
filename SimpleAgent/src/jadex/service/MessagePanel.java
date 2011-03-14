@@ -146,7 +146,7 @@ public class MessagePanel extends JPanel
 					{
 						Object[] content = (Object[])event.getValue();
 						StringBuffer buf = new StringBuffer();
-						buf.append("[").append(content[0].toString()).append("|").append(ca.getReceiveNewGoalService().getClass().getName()).append("]: ").append(content[1].toString()).append(" heading ").append(content[2].toString()).append(lf);
+						buf.append("[").append(content[0].toString()).append("|").append(ca.getReceiveNewGoalService().getClass().getName()).append("]: ").append(content[1].toString()).append(" @ ").append(content[2].toString()).append(lf);
 						
 						ta.append(buf.toString());
 						scrollToEnd(main);

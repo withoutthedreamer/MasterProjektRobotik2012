@@ -3,13 +3,16 @@ package jadex.agent;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import robot.ExploreRobot;
+import data.BlobfinderBlob;
+import data.Board;
+import data.BoardObject;
 import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
+import device.IBlobfinderListener;
 import device.IDevice;
-import jadex.bridge.Argument;
-import jadex.bridge.IArgument;
+import jadex.bridge.*;
 import jadex.micro.MicroAgentMetaInfo;
 import jadex.service.HelloService;
 import jadex.service.ReceiveNewGoalService;
@@ -19,6 +22,9 @@ public class ExploreAgent extends WallfollowAgent
 {	
     /** Services */
     ReceiveNewGoalService gs;
+
+    /** Data */
+    Board bb;
 
     @Override public void agentCreated()
 	{
@@ -69,7 +75,9 @@ public class ExploreAgent extends WallfollowAgent
                 (Double)getArgument("Angle"));
         
         if ( setPose.equals(new Position(0,0,0)) == false )
-            getRobot().setPosition(setPose);         
+            getRobot().setPosition(setPose);
+        
+        bb = new Board();
         
         sendHello();
 	}
@@ -80,12 +88,59 @@ public class ExploreAgent extends WallfollowAgent
     @Override public void executeBody()
     {    
         super.executeBody();
+        
         /**
-         * Register to blobfinder
+         * Register to Blobfinder device
          */
+        if (getRobot().getBloFi() != null)
+        {
+            scheduleStep(new IComponentStep()
+            {
+                public Object execute(IInternalAccess ia)
+                {
+                    getRobot().getBloFi().addBlobListener(new IBlobfinderListener()
+                    {
+                        @Override public void newBlobFound(BlobfinderBlob newBlob)
+                        {
+                            /** Board object */
+                            if (bb.getObject(newBlob.getColorString()) == null)
+                            {
+                                Position blobPose = new Position(newBlob.getRange(),0,newBlob.getAngle(Math.PI/2,80));
+                                Position globPose = blobPose.getCartesianCoordinates().getGlobalCoordinates(getRobot().getPosition()); 
+
+                                BoardObject bo = new BoardObject();
+                                bo.setName(""+newBlob.getClass());
+                                bo.setPosition(globPose);
+
+                                bb.addObject(newBlob.getColorString(), bo);
+                            }
+                        }
+                    });
+                    return null;
+                }
+            });
+        }
         
-        /** Send new goal position */
-        
+        /**
+         * Send blob positions periodically 
+         */
+        final IComponentStep step = new IComponentStep()
+        {
+            public Object execute(IInternalAccess ia)
+            {
+                BoardObject[] objList = bb.getArrayList();
+                
+                for (int i=0; i<objList.length; i++)
+                {
+                    getReceiveNewGoalService().send(""+getComponentIdentifier(), "collectGoal", objList[i].getPosition());
+                }
+                
+                waitFor(10000,this);
+                return null;
+            }
+        };
+        waitForTick(step);
+
     }
 
     public ReceiveNewGoalService getReceiveNewGoalService() { return gs; }

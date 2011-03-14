@@ -1,7 +1,7 @@
 /**
  * 
  */
-package test;
+package test.robot;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 

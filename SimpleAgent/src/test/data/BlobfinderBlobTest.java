@@ -1,7 +1,7 @@
 /**
  * 
  */
-package test;
+package test.data;
 
 import junit.framework.JUnit4TestAdapter;
 import junit.framework.TestCase;

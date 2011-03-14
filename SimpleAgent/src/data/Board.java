@@ -135,4 +135,21 @@ public class Board
 		
 		return topicKeys;
 	}
+	public BoardObject[] getArrayList()
+	{
+	    removeIfObsolete();
+
+        BoardObject[] objList = new BoardObject[objectHm.size()];
+
+	    Iterator<Entry<String, BoardObject>> it = getIterator();
+
+	    int i=0;
+	    while (it.hasNext())
+	    {
+	        Entry<String, BoardObject> entry = it.next();
+	        objList[i] = entry.getValue();
+	        i += 1;
+	    }
+	    return objList;
+	}
 }

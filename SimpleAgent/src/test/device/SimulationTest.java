@@ -1,4 +1,4 @@
-package test;
+package test.device;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -104,6 +104,15 @@ public class SimulationTest
 			// Pause to verify position in gui window
 			try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
+	}
+	
+	@Test public void testGetPositionOf()
+	{
+	    Position goalPose = simu.getPositionOf("r0");
+	    System.out.println("r0 "+goalPose);
+	    
+	    assertTrue(goalPose.distanceTo(new Position(-2,-2,360)) < 0.1);
+
 	}
 
 	/** To use JUnit  test suite */

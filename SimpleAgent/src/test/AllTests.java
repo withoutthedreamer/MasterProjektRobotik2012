@@ -3,6 +3,20 @@
  */
 package test;
 
+import test.data.BlobfinderBlobTest;
+import test.data.BoardTest;
+import test.data.PositionTest;
+import test.device.BlobfinderTest;
+import test.device.DeviceNodeTest;
+import test.device.DeviceTest;
+import test.device.GripperTest;
+import test.device.LocalizerTest;
+import test.device.PlannerTest;
+import test.device.RobotDeviceTest;
+import test.device.SimulationTest;
+import test.robot.ExploreRobotTest;
+import test.robot.NavRobotTest;
+import test.robot.PioneerTest;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 

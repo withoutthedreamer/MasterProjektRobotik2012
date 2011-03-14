@@ -1,4 +1,4 @@
-package test;
+package test.device;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
