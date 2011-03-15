@@ -69,7 +69,7 @@ public class MasterAgent extends MicroAgent
 						
 						if (id != "" && board.getObject(id) == null) {
 							BoardObject bo = new BoardObject();
-							bo.setName(name);
+							bo.setTopic(name);
 							
 							board.addObject(id, bo);
 							logger.info(""+getComponentIdentifier()+" adding to board: "+id);

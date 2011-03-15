@@ -43,7 +43,7 @@ public class MessagePanel extends JPanel
 	{
 		this.agent = agent;
 		
-		final JTextArea ta = new JTextArea(10, 30);
+		final JTextArea ta = new JTextArea(10, 60);
 		final JScrollPane main = new JScrollPane(ta);
 		
 		/** Register message service */

@@ -5,9 +5,10 @@ public class BoardObject {
 	Goal goal;
 	Position position;
 	double distanceGoal;
-	String name;
+	String topic;
 	long timestamp;
 	long timeout = 3600000;
+	boolean isDone = false;
 	
 	public BoardObject(){
 		updateAccessTime();
@@ -36,13 +37,13 @@ public class BoardObject {
 		this.goal = goal;
 	}
 
-	public String getName() {
-		return name;
+	public String getTopic() {
+		return topic;
 	}
 
-	public void setName(String name) {
+	public void setTopic(String name) {
 		updateAccessTime();
-		this.name = name;
+		this.topic = name;
 	}
 
 	public Position getPosition() {
@@ -71,4 +72,18 @@ public class BoardObject {
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
 	}
+
+    /**
+     * @return the isDone
+     */
+    public boolean isDone() {
+        return isDone;
+    }
+
+    /**
+     * @param isDone the isDone to set
+     */
+    public void setDone(boolean isDone) {
+        this.isDone = isDone;
+    }
 }

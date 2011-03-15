@@ -135,7 +135,7 @@ public class BlobfinderTest
                     
                     
                     BoardObject bo = new BoardObject();
-                    bo.setName(""+newBlob.getClass());
+                    bo.setTopic(""+newBlob.getClass());
                     bo.setPosition(blobPose);
 
                     bb.addObject(newBlob.getColorString(), bo);

@@ -126,7 +126,7 @@ public class Board
 		while (it.hasNext()) {
 			Entry<String, BoardObject> entry = it.next();
 			
-			String boTopic = entry.getValue().getName(); 
+			String boTopic = entry.getValue().getTopic(); 
 			
 //			if (boTopic.equals(topic) == true);
 			if (boTopic.equalsIgnoreCase(topic) == true)

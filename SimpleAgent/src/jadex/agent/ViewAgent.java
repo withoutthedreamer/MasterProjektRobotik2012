@@ -42,6 +42,9 @@ public class ViewAgent extends MicroAgent
 
 		String host = (String)getArgument("host");
         Integer port = (Integer)getArgument("port");
+        int id = (Integer)getArgument("robot");
+        if (id != -1)
+            folRobot = "r"+id;
 
 		/** Device list */
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
@@ -56,15 +59,16 @@ public class ViewAgent extends MicroAgent
 		deviceNode.runThreaded();
 		
 		hs.send(""+getComponentIdentifier(), "", "Hello");
+
+				simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
 		
-		int id = (Integer)getArgument("robot");
-		if (id != -1)
-		    folRobot = "r"+id;
+		if (simu == null)
+		    throw new IllegalStateException("No simulation device found");
 	}
 
 	@Override public void executeBody()
 	{
-		scheduleStep(new IComponentStep()
+	    scheduleStep(new IComponentStep()
 		{
 			public Object execute(IInternalAccess ia)
 			{
@@ -94,16 +98,16 @@ public class ViewAgent extends MicroAgent
 			}
 		});
 
-		waitFor(200, new IComponentStep()
-		{
-			public Object execute(IInternalAccess args)
-			{
-				simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
-				simu.initPositionOf("r0");
-				simu.initPositionOf("r1");
-				return null;
-			}
-		});
+//		waitFor(200, new IComponentStep()
+//		{
+//			public Object execute(IInternalAccess args)
+//			{
+//				simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
+//				simu.initPositionOf("r0");
+//				simu.initPositionOf("r1");
+//				return null;
+//			}
+//		});
 	}
 	@Override public void agentKilled()
 	{
