@@ -47,27 +47,28 @@ public class WallfollowAgent extends MicroAgent
 
         addDirectService(hs);
         addDirectService(ps);
-
+        
         String host = (String)getArgument("host");
         Integer port = (Integer)getArgument("port");
         Integer robotIdx = (Integer)getArgument("index");
+        Integer devIdx = (Integer)getArgument("devIndex");
         Boolean hasLaser = (Boolean)getArgument("laser");
         Boolean hasLocalize = (Boolean)getArgument("localize");
 
         /** Device list */
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
-        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,robotIdx) );
-        devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx) );
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,devIdx) );
+        devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,devIdx) );
         devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
         if (hasLocalize == true)
         {
-            devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,robotIdx) );
-            devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,robotIdx) );
+            devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,devIdx) );
+            devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,devIdx) );
         }
 
         /** Optional laser ranger */
         if (hasLaser == true)
-            devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,robotIdx+1));
+            devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,devIdx+1));
 
         /** Host list */
         CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
@@ -234,6 +235,7 @@ public class WallfollowAgent extends MicroAgent
                 new Argument("host", "Player", "String", "localhost"),
                 new Argument("port", "Player", "Integer", new Integer(6665)),
                 new Argument("index", "Robot index", "Integer", new Integer(0)),
+                new Argument("devIndex", "Device index", "Integer", new Integer(0)),
                 new Argument("X", "Meter", "Double", new Double(0.0)),
                 new Argument("Y", "Meter", "Double", new Double(0.0)),
                 new Argument("Angle", "Degree", "Double", new Double(0.0)),

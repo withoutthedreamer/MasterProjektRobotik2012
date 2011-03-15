@@ -158,10 +158,12 @@ public class EscapeAgent extends WallfollowAgent
                 new Argument("host", "Player", "String", "localhost"),
                 new Argument("port", "Player", "Integer", new Integer(6665)),
                 new Argument("index", "Robot index", "Integer", new Integer(0)),
+                new Argument("devIndex", "Device index", "Integer", new Integer(0)),
                 new Argument("X", "Meter", "Double", new Double(0.0)),
                 new Argument("Y", "Meter", "Double", new Double(0.0)),
                 new Argument("Angle", "Degree", "Double", new Double(0.0)),
                 new Argument("laser", "Laser ranger", "Boolean", new Boolean(true)),
+                new Argument("localize", "Localize device", "Boolean", new Boolean(true)),
                 new Argument("minDistance", "Minimum escape distance (m)", "Double", new Double(1.5))
         };
         

@@ -53,16 +53,16 @@ public class NavAgent extends MicroAgent
         Integer robotIdx = (Integer)getArgument("index");
         Boolean hasLaser = (Boolean)getArgument("laser");
         Boolean hasSimu = (Boolean)getArgument("simulation");
-        Integer argDevIdx = (Integer)getArgument("devIndex");
+        Integer devIdx = (Integer)getArgument("devIndex");
 
         /** Device list */
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
-        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,argDevIdx) ); // TODO why playerclient blocks if not present?
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,devIdx) ); // TODO why playerclient blocks if not present?
         if (hasSimu == true)
             devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,null,-1,-1) );
         
-        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,argDevIdx) );
-        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,argDevIdx) );
+        devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,devIdx) );
+        devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,devIdx) );
 
         if (hasLaser == true)
             devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,-1));
