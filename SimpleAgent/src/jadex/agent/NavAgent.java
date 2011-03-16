@@ -134,6 +134,17 @@ public class NavAgent extends MicroAgent
 
 							logger.fine(""+getComponentIdentifier()+" "+robot+" reached goal "+robot.getPlanner().getGoal());
 						}
+
+                        @Override public void callWhenAbort()
+                        {
+                            /** Set the goal again. */
+                            robot.setGoal(robot.getGoal());
+                        }
+
+                        @Override public void callWhenNotValid()
+                        {
+                            logger.info("No valid path");
+                        }
 					});
 				}
 				return null;
@@ -173,6 +184,7 @@ public class NavAgent extends MicroAgent
 			                Position curPose = robot.getPosition();
 			                sendPosition(curPose);
 			                logger.finest("Sending new pose "+curPose+" for "+robot);
+			               
 			                waitFor(1000,this);
 			                return null;
 			            }
@@ -195,19 +207,19 @@ public class NavAgent extends MicroAgent
 					public void changeOccurred(ChangeEvent event)
 					{
 						Object[] content = (Object[])event.getValue();
-						StringBuffer buf = new StringBuffer();
-						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString());
 						
-						logger.finer("Receiving "+buf+" "+getComponentIdentifier());
+						String id = (String)content[1];
+						Position goal = (Position)content[2];
+						logger.finer("Receiving "+id+" @ "+goal+" "+getComponentIdentifier());
 						
 						/** Check if it is this robot's goal */
 						if (
-						     ((String)content[1]).equals(robot.getRobotId()) ||
-							 ((String)content[1]).equals("all")
+						     id.equals(robot.getRobotId()) == true ||
+							 id.equals("all") == true
 						)
 						{
-							robot.setGoal((Position)content[2]);
-							logger.finest(""+robot+" received new goal "+((Position)content[2]));
+							robot.setGoal(goal);
+							logger.finest(""+robot+" received new goal "+goal);
 						}
 					}
 				});
@@ -227,15 +239,13 @@ public class NavAgent extends MicroAgent
 					public void changeOccurred(ChangeEvent event)
 					{
 						Object[] content = (Object[])event.getValue();
-						StringBuffer buf = new StringBuffer();
-						buf.append("[").append(content[0].toString()).append("]: ").append(content[1].toString()).append(" ").append(content[2].toString());
-												
+						String type = (String)content[2];
+						
 						/** Check for reply request */
-						if (((String)content[2]).equalsIgnoreCase("ping"))
+						if (type.equalsIgnoreCase("ping"))
 						{
-							logger.finer(""+getComponentIdentifier()+" receiving "+buf);
-
 							sendHello();
+                            logger.finer(""+getComponentIdentifier()+" receiving "+type);
 						}
 					}
 				});
@@ -255,9 +265,10 @@ public class NavAgent extends MicroAgent
 					public void changeOccurred(ChangeEvent event)
 					{
 						Object[] content = (Object[])event.getValue();
+						String id = (String)content[1];
 						
 						/** Sending position on request */
-						if (((String)content[1]).equals("request"))
+						if (id.equals("request"))
 						{
 							sendPosition(robot.getPosition());
 						}

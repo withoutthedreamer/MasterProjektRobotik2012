@@ -107,14 +107,26 @@ public class PlannerTest
 		Position pose = new Position(-6.5,-2,Math.toRadians(75));
 		isDone = false;
 		
-		// Add isDone listener
+		/** Add isDone listener */
 		planner.addIsDoneListener(new IPlannerListener()
 		{
 			@Override public void callWhenIsDone()
 			{
 				isDone = true;
 				logger.info("Planner is done.");
+				planner.removeIsDoneListener(this);
 			}
+
+            @Override public void callWhenAbort()
+            {
+                logger.info("Planner abort");
+                planner.setGoal(new Position(-6.5,-2,Math.toRadians(75)));
+            }
+
+            @Override public void callWhenNotValid()
+            {
+                logger.info("No valid path");
+            }
 		});
 		
 		assertTrue(planner.setGoal(pose));
@@ -163,29 +175,29 @@ public class PlannerTest
 		assertTrue(planner.stop());
 		// TODO assert condition
 	}
-	@Test public void testGetCostPosition()
-	{
-		Position pose = new Position(-7,1.5,0);
-		double cost;
-		
-		for (int i=0; i<5; i++) {
-			cost = planner.getCost(pose);
-			logger.info("Cost: "+cost+" to pose "+pose.toString());
-			assertTrue(cost > 0);
-			pose.setX(pose.getX()+1);
-			try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
-		}
-	}
-	@Test public void testGetCostInvalidPosition()
-	{
-		Position pose = new Position(-90,-90,0);
-		double cost;
-
-		cost = planner.getCost(pose);
-		logger.info("Cost: "+cost+" to pose "+pose.toString());
-		
-//		assertFalse(cost > 0);
-	}
+//	@Test public void testGetCostPosition()
+//	{
+//		Position pose = new Position(-7,1.5,0);
+//		double cost;
+//		
+//		for (int i=0; i<5; i++) {
+//			cost = planner.getCost(pose);
+//			logger.info("Cost: "+cost+" to pose "+pose.toString());
+//			assertTrue(cost > 0);
+//			pose.setX(pose.getX()+1);
+//			try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+//		}
+//	}
+//	@Test public void testGetCostInvalidPosition()
+//	{
+//		Position pose = new Position(-90,-90,0);
+//		double cost;
+//
+//		cost = planner.getCost(pose);
+//		logger.info("Cost: "+cost+" to pose "+pose.toString());
+//		
+////		assertFalse(cost > 0);
+//	}
 	@Test public void testSetFarGoal()
 	{
 		planner.stop();
@@ -194,8 +206,20 @@ public class PlannerTest
 		planner.addIsDoneListener(new IPlannerListener()
 		{
 			@Override public void callWhenIsDone() {
-				logger.info("Planner will be shutdown.");
+			    isDone = true;
+                logger.info("Planner is done.");
 			}
+
+			@Override public void callWhenAbort()
+            {
+                logger.info("Planner abort");
+                planner.setGoal(new Position(0,5,0));
+            }
+
+            @Override public void callWhenNotValid()
+            {
+                logger.info("No valid path");
+            }
 		});
 
 		isDone = false;

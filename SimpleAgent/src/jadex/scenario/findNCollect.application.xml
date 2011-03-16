@@ -22,6 +22,27 @@
 
 	<applications>
 		
+		<application name="2 Robots, 4 Rooms">
+			<components>
+				<component type="Explore0" name="Explore0">
+					<arguments>
+						<argument name="port"> 6669 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 2 </argument>
+					</arguments>
+				</component>
+				<component type="Collect0" name="Collect0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 0 </argument>
+						<argument name="X"> 5.0 </argument>
+						<argument name="Y"> 5.0 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
 		<application name="3 Robots, 4 Rooms">
 			<components>
 				<component type="Explore0" name="Explore0">

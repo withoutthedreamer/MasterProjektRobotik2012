@@ -114,6 +114,7 @@ public class ExploreAgent extends WallfollowAgent
                                 bo.setPosition(globPose);
 
                                 bb.addObject(newBlob.getColorString(), bo);
+                                sendBlobInfo(bo);
                             }
                         }
                     });
@@ -121,27 +122,14 @@ public class ExploreAgent extends WallfollowAgent
                 }
             });
         }
-        
-        /**
-         * Send blob positions periodically 
-         */
-        final IComponentStep step = new IComponentStep()
-        {
-            public Object execute(IInternalAccess ia)
-            {
-                BoardObject[] objList = bb.getArrayList();
-                
-                for (int i=0; i<objList.length; i++)
-                {
-                    getReceiveNewGoalService().send(""+getComponentIdentifier(), "collectGoal", objList[i].getPosition());
-                }
-                
-                waitFor(10000,this);
-                return null;
-            }
-        };
-        waitForTick(step);
-
+    }
+    /**
+     * Send a new goal locating a Boardobject.
+     * @param bo The board object to be found.
+     */
+    void sendBlobInfo(BoardObject bo)
+    {
+        getReceiveNewGoalService().send(""+getComponentIdentifier(), "collectGoal", bo.getPosition());
     }
 
     public ReceiveNewGoalService getReceiveNewGoalService() { return gs; }

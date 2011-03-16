@@ -1,8 +1,6 @@
 package device;
 
 import java.util.Iterator;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
@@ -33,8 +31,12 @@ public class Planner extends RobotDevice
 	int wayPointIndex;
 
 	/** Watchdog timer for goal checking */
-	boolean timerIsArmed = false;
-	Timer timer;
+//	boolean timerIsArmed = false;
+//	Timer timer;
+
+    Position stuckPose;
+    int stuckTimer = 0;
+    int STUCKTIMEOUT = 10;
 
 	public Planner(DeviceNode roboClient, Device device)
 	{
@@ -44,7 +46,7 @@ public class Planner extends RobotDevice
 		globalGoal = new Position();
 		curPosition = new Position();
 		isDoneListeners = new CopyOnWriteArrayList<IPlannerListener>();
-		timer = new Timer();
+//		timer = new Timer();
 
 		setSleepTime(500);
 
@@ -56,29 +58,28 @@ public class Planner extends RobotDevice
 	}
 	protected void update ()
 	{
-//		if(isStopped == true) return;
-
 		/** Check for ready planner data */
-		if (((PlannerInterface) getDevice()).isDataReady()) {
-
+		if (((PlannerInterface) getDevice()).isDataReady())
+		{
 			/** request recent planner data */
 			ppd = ((PlannerInterface) getDevice()).getData ();
 
 			/** Check for a valid path */
 			if (ppd.getValid() == new Integer(1).byteValue())
 				isValidGoal = true;
-			else
+			else {
 				isValidGoal = false;
+				notifyListenersNotValid();
+			}
 
 			/** Check if goal is achieved */
 			if (ppd.getDone() == new Integer(1).byteValue())
 			{
 				/** Planner is done */
-				// Check if really at the goal position
+				/** Check if really at the goal position */
 				if (globalGoal.distanceTo(curPosition) < 1.0) {
 					isDone = true;
-					stopTimer();
-					notifyListeners();
+					notifyListenersDone();
 				} else {
 					/** Set the goal again */
 					setGoal(globalGoal);
@@ -86,16 +87,12 @@ public class Planner extends RobotDevice
 			}
 			else /** Planner is not yet done */
 			{
-				if (isValidGoal != true) {
+				if (isValidGoal == false) {
 					isDone = true;
 				} else {
-					isDone = false;					
-					/** Check if planner is maybe stucked */
-					if (goal.distanceTo(curPosition) < 1.0)	{
-						startTimer();
-					} else {
-						stopTimer();
-					}
+					isDone = false;
+					if (isStuck(curPosition) == true)
+					    notifyListenersAbort();
 				}
 			}
 
@@ -139,12 +136,35 @@ public class Planner extends RobotDevice
 					+" IsValid: "+this.isValidGoal);
 		}
 	}
-	/**
+	boolean isStuck(Position curPose)
+	{
+	    boolean isStuck = false;
+	    
+	    if (stuckTimer == 0)
+	    {
+	        stuckPose = new Position(curPose);
+	    }
+	    else
+	    {
+	        if (stuckTimer > STUCKTIMEOUT)
+	        {
+	            stuckTimer = -1;
+	            if (stuckPose.equals(curPose))
+	            {
+	                isStuck = true;
+	            }
+	        }
+	    }
+	    stuckTimer += 1;
+        return isStuck;
+    }
+    /**
 	 * Sets the planner goal to the given @see Position.
 	 * @param newGoal Position to navigate to.
 	 * @return ‘true‘ if the planner could plan a trajectory, ‘false' else.
 	 */
-	public synchronized boolean setGoal (Position newGoal) {
+	public synchronized boolean setGoal (Position newGoal)
+	{
 		// New Positions and copy
 		goal = new Position(newGoal);
 		globalGoal = new Position(newGoal);
@@ -191,11 +211,12 @@ public class Planner extends RobotDevice
 	 * Stops approaching the current goal (if any).
 	 * Does not remove goal from goal stack but stops robot motion.
 	 */
-	public boolean stop() {
+	public boolean stop()
+	{
 		isStopped  = true;
 		
-		// disable motion
-		((PlannerInterface) getDevice()).setRobotMotion(0);
+		/** Disable motion */
+//		((PlannerInterface) getDevice()).setRobotMotion(0);
 
 		return true;
 	}
@@ -252,17 +273,37 @@ public class Planner extends RobotDevice
 	public void removeIsDoneListener(IPlannerListener cb){
 		isDoneListeners.remove(cb);
 	}
-	public void notifyListeners() {
-		if (notify == true) {
+	void notifyListenersDone()
+	{
+		if (notify == true)
+		{
 			notify = false;
 			Iterator<IPlannerListener> it = isDoneListeners.iterator();
 			while (it.hasNext()) { it.next().callWhenIsDone(); }
 		}
 	}
+	void notifyListenersAbort()
+    {
+        if (notify == true)
+        {
+            notify = false;
+            Iterator<IPlannerListener> it = isDoneListeners.iterator();
+            while (it.hasNext()) { it.next().callWhenAbort(); }
+        }
+    }
+	void notifyListenersNotValid()
+    {
+        if (notify == true)
+        {
+            notify = false;
+            Iterator<IPlannerListener> it = isDoneListeners.iterator();
+            while (it.hasNext()) { it.next().callWhenNotValid(); }
+        }
+    }
 	@Override synchronized public void shutdown() {
 		super.shutdown();
 		isDoneListeners.clear();
-		stopTimer();
+//		stopTimer();
 	}
 	/**
 	 * Checks if the planner is currently busy with a plan.
@@ -277,41 +318,41 @@ public class Planner extends RobotDevice
 
 		return true;
 	}
-	/**
-	 * Start a timer if not already a timer is running.
-	 */
-	synchronized void startTimer() {
-		if ( timerIsArmed == false) {
-			timerIsArmed = true;
-			logger.info("Set up planner watchdog timer");
-
-			timer.schedule(new TimerTask()
-			{
-				public void run()
-				{
-					timerIsArmed = false;
-					logger.info("Watchdog occured");
-					// Check if not already finished
-					if (isDone() == false) {
-						notifyListeners(); // TODO debug setDone();
-						stop();
-
-						logger.config("Timout for goal: "+globalGoal.toString());
-					}
-				}
-			}, 20000);
-		}
-	}
-	/**
-	 * Stop a timer if already a timer has been started.
-	 */
-	synchronized void stopTimer() {
-		if (timerIsArmed == true) {
-			timerIsArmed = false;
-			timer.cancel();
-			timer = new Timer();
-
-			logger.info("Watchdog canceled");
-		}
-	}
+//	/**
+//	 * Start a timer if not already a timer is running.
+//	 */
+//	synchronized void startTimer() {
+//		if ( timerIsArmed == false) {
+//			timerIsArmed = true;
+//			logger.info("Set up planner watchdog timer");
+//
+//			timer.schedule(new TimerTask()
+//			{
+//				public void run()
+//				{
+//					timerIsArmed = false;
+//					logger.info("Watchdog occured");
+//					// Check if not already finished
+//					if (isDone() == false) {
+//						notifyListenersDone(); // TODO debug setDone();
+//						stop();
+//
+//						logger.config("Timout for goal: "+globalGoal.toString());
+//					}
+//				}
+//			}, 20000);
+//		}
+//	}
+//	/**
+//	 * Stop a timer if already a timer has been started.
+//	 */
+//	synchronized void stopTimer() {
+//		if (timerIsArmed == true) {
+//			timerIsArmed = false;
+//			timer.cancel();
+//			timer = new Timer();
+//
+//			logger.info("Watchdog canceled");
+//		}
+//	}
 }

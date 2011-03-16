@@ -286,5 +286,13 @@ public class Gripper extends RobotDevice
 			}
 			/** else: Nothing between paddles to lift*/
 		}
+		else
+		{
+		    /** No Dio */
+		    release();
+		    open();
+		    close();
+		    lift();
+		}
 	}
 }

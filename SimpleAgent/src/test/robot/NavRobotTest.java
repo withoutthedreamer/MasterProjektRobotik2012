@@ -120,6 +120,16 @@ public class NavRobotTest
                 System.out.println("Planar delta: "+delta);
 //                assertTrue(delta < 1.0);
             }
+
+            @Override public void callWhenAbort()
+            {
+                System.out.println("Planner abort");
+            }
+
+            @Override public void callWhenNotValid()
+            {
+                System.out.println("No valid path");
+            }
         });
 
         si.setPositionOf("green", tmpGoalPose);

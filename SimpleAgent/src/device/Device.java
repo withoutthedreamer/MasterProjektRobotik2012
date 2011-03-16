@@ -198,6 +198,7 @@ public class Device implements IDevice, Runnable
 	    { 
 	        String log = "Error updating device "+this;
 	        logger.severe(log);
+	        e.printStackTrace();
 //          throw new IllegalStateException(log); /** Exception will not be caught as dedicated thread */
 	    }
 	    finally
