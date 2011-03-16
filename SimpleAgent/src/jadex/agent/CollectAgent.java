@@ -174,9 +174,11 @@ public class CollectAgent extends NavAgent
                                 else
                                 {
                                     /** Arrived at objects goal position */
-                                    curGoalKey = null;
                                     getRobot().getGripper().release();
                                     getRobot().getGripper().open();
+                                    bb.removeObject(curGoalKey);
+                                    curGoalKey = null;
+                                    updateGoal(bb);
                                 }
                             }
                         }
@@ -189,18 +191,21 @@ public class CollectAgent extends NavAgent
 
                         @Override public void callWhenNotValid()
                         {
-                            if (bb.getObject(curGoalKey).isDone() == false)
+                            if (curGoalKey != null)
                             {
-                                /** We are heading for the object. */
-                                bb.getObject(curGoalKey).setDone(true);
-                                curGoalKey = null;
-                            }
-                            else
-                            {
-                                /** We are heading home. */
-                                getRobot().getGripper().release();
-                                getRobot().getGripper().open();
-                                curGoalKey = null;
+                                if (bb.getObject(curGoalKey).isDone() == false)
+                                {
+                                    /** We are heading for the object. */
+                                    bb.getObject(curGoalKey).setDone(true);
+                                    curGoalKey = null;
+                                }
+                                else
+                                {
+                                    /** We are heading home. */
+                                    getRobot().getGripper().release();
+                                    getRobot().getGripper().open();
+                                    curGoalKey = null;
+                                }
                             }
                             logger.info("No valid path");
                         }
@@ -216,7 +221,7 @@ public class CollectAgent extends NavAgent
         {
             public Object execute(IInternalAccess ia)
             {
-                if (permitGripperOpen == true)
+                if (permitGripperOpen == true && curGoalKey != null)
                 {
                     Position curPose = getRobot().getPosition();
                     Position goalPose = bb.getObject(curGoalKey).getPosition();
@@ -250,8 +255,11 @@ public class CollectAgent extends NavAgent
 	    {
 	        /** Set a new goal. */
 	        curGoalKey = getNextGoal(bb);
-	        getRobot().setGoal(bb.getObject(curGoalKey).getPosition());
-	        permitGripperOpen = true;
+	        if (curGoalKey != null)
+	        {
+	            getRobot().setGoal(bb.getObject(curGoalKey).getPosition());
+	            permitGripperOpen = true;
+	        }
 	    }
 	    else
 	    {

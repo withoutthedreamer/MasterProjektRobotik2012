@@ -139,6 +139,51 @@ public class Gripper extends RobotDevice
 	    try { Thread.sleep(4000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	/**
+     * Sets up the gripper to only close and lift paddles when an object is sensed between the paddles.
+     */
+    public void liftWithObject()
+    {
+        updateDio();
+    
+    	if (getDio() != null) {
+    
+    		open();
+    		
+    		timeout = false;
+    		Timer timer = new Timer();
+    		timer.schedule(new TimerTask()
+    		{
+    			public void run()
+    			{
+    				timeout = true;
+    			}
+    
+    		}, 20000);
+    
+    		while (getDio().getInput(2)==0 && getDio().getInput(3)==0 && timeout == false)
+    		{
+    			try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
+    		}
+    
+    		/** Some object */
+    		if (timeout == false)
+    		{
+    			close();
+    			lift();
+    		}
+    		/** else: Nothing between paddles to lift*/
+    	}
+    	else
+    	{
+    	    /** No Dio */
+    	    release();
+    	    open();
+    	    close();
+    	    lift();
+    	}
+    }
+
+    /**
 	 * Release the gripper's paddles (if supported).
 	 * Use sensors to determine if paddles are released (if available).
 	 */
@@ -250,49 +295,4 @@ public class Gripper extends RobotDevice
     protected void setDio(Dio dio) {
         this.dio = dio;
     }
-
-    /**
-     * Sets up the gripper to only close and lift paddles when an object is sensed between the paddles.
-     */
-    public void liftWithObject()
-    {
-        updateDio();
-
-		if (getDio() != null) {
-
-			open();
-			
-			timeout = false;
-			Timer timer = new Timer();
-			timer.schedule(new TimerTask()
-			{
-				public void run()
-				{
-					timeout = true;
-				}
-
-			}, 20000);
-
-			while (getDio().getInput(2)==0 && getDio().getInput(3)==0 && timeout == false)
-			{
-				try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
-			}
-
-			/** Some object */
-			if (timeout == false)
-			{
-				close();
-				lift();
-			}
-			/** else: Nothing between paddles to lift*/
-		}
-		else
-		{
-		    /** No Dio */
-		    release();
-		    open();
-		    close();
-		    lift();
-		}
-	}
 }

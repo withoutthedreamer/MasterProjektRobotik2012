@@ -216,7 +216,7 @@ public class Planner extends RobotDevice
 		isStopped  = true;
 		
 		/** Disable motion */
-//		((PlannerInterface) getDevice()).setRobotMotion(0);
+		((PlannerInterface) getDevice()).setRobotMotion(0);
 
 		return true;
 	}

@@ -43,47 +43,13 @@
 			</components>
 		</application>
 
-		<application name="3 Robots, 4 Rooms">
+		<application name="2 Robots, Tams floor">
 			<components>
 				<component type="Explore0" name="Explore0">
 					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
-						<argument name="X"> 1.0 </argument>
-						<argument name="Y"> 1.0 </argument>
-					</arguments>
-				</component>
-				<component type="Collect0" name="Collect0">
-					<arguments>
-						<argument name="port"> $args.port+2 </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
-						<argument name="X"> -7.0 </argument>
-						<argument name="Y"> 7.0 </argument>
-					</arguments>
-				</component>
-				<component type="Follow0" name="Follow0">
-					<arguments>
-						<argument name="robot"> 1 </argument>
 						<argument name="port"> $args.port+4 </argument>
 						<argument name="host"> $args.host </argument>
 						<argument name="index"> 2 </argument>
-						<argument name="updateInterval"> 5000 </argument>
-						<argument name="X"> -7.0 </argument>
-						<argument name="Y"> -3.0 </argument>
-					</arguments>
-				</component>
-			</components>
-		</application>
-
-		<application name="3 Robots, Tams floor">
-			<components>
-				<component type="Explore0" name="Explore0">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
 						<argument name="X"> -17.0 </argument>
 						<argument name="Y"> -1.5 </argument>
 						<argument name="Angle"> 180.0 </argument>
@@ -93,87 +59,29 @@
 					<arguments>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
+						<argument name="index"> 0 </argument>
 						<argument name="X"> -25.0 </argument>
 						<argument name="Y"> 3.5 </argument>
 						<argument name="Angle"> -90.0 </argument>
 					</arguments>
 				</component>
-				<component type="Follow0" name="Follow0">
-					<arguments>
-						<argument name="robot"> 1 </argument>
-						<argument name="port"> $args.port+4 </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
-						<argument name="updateInterval"> 5000 </argument>
-						<argument name="X"> -29.0 </argument>
-						<argument name="Y"> -1.5 </argument>
-						<argument name="Angle"> 0.0 </argument>
-					</arguments>
-				</component>
 			</components>
 		</application>
 
-		<application name="3 Robots, Tams floor 2">
+		<application name="2 Robots, Tams floor Real">
 			<components>
 				<component type="Explore0" name="Explore0">
 					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
-						<argument name="X"> -17.0 </argument>
-						<argument name="Y"> -1.5 </argument>
-						<argument name="Angle"> 180.0 </argument>
-					</arguments>
-				</component>
-				<component type="Collect0" name="Collect0">
-					<arguments>
-						<argument name="port"> $args.port+2 </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
-						<argument name="X"> -10.0 </argument>
-						<argument name="Y"> 4.0 </argument>
-						<argument name="Angle"> -90.0 </argument>
-					</arguments>
-				</component>
-				<component type="Follow0" name="Follow0">
-					<arguments>
-						<argument name="robot"> 1 </argument>
 						<argument name="port"> $args.port+4 </argument>
-						<argument name="host"> $args.host </argument>
+						<argument name="host"> "localhost" </argument>
 						<argument name="index"> 2 </argument>
-						<argument name="updateInterval"> 5000 </argument>
-						<argument name="X"> 0.0 </argument>
-						<argument name="Y"> -1.5 </argument>
-						<argument name="Angle"> 180.0 </argument>
-					</arguments>
-				</component>
-			</components>
-		</application>
-
-		<application name="3 Robots, Tams floor Real">
-			<components>
-				<component type="Explore0" name="Explore0">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 0 </argument>
 					</arguments>
 				</component>
 				<component type="Collect0" name="Collect0">
 					<arguments>
 						<argument name="port"> $args.port </argument>
-						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 1 </argument>
-					</arguments>
-				</component>
-				<component type="Follow0" name="Follow0">
-					<arguments>
-						<argument name="robot"> 1 </argument>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> "134.100.13.163" </argument>
-						<argument name="index"> 2 </argument>
-						<argument name="updateInterval"> 3000 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 0 </argument>
 					</arguments>
 				</component>
 			</components>

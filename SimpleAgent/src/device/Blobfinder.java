@@ -3,6 +3,7 @@ package device;
 import javaclient3.BlobfinderInterface;
 
 import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
+import javaclient3.structures.blobfinder.PlayerBlobfinderData;
 import data.BlobfinderBlob;
 
 import java.util.Iterator;
@@ -46,14 +47,17 @@ public class Blobfinder extends RobotDevice
 	    if (((BlobfinderInterface) getDevice()).isDataReady())
 	    {
 	        // TODO else case
+	        
+	        PlayerBlobfinderData data = ((BlobfinderInterface) getDevice()).getData();
+	       
 	        /** Get the current blob count in view */
-	        count = ((BlobfinderInterface) getDevice()).getData().getBlobs_count();
+	        count = data.getBlobs_count();
 
 	        if (count > 0)
 	        {
 	            for (int i=0; i<count; i++)
 	            {
-	                PlayerBlobfinderBlob unblob = ((BlobfinderInterface) getDevice()).getData().getBlobs()[i];
+	                PlayerBlobfinderBlob unblob = data.getBlobs()[i];
 	                
 	                /** Envelope for new blob */
 	                BlobfinderBlob inblob = new BlobfinderBlob(
