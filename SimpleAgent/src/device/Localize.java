@@ -36,19 +36,21 @@ public class Localize extends RobotDevice
 
 		localizeListeners = new CopyOnWriteArrayList<ILocalizeListener>();
 	}
-	// Only to be called @~10Hz
-	@Override
-	protected void update ()
+	@Override protected void update ()
 	{
-		if (((javaclient3.LocalizeInterface) device).isDataReady()) {
+		if (((javaclient3.LocalizeInterface) getDevice()).isDataReady())
+		{
 			/** Get current position belief */
 			PlayerLocalizeHypoth[] hypList = ((javaclient3.LocalizeInterface) device).getData().getHypoths();
-			if (hypList.length > 0) {
-				/** Only first hypothesis is interessting (for now) */
+			if (hypList.length > 0)
+			{
+				/** Only first hypothesis is interesting */
 				PlayerLocalizeHypoth hyp1 = hypList[0];
-				if (hyp1 != null) {
+				if (hyp1 != null)
+				{
 					PlayerPose curPos = hyp1.getMean();
-					if (curPos != null) {
+					if (curPos != null)
+					{
 						getPosition.setX(curPos.getPx());
 						getPosition.setY(curPos.getPy());
 						getPosition.setYaw(curPos.getPa());
@@ -56,18 +58,18 @@ public class Localize extends RobotDevice
 				}
 			}
 			
-			if(oldPosition.equals(getPosition) == false) {
+			if(oldPosition.equals(getPosition) == false)
+			{
 				notifyNewPosition(getPosition);
 				oldPosition.setPosition(getPosition);
 			}
 		}
 	}
 
-	private void notifyNewPosition(Position newPose) {
-
+	private void notifyNewPosition(Position newPose)
+	{
 		Iterator<ILocalizeListener> it = localizeListeners.iterator();
 		while (it.hasNext()) { it.next().newPositionAvailable(new Position(newPose)); }
-
 	}
 	public void addListener(ILocalizeListener cb){
 		localizeListeners.addIfAbsent(cb);
@@ -75,16 +77,19 @@ public class Localize extends RobotDevice
 	public void removeListener(ILocalizeListener cb){
 		localizeListeners.remove(cb);
 	}
-	public synchronized boolean setPosition(Position position) {
-		if (position != null) {
+	public synchronized boolean setPosition(Position position)
+	{
+		if (position != null)
+		{
 			/** Set position belief */
 			setPosition.setMean(new PlayerPose(position.getX(),position.getY(),position.getYaw()));
-			((javaclient3.LocalizeInterface) device).setPose(setPosition);
+			((javaclient3.LocalizeInterface) getDevice()).setPose(setPosition);
 		}
 		return true;
 	}
 	public synchronized Position getPosition() {
-		return new Position(getPosition);
+//		return new Position(getPosition);
+	    return getPosition;
 	}
 	@Override synchronized public void shutdown() {
 		super.shutdown();

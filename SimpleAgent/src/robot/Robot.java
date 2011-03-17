@@ -247,7 +247,8 @@ public class Robot extends Device implements IRobot
 			}
 		}
 
-		return new Position(position);
+//		return new Position(position);
+		return position;
 	}
 	@Override public void shutdown()
 	{

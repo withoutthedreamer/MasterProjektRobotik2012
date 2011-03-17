@@ -224,19 +224,30 @@ public class CollectAgent extends NavAgent
         {
             public Object execute(IInternalAccess ia)
             {
-                if (permitGripperOpen == true && curGoalKey != null)
-                {
+//                if (permitGripperOpen == true && curGoalKey != null)
+//                {
                     Position curPose = getRobot().getPosition();
-                    Position goalPose = bb.getObject(curGoalKey).getPosition();
+//                    Position goalPose = bb.getObject(curGoalKey).getPosition();
+                    Position goalPose = getRobot().getGoal();
                     
-                    if (curPose.distanceTo(goalPose) < 2.0)
+                    double goalDist = curPose.distanceTo(goalPose);
+                    
+                    if (goalDist < 2.0 &&
+                            goalDist > 1.0)
                     {
                         permitGripperOpen = false;
+                        /** Set the approach angle appropriate*/
+                        getRobot().setGoal(new Position(
+                                getRobot().getGoal().getX(),
+                                getRobot().getGoal().getY(),
+                                getRobot().getPosition().getYaw()));
+
+                        /** Prepare the paddles */
                         getRobot().getGripper().open();
                         getRobot().getGripper().release();
                         getRobot().getGripper().liftWithObject();
                     }
-                }
+//                }
                 waitFor(1000,this);
                 return null;
             }
