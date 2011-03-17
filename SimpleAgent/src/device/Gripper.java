@@ -160,6 +160,7 @@ public class Gripper extends RobotDevice
     
     		}, 20000);
     
+    		// TODO debug
     		while (getDio().getInput(2)==0 && getDio().getInput(3)==0 && timeout == false)
     		{
     			try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }

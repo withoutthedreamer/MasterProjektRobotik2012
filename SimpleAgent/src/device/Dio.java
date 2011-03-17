@@ -41,7 +41,7 @@ public class Dio extends RobotDevice {
             {
                 int count = data.getCount();
                 int digIn = data.getDigin();
-                logger.info("Got digin count: "+count+" with bits: "+Integer.toBinaryString(digIn));
+                logger.fine("Got digin count: "+count+" with bits: "+Integer.toBinaryString(digIn));
                                 
                 if (0 <= index && index < count) {
                 	int bit = digIn & (1<<index);

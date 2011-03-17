@@ -60,7 +60,7 @@ public class ViewAgent extends MicroAgent
 		
 		hs.send(""+getComponentIdentifier(), "", "Hello");
 
-				simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
+		simu = (Simulation) deviceNode.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
 		
 		if (simu == null)
 		    throw new IllegalStateException("No simulation device found");

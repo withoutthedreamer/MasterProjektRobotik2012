@@ -35,6 +35,8 @@ public class GripperTest
         /** Device list */
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
         devList.add( new Device(IDevice.DEVICE_GRIPPER_CODE,host,port,0) );
+        devList.add( new Device(IDevice.DEVICE_ACTARRAY_CODE,host,port,0) );
+        devList.add( new Device(IDevice.DEVICE_DIO_CODE,host,port,0) );
         
         /** Host list */
         CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
@@ -104,7 +106,6 @@ public class GripperTest
 	    gripper.release();
 		try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
-
 	/**
 	 * Test method for {@link device.Gripper#getState()}.
 	 */
@@ -116,8 +117,9 @@ public class GripperTest
 		
 		return state;
 	}
-	public void testLiftWithObject()
+	@Test public void testLiftWithObject()
 	{
+		gripper.open();
 		gripper.liftWithObject();
 	}
 

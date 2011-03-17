@@ -128,8 +128,8 @@ public class Board
 			
 			String boTopic = entry.getValue().getTopic(); 
 			
-//			if (boTopic.equals(topic) == true);
-			if (boTopic.equalsIgnoreCase(topic) == true)
+			if (boTopic.equals(topic) == true);
+//			if (boTopic.equalsIgnoreCase(topic) == true)
 				topicKeys.add(entry.getKey());
 		}
 		

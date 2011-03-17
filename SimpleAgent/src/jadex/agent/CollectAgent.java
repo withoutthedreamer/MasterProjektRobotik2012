@@ -63,6 +63,8 @@ public class CollectAgent extends NavAgent
         devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,devIdx) );
         devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,devIdx) );
         devList.add( new Device(IDevice.DEVICE_GRIPPER_CODE,host,port,devIdx) );
+        devList.add( new Device(IDevice.DEVICE_ACTARRAY_CODE,host,port,devIdx) );
+        devList.add( new Device(IDevice.DEVICE_DIO_CODE,host,port,devIdx) );
 
         if (hasLaser == true)
             devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,-1));
@@ -135,6 +137,7 @@ public class CollectAgent extends NavAgent
                                 BoardObject newBo = new BoardObject();
                                 newBo.setTopic(id);
                                 newBo.setPosition(newGoal);
+//                                newBo.setTimeout(10000);
                                 Goal boGoal = new Goal();
                                 /** Goal pose is this agent's depot. */
                                 boGoal.setPosition(depotPose);
@@ -229,6 +232,8 @@ public class CollectAgent extends NavAgent
                     if (curPose.distanceTo(goalPose) < 2.0)
                     {
                         permitGripperOpen = false;
+                        getRobot().getGripper().open();
+                        getRobot().getGripper().release();
                         getRobot().getGripper().liftWithObject();
                     }
                 }
@@ -257,6 +262,8 @@ public class CollectAgent extends NavAgent
 	        curGoalKey = getNextGoal(bb);
 	        if (curGoalKey != null)
 	        {
+	        	getRobot().getGripper().lift();
+	        	getRobot().getGripper().close();
 	            getRobot().setGoal(bb.getObject(curGoalKey).getPosition());
 	            permitGripperOpen = true;
 	        }

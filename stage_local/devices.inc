@@ -6,8 +6,8 @@ include "laptop.inc"
 
 define bobsblobfinder blobfinder
 (
-  colors_count 3
-  colors [ "red" "green" "black" ]
+  colors_count 1
+  colors [ "green" ]
   #fov 1.047196667 # 60 degrees = pi/3 radians
   fov 90 # degrees
   range 3

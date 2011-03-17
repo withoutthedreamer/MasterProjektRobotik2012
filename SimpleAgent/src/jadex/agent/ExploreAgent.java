@@ -112,6 +112,7 @@ public class ExploreAgent extends WallfollowAgent
                                 BoardObject bo = new BoardObject();
                                 bo.setTopic(""+newBlob.getClass());
                                 bo.setPosition(globPose);
+                                bo.setTimeout(10000);
 
                                 bb.addObject(newBlob.getColorString(), bo);
                                 sendBlobInfo(bo);
