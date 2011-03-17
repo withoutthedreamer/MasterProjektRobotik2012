@@ -199,9 +199,9 @@ public class Pioneer extends Robot implements IPioneer
 	        if (getPlanner() != null)
 	            getPlanner().stop();
 
-	        if (getSimu() == null)
-	            if (getPosi() != null)
-	                getPosi().disableMotor();
+//	        if (getSimu() == null)
+//	            if (getPosi() != null)
+//	                getPosi().disableMotor();
 
 	        setTurnrate(0.0);
 	        setSpeed(0.0);
