@@ -347,9 +347,9 @@ public class DeviceNode extends Device
                 
             case IDevice.DEVICE_SONAR_CODE : 
                 dev = new RangerSonar(this, new Device(devId, host, port, devIdx)); break;
-    
-            case IDevice.DEVICE_LASER_CODE :
-                dev = new RangerLaser(this, new Device(devId, host, port, devIdx)); break;
+// Legacy device
+//            case IDevice.DEVICE_LASER_CODE :
+//                dev = new RangerLaser(this, new Device(devId, host, port, devIdx)); break;
     
             case IDevice.DEVICE_LOCALIZE_CODE : 
                 dev = new Localize(this, new Device(devId, host, port, devIdx)); break;

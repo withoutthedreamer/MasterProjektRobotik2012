@@ -49,11 +49,11 @@ public class BlobAgent extends MicroAgent
         CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
         hostList.add(new Host(host,port));
        
-        /** Get the device node */
-        dn = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
-        dn.runThreaded();
-        
-		simu = (Simulation) dn.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
+//        /** Get the device node */
+//        dn = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
+//        dn.runThreaded();
+//        
+//		simu = (Simulation) dn.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
 
 	}
 
@@ -75,7 +75,7 @@ public class BlobAgent extends MicroAgent
 	}
 	@Override public void agentKilled()
 	{
-		dn.shutdown();
+//		dn.shutdown();
 	}
 	public static MicroAgentMetaInfo getMetaInfo()
 	{
