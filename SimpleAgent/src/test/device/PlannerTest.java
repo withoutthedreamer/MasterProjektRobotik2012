@@ -131,9 +131,9 @@ public class PlannerTest
 		
 		assertTrue(planner.setGoal(pose));
 	}
-	@Test public void testIsValid(){
-		assertTrue(planner.isValidGoal());
-	}
+//	@Test public void testIsValid(){
+//		assertTrue(planner.isValidGoal());
+//	}
 	@Test public void testIsDoneFalse() {
 		assertFalse(planner.isDone());
 	}
@@ -146,14 +146,14 @@ public class PlannerTest
 	@Test public void testWPIndex() {
 		assertNotNull(planner.getWayPointIndex());
 	}
-	@Test public void testGetCost() {
-		double cost = planner.getCost();
-		logger.info("Cost: "+cost);
-		assertTrue(cost > 0);
-	}
-	@Test public void testIsActive() {
-		assertTrue(planner.isActive());
-	}
+//	@Test public void testGetCost() {
+//		double cost = planner.getCost();
+//		logger.info("Cost: "+cost);
+//		assertTrue(cost > 0);
+//	}
+//	@Test public void testIsActive() {
+//		assertTrue(planner.isActive());
+//	}
 	@Test public void testIsDone() {
 		while (isDone == false) {
 			try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }

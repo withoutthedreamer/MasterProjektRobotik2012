@@ -69,7 +69,8 @@ public class Planner extends RobotDevice
 				isValidGoal = true;
 			else {
 				isValidGoal = false;
-				notifyListenersNotValid();
+				if (isNewGoal == true)
+				    notifyListenersNotValid();
 			}
 
 			/** Check if goal is achieved */
@@ -175,11 +176,12 @@ public class Planner extends RobotDevice
 		// enable motion
 		((PlannerInterface) getDevice()).setRobotMotion(1);
 
-		try { Thread.sleep(getSleepTime()*2); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
+//		try { Thread.sleep(getSleepTime()*2); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
 
 		notify = true; // notify listeners of this new goal
 
-		return isValidGoal();
+//		return isValidGoal();
+		return true;
 	}
 	public Position getGoal() {
 		return new Position(globalGoal);
