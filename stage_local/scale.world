@@ -78,7 +78,7 @@ redrob( pose [-6.277 4.252 0 -97.494] name "r8" )
 redrob( pose [-5.202 5.566 0 -89.743] name "r9" )
 
 bluerob( pose [-7.014 6.409 0 -103.088] name "r10" )
-bluerob( pose [-5.139 5.649 0 -29.509] name "r11" )
+bluerob( pose [-5.320 6.400 0 -29.509] name "r11" )
 bluerob( pose [-6.315 6.277 0 -35.740] name "r12" )
 bluerob( pose [-7.527 6.162 0 -18.380] name "r13" )
 bluerob( pose [-6.897 5.544 0 -2.394] name "r14" )
