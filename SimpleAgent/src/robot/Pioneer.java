@@ -20,11 +20,10 @@ public class Pioneer extends Robot implements IPioneer
     StateType currentState = StateType.SET_SPEED;
     
     /** Watchdog timer for stuck checking */
-//    boolean timerIsArmed = false;
     boolean timerIsOccured = false;
-//    Timer timer;
+
     Position lastPosition;
-    int stuckCounter = 0;
+    int stuckCounter = -1;
 
 
     /**
@@ -106,38 +105,21 @@ public class Pioneer extends Robot implements IPioneer
     {        
         if (stuckCounter <= 0)
         {
-            lastPosition = getPosition();
+            /** Read odometry values */
+            lastPosition = getPosi().getPosition();
         }
         else
         {
             if (stuckCounter >= 20)
             {
-                stuckCounter = 0;
-                if (lastPosition.distanceTo(getPosition()) < 0.2 )
+                stuckCounter = -1;
+//                if (lastPosition.distanceTo(getPosi().getPosition()) < 0.1 )
+                if (lastPosition.isNearTo(getPosi().getPosition(), 0.1, 0.17) == true)
                 {
                     timerIsOccured = true;
                 }
             }
         }
-//        if (timerIsArmed == false)
-//        {
-//            timerIsArmed = true;
-//            lastPosition = getPosition();
-//            timer = new Timer();
-//            timer.schedule(new TimerTask()
-//            {
-//                public void run()
-//                {
-//                    timerIsArmed = false;
-//
-//                    if (lastPosition.distanceTo(getPosition()) < 0.2 )
-//                    {
-//                        timerIsOccured = true;
-//                    }
-//                }
-//            }, 2000);
-
-//        }
         if (timerIsOccured == true)
         {
             timerIsOccured = false;
@@ -326,8 +308,8 @@ public class Pioneer extends Robot implements IPioneer
 	 * than the array contains fake (max) values.
 	 * @return The sonar range values.
 	 */
-	final double[] getSonarRanges() {
-	    
+	final double[] getSonarRanges()
+	{    
 	    double[] sonarValues = null;
         int sonarCount = 0;
 
@@ -599,9 +581,9 @@ public class Pioneer extends Robot implements IPioneer
     /**
      * @param currentState the currentState to set
      */
-    void setCurrentState(StateType currentState)
+    void setCurrentState(StateType newCurrentState)
     {
-        this.currentState = currentState;
+        currentState = newCurrentState;
     }
     public void setWallfollow()
     {

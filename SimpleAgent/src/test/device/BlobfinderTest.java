@@ -101,8 +101,8 @@ public class BlobfinderTest
     @Before public void setUp() throws Exception
     {
         /** Set blobs */
-        si.setPositionOf("black", blobPoses[0]);
-        si.setPositionOf("red", blobPoses[1]);
+        si.setPositionOf("green2", blobPoses[0]);
+        si.setPositionOf("green3", blobPoses[1]);
         si.setPositionOf("green", blobPoses[2]);
         
 //        for (int i=0; i<blobPoses.length; i++)

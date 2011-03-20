@@ -1,13 +1,26 @@
 package device;
 
+import javaclient3.RangerInterface;
+import javaclient3.structures.ranger.PlayerRangerData;
 
+/**
+ * A Ranger device.
+ * It has a number of ranges that return the distance to the next obstacle.
+ * 
+ * @author sebastian
+ */
 public class Ranger extends RobotDevice
 {
+	double[] ranges;
+	int count;
 
-	protected double[] ranges	= null;
-	protected int count;
-
-	public Ranger (DeviceNode roboClient, Device device) {
+	/**
+	 * Creates a Ranger device.
+	 * @param roboClient The device node containing the ranger.
+	 * @param device The device properties.
+	 */
+	public Ranger (DeviceNode roboClient, Device device)
+	{
 		super(roboClient, device);;
 	}
 
@@ -15,19 +28,24 @@ public class Ranger extends RobotDevice
 	 * Will check for new ranges
 	 * If not yet ready will put current thread to sleep
 	 */
-	@Override
-	protected void update() {
-		if ( ((javaclient3.RangerInterface) device).isDataReady() ) {
-			count = ((javaclient3.RangerInterface) device).getData().getRanges_count();
-			ranges = ((javaclient3.RangerInterface) device).getData().getRanges();
+	@Override protected void update()
+	{
+		if ( ((javaclient3.RangerInterface) getDevice()).isDataReady() )
+		{
+		    PlayerRangerData rData = ((RangerInterface) getDevice()).getData();
+			
+		    count = rData.getRanges_count();
+			ranges = rData.getRanges();
 		}
 	}
 
-	public double[] getRanges () {
+	public double[] getRanges ()
+	{
 		return ranges;
 	}
 
-	public int getCount () {
+	public int getCount ()
+	{
 		return count;
 	}
 }

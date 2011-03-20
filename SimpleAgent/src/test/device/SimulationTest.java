@@ -114,6 +114,10 @@ public class SimulationTest
 	    assertTrue(goalPose.distanceTo(new Position(-2,-2,360)) < 0.1);
 
 	}
+	@Test public void testGetPositionNew()
+	{
+	    System.out.println("green: "+simu.getPositionOf("green"));
+	}
 
 	/** To use JUnit  test suite */
 	public static JUnit4TestAdapter suite()

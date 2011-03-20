@@ -3,17 +3,14 @@
  */
 package test.device;
 
-
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import junit.framework.JUnit4TestAdapter;
-import junit.framework.TestCase;
 
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 import data.Host;
 import device.Device;
@@ -25,7 +22,7 @@ import device.Ranger;
  * @author sebastian
  *
  */
-public class RangerTest extends TestCase
+public class RangerTest
 {
 	static DeviceNode deviceNode;
 	static Ranger ranger;
@@ -33,8 +30,7 @@ public class RangerTest extends TestCase
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception
+	@BeforeClass public static void setUpBeforeClass() throws Exception
 	{
 		int port = 6665;
         String host = "localhost";
@@ -55,36 +51,33 @@ public class RangerTest extends TestCase
         
         ranger = (Ranger) deviceNode.getDevice(new Device(IDevice.DEVICE_RANGER_CODE, null, -1, -1));
         assertNotNull(ranger);
-
-        try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception
+	@AfterClass public static void tearDownAfterClass() throws Exception
 	{
 		deviceNode.shutdown();
 	}
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
 	@Test public void testRead()
 	{
-		System.out.print(ranger.getCount());
-		System.out.println(","+ranger.getRanges());
+	    assertNotNull(ranger);
+        try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
+
+        int count = ranger.getCount();
+        double[] ranges = ranger.getRanges();
+        
+        System.out.print(count);
+       
+        for (int i=0; i<count; i++)
+        {
+            String rString = String.format("|%4.1f", ranges[i]);
+            System.out.print(rString);
+        }
+        
+        System.out.println();
 	}
 
 	/** To use JUnit  test suite */

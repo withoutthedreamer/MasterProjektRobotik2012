@@ -45,18 +45,28 @@ robot
 )
 
 # Place some blobs
-blob (
-  pose [ 7 -5 0 0]
-  color "red"
-  name "red"
-)
+#blob (
+  #pose [ 7 -5 0 0]
+  #color "red"
+  #name "red"
+#)
 blob (
   pose [ -7 5 0 0]
   color "green"
   name "green"
 )
+#blob (
+  #pose [ 2.5 7 0 0]
+  #color "black"
+  #name "black"
+#)
+blob (
+  pose [ 7 -5 0 0]
+  color "green"
+  name "green2"
+)
 blob (
   pose [ 2.5 7 0 0]
-  color "black"
-  name "black"
+  color "green"
+  name "green3"
 )
