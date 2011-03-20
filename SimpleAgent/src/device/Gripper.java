@@ -182,6 +182,18 @@ public class Gripper extends RobotDevice
     	    close();
     	    lift();
     	}
+    	// TODO notify
+    }
+    public void releaseOpen()
+    {
+        release();
+        open();
+        // TODO notify
+    }
+    public void closeLift()
+    {
+        close();
+        lift();
     }
 
     /**

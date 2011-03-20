@@ -88,8 +88,8 @@ public class SimulationTest
 			assertEquals(simu.getPositionOf("r1").equals(pose2), true);
 
 			simu.setPositionOf("green", new Position(pose2.getX()+1,pose2.getY(),pose2.getYaw()));
-			simu.setPositionOf("black", new Position(pose2.getX()+2,pose2.getY(),pose2.getYaw()));
-			simu.setPositionOf("red", new Position(pose2.getX()+3,pose2.getY(),pose2.getYaw()));
+			simu.setPositionOf("green2", new Position(pose2.getX()+2,pose2.getY(),pose2.getYaw()));
+			simu.setPositionOf("green3", new Position(pose2.getX()+3,pose2.getY(),pose2.getYaw()));
 			
 			simu.setPositionOf("nottExist", new Position(pose2.getX()+4,pose2.getY(),pose2.getYaw()));
 			
@@ -116,6 +116,10 @@ public class SimulationTest
 	}
 	@Test public void testGetPositionNew()
 	{
+	    // TODO debug unhadled message for simulation
+	    simu.initPositionOf("green");
+	    simu.sync();
+
 	    System.out.println("green: "+simu.getPositionOf("green"));
 	}
 

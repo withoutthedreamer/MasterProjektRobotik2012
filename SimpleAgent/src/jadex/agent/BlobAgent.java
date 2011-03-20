@@ -49,11 +49,11 @@ public class BlobAgent extends MicroAgent
         CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
         hostList.add(new Host(host,port));
        
-//        /** Get the device node */
-//        dn = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
-//        dn.runThreaded();
-//        
-//		simu = (Simulation) dn.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
+        /** Get the device node */
+        dn = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
+        dn.runThreaded();
+        
+		simu = (Simulation) dn.getDevice(new Device(IDevice.DEVICE_SIMULATION_CODE, null, -1, -1));
 
 	}
 
@@ -61,21 +61,17 @@ public class BlobAgent extends MicroAgent
 	{
         getReceiveNewGoalService().send(""+getComponentIdentifier(), "collectGoal", blobPose);
         if (simu != null)
-        	simu.setPositionOf((String)getArgument("blob"), blobPose);
-       
-        waitFor(200, new IComponentStep()
-		{
-			public Object execute(IInternalAccess args)
-			{
-		        killAgent();
-				return null;
-			}
-		});
-
+        {
+            String bName = (String)getArgument("blob");
+//            simu.initPositionOf(bName);
+        	simu.setPositionOf(bName, blobPose);
+        	simu.sync();
+        }
+        killAgent();
 	}
 	@Override public void agentKilled()
 	{
-//		dn.shutdown();
+		dn.shutdown();
 	}
 	public static MicroAgentMetaInfo getMetaInfo()
 	{

@@ -213,12 +213,24 @@ public class Planner extends RobotDevice
 	 */
 	public boolean stop()
 	{
-		isStopped  = true;
+		isStopped = true;
 		
 		/** Disable motion */
 		((PlannerInterface) getDevice()).setRobotMotion(0);
 
 		return true;
+	}
+	/**
+	 * Resumes any current path planning.
+	 * If no goal is on the stack nothing is done.
+	 * TODO test
+	 */
+	public void resume()
+	{
+	    isStopped = false;
+	    
+	    /** Enable motion */
+	    ((PlannerInterface) getDevice()).setRobotMotion(1);
 	}
 	/**
 	 * Returns the current cost to current goal position.

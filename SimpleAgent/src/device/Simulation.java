@@ -60,7 +60,7 @@ public class Simulation extends RobotDevice {
 	}
 	
 	// TODO Currently only 'static' objects should be modified
-	@Override protected void update ()
+	@Override protected synchronized void update ()
 	{
 		Set<Entry<String,Position>> set = objList.entrySet();
 		Iterator<Entry<String, Position>> i = set.iterator();
@@ -153,5 +153,9 @@ public class Simulation extends RobotDevice {
 	}
 	public int getIsDirtyListCount() {
 		return isDirtyList.size();
+	}
+	public synchronized void sync()
+	{
+	    update();
 	}
 }
