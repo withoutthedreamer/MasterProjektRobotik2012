@@ -272,7 +272,7 @@ public class DeviceNode extends Device
 							dev = new Position2d(this, new Device(devId, host, port, devIdx)); break;
 
 					case IDevice.DEVICE_RANGER_CODE : 
-						dev = new Ranger(this, new Device(devId, host, port, devIdx)); break;
+//						dev = new Ranger(this, new Device(devId, host, port, devIdx)); break;
 						
 					case IDevice.DEVICE_BLOBFINDER_CODE :
 						dev = new Blobfinder(this, new Device(devId, host, port, devIdx)); break;
@@ -285,7 +285,7 @@ public class DeviceNode extends Device
 
 					case IDevice.DEVICE_LASER_CODE :
 					    /** Use legacy laser only when no ranger is present */
-					    if (getDevice(new Device(IDevice.DEVICE_RANGER_CODE,null,-1,1)) == null)
+//					    if (getDevice(new Device(IDevice.DEVICE_RANGER_CODE,null,-1,1)) == null)
 					        dev = new RangerLaser(this, new Device(devId, host, port, devIdx));
 					    break;
 
@@ -347,9 +347,9 @@ public class DeviceNode extends Device
                 
             case IDevice.DEVICE_SONAR_CODE : 
                 dev = new RangerSonar(this, new Device(devId, host, port, devIdx)); break;
-// Legacy device
-//            case IDevice.DEVICE_LASER_CODE :
-//                dev = new RangerLaser(this, new Device(devId, host, port, devIdx)); break;
+
+            case IDevice.DEVICE_LASER_CODE :
+                dev = new RangerLaser(this, new Device(devId, host, port, devIdx)); break;
     
             case IDevice.DEVICE_LOCALIZE_CODE : 
                 dev = new Localize(this, new Device(devId, host, port, devIdx)); break;

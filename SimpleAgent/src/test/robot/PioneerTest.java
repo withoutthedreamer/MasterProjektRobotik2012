@@ -3,6 +3,8 @@
  */
 package test.robot;
 
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import junit.framework.JUnit4TestAdapter;
 
 import org.junit.AfterClass;
@@ -15,6 +17,7 @@ import robot.IPioneer;
 import data.Host;
 import device.Device;
 import device.DeviceNode;
+import device.IDevice;
 
 /**
  * @author sebastian
@@ -27,7 +30,20 @@ public class PioneerTest
     
     @BeforeClass public static void setUpBeforeClass() throws Exception
     {
-        dn = new DeviceNode(new Host("localhost", 6665), (Device[]) null);
+    	int port = 6667;
+        String host = "localhost";
+ 
+        /** Device list */
+        CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
+        devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,-1) );
+        devList.add( new Device(IDevice.DEVICE_SONAR_CODE,host,port,-1) );
+        devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,-1) );
+        
+        /** Host list */
+        CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,port));
+
+        dn = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
         dn.runThreaded();
         
         pion = new Pioneer(dn.getDeviceListArray());

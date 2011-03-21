@@ -172,9 +172,18 @@ public class CollectAgent extends NavAgent
                                 if (bb.getObject(curGoalKey).isDone() == false)
                                 {
                                     /** Arrived at the object's position */
+                                	logger.fine("Start lift with object");
                                     getRobot().getGripper().liftWithObject();
-                                    bb.getObject(curGoalKey).setDone(true);
-                                    updateGoal(bb);
+                                    waitFor(10000,new IComponentStep()
+                                    {
+										@Override public Object execute(IInternalAccess ia)
+										{
+											logger.fine("Update goal");
+											bb.getObject(curGoalKey).setDone(true);
+		                                    updateGoal(bb);
+											return null;
+										}
+                                    });
                                 }
                                 else
                                 {
@@ -263,6 +272,18 @@ public class CollectAgent extends NavAgent
 	
 	@Override public void agentKilled()
 	{
+		getRobot().getGripper().closeLift();
+
+		final IComponentStep step = new IComponentStep()
+		{
+			public Object execute(IInternalAccess ia)
+			{
+				waitFor(5000,this);
+				return null;
+			}
+		};        
+		waitForTick(step);
+		
 	    super.agentKilled();
 	    
 	    bb.clear();

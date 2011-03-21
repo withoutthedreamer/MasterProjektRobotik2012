@@ -16,16 +16,16 @@ import data.Host;
 import device.Device;
 import device.DeviceNode;
 import device.IDevice;
-import device.Ranger;
+import device.RangerLaser;
 
 /**
  * @author sebastian
  *
  */
-public class RangerTest
+public class RangerLaserTest
 {
 	static DeviceNode deviceNode;
-	static Ranger ranger;
+	static RangerLaser rLaser;
 
 	/**
 	 * @throws java.lang.Exception
@@ -37,7 +37,7 @@ public class RangerTest
         
         /** Device list */
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
-        devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,1) );
+        devList.add( new Device(IDevice.DEVICE_LASER_CODE,host,port,-1) );
                 
         /** Host list */
         CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
@@ -49,8 +49,8 @@ public class RangerTest
         
         deviceNode.runThreaded();
         
-        ranger = (Ranger) deviceNode.getDevice(new Device(IDevice.DEVICE_RANGER_CODE, null, -1, -1));
-        assertNotNull(ranger);
+        rLaser = (RangerLaser) deviceNode.getDevice(new Device(IDevice.DEVICE_LASER_CODE, null, -1, -1));
+        assertNotNull(rLaser);
 	}
 
 	/**
@@ -63,11 +63,11 @@ public class RangerTest
 
 	@Test public void testRead()
 	{
-	    assertNotNull(ranger);
+	    assertNotNull(rLaser);
         try { Thread.sleep(1000); } catch (InterruptedException e) { e.printStackTrace(); }
 
-        int count = ranger.getCount();
-        double[] ranges = ranger.getRanges();
+        int count = rLaser.getCount();
+        double[] ranges = rLaser.getRanges();
         
         System.out.print(count);
        
@@ -83,6 +83,6 @@ public class RangerTest
 	/** To use JUnit  test suite */
     public static JUnit4TestAdapter suite()
     { 
-       return new JUnit4TestAdapter(RangerTest.class); 
+       return new JUnit4TestAdapter(RangerLaserTest.class); 
     }
 }

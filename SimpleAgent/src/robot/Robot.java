@@ -12,6 +12,7 @@ import device.Planner;
 import device.Position2d;
 import device.Ranger;
 import device.RangerSonar;
+import device.RangerLaser;
 import device.Simulation;
 
 /**
@@ -32,8 +33,10 @@ public class Robot extends Device implements IRobot
 	 */
 	// TODO dynamic array
 	Position2d posi;
-	Ranger laser;
-	Ranger sonar;
+	Ranger ranger1;
+	RangerLaser rLaser;
+	Ranger ranger0;
+	RangerSonar rSonar;
 	Planner planner;
 	Localize localizer;
 	Gripper gripper;
@@ -137,20 +140,29 @@ public class Robot extends Device implements IRobot
     	            case IDevice.DEVICE_RANGER_CODE : 
     	            {
     	                /** getCount() might be 0 at this time, so try sonar first */
-    	                if (sonar == null)
+    	                if (ranger0 == null && rSonar == null)
     	                {
-    	                    sonar = (Ranger) dev; break;
+    	                    ranger0 = (Ranger) dev; break;
     	                }
-    	                else
+    	                /** Do we have a sonar? */
+    	                if (ranger0 != null || rSonar != null)
     	                {
-    	                    laser = (Ranger) dev; break;
+    	                    ranger1 = (Ranger) dev; break;
     	                }
     	            }
-    	            case IDevice.DEVICE_SONAR_CODE : 
-    	                sonar = (RangerSonar) dev; break;
-    /** Laser is a legacy device and deprecated */
-    //	            case IDevice.DEVICE_LASER_CODE : 
-    //	                laser = (RangerLaser) dev; break;
+    	            case IDevice.DEVICE_SONAR_CODE :
+    	            {
+    	            	/** Do we have a ranger already? */
+    	            	if (ranger0 == null)
+    	            		rSonar = (RangerSonar) dev; break;
+    	            }
+    	            /** Laser is a legacy device and deprecated */
+    	            case IDevice.DEVICE_LASER_CODE :
+    	            {
+    	            	/** Do we have a ranger already? */
+    	            	if (ranger1 == null)
+    	            		rLaser = (RangerLaser) dev; break;
+    	            }
     
     	            case IDevice.DEVICE_PLANNER_CODE :
     	                planner = (Planner) dev; break;
@@ -295,7 +307,10 @@ public class Robot extends Device implements IRobot
      */
     public Ranger getLaser()
     {
-        return laser;
+        if (rLaser != null)
+        	return rLaser;
+        else
+        	return ranger1;
     }
 
     /**
@@ -303,7 +318,10 @@ public class Robot extends Device implements IRobot
      */
     public Ranger getSonar()
     {
-        return sonar;
+    	if (rSonar != null)
+    		return rSonar;
+    	else
+    		return ranger0;
     }
 
     /**

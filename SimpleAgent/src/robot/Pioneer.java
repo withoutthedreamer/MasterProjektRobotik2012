@@ -338,6 +338,17 @@ public class Pioneer extends Robot implements IPioneer
                 break;
             }
         }
+        /** Corect error ranges */
+        for (int i=0; i<SONARCOUNT; i++)
+        {
+        	if (sonarValues[i] > IPioneer.MINRANGE &&
+        		sonarValues[i] < IPioneer.LPMAX )
+        	{/** Value looks good */}
+        	else
+        	{
+        		sonarValues[i] = IPioneer.LPMAX;        		
+        	}
+        }
         
         return sonarValues;
 	}
@@ -605,11 +616,10 @@ public class Pioneer extends Robot implements IPioneer
     void debugSensorData()
     {
         if (isDebugSonar && getSonar() != null) {
-            double[] sonarValues = getSonar().getRanges();  
-            int sonarCount = getSonar().getCount();
+            double[] sonarValues = getSonarRanges();  
     
             System.out.print("\nSonar");
-            for(int i=0; i< sonarCount; i++)
+            for(int i=0; i<SONARCOUNT; i++)
                 System.out.printf(" [%d]:%4.1f ", i, sonarValues[i]);
         }
     
@@ -630,7 +640,7 @@ public class Pioneer extends Robot implements IPioneer
             }
     
             if (getSonar() != null) {
-                double[] sonarValues = getSonar().getRanges();
+                double[] sonarValues = getSonarRanges();
                 int sonarCount = getSonar().getCount();
                 if (sonarCount >= SONARCOUNT) {
                     System.out.print("Sonar (l/lf/f/rf/r/rb/b/lb):\t");

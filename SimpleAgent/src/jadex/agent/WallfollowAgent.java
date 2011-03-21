@@ -59,7 +59,9 @@ public class WallfollowAgent extends MicroAgent
         CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
         devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,devIdx) );
         devList.add( new Device(IDevice.DEVICE_RANGER_CODE,host,port,devIdx) );
+        devList.add( new Device(IDevice.DEVICE_SONAR_CODE,host,port,devIdx));
         devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
+
         if (hasLocalize == true)
         {
             devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,devIdx) );
