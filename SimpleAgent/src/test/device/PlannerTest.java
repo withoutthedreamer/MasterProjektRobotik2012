@@ -1,5 +1,7 @@
 package test.device;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
@@ -30,6 +32,7 @@ public class PlannerTest
 	/** Logging support */
     Logger logger = Logger.getLogger (PlannerTest.class.getName ());
 	static boolean isDone;
+    static boolean plannerTO;
 
 	@BeforeClass public static void setUpBeforeClass() throws Exception
 	{
@@ -154,11 +157,32 @@ public class PlannerTest
 //	@Test public void testIsActive() {
 //		assertTrue(planner.isActive());
 //	}
-	@Test public void testIsDone() {
-		while (isDone == false) {
+	@Test public void testIsDone()
+	{
+	    Timer timer = new Timer();
+	    plannerTO = false;
+	    timer.schedule(new TimerTask()
+	    {
+            @Override public void run()
+            {
+                if (isDone == false)
+                {
+                    plannerTO = true;
+                }
+            }
+	    }, 15000);
+	    
+		while (isDone == false)
+		{
+		    if (plannerTO == true)
+		    {
+		        plannerTO = false;
+		        fail("Planner timeout");
+		        break;
+		    }
 			try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
 		}
-		assertTrue(isDone);
+		timer.cancel();
 	}
 	@Test public void testNotActive() {
 		assertFalse(planner.isActive());
