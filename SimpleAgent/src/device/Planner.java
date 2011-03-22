@@ -38,6 +38,8 @@ public class Planner extends RobotDevice
     int stuckTimer = 0;
     int STUCKTIMEOUT = 10;
 
+    int newGoalValidDelay;
+
 	public Planner(DeviceNode roboClient, Device device)
 	{
 		super(roboClient, device);
@@ -69,7 +71,8 @@ public class Planner extends RobotDevice
 				isValidGoal = true;
 			else {
 				isValidGoal = false;
-				notifyListenersNotValid();
+				if (newGoalValidDelay >= 0)
+				    notifyListenersNotValid();
 			}
 
 			/** Check if goal is achieved */
@@ -79,7 +82,8 @@ public class Planner extends RobotDevice
 				/** Check if really at the goal position */
 				if (globalGoal.distanceTo(curPosition) < 1.0) {
 					isDone = true;
-					notifyListenersDone();
+	                if (newGoalValidDelay >= 0)
+	                    notifyListenersDone();
 				} else {
 					/** Set the goal again */
 					setGoal(globalGoal);
@@ -92,7 +96,8 @@ public class Planner extends RobotDevice
 				} else {
 					isDone = false;
 					if (isStuck(curPosition) == true)
-					    notifyListenersAbort();
+		                if (newGoalValidDelay >= 0)
+		                    notifyListenersAbort();
 				}
 			}
 
@@ -134,6 +139,8 @@ public class Planner extends RobotDevice
 					+" CurPos: "+this.curPosition.toString()
 					+" IsDone: "+this.isDone
 					+" IsValid: "+this.isValidGoal);
+			
+			newGoalValidDelay += 1;
 		}
 	}
 	boolean isStuck(Position curPose)
@@ -165,21 +172,20 @@ public class Planner extends RobotDevice
 	 */
 	public synchronized boolean setGoal (Position newGoal)
 	{
-		// New Positions and copy
 		goal = new Position(newGoal);
 		globalGoal = new Position(newGoal);
 		isNewGoal = true;
 		isValidGoal = false;
 		isDone = false;
 		isStopped = false;
-		// enable motion
+		/** Enable motion */
 		((PlannerInterface) getDevice()).setRobotMotion(1);
 
-		try { Thread.sleep(getSleepTime()*2); } catch (InterruptedException e) { /* e.printStackTrace();*/ }
+		/** notify listeners of goal updates */
+		notify = true;
+		newGoalValidDelay = -2;
 
-		notify = true; // notify listeners of this new goal
-
-		return isValidGoal();
+		return true;
 	}
 	public Position getGoal() {
 		return new Position(globalGoal);
