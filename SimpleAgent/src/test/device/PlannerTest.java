@@ -189,7 +189,8 @@ public class PlannerTest
 	}
 	@Test public void testCancel()
 	{
-		Position pose = new Position(0,-6,Math.toRadians(75));
+//		Position pose = new Position(0,-6,Math.toRadians(75));
+	    Position pose = new Position(-6,6,Math.toRadians(75));
 
 		isDone = false;
 		assertTrue(planner.setGoal(pose));
