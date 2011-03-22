@@ -31,9 +31,6 @@ public class Planner extends RobotDevice
 	int wayPointIndex;
 
 	/** Watchdog timer for goal checking */
-//	boolean timerIsArmed = false;
-//	Timer timer;
-
     Position stuckPose;
     int stuckTimer = 0;
     int STUCKTIMEOUT = 10;
@@ -48,7 +45,6 @@ public class Planner extends RobotDevice
 		globalGoal = new Position();
 		curPosition = new Position();
 		isDoneListeners = new CopyOnWriteArrayList<IPlannerListener>();
-//		timer = new Timer();
 
 		setSleepTime(500);
 
@@ -318,16 +314,17 @@ public class Planner extends RobotDevice
             while (it.hasNext()) { it.next().callWhenNotValid(); }
         }
     }
-	@Override synchronized public void shutdown() {
+	@Override synchronized public void shutdown()
+	{
 		super.shutdown();
 		isDoneListeners.clear();
-//		stopTimer();
 	}
 	/**
 	 * Checks if the planner is currently busy with a plan.
 	 * @return 'true' if planner is busy, 'false' else.
 	 */
-	public boolean isActive() {
+	public boolean isActive()
+	{
 		if (isDone() == true)
 			return false;
 		else
@@ -336,41 +333,4 @@ public class Planner extends RobotDevice
 
 		return true;
 	}
-//	/**
-//	 * Start a timer if not already a timer is running.
-//	 */
-//	synchronized void startTimer() {
-//		if ( timerIsArmed == false) {
-//			timerIsArmed = true;
-//			logger.info("Set up planner watchdog timer");
-//
-//			timer.schedule(new TimerTask()
-//			{
-//				public void run()
-//				{
-//					timerIsArmed = false;
-//					logger.info("Watchdog occured");
-//					// Check if not already finished
-//					if (isDone() == false) {
-//						notifyListenersDone(); // TODO debug setDone();
-//						stop();
-//
-//						logger.config("Timout for goal: "+globalGoal.toString());
-//					}
-//				}
-//			}, 20000);
-//		}
-//	}
-//	/**
-//	 * Stop a timer if already a timer has been started.
-//	 */
-//	synchronized void stopTimer() {
-//		if (timerIsArmed == true) {
-//			timerIsArmed = false;
-//			timer.cancel();
-//			timer = new Timer();
-//
-//			logger.info("Watchdog canceled");
-//		}
-//	}
 }

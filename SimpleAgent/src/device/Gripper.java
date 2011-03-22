@@ -1,7 +1,9 @@
 package device;
 
+import java.util.Iterator;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import javaclient3.GripperInterface;
@@ -13,6 +15,11 @@ import javaclient3.GripperInterface;
  */
 public class Gripper extends RobotDevice
 {
+    stateType currentState = stateType.IDLE;
+    
+    /** Callback listeners */
+    CopyOnWriteArrayList<IGripperListener> isDoneListeners;
+
     /** Logging support */
     Logger logger = Logger.getLogger (Gripper.class.getName ());
     
@@ -65,12 +72,18 @@ public class Gripper extends RobotDevice
 	 */
 	public static enum stateType
 	{
+		OPEN_LIFT,
+		RELEASE_OPEN,
+		CLOSE_LIFT,
+		CLOSE_RELEASE,
 		OPEN,
-		CLOSED,
+		CLOSE,
 		MOVING,
-		UP,
-		DOWN,
-		ERROR
+		LIFT,
+		RELEASE,
+		ERROR,
+		IDLE,
+		STOP
 	}
 	
 	/**
@@ -81,9 +94,93 @@ public class Gripper extends RobotDevice
 	public Gripper(DeviceNode deviceNode, Device device)
 	{
 		super(deviceNode, device);
+		isDoneListeners = new CopyOnWriteArrayList<IGripperListener>();
+	}
+	@Override public void shutdown()
+	{
+	    super.shutdown();
+	    isDoneListeners.clear();
 	}
 	
-	/**
+	@Override protected void update()
+	{
+        stateType curState = getCurrentState();
+        
+        switch (curState)
+        {
+            case OPEN_LIFT :
+            {
+                break;
+            }
+            case RELEASE_OPEN :
+            {
+                startRelease();
+                startOpen();
+                notifyListenersReleasedOpened();
+                setCurrentState(stateType.IDLE);
+                break;
+            }
+            case CLOSE_LIFT :
+            {
+                startClose();
+                startLift();
+                notifyListenersClosedLifted();
+                setCurrentState(stateType.IDLE);
+                break;
+            }
+            case CLOSE_RELEASE :
+                break;
+            case OPEN :
+            {
+                startOpen();
+                notifyListenersOpened();
+                setCurrentState(stateType.IDLE);
+                break;
+            }
+            case CLOSE :
+            {
+                startClose();
+                notifyListenersClosed();
+                setCurrentState(stateType.IDLE);
+                break;
+            }
+            case MOVING :
+                break;
+            case LIFT :
+            {
+                startLift();
+                notifyListenersLifted();
+                setCurrentState(stateType.IDLE);
+                break;
+            }
+            case RELEASE :
+            {
+                startRelease();
+                notifyListenersReleased();
+                setCurrentState(stateType.IDLE);
+                break;
+            }
+            case STOP :
+                break;
+            case ERROR :
+                break;
+            case IDLE :
+                break;
+            default :
+                break;
+        }
+	}
+
+    public synchronized stateType getCurrentState()
+    {
+        return currentState;
+    }
+    synchronized void setCurrentState(stateType newState)
+    {
+        currentState = newState;
+    }
+
+    /**
 	 * Stops the gripper current motion (if any).
 	 */
 	public void stop ()
@@ -91,6 +188,7 @@ public class Gripper extends RobotDevice
 		((GripperInterface) getDevice()).stop();
 	}
 	/**
+	 * @deprecated Use {@link #open(IGripperListener)}.
 	 * Opens the gripper's paddles.
 	 * If available sensors are used to determine when the paddles are open.
 	 */
@@ -107,7 +205,26 @@ public class Gripper extends RobotDevice
 		} else
 			try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
+	public void open (IGripperListener cb)
+	{
+	    addIsDoneListener(cb);
+	    setCurrentState(stateType.OPEN);
+	}
+	void startOpen()
+	{
+	    updateDio();
+
+	    ((GripperInterface) getDevice()).open();
+
+	    if (getDio() != null) {
+	        while (getDio().getInput(0) != 0) {
+	            try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
+	        }
+	    } else
+	        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+	}
 	/**
+	 * @deprecated Use {@link #close(IGripperListener)}.
 	 * Close the gripper's paddles.
 	 */
 	public void close ()
@@ -116,7 +233,19 @@ public class Gripper extends RobotDevice
 
 		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
+	public void close (IGripperListener cb)
+	{
+	    addIsDoneListener(cb);
+	    setCurrentState(stateType.CLOSE);
+	}
+	void startClose()
+	{
+	    ((GripperInterface) getDevice()).close();
+
+        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+	}
 	/**
+	 * @deprecated Use {@link #lift(IGripperListener)}.
 	 * Lift the gripper's paddles (if supported).
 	 */
 	public void lift ()
@@ -137,6 +266,30 @@ public class Gripper extends RobotDevice
 	    }
 	   	   
 	    try { Thread.sleep(4000); } catch (InterruptedException e) { e.printStackTrace(); }
+	}
+	public void lift(IGripperListener cb)
+	{
+	    addIsDoneListener(cb);
+        setCurrentState(stateType.LIFT);
+	}
+	void startLift()
+	{
+	    updateActarray();
+        updateDio();
+
+        if (getDio() != null)
+            /** Some thing between the paddles ? */
+            if (getDio().getInput(3)==1 || getDio().getInput(2)==1 ) {
+                logger.info("Something is between the paddles");
+            } else
+                logger.info("Nothing between the paddles");
+
+        if (getAa() != null) {
+            /** Lift up */
+            getAa().moveHome(0);
+        }
+           
+        try { Thread.sleep(4000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	/**
      * Sets up the gripper to only close and lift paddles when an object is sensed between the paddles.
@@ -184,18 +337,33 @@ public class Gripper extends RobotDevice
     	}
     	// TODO notify
     }
+    /**
+     * @deprecated Use {@link #releaseOpen(IGripperListener)}.
+     */
     public void releaseOpen()
     {
         release();
         open();
         // TODO notify
     }
+    public void releaseOpen(IGripperListener cb)
+    {
+        addIsDoneListener(cb);
+        setCurrentState(stateType.RELEASE_OPEN);
+    }
+    /**
+     * @deprecated Use {@link #closeLift(IGripperListener)}.
+     */
     public void closeLift()
     {
         close();
         lift();
     }
-
+    public void closeLift(IGripperListener cb)
+    {
+        addIsDoneListener(cb);
+        setCurrentState(stateType.CLOSE_LIFT);
+    }
     /**
 	 * Release the gripper's paddles (if supported).
 	 * Use sensors to determine if paddles are released (if available).
@@ -220,6 +388,31 @@ public class Gripper extends RobotDevice
 	    } else
 	    	try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
     }
+	public void release (IGripperListener cb)
+	{
+	    addIsDoneListener(cb);
+        setCurrentState(stateType.RELEASE);
+	}
+	void startRelease()
+	{
+	    updateActarray();
+        updateDio();
+
+        /** Lift down */
+        if (getAa() != null)
+        {
+            getAa().moveTo(0, 0);
+        }
+       
+        if (getDio() != null)
+        {
+            while (getDio().getInput(1) != 0)
+            {
+                try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
+            }
+        } else
+            try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
+	}
 	/**
 	 * During runtime checks if an actarray device is available, typically used to lift/release the paddles.
 	 */
@@ -264,8 +457,8 @@ public class Gripper extends RobotDevice
 	    	pState = ((GripperInterface) getDevice()).getData().getState();
 
             switch (pState) {
-            case 1:  state = stateType.OPEN;  break;
-            case 2:  state = stateType.CLOSED; break;
+//            case 1:  state = stateType.OPEN;  break;
+//            case 2:  state = stateType.CLOSED; break;
             case 3:  state = stateType.MOVING;  break;
 
             default: state = stateType.ERROR; break;
@@ -307,5 +500,50 @@ public class Gripper extends RobotDevice
      */
     protected void setDio(Dio dio) {
         this.dio = dio;
+    }
+    public void addIsDoneListener(IGripperListener cb)
+    {
+        if (cb != null)
+            isDoneListeners.addIfAbsent(cb);
+    }
+    public void removeIsDoneListener(IGripperListener cb)
+    {
+        if (cb != null)
+            isDoneListeners.remove(cb);
+    }
+    void notifyListenersOpened()
+    {
+        Iterator<IGripperListener> it = isDoneListeners.iterator();
+        while (it.hasNext()) { it.next().whenOpened(); }
+    }
+    void notifyListenersClosed()
+    {
+        Iterator<IGripperListener> it = isDoneListeners.iterator();
+        while (it.hasNext()) { it.next().whenClosed(); }
+    }
+    void notifyListenersLifted()
+    {
+        Iterator<IGripperListener> it = isDoneListeners.iterator();
+        while (it.hasNext()) { it.next().whenLifted(); }
+    }
+    void notifyListenersReleased()
+    {
+        Iterator<IGripperListener> it = isDoneListeners.iterator();
+        while (it.hasNext()) { it.next().whenReleased(); }
+    }
+    void notifyListenersClosedLifted()
+    {
+        Iterator<IGripperListener> it = isDoneListeners.iterator();
+        while (it.hasNext()) { it.next().whenClosedLifted(); }
+    }
+    void notifyListenersReleasedOpened()
+    {
+        Iterator<IGripperListener> it = isDoneListeners.iterator();
+        while (it.hasNext()) { it.next().whenReleasedOpened(); }
+    }
+    void notifyListenersError()
+    {
+        Iterator<IGripperListener> it = isDoneListeners.iterator();
+        while (it.hasNext()) { it.next().whenError(); }
     }
 }
