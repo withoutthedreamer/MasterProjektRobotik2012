@@ -137,7 +137,8 @@ public class NavAgent extends MicroAgent
                         @Override public void callWhenAbort()
                         {
                             /** Set the goal again. */
-                            robot.setGoal(robot.getGoal());
+//                            robot.setGoal(robot.getGoal());
+                            logger.info("Aborted");
                         }
 
                         @Override public void callWhenNotValid()

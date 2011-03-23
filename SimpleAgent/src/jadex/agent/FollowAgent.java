@@ -137,7 +137,7 @@ public class FollowAgent extends NavAgent
         /**
          * Check for distance to goal.
          */
-        if (robotPose.distanceTo( followPose ) >= minToGoalDist)
+        if (robotPose.distanceTo( followPose ) > minToGoalDist)
         {
             caughtRobot = false;
             /**
@@ -147,6 +147,9 @@ public class FollowAgent extends NavAgent
             {
                 isNewFollowPose = false;
                 getRobot().setGoal( followPose );
+                
+                logger.fine("Resume following robot "+folRobot);
+                logger.finer("pose: "+robotPose+", robot pose: "+followPose);
             }
         }
         else
