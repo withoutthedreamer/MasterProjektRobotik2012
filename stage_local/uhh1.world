@@ -49,11 +49,15 @@ robot
   pose [ -21 2 0 0 ] 
 )
 
+define yellowrob robot( color "yellow" )
+yellowrob( pose [-21 10 0 0] name "r3" )
+yellowrob( pose [-20 10 0 0] name "r4" )
+
 # Place some blobs
 blob (
   pose [ 7 -5 0 0]
-  color "red"
-  name "red"
+  color "green"
+  name "green1"
 )
 blob (
   pose [ -7 5 0 0]
@@ -62,8 +66,8 @@ blob (
 )
 blob (
   pose [ 2.5 7 0 0]
-  color "black"
-  name "black"
+  color "green"
+  name "green2"
 )
 
 # Place some furniture
