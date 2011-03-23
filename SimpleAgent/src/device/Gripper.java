@@ -216,11 +216,11 @@ public class Gripper extends RobotDevice
 
 	    ((GripperInterface) getDevice()).open();
 
-	    if (getDio() != null) {
-	        while (getDio().getInput(0) != 0) {
-	            try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
-	        }
-	    } else
+//	    if (getDio() != null) {
+//	        while (getDio().getInput(0) != 0) {
+//	            try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
+//	        }
+//	    } else
 	        try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	/**

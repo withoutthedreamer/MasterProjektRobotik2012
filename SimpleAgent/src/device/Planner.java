@@ -35,7 +35,7 @@ public class Planner extends RobotDevice
     int stuckTimer = 0;
     int STUCKTIMEOUT = 10;
 
-    int newGoalValidDelay;
+    int newGoalValidDelay = -2;
 
 	public Planner(DeviceNode roboClient, Device device)
 	{
@@ -231,8 +231,9 @@ public class Planner extends RobotDevice
 	{
 	    isStopped = false;
 	    
-	    /** Enable motion */
-	    ((PlannerInterface) getDevice()).setRobotMotion(1);
+//	    /** Enable motion */
+//	    ((PlannerInterface) getDevice()).setRobotMotion(1);
+	    setGoal(globalGoal);
 	}
 	/**
 	 * Returns the current cost to current goal position.

@@ -106,7 +106,6 @@ public class PlannerTest
 
 	@Test public void testSetGoal()
 	{
-
 		Position pose = new Position(-6.5,-2,Math.toRadians(75));
 		isDone = false;
 		
@@ -199,6 +198,15 @@ public class PlannerTest
 
 		assertTrue(planner.stop());
 		// TODO assert condition
+	}
+	@Test public void testResume()
+	{
+		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+		planner.resume();
+		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
+		
+		planner.stop();
+		try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 //	@Test public void testGetCostPosition()
 //	{

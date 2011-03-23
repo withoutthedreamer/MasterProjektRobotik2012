@@ -97,15 +97,17 @@ public class CollectAgent extends NavAgent
                 (Double)getArgument("Angle"));
         
         if ( setPose.equals(new Position(0,0,0)) == false )
-            robot.setPosition(setPose);         
+            getRobot().setPosition(setPose);         
 
         sendHello();
 		
 		bb = new Board();
-		depotPose = new Position(
-		        (Double)getArgument("X"),
-		        (Double)getArgument("Y"),
-		        0);
+//		depotPose = new Position(
+//		        (Double)getArgument("X"),
+//		        (Double)getArgument("Y"),
+//		        0);
+//		depotPose = getRobot().getPosition();
+//        logger.fine("Updated depot pose to "+depotPose);
 	}
 	
 	@Override public void executeBody()
@@ -175,7 +177,7 @@ public class CollectAgent extends NavAgent
                                 {
                                     /** Arrived at the object's position */
                                 	logger.fine("Start lift with object");
-//                                    getRobot().getGripper().liftWithObject();
+
                                 	getRobot().getGripper().closeLift(new IGripperListener()
                                 	{
 										@Override public void whenOpened() {
@@ -203,16 +205,6 @@ public class CollectAgent extends NavAgent
 											getRobot().getGripper().removeIsDoneListener(this);
 										}                                		
                                 	});
-//                                    waitFor(10000,new IComponentStep()
-//                                    {
-//										@Override public Object execute(IInternalAccess ia)
-//										{
-//											logger.fine("Update goal");
-//											bb.getObject(curGoalKey).setDone(true);
-//		                                    updateGoal(bb);
-//											return null;
-//										}
-//                                    });
                                 }
                                 else
                                 {
@@ -244,9 +236,6 @@ public class CollectAgent extends NavAgent
 											getRobot().getGripper().removeIsDoneListener(this);
 										}                                		
                                     });
-//                                    bb.removeObject(curGoalKey);
-//                                    curGoalKey = null;
-//                                    updateGoal(bb);
                                 }
                             }
                         }
@@ -300,9 +289,6 @@ public class CollectAgent extends NavAgent
  											getRobot().getGripper().removeIsDoneListener(this);
  										}                                		
                                      });
-//                                    /** Forget it and update the plan */
-//                                    curGoalKey = null;
-//                                    updateGoal(bb);
                                 }
                             }
                             logger.info("No valid path");
@@ -363,16 +349,7 @@ public class CollectAgent extends NavAgent
 							@Override public void whenError() {
 								getRobot().getGripper().removeIsDoneListener(this);
 							}                                		
-                        });
-                        
-//                        double angle = getRobot().getPosition().getYaw(); 
-//                        /** Set the approach angle appropriate*/
-//                        getRobot().setGoal(new Position(
-//                                getRobot().getGoal().getX(),
-//                                getRobot().getGoal().getY(),
-//                                angle));
-//
-//                        logger.fine("Updated angle: "+Math.toDegrees(angle));
+                        });                        
                     }
                 }
                 waitFor(1000,this);
@@ -380,6 +357,17 @@ public class CollectAgent extends NavAgent
             }
         };        
         waitForTick(step);
+        
+        /** Depot Pose */
+        waitFor(1000, new IComponentStep()
+        {
+			@Override public Object execute(IInternalAccess ia) {
+		        /** Set current depot pose */
+		        depotPose = new Position(getRobot().getPosition());
+		        logger.fine("Updated depot pose to "+depotPose);
+				return null;
+			}        	
+        });
 	}
 	
 	@Override public void agentKilled()
@@ -409,20 +397,6 @@ public class CollectAgent extends NavAgent
 				getRobot().getGripper().removeIsDoneListener(this);
 			}                                		
         });
-
-//		final IComponentStep step = new IComponentStep()
-//		{
-//			public Object execute(IInternalAccess ia)
-//			{
-//				waitFor(5000,this);
-//				return null;
-//			}
-//		};        
-//		waitForTick(step);
-		
-//	    super.agentKilled();
-//	    
-//	    bb.clear();
 	}
 	public void killNow()
 	{
@@ -468,8 +442,6 @@ public class CollectAgent extends NavAgent
 						getRobot().getGripper().removeIsDoneListener(this);
 					}                                		
             	});
-//	            getRobot().setGoal(bb.getObject(curGoalKey).getPosition());
-//	            permitGripperOpen = true;
 	        }
 	    }
 	    else
@@ -485,7 +457,7 @@ public class CollectAgent extends NavAgent
 	        {
 	            /** Aborted? */
 	            /** Set the goal again. */
-	            getRobot().setGoal(bb.getObject(curGoalKey).getGoal().getPosition());
+	            getRobot().setGoal(bb.getObject(curGoalKey).getPosition());
 	            permitGripperOpen = true;
 	        }
 	    }

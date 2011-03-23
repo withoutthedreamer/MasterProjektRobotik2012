@@ -259,6 +259,11 @@ public class Robot extends Device implements IRobot
 			}
 		}
 
+		if (position.equals(new Position(0,0,0)) && planner != null)
+		{
+			position.setPosition( planner.getPosition() );
+		}
+		
 //		return new Position(position);
 		return position;
 	}
