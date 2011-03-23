@@ -3,6 +3,10 @@
  */
 package jadex.agent;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
+import robot.IPioneer;
 import data.Position;
 import device.ILocalizeListener;
 import jadex.bridge.Argument;
@@ -120,6 +124,7 @@ public class EscapeAgent extends WallfollowAgent
                                         gotCaught = true;
                                         getRobot().stop();
                                         getLogger().info("Got caught "+getRobot()+" by "+id);
+                                        dance();
                                     }
                                 }
                             }
@@ -168,5 +173,18 @@ public class EscapeAgent extends WallfollowAgent
         };
         
         return new MicroAgentMetaInfo("This agent starts up an escape agent.", null, args, null);
+    }
+    void dance()
+    {
+    	logger.info("Dancing..");
+    	getRobot().setCommand();
+    	getRobot().setTurnrate(Math.toRadians(IPioneer.MAXTURNRATE));
+    	Timer timer = new Timer();
+    	timer.schedule(new TimerTask()
+    	{
+			@Override public void run() {
+				getRobot().stop();
+			}
+    	}, 15000);
     }
 }
