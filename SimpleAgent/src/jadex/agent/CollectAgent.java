@@ -14,6 +14,7 @@ import data.Position;
 import device.Device;
 import device.DeviceNode;
 import device.IDevice;
+import device.IGripperListener;
 import device.IPlannerListener;
 import jadex.bridge.*;
 import jadex.commons.ChangeEvent;
@@ -25,7 +26,6 @@ import jadex.service.HelloService;
 import jadex.service.ReceiveNewGoalService;
 import jadex.service.SendPositionService;
 
-
 public class CollectAgent extends NavAgent
 {
     /** Data */
@@ -33,10 +33,12 @@ public class CollectAgent extends NavAgent
     String curGoalKey = null;
     /** Where to store objects */
     Position depotPose;
-    private boolean permitGripperOpen = false;
+    boolean permitGripperOpen = false;
+    CollectAgent agent;
 
 	@Override public void agentCreated()
 	{
+		agent = this;
 	    hs = new HelloService(getExternalAccess());
         ps = new SendPositionService(getExternalAccess());
         gs = new ReceiveNewGoalService(getExternalAccess());
@@ -173,25 +175,78 @@ public class CollectAgent extends NavAgent
                                 {
                                     /** Arrived at the object's position */
                                 	logger.fine("Start lift with object");
-                                    getRobot().getGripper().liftWithObject();
-                                    waitFor(10000,new IComponentStep()
-                                    {
-										@Override public Object execute(IInternalAccess ia)
-										{
+//                                    getRobot().getGripper().liftWithObject();
+                                	getRobot().getGripper().closeLift(new IGripperListener()
+                                	{
+										@Override public void whenOpened() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+										}
+										@Override public void whenClosed() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+										}
+										@Override public void whenLifted() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+										}
+										@Override public void whenReleased() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+										}
+										@Override public void whenClosedLifted() {
+											getRobot().getGripper().removeIsDoneListener(this);
 											logger.fine("Update goal");
 											bb.getObject(curGoalKey).setDone(true);
 		                                    updateGoal(bb);
-											return null;
 										}
-                                    });
+										@Override public void whenReleasedOpened() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+										}
+										@Override public void whenError() {
+											getRobot().getGripper().removeIsDoneListener(this);
+										}                                		
+                                	});
+//                                    waitFor(10000,new IComponentStep()
+//                                    {
+//										@Override public Object execute(IInternalAccess ia)
+//										{
+//											logger.fine("Update goal");
+//											bb.getObject(curGoalKey).setDone(true);
+//		                                    updateGoal(bb);
+//											return null;
+//										}
+//                                    });
                                 }
                                 else
                                 {
                                     /** Arrived at the objects depot position */
-                                    getRobot().getGripper().releaseOpen();
-                                    bb.removeObject(curGoalKey);
-                                    curGoalKey = null;
-                                    updateGoal(bb);
+                                    getRobot().getGripper().releaseOpen(new IGripperListener()
+                                    {                                    	
+                                    	@Override public void whenOpened() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+										}
+										@Override public void whenClosed() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+										}
+										@Override public void whenLifted() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+										}
+										@Override public void whenReleased() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+										}
+										@Override public void whenClosedLifted() {
+											getRobot().getGripper().removeIsDoneListener(this);
+										}
+										@Override public void whenReleasedOpened() {
+											getRobot().getGripper().removeIsDoneListener(this);											
+											bb.removeObject(curGoalKey);
+		                                    curGoalKey = null;
+		                                    updateGoal(bb);
+										}
+										@Override public void whenError() {
+											getRobot().getGripper().removeIsDoneListener(this);
+										}                                		
+                                    });
+//                                    bb.removeObject(curGoalKey);
+//                                    curGoalKey = null;
+//                                    updateGoal(bb);
                                 }
                             }
                         }
@@ -218,10 +273,36 @@ public class CollectAgent extends NavAgent
                                 {
                                     /** We are heading home. */
                                     /** Deposit any object here */
-                                    getRobot().getGripper().releaseOpen();
-                                    /** Forget it and update the plan */
-                                    curGoalKey = null;
-                                    updateGoal(bb);
+                                	 getRobot().getGripper().releaseOpen(new IGripperListener()
+                                     {                                    	
+                                     	@Override public void whenOpened() {
+ 											getRobot().getGripper().removeIsDoneListener(this);											
+ 										}
+ 										@Override public void whenClosed() {
+ 											getRobot().getGripper().removeIsDoneListener(this);											
+ 										}
+ 										@Override public void whenLifted() {
+ 											getRobot().getGripper().removeIsDoneListener(this);											
+ 										}
+ 										@Override public void whenReleased() {
+ 											getRobot().getGripper().removeIsDoneListener(this);											
+ 										}
+ 										@Override public void whenClosedLifted() {
+ 											getRobot().getGripper().removeIsDoneListener(this);
+ 										}
+ 										@Override public void whenReleasedOpened() {
+ 											getRobot().getGripper().removeIsDoneListener(this);											
+ 		                                    /** Forget it and update the plan */
+ 		                                    curGoalKey = null;
+ 		                                    updateGoal(bb);
+ 										}
+ 										@Override public void whenError() {
+ 											getRobot().getGripper().removeIsDoneListener(this);
+ 										}                                		
+                                     });
+//                                    /** Forget it and update the plan */
+//                                    curGoalKey = null;
+//                                    updateGoal(bb);
                                 }
                             }
                             logger.info("No valid path");
@@ -251,16 +332,47 @@ public class CollectAgent extends NavAgent
                         permitGripperOpen = false;
                         
                         getRobot().getPlanner().stop();
-                        getRobot().getGripper().releaseOpen();
-                        
-                        double angle = getRobot().getPosition().getYaw(); 
-                        /** Set the approach angle appropriate*/
-                        getRobot().setGoal(new Position(
-                                getRobot().getGoal().getX(),
-                                getRobot().getGoal().getY(),
-                                angle));
+                        getRobot().getGripper().releaseOpen(new IGripperListener()
+                        {                                    	
+                        	@Override public void whenOpened() {
+								getRobot().getGripper().removeIsDoneListener(this);											
+							}
+							@Override public void whenClosed() {
+								getRobot().getGripper().removeIsDoneListener(this);											
+							}
+							@Override public void whenLifted() {
+								getRobot().getGripper().removeIsDoneListener(this);											
+							}
+							@Override public void whenReleased() {
+								getRobot().getGripper().removeIsDoneListener(this);											
+							}
+							@Override public void whenClosedLifted() {
+								getRobot().getGripper().removeIsDoneListener(this);
+							}
+							@Override public void whenReleasedOpened() {
+								getRobot().getGripper().removeIsDoneListener(this);											
+								double angle = getRobot().getPosition().getYaw(); 
+		                        /** Set the approach angle appropriate*/
+		                        getRobot().setGoal(new Position(
+		                                getRobot().getGoal().getX(),
+		                                getRobot().getGoal().getY(),
+		                                angle));
 
-                        logger.fine("Updated angle: "+Math.toDegrees(angle));
+		                        logger.fine("Updated angle: "+Math.toDegrees(angle));
+							}
+							@Override public void whenError() {
+								getRobot().getGripper().removeIsDoneListener(this);
+							}                                		
+                        });
+                        
+//                        double angle = getRobot().getPosition().getYaw(); 
+//                        /** Set the approach angle appropriate*/
+//                        getRobot().setGoal(new Position(
+//                                getRobot().getGoal().getX(),
+//                                getRobot().getGoal().getY(),
+//                                angle));
+//
+//                        logger.fine("Updated angle: "+Math.toDegrees(angle));
                     }
                 }
                 waitFor(1000,this);
@@ -272,21 +384,50 @@ public class CollectAgent extends NavAgent
 	
 	@Override public void agentKilled()
 	{
-		getRobot().getGripper().closeLift();
-
-		final IComponentStep step = new IComponentStep()
-		{
-			public Object execute(IInternalAccess ia)
-			{
-				waitFor(5000,this);
-				return null;
+		getRobot().getGripper().closeLift(new IGripperListener()
+        {                                    	
+        	@Override public void whenOpened() {
+				getRobot().getGripper().removeIsDoneListener(this);											
 			}
-		};        
-		waitForTick(step);
+			@Override public void whenClosed() {
+				getRobot().getGripper().removeIsDoneListener(this);											
+			}
+			@Override public void whenLifted() {
+				getRobot().getGripper().removeIsDoneListener(this);											
+			}
+			@Override public void whenReleased() {
+				getRobot().getGripper().removeIsDoneListener(this);											
+			}
+			@Override public void whenClosedLifted() {
+				getRobot().getGripper().removeIsDoneListener(this);
+				agent.killNow();				    
+			}
+			@Override public void whenReleasedOpened() {
+				getRobot().getGripper().removeIsDoneListener(this);											
+			}
+			@Override public void whenError() {
+				getRobot().getGripper().removeIsDoneListener(this);
+			}                                		
+        });
+
+//		final IComponentStep step = new IComponentStep()
+//		{
+//			public Object execute(IInternalAccess ia)
+//			{
+//				waitFor(5000,this);
+//				return null;
+//			}
+//		};        
+//		waitForTick(step);
 		
-	    super.agentKilled();
-	    
-	    bb.clear();
+//	    super.agentKilled();
+//	    
+//	    bb.clear();
+	}
+	public void killNow()
+	{
+		super.agentKilled();
+		bb.clear();
 	}
 	/**
 	 * Updates the current goal of the agent.
@@ -301,9 +442,34 @@ public class CollectAgent extends NavAgent
 	        if (curGoalKey != null)
 	        {
 	            /** Prepare Gripper for driving */
-	            getRobot().getGripper().closeLift();
-	            getRobot().setGoal(bb.getObject(curGoalKey).getPosition());
-	            permitGripperOpen = true;
+	            getRobot().getGripper().closeLift(new IGripperListener()
+            	{
+					@Override public void whenOpened() {
+						getRobot().getGripper().removeIsDoneListener(this);											
+					}
+					@Override public void whenClosed() {
+						getRobot().getGripper().removeIsDoneListener(this);											
+					}
+					@Override public void whenLifted() {
+						getRobot().getGripper().removeIsDoneListener(this);											
+					}
+					@Override public void whenReleased() {
+						getRobot().getGripper().removeIsDoneListener(this);											
+					}
+					@Override public void whenClosedLifted() {
+						getRobot().getGripper().removeIsDoneListener(this);
+			            getRobot().setGoal(agent.getBb().getObject(curGoalKey).getPosition());
+			            permitGripperOpen = true;
+					}
+					@Override public void whenReleasedOpened() {
+						getRobot().getGripper().removeIsDoneListener(this);											
+					}
+					@Override public void whenError() {
+						getRobot().getGripper().removeIsDoneListener(this);
+					}                                		
+            	});
+//	            getRobot().setGoal(bb.getObject(curGoalKey).getPosition());
+//	            permitGripperOpen = true;
 	        }
 	    }
 	    else
@@ -363,5 +529,12 @@ public class CollectAgent extends NavAgent
 		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a collect agent.", null, args, null);
+	}
+
+	/**
+	 * @return the bb
+	 */
+	protected Board getBb() {
+		return bb;
 	}
 }

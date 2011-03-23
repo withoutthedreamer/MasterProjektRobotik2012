@@ -12,6 +12,7 @@ import test.device.DeviceTest;
 import test.device.GripperTest;
 import test.device.LocalizerTest;
 import test.device.PlannerTest;
+import test.device.RangerLaserTest;
 import test.device.RangerTest;
 import test.device.RobotDeviceTest;
 import test.device.SimulationTest;
@@ -43,6 +44,7 @@ public class AllTests
 		suite.addTest(DeviceNodeTest.suite());
 		suite.addTest(RobotDeviceTest.suite());  
 		suite.addTest(RangerTest.suite());
+		suite.addTest(RangerLaserTest.suite());
 		suite.addTest(SimulationTest.suite());  
         suite.addTest(LocalizerTest.suite());  
 		suite.addTest(PlannerTest.suite());  

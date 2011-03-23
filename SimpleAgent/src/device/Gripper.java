@@ -404,14 +404,14 @@ public class Gripper extends RobotDevice
             getAa().moveTo(0, 0);
         }
        
-        if (getDio() != null)
-        {
-            while (getDio().getInput(1) != 0)
-            {
-                try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
-            }
-        } else
-            try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
+//        if (getDio() != null)
+//        {
+//            while (getDio().getInput(1) != 0)
+//            {
+//                try { Thread.sleep(100); } catch (InterruptedException e) { e.printStackTrace(); }
+//            }
+//        } else
+            try { Thread.sleep(4000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
 	/**
 	 * During runtime checks if an actarray device is available, typically used to lift/release the paddles.

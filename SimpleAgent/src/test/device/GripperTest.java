@@ -39,7 +39,7 @@ public class GripperTest
 
     @BeforeClass public static void setUpBeforeClass() throws Exception
     {
-        int port = 6665;
+        int port = 6671;
         String host = "localhost";
         
         /** Device list */
@@ -179,6 +179,19 @@ public class GripperTest
 		
 		assertEquals(isReleased, true);
         System.out.println();
+	}
+	/**
+	 * Test method for {@link device.Gripper#lift()}.
+	 */
+	@Test public void testLift2()
+	{
+	    isLifted = false;
+	    System.out.print("Test lift..");
+	    gripper.lift(null);
+		try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
+		
+		assertEquals(isLifted, true);
+	    System.out.println();
 	}
 	@Test public void testReleaseOpen()
 	{
