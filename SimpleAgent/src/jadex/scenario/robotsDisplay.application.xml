@@ -7,7 +7,7 @@
 	name="robotDisplay" package="jadex.scenario">
 
 	<arguments>
-		<argument name="port" typename="Integer"> 6600 </argument>
+		<argument name="port" typename="Integer"> 6665 </argument>
 		<argument name="host" typename="String"> "localhost" </argument>
 	</arguments>
 
@@ -28,6 +28,21 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
+						<argument name="robot"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="View1" name="View1">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="robot"> 4 </argument>
+					</arguments>
+				</component>
+				<component type="View2" name="View2">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="robot"> 5 </argument>
 					</arguments>
 				</component>
 			</components>

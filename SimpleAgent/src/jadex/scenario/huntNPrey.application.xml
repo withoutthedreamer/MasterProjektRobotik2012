@@ -18,10 +18,229 @@
 			master="true" />
 		<componenttype name="Follow1" filename="jadex/agent/FollowAgent.class"
 			master="true" />
+		<componenttype name="Nav0" filename="jadex/agent/NavAgent.class"
+			master="true" />
+		<componenttype name="Nav1" filename="jadex/agent/NavAgent.class"
+			master="true" />
+		<componenttype name="Nav2" filename="jadex/agent/NavAgent.class"
+			master="true" />
+		<componenttype name="Nav3" filename="jadex/agent/NavAgent.class"
+			master="true" />
+		<componenttype name="Nav4" filename="jadex/agent/NavAgent.class"
+			master="true" />
+		<componenttype name="Nav5" filename="jadex/agent/NavAgent.class"
+			master="true" />
+		<componenttype name="Dispersion0" filename="jadex/scenario/DispersionAgent.class"
+			master="true" />
 	</componenttypes>
 
 	<applications>
 		
+		<application name="2 Robots, Dispers, Tams floor Real">
+			<components>
+				<component type="Nav3" name="Nav3">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams66" </argument>
+						<argument name="index"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="Nav4" name="Nav4">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams67" </argument>
+						<argument name="index"> 4 </argument>
+					</arguments>
+				</component>
+				<component type="Dispersion0" name="Dispersion0">
+				</component>
+			</components>
+		</application>
+
+		<application name="3 Robots, Dispers, Tams floor Mixed">
+			<components>
+				<component type="Nav2" name="Nav2">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 2 </argument>
+					</arguments>
+				</component>
+				<component type="Nav3" name="Nav3">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams66" </argument>
+						<argument name="index"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="Nav4" name="Nav4">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams67" </argument>
+						<argument name="index"> 4 </argument>
+					</arguments>
+				</component>
+				<component type="Dispersion0" name="Dispersion0">
+				</component>
+			</components>
+		</application>
+
+		<application name="1 Robot, Tams floor Real (ext)">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> 6671 </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="index"> 3 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="1 Robot, Tams floor Real">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams66" </argument>
+						<argument name="index"> 3 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="2 Robots, Tams floor Real (ext)">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> 6671 </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="index"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> 6673 </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="index"> 4 </argument>
+						<argument name="updateInterval"> 1000 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="2 Robots, Tams floor Real">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams66" </argument>
+						<argument name="index"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams67" </argument>
+						<argument name="index"> 4 </argument>
+						<argument name="updateInterval"> 1000 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="3 Robots, Tams floor Mixed (ext)">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> 6671 </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="index"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> 6673 </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="index"> 4 </argument>
+						<argument name="updateInterval"> 1000 </argument>
+					</arguments>
+				</component>
+				<component type="Follow1" name="Follow1">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 0 </argument>
+						<argument name="updateInterval"> 2000 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="3 Robots, Tams floor Mixed">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams66" </argument>
+						<argument name="index"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams67" </argument>
+						<argument name="index"> 4 </argument>
+						<argument name="updateInterval"> 1000 </argument>
+					</arguments>
+				</component>
+				<component type="Follow1" name="Follow1">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 0 </argument>
+						<argument name="updateInterval"> 2000 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="3 Robots, Tams floor Real">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams66" </argument>
+						<argument name="index"> 2 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 2 </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams67" </argument>
+						<argument name="index"> 3 </argument>
+						<argument name="updateInterval"> 1500 </argument>
+					</arguments>
+				</component>
+				<component type="Follow1" name="Follow1">
+					<arguments>
+						<argument name="robot"> 2 </argument>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "134.100.13.163" </argument>
+						<argument name="index"> 4 </argument>
+						<argument name="updateInterval"> 1000 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
 		<application name="3 Robots, 4 Rooms">
 			<components>
 				<component type="Escape0" name="Escape0">
@@ -131,36 +350,6 @@
 						<argument name="X"> 0.0 </argument>
 						<argument name="Y"> -1.5 </argument>
 						<argument name="Angle"> 180.0 </argument>
-					</arguments>
-				</component>
-			</components>
-		</application>
-
-		<application name="3 Robots, Tams floor Real">
-			<components>
-				<component type="Escape0" name="Escape0">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 0 </argument>
-					</arguments>
-				</component>
-				<component type="Follow0" name="Follow0">
-					<arguments>
-						<argument name="robot"> 0 </argument>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 1 </argument>
-						<argument name="updateInterval"> 3000 </argument>
-					</arguments>
-				</component>
-				<component type="Follow1" name="Follow1">
-					<arguments>
-						<argument name="robot"> 0 </argument>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> "134.100.13.163" </argument>
-						<argument name="index"> 2 </argument>
-						<argument name="updateInterval"> 3000 </argument>
 					</arguments>
 				</component>
 			</components>
