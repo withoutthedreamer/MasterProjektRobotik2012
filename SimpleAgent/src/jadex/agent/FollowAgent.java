@@ -161,7 +161,7 @@ public class FollowAgent extends NavAgent
             {
                 caughtRobot = true;
                 getRobot().stop();
-                
+                // TODO send position continuously, so that escape robot recognizes
                 logger.info("Caught robot "+folRobot);
             }
         }
