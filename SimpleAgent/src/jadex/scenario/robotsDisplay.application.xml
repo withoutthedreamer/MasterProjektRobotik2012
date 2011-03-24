@@ -18,27 +18,35 @@
 			master="true" />
 		<componenttype name="View2" filename="jadex/agent/ViewAgent.class"
 			master="true" />
+		<componenttype name="View3" filename="jadex/agent/ViewAgent.class"
+			master="true" />
+		<componenttype name="View4" filename="jadex/agent/ViewAgent.class"
+			master="true" />
+		<componenttype name="View5" filename="jadex/agent/ViewAgent.class"
+			master="true" />
+		<componenttype name="View10" filename="jadex/agent/ViewAgent.class"
+			master="true" />
 	</componenttypes>
 
 	<applications>
 
-		<application name="1 Display">
+		<application name="1 Display, Mixed">
 			<components>
-				<component type="View0" name="View0">
+				<component type="View3" name="View3">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
 						<argument name="robot"> 3 </argument>
 					</arguments>
 				</component>
-				<component type="View1" name="View1">
+				<component type="View4" name="View4">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
 						<argument name="robot"> 4 </argument>
 					</arguments>
 				</component>
-				<component type="View2" name="View2">
+				<component type="View5" name="View5">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
@@ -48,45 +56,17 @@
 			</components>
 		</application>
 		
-		<application name="2 Displays">
+		<application name="1 Display, View only">
 			<components>
-				<component type="View0" name="View0">
+				<component type="View10" name="View10">
 					<arguments>
 						<argument name="port"> $args.port </argument>
-						<argument name="host"> $args.host </argument>
-					</arguments>
-				</component>
-				<component type="View1" name="View1">
-					<arguments>
-						<argument name="port"> $args.port+1 </argument>
 						<argument name="host"> $args.host </argument>
 					</arguments>
 				</component>
 			</components>
 		</application>
 
-		<application name="3 Displays">
-			<components>
-				<component type="View0" name="View0">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> $args.host </argument>
-					</arguments>
-				</component>
-				<component type="View1" name="View1">
-					<arguments>
-						<argument name="port"> $args.port+1 </argument>
-						<argument name="host"> $args.host </argument>
-					</arguments>
-				</component>
-				<component type="View2" name="View2">
-					<arguments>
-						<argument name="port"> $args.port+2 </argument>
-						<argument name="host"> $args.host </argument>
-					</arguments>
-				</component>
-			</components>
-		</application>
 	</applications>
 
 </applicationtype>

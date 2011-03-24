@@ -196,7 +196,7 @@
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams67" </argument>
 						<argument name="index"> 4 </argument>
-						<argument name="updateInterval"> 1000 </argument>
+						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
 				<component type="Follow1" name="Follow1">
