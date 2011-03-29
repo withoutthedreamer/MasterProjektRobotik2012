@@ -100,7 +100,7 @@ public class NavAgent extends MicroAgent
 		logger.fine(""+getComponentIdentifier()+" sending hello");
 	}
 
-	void sendPosition(Position newPose)
+	protected void sendPosition(Position newPose)
 	{
 	    if (newPose != null)
 	    {

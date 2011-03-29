@@ -132,7 +132,7 @@ public class FollowAgent extends NavAgent
         waitForTick(step);
     }
    
-    public void updateGoal()
+    void updateGoal()
     {
         /**
          * Check for distance to goal.
@@ -161,8 +161,12 @@ public class FollowAgent extends NavAgent
             {
                 caughtRobot = true;
                 getRobot().stop();
-                // TODO send position continuously, so that escape robot recognizes
                 logger.info("Caught robot "+folRobot);
+            }
+            else
+            {
+                /** Send position continuously, so that escape robot recognizes */
+            	sendPosition(getRobot().getPosition());
             }
         }
     }

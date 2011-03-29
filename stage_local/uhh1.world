@@ -29,54 +29,28 @@ floorplan
   bitmap "bitmaps/tams_compl_red_map.png"
   blob_return 1
 )
+# Define some robots
+define yellowrob robot( color "yellow" )
+define redrob robot( color "red" )
 
 # Place some robots
-robot
-(
-  name "r0"
-  pose [ -21 4 0 0 ] 
-)
+yellowrob ( pose [ -21 4 0 0 ] name "r0" )
+yellowrob ( pose [ -21 3 0 0 ] name "r1" )
+yellowrob ( pose [ -21 2 0 0 ] name "r2" )
 
-robot
-(
-  name "r1"
-  pose [ -21 3 0 0 ] 
-)
-
-robot
-(
-  name "r2"
-  pose [ -21 2 0 0 ] 
-)
-
-define yellowrob robot( color "yellow" )
-yellowrob( pose [-21 10 0 0] name "r3" )
-yellowrob( pose [-20 10 0 0] name "r4" )
+redrob( pose [-21 10 0 0] name "r3" )
+redrob( pose [-20 10 0 0] name "r4" )
+redrob( pose [-19 10 0 0] name "r5" )
 
 # Place some blobs
-blob (
-  pose [ 7 -5 0 0]
-  color "green"
-  name "green1"
-)
-blob (
-  pose [ -7 5 0 0]
-  color "green"
-  name "green"
-)
-blob (
-  pose [ 2.5 7 0 0]
-  color "green"
-  name "green2"
-)
+blob ( pose [ -7 5 0 0] color "green" name "green")
+blob ( pose [ 7 -5 0 0] color "green" name "green1")
+blob ( pose [ 2.5 7 0 0] color "green" name "green2")
 
-# Place some furniture
+# Define some furniture
 define t table ()
-
 define c1 chair1 ()
-
 define c2 chair2 ()
-
 define cab bigCabin ()
 
 # Place the tables and chairs according to the real lab

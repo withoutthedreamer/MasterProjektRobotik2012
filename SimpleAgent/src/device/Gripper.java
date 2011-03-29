@@ -424,7 +424,7 @@ public class Gripper extends RobotDevice
 
 			if (getAa() == null)
 			{
-				logger.info("No Actarray device found");
+				logger.fine("No Actarray device found");
 			}
 		}
 	}
@@ -440,7 +440,7 @@ public class Gripper extends RobotDevice
 
 			if (getDio() == null)
 			{
-				logger.info("No Dio device found");
+				logger.fine("No Dio device found");
 			}
 		}
 	}

@@ -52,7 +52,7 @@
 						<argument name="index"> 2 </argument>
 						<argument name="X"> -17.0 </argument>
 						<argument name="Y"> -1.5 </argument>
-						<argument name="Angle"> 180.0 </argument>
+						<!--<argument name="Angle"> 180.0 </argument>-->
 					</arguments>
 				</component>
 				<component type="Collect0" name="Collect0">
@@ -62,7 +62,7 @@
 						<argument name="index"> 0 </argument>
 						<argument name="X"> -25.0 </argument>
 						<argument name="Y"> 3.5 </argument>
-						<argument name="Angle"> -90.0 </argument>
+						<!--<argument name="Angle"> -90.0 </argument>-->
 					</arguments>
 				</component>
 			</components>
