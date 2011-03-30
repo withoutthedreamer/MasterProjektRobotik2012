@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <H3> Multiple Robot Scenario </H3> Starts robot agents. -->
+<!-- <H3> Dispers scenario </H3> Starts the dispers scenario. -->
 <applicationtype xmlns="http://jadex.sourceforge.net/jadex-application"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-application
 						http://jadex.sourceforge.net/jadex-application-2.0.xsd"
-	name="robots" package="jadex.scenario">
+	name="Dispersion" package="jadex.scenario">
 
 	<arguments>
 		<argument name="port" typename="Integer"> 6665 </argument>
 		<argument name="host" typename="String"> "localhost" </argument>
+		<argument name="dispersionInterval" typename="Integer"> 3600000 </argument>
 	</arguments>
 
 	<componenttypes>
@@ -24,54 +25,23 @@
 			master="true" />
 		<componenttype name="Nav5" filename="jadex/agent/NavAgent.class"
 			master="true" />
+		<componenttype name="Dispersion0" filename="jadex/agent/DispersionAgent.class"
+			master="true" />
 	</componenttypes>
 
 	<applications>
+
+		<application name="All available robots, Tams floor">
+			<components>
+				<component type="Dispersion0" name="Dispersion0">
+					<arguments>
+						<argument name="dispersionInterval"> -1 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
 		
-		<application name="1 Robot, virtual">
-			<components>
-				<component type="Nav0" name="Nav0">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
-					</arguments>
-				</component>
-			</components>
-		</application>
-
-		<application name="1 Robot, real">
-			<components>
-				<component type="Nav3" name="Nav3">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
-					</arguments>
-				</component>
-			</components>
-		</application>
-
-		<application name="2 Robots, virtual">
-			<components>
-				<component type="Nav0" name="Nav0">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
-					</arguments>
-				</component>
-				<component type="Nav1" name="Nav1">
-					<arguments>
-						<argument name="port"> $args.port+2 </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
-					</arguments>
-				</component>
-			</components>
-		</application>
-
-		<application name="2 Robots, real">
+		<application name="3 Robots, Tams floor, real">
 			<components>
 				<component type="Nav3" name="Nav3">
 					<arguments>
@@ -87,81 +57,72 @@
 						<argument name="index"> 4 </argument>
 					</arguments>
 				</component>
-			</components>
-		</application>
-
-		<application name="3 Robots, virtual">
-			<components>
-				<component type="Nav0" name="Nav0">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
-					</arguments>
-				</component>
-				<component type="Nav1" name="Nav1">
-					<arguments>
-						<argument name="port"> $args.port+2 </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
-					</arguments>
-				</component>
-				<component type="Nav2" name="Nav2">
-					<arguments>
-						<argument name="port"> $args.port+4 </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
-					</arguments>
-				</component>
-			</components>
-		</application>
-
-		<application name="3 Robots, real">
-			<components>
-				<component type="Nav3" name="Nav3">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
-					</arguments>
-				</component>
-				<component type="Nav4" name="Nav4">
-					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 4 </argument>
-					</arguments>
-				</component>
-				<component type="Nav6" name="Nav5">
+				<component type="Nav5" name="Nav5">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "134.100.13.163" </argument>
 						<argument name="index"> 5 </argument>
 					</arguments>
 				</component>
+				<component type="Dispersion0" name="Dispersion0">
+					<arguments>
+						<argument name="dispersionInterval"> $args.dispersionInterval </argument>
+					</arguments>
+				</component>
 			</components>
 		</application>
 
-		<application name="6 Robots, mixed">
+		<application name="3 Robots, Tams floor, virtual">
 			<components>
 				<component type="Nav0" name="Nav0">
 					<arguments>
 						<argument name="port"> $args.port </argument>
-						<argument name="host"> $args.host </argument>
+						<argument name="host"> "localhost" </argument>
 						<argument name="index"> 0 </argument>
 					</arguments>
 				</component>
 				<component type="Nav1" name="Nav1">
 					<arguments>
 						<argument name="port"> $args.port+2 </argument>
-						<argument name="host"> $args.host </argument>
+						<argument name="host"> "localhost" </argument>
 						<argument name="index"> 1 </argument>
 					</arguments>
 				</component>
 				<component type="Nav2" name="Nav2">
 					<arguments>
 						<argument name="port"> $args.port+4 </argument>
-						<argument name="host"> $args.host </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="index"> 2 </argument>
+					</arguments>
+				</component>
+				<component type="Dispersion0" name="Dispersion0">
+					<arguments>
+						<argument name="dispersionInterval"> $args.dispersionInterval </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="6 Robots, Tams floor, mixed">
+			<components>
+				<component type="Nav0" name="Nav0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="index"> 0 </argument>
+					</arguments>
+				</component>
+				<component type="Nav1" name="Nav1">
+					<arguments>
+						<argument name="port"> $args.port+2 </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="index"> 1 </argument>
+					</arguments>
+				</component>
+				<component type="Nav2" name="Nav2">
+					<arguments>
+						<argument name="port"> $args.port+4 </argument>
+						<argument name="host"> "localhost" </argument>
 						<argument name="index"> 2 </argument>
 					</arguments>
 				</component>
@@ -179,11 +140,16 @@
 						<argument name="index"> 4 </argument>
 					</arguments>
 				</component>
-				<component type="Nav6" name="Nav5">
+				<component type="Nav5" name="Nav5">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "134.100.13.163" </argument>
 						<argument name="index"> 5 </argument>
+					</arguments>
+				</component>
+				<component type="Dispersion0" name="Dispersion0">
+					<arguments>
+						<argument name="dispersionInterval"> $args.dispersionInterval </argument>
 					</arguments>
 				</component>
 			</components>

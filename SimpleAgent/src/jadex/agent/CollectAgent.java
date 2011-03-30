@@ -102,12 +102,6 @@ public class CollectAgent extends NavAgent
         sendHello();
 		
 		bb = new Board();
-//		depotPose = new Position(
-//		        (Double)getArgument("X"),
-//		        (Double)getArgument("Y"),
-//		        0);
-//		depotPose = getRobot().getPosition();
-//        logger.fine("Updated depot pose to "+depotPose);
 	}
 	
 	@Override public void executeBody()
