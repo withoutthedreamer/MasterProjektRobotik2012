@@ -426,8 +426,10 @@ public class CollectAgent extends NavAgent
 					}
 					@Override public void whenClosedLifted() {
 						getRobot().getGripper().removeIsDoneListener(this);
-			            getRobot().setGoal(agent.getBb().getObject(curGoalKey).getPosition());
+						Position goal = agent.getBb().getObject(curGoalKey).getPosition();
+			            getRobot().setGoal(goal);
 			            permitGripperOpen = true;
+			            logger.info("Set collect goal "+goal);
 					}
 					@Override public void whenReleasedOpened() {
 						getRobot().getGripper().removeIsDoneListener(this);											
@@ -444,15 +446,19 @@ public class CollectAgent extends NavAgent
 	        {
 	            /** We are driving to the depot */
 	            /** Where should it be delivered? */
-	            getRobot().setGoal(bb.getObject(curGoalKey).getGoal().getPosition());
+	        	Position goal = bb.getObject(curGoalKey).getGoal().getPosition();
+	            getRobot().setGoal(goal);
 	            permitGripperOpen = false;
+	            logger.info("Heading to depot "+goal);
 	        }
 	        else
 	        {
 	            /** Aborted? */
 	            /** Set the goal again. */
-	            getRobot().setGoal(bb.getObject(curGoalKey).getPosition());
+	        	Position goal = bb.getObject(curGoalKey).getPosition();
+	            getRobot().setGoal(goal);
 	            permitGripperOpen = true;
+	            logger.info("Set collect goal again "+goal);
 	        }
 	    }
 	}

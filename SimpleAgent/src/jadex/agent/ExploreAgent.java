@@ -49,6 +49,7 @@ public class ExploreAgent extends WallfollowAgent
         devList.add( new Device(IDevice.DEVICE_SONAR_CODE,host,port,devIdx) );
         devList.add( new Device(IDevice.DEVICE_BLOBFINDER_CODE,host,port,devIdx) );
         devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,port,-1) );
+        devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,host,6665,-1) );
         devList.add( new Device(IDevice.DEVICE_PLANNER_CODE,host,port+1,devIdx) );
         devList.add( new Device(IDevice.DEVICE_LOCALIZE_CODE,host,port+1,devIdx) );
         
@@ -57,6 +58,7 @@ public class ExploreAgent extends WallfollowAgent
        
         /** Host list */
         CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
+        hostList.add(new Host(host,6665));
         hostList.add(new Host(host,port));
         hostList.add(new Host(host,port+1));
 
@@ -106,8 +108,9 @@ public class ExploreAgent extends WallfollowAgent
                             /** Board object */
                             if (bb.getObject(newBlob.getColorString()) == null)
                             {
-                                Position blobPose = new Position(newBlob.getRange(),0,newBlob.getAngle(Math.PI/2,80));
-                                Position globPose = blobPose.getCartesianCoordinates().getGlobalCoordinates(getRobot().getPosition()); 
+//                                Position blobPose = new Position(newBlob.getRange(),0,newBlob.getAngle(Math.PI/2,80));
+//                                Position globPose = blobPose.getCartesianCoordinates().getGlobalCoordinates(getRobot().getPosition());
+                                Position globPose = new Position(-21.5,1.5,0);
 
                                 BoardObject bo = new BoardObject();
                                 bo.setTopic(""+newBlob.getClass());
@@ -131,6 +134,7 @@ public class ExploreAgent extends WallfollowAgent
     void sendBlobInfo(BoardObject bo)
     {
         getReceiveNewGoalService().send(""+getComponentIdentifier(), "collectGoal", bo.getPosition());
+        logger.info("Sending blob info from "+bo);
     }
 
     public ReceiveNewGoalService getReceiveNewGoalService() { return gs; }

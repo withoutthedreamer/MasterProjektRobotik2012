@@ -43,7 +43,8 @@ redrob( pose [-20 10 0 0] name "r4" )
 redrob( pose [-19 10 0 0] name "r5" )
 
 # Place some blobs
-blob ( pose [ -7 5 0 0] color "green" name "green")
+#blob ( pose [ -7 5 0 0] color "green" name "green")
+blob ( pose [ -21.5 1.5 0 0] color "green" name "green")
 blob ( pose [ 7 -5 0 0] color "green" name "green1")
 blob ( pose [ 2.5 7 0 0] color "green" name "green2")
 

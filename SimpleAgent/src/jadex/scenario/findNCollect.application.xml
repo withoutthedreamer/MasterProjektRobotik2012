@@ -18,6 +18,10 @@
 			master="true" />
 		<componenttype name="Follow0" filename="jadex/agent/FollowAgent.class"
 			master="true" />
+		<componenttype name="Nav0" filename="jadex/agent/NavAgent.class"
+			master="true" />
+		<componenttype name="Nav1" filename="jadex/agent/NavAgent.class"
+			master="true" />
 	</componenttypes>
 
 	<applications>
@@ -43,38 +47,16 @@
 			</components>
 		</application>
 
-		<application name="2 Robots, Tams floor">
+		<application name="2 Robots, Tams floor, virtual">
 			<components>
 				<component type="Explore0" name="Explore0">
 					<arguments>
 						<argument name="port"> $args.port+4 </argument>
 						<argument name="host"> $args.host </argument>
 						<argument name="index"> 2 </argument>
-						<argument name="X"> -17.0 </argument>
-						<argument name="Y"> -1.5 </argument>
-						<!--<argument name="Angle"> 180.0 </argument>-->
-					</arguments>
-				</component>
-				<component type="Collect0" name="Collect0">
-					<arguments>
-						<argument name="port"> $args.port+2 </argument>
-						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
-						<argument name="X"> -25.0 </argument>
-						<argument name="Y"> 3.5 </argument>
-						<!--<argument name="Angle"> -90.0 </argument>-->
-					</arguments>
-				</component>
-			</components>
-		</application>
-
-		<application name="2 Robots, Tams floor Real">
-			<components>
-				<component type="Explore0" name="Explore0">
-					<arguments>
-						<argument name="port"> $args.port+4 </argument>
-						<argument name="host"> "localhost" </argument>
-						<argument name="index"> 2 </argument>
+            <argument name="X"> -18.5 </argument>
+            <argument name="Y"> 5.5 </argument>
+            <!--<argument name="Angle"> -90.0 </argument>-->
 					</arguments>
 				</component>
 				<component type="Collect0" name="Collect0">
@@ -82,6 +64,57 @@
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
 						<argument name="index"> 0 </argument>
+						<argument name="X"> -22.0 </argument>
+						<argument name="Y"> 5.0 </argument>
+            <argument name="Angle"> -90.0 </argument>
+					</arguments>
+				</component>
+				<component type="Nav0" name="Nav0">
+					<arguments>
+						<argument name="port"> $args.port+2 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 1 </argument>
+            <argument name="X"> -30.0 </argument>
+            <argument name="Y"> 3.0 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="2 Robots, Tams floor, mixed">
+			<components>
+				<component type="Explore0" name="Explore0">
+					<arguments>
+						<argument name="port"> $args.port+4 </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="index"> 2 </argument>
+            <argument name="X"> -18.5 </argument>
+            <argument name="Y"> 5.5 </argument>
+					</arguments>
+				</component>
+				<component type="Collect0" name="Collect0">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> "tams66" </argument>
+						<argument name="index"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="Nav0" name="Nav0">
+					<arguments>
+						<argument name="port"> $args.port+2 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 1 </argument>
+            <argument name="X"> -30.0 </argument>
+            <argument name="Y"> 3.0 </argument>
+					</arguments>
+				</component>
+				<component type="Nav1" name="Nav1">
+					<arguments>
+						<argument name="port"> $args.port </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="index"> 0 </argument>
+            <argument name="X"> -30.0 </argument>
+            <argument name="Y"> 2.0 </argument>
 					</arguments>
 				</component>
 			</components>
