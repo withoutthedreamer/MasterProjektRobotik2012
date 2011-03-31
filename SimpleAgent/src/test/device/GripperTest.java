@@ -39,7 +39,7 @@ public class GripperTest
 
     @BeforeClass public static void setUpBeforeClass() throws Exception
     {
-        int port = 6671;
+        int port = 6665;
         String host = "localhost";
         
         /** Device list */
