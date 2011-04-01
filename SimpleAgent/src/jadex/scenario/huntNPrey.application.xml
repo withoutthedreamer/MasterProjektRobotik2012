@@ -14,11 +14,15 @@
 	<componenttypes>
 		<componenttype name="Escape0" filename="jadex/agent/EscapeAgent.class"
 			master="true" />
+		<componenttype name="Escape1" filename="jadex/agent/EscapeAgent.class"
+			master="true" />
 		<componenttype name="Follow0" filename="jadex/agent/FollowAgent.class"
 			master="true" />
 		<componenttype name="Follow1" filename="jadex/agent/FollowAgent.class"
 			master="true" />
 		<componenttype name="Follow2" filename="jadex/agent/FollowAgent.class"
+			master="true" />
+		<componenttype name="Follow3" filename="jadex/agent/FollowAgent.class"
 			master="true" />
 		<componenttype name="Nav0" filename="jadex/agent/NavAgent.class"
 			master="true" />
@@ -144,24 +148,24 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="index"> 3 </argument>
 					</arguments>
 				</component>
 				<component type="Follow2" name="Follow2">
 					<arguments>
-						<argument name="robot"> 2 </argument>
+						<argument name="robot"> 3 </argument>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="index"> 4 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
 				<component type="Follow3" name="Follow3">
 					<arguments>
-						<argument name="robot"> 2 </argument>
+						<argument name="robot"> 3 </argument>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "134.100.13.163" </argument>
-						<argument name="index"> 4 </argument>
+						<argument name="index"> 5 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>

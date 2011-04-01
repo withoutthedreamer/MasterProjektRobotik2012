@@ -391,6 +391,8 @@ public class CollectAgent extends NavAgent
 				getRobot().getGripper().removeIsDoneListener(this);
 			}                                		
         });
+		//TODO Wait for agent to be killed
+//		killNow();
 	}
 	public void killNow()
 	{

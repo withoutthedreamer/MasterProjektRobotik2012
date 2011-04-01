@@ -22,6 +22,8 @@
 			master="true" />
 		<componenttype name="Nav1" filename="jadex/agent/NavAgent.class"
 			master="true" />
+		<!--<componenttype name="Blob0" filename="jadex/agent/BlobAgent.class"-->
+			<!--master="true" />-->
 	</componenttypes>
 
 	<applications>
@@ -69,13 +71,21 @@
             <argument name="Angle"> -90.0 </argument>
 					</arguments>
 				</component>
+				<!--<component type="Blob0" name="Blob0">-->
+					<!--<arguments>-->
+						<!--<argument name="port"> $args.port </argument>-->
+						<!--<argument name="host"> $args.host </argument>-->
+            <!--<argument name="X"> -8.0 </argument>-->
+            <!--<argument name="Y"> 3.0 </argument>-->
+					<!--</arguments>-->
+				<!--</component>-->
 				<component type="Nav0" name="Nav0">
 					<arguments>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
 						<argument name="index"> 1 </argument>
-            <argument name="X"> -30.0 </argument>
-            <argument name="Y"> 3.0 </argument>
+            <argument name="X"> -8.0 </argument>
+            <argument name="Y"> 4.0 </argument>
 					</arguments>
 				</component>
 			</components>
@@ -99,12 +109,20 @@
 						<argument name="index"> 3 </argument>
 					</arguments>
 				</component>
+				<!--<component type="Blob0" name="Blob0">-->
+					<!--<arguments>-->
+						<!--<argument name="port"> $args.port </argument>-->
+						<!--<argument name="host"> $args.host </argument>-->
+            <!--<argument name="X"> -21.0 </argument>-->
+            <!--<argument name="Y"> 1.5 </argument>-->
+					<!--</arguments>-->
+				<!--</component>-->
 				<component type="Nav0" name="Nav0">
 					<arguments>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
 						<argument name="index"> 1 </argument>
-            <argument name="X"> -30.0 </argument>
+            <argument name="X"> -8.0 </argument>
             <argument name="Y"> 3.0 </argument>
 					</arguments>
 				</component>
@@ -113,8 +131,8 @@
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
 						<argument name="index"> 0 </argument>
-            <argument name="X"> -30.0 </argument>
-            <argument name="Y"> 2.0 </argument>
+            <argument name="X"> -8.0 </argument>
+            <argument name="Y"> 4.0 </argument>
 					</arguments>
 				</component>
 			</components>

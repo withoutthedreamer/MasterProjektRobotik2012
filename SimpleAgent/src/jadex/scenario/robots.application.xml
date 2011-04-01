@@ -132,7 +132,7 @@
 						<argument name="index"> 4 </argument>
 					</arguments>
 				</component>
-				<component type="Nav6" name="Nav5">
+				<component type="Nav5" name="Nav5">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "134.100.13.163" </argument>
@@ -179,7 +179,7 @@
 						<argument name="index"> 4 </argument>
 					</arguments>
 				</component>
-				<component type="Nav6" name="Nav5">
+				<component type="Nav5" name="Nav5">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "134.100.13.163" </argument>

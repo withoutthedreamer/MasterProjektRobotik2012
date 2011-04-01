@@ -154,6 +154,7 @@ public class EscapeAgent extends WallfollowAgent
      */
     @Override public void agentKilled()
     {
+    	//TODO kill timer here if not yet expired
         super.agentKilled();
     }
 
