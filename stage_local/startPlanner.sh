@@ -3,6 +3,8 @@
 # Start Player planner servers
 # Multiple robots scenario
 
+cd ~/robotcolla/SimpleAgent/player/
+
 player -p 6666 planner_6666.cfg &
 player -p 6668 planner_6668.cfg &
 player -p 6670 planner_6670.cfg &

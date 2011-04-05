@@ -6,6 +6,8 @@ killall player
 killall player
 killall playernav
 
-player uhh1.cfg &
+
+player ~/robotcolla/SimpleAgent/player/uhh1.cfg &
 sleep 2
+cd ~/robotcolla/SimpleAgent/player/
 ./startPlanner.sh &
