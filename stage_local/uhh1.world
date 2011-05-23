@@ -10,10 +10,10 @@ resolution 0.01 # meters per pixel
 # configure the GUI window
 window
 (
-  size [ 1280.0 400.0 ]
-  scale 20.0             # pixels per meter
-  center [ 0  0 ]
-  rotate [ 0  0 ]
+  size [ 800.0 400.0 ]
+  scale 40.0             # pixels per meter
+  center [ -21  0 ]
+  rotate [ 45  45 ]
 
   interval 100
 
