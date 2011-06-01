@@ -1,0 +1,714 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%Creator: graphviz version 2.26.3 (20100126.1600)
+%%Title: APIVIZ
+%%Pages: 1
+%%BoundingBox: 157 268 455 524
+%%EndComments
+save
+%%BeginProlog
+/DotDict 200 dict def
+DotDict begin
+
+/setupLatin1 {
+mark
+/EncodingVector 256 array def
+ EncodingVector 0
+
+ISOLatin1Encoding 0 255 getinterval putinterval
+EncodingVector 45 /hyphen put
+
+% Set up ISO Latin 1 character encoding
+/starnetISO {
+        dup dup findfont dup length dict begin
+        { 1 index /FID ne { def }{ pop pop } ifelse
+        } forall
+        /Encoding EncodingVector def
+        currentdict end definefont
+} def
+/Times-Roman starnetISO def
+/Times-Italic starnetISO def
+/Times-Bold starnetISO def
+/Times-BoldItalic starnetISO def
+/Helvetica starnetISO def
+/Helvetica-Oblique starnetISO def
+/Helvetica-Bold starnetISO def
+/Helvetica-BoldOblique starnetISO def
+/Courier starnetISO def
+/Courier-Oblique starnetISO def
+/Courier-Bold starnetISO def
+/Courier-BoldOblique starnetISO def
+cleartomark
+} bind def
+
+%%BeginResource: procset graphviz 0 0
+/coord-font-family /Times-Roman def
+/default-font-family /Times-Roman def
+/coordfont coord-font-family findfont 8 scalefont def
+
+/InvScaleFactor 1.0 def
+/set_scale {
+       dup 1 exch div /InvScaleFactor exch def
+       scale
+} bind def
+
+% styles
+/solid { [] 0 setdash } bind def
+/dashed { [9 InvScaleFactor mul dup ] 0 setdash } bind def
+/dotted { [1 InvScaleFactor mul 6 InvScaleFactor mul] 0 setdash } bind def
+/invis {/fill {newpath} def /stroke {newpath} def /show {pop newpath} def} bind def
+/bold { 2 setlinewidth } bind def
+/filled { } bind def
+/unfilled { } bind def
+/rounded { } bind def
+/diagonals { } bind def
+
+% hooks for setting color 
+/nodecolor { sethsbcolor } bind def
+/edgecolor { sethsbcolor } bind def
+/graphcolor { sethsbcolor } bind def
+/nopcolor {pop pop pop} bind def
+
+/beginpage {	% i j npages
+	/npages exch def
+	/j exch def
+	/i exch def
+	/str 10 string def
+	npages 1 gt {
+		gsave
+			coordfont setfont
+			0 0 moveto
+			(\() show i str cvs show (,) show j str cvs show (\)) show
+		grestore
+	} if
+} bind def
+
+/set_font {
+	findfont exch
+	scalefont setfont
+} def
+
+% draw text fitted to its expected width
+/alignedtext {			% width text
+	/text exch def
+	/width exch def
+	gsave
+		width 0 gt {
+			[] 0 setdash
+			text stringwidth pop width exch sub text length div 0 text ashow
+		} if
+	grestore
+} def
+
+/boxprim {				% xcorner ycorner xsize ysize
+		4 2 roll
+		moveto
+		2 copy
+		exch 0 rlineto
+		0 exch rlineto
+		pop neg 0 rlineto
+		closepath
+} bind def
+
+/ellipse_path {
+	/ry exch def
+	/rx exch def
+	/y exch def
+	/x exch def
+	matrix currentmatrix
+	newpath
+	x y translate
+	rx ry scale
+	0 0 1 0 360 arc
+	setmatrix
+} bind def
+
+/endpage { showpage } bind def
+/showpage { } def
+
+/layercolorseq
+	[	% layer color sequence - darkest to lightest
+		[0 0 0]
+		[.2 .8 .8]
+		[.4 .8 .8]
+		[.6 .8 .8]
+		[.8 .8 .8]
+	]
+def
+
+/layerlen layercolorseq length def
+
+/setlayer {/maxlayer exch def /curlayer exch def
+	layercolorseq curlayer 1 sub layerlen mod get
+	aload pop sethsbcolor
+	/nodecolor {nopcolor} def
+	/edgecolor {nopcolor} def
+	/graphcolor {nopcolor} def
+} bind def
+
+/onlayer { curlayer ne {invis} if } def
+
+/onlayers {
+	/myupper exch def
+	/mylower exch def
+	curlayer mylower lt
+	curlayer myupper gt
+	or
+	{invis} if
+} def
+
+/curlayer 0 def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+14 default-font-family set_font
+1 setmiterlimit
+% /arrowlength 10 def
+% /arrowwidth 5 def
+
+% make sure pdfmark is harmless for PS-interpreters other than Distiller
+/pdfmark where {pop} {userdict /pdfmark /cleartomark load put} ifelse
+% make '<<' and '>>' safe on PS Level 1 devices
+/languagelevel where {pop languagelevel}{1} ifelse
+2 lt {
+    userdict (<<) cvn ([) cvn load put
+    userdict (>>) cvn ([) cvn load put
+} if
+
+%%EndSetup
+setupLatin1
+%%Page: 1 1
+%%PageBoundingBox: 157 268 455 524
+%%PageOrientation: Portrait
+0 0 1 beginpage
+gsave
+157 268 298 256 boxprim clip newpath
+1 1 set_scale 0 rotate 161 273 translate
+% jadex_agent_MasterAgent->jadex_agent_DispersionAgent
+gsave
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 175.53 175.43 moveto
+189.15 180.18 204.24 185.44 216.94 189.87 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 176.52 172.07 moveto
+165.92 172.08 lineto
+174.21 178.68 lineto
+closepath stroke
+grestore
+% jadex_agent_NavAgent->jadex_agent_CollectAgent
+gsave
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 175.53 137.43 moveto
+189.15 142.18 204.24 147.44 216.94 151.87 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 176.52 134.07 moveto
+165.92 134.08 lineto
+174.21 140.68 lineto
+closepath stroke
+grestore
+% jadex_agent_NavAgent->jadex_agent_FollowAgent
+gsave
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 176.27 124 moveto
+187.58 124 199.84 124 210.89 124 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 176.21 120.5 moveto
+166.21 124 lineto
+176.21 127.5 lineto
+closepath stroke
+grestore
+% jadex_agent_NavAgent->jadex_agent_SwarmAgent
+gsave
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 175.53 110.57 moveto
+189.15 105.82 204.24 100.56 216.94 96.13 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 174.21 107.32 moveto
+165.92 113.92 lineto
+176.52 113.93 lineto
+closepath stroke
+grestore
+% jadex_agent_WallfollowAgent->jadex_agent_EscapeAgent
+gsave
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 190.21 48 moveto
+196.28 48 202.37 48 208.17 48 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 190.08 44.5 moveto
+180.08 48 lineto
+190.08 51.5 lineto
+closepath stroke
+grestore
+% jadex_agent_WallfollowAgent->jadex_agent_ExploreAgent
+gsave
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 175.53 34.57 moveto
+189.15 29.82 204.24 24.56 216.94 20.13 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0 edgecolor
+newpath 174.21 31.32 moveto
+165.92 37.92 lineto
+176.52 37.93 lineto
+closepath stroke
+grestore
+% jadex_micro_MicroAgent->jadex_agent_BlobAgent
+gsave
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 55.33 168.33 moveto
+72.2 190.43 94 219 94 219 curveto
+94 219 103.93 223.39 114.24 227.94 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 58.01 166.07 moveto
+49.16 160.25 lineto
+52.45 170.32 lineto
+closepath stroke
+grestore
+% jadex_micro_MicroAgent->jadex_agent_ConsoleAgent
+gsave
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 70.91 165.87 moveto
+83.19 173.92 94 181 94 181 curveto
+94 181 103.93 185.39 114.24 189.94 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 72.57 162.77 moveto
+62.28 160.22 lineto
+68.73 168.63 lineto
+closepath stroke
+grestore
+% jadex_micro_MicroAgent->jadex_agent_MasterAgent
+gsave
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 82.39 151.73 moveto
+88.55 152.89 94.79 154.06 100.74 155.18 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 82.65 148.21 moveto
+72.18 149.81 lineto
+81.36 155.09 lineto
+closepath stroke
+grestore
+% jadex_micro_MicroAgent->jadex_agent_NavAgent
+gsave
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 82.22 134.31 moveto
+90.89 132.67 99.73 131.01 107.71 129.51 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 81.36 130.91 moveto
+72.18 136.19 lineto
+82.65 137.79 lineto
+closepath stroke
+grestore
+% jadex_micro_MicroAgent->jadex_agent_ViewAgent
+gsave
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 70.91 120.13 moveto
+83.19 112.08 94 105 94 105 curveto
+94 105 103.93 100.61 114.24 96.06 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 68.73 117.37 moveto
+62.28 125.78 lineto
+72.57 123.23 lineto
+closepath stroke
+grestore
+% jadex_micro_MicroAgent->jadex_agent_WallfollowAgent
+gsave
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 55.33 117.67 moveto
+72.2 95.57 94 67 94 67 curveto
+94 67 103.93 62.61 114.24 58.06 curveto
+stroke
+1 setlinewidth
+solid
+0 0 0.30196 edgecolor
+newpath 52.45 115.68 moveto
+49.16 125.75 lineto
+58.01 119.93 lineto
+closepath stroke
+grestore
+% jadex_agent_BlobAgent
+gsave
+[ /Rect [ 106 227.5 168 248.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (BlobAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 168 248.5 moveto
+106 248.5 lineto
+106 227.5 lineto
+168 227.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 168 248.5 moveto
+106 248.5 lineto
+106 227.5 lineto
+168 227.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+114 235.5 moveto 46 (BlobAgent) alignedtext
+grestore
+% jadex_agent_CollectAgent
+gsave
+[ /Rect [ 210 151.5 282 172.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (CollectAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 282 172.5 moveto
+210 172.5 lineto
+210 151.5 lineto
+282 151.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 282 172.5 moveto
+210 172.5 lineto
+210 151.5 lineto
+282 151.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+218 159.5 moveto 56 (CollectAgent) alignedtext
+grestore
+% jadex_agent_ConsoleAgent
+gsave
+[ /Rect [ 99 189.5 175 210.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (ConsoleAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 175 210.5 moveto
+99 210.5 lineto
+99 189.5 lineto
+175 189.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 175 210.5 moveto
+99 210.5 lineto
+99 189.5 lineto
+175 189.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+106.5 197.5 moveto 61 (ConsoleAgent) alignedtext
+grestore
+% jadex_agent_DispersionAgent
+gsave
+[ /Rect [ 202 189.5 290 210.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (DispersionAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 290 210.5 moveto
+202 210.5 lineto
+202 189.5 lineto
+290 189.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 290 210.5 moveto
+202 210.5 lineto
+202 189.5 lineto
+290 189.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+210 197.5 moveto 72 (DispersionAgent) alignedtext
+grestore
+% jadex_agent_EscapeAgent
+gsave
+[ /Rect [ 209 37.5 283 58.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (EscapeAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 283 58.5 moveto
+209 58.5 lineto
+209 37.5 lineto
+283 37.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 283 58.5 moveto
+209 58.5 lineto
+209 37.5 lineto
+283 37.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+216.5 45.5 moveto 59 (EscapeAgent) alignedtext
+grestore
+% jadex_agent_ExploreAgent
+gsave
+[ /Rect [ 209 -.5 283 20.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (ExploreAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 283 20.5 moveto
+209 20.5 lineto
+209 -.5 lineto
+283 -.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 283 20.5 moveto
+209 20.5 lineto
+209 -.5 lineto
+283 -.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+216.5 7.5 moveto 59 (ExploreAgent) alignedtext
+grestore
+% jadex_agent_FollowAgent
+gsave
+[ /Rect [ 211 113.5 281 134.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (FollowAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 281 134.5 moveto
+211 134.5 lineto
+211 113.5 lineto
+281 113.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 281 134.5 moveto
+211 134.5 lineto
+211 113.5 lineto
+281 113.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+219 121.5 moveto 54 (FollowAgent) alignedtext
+grestore
+% jadex_agent_MasterAgent
+gsave
+[ /Rect [ 101 151.5 173 172.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (MasterAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 173 172.5 moveto
+101 172.5 lineto
+101 151.5 lineto
+173 151.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 173 172.5 moveto
+101 172.5 lineto
+101 151.5 lineto
+173 151.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+109 159.5 moveto 56 (MasterAgent) alignedtext
+grestore
+% jadex_agent_NavAgent
+gsave
+[ /Rect [ 108 113.5 166 134.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (NavAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 166 134.5 moveto
+108 134.5 lineto
+108 113.5 lineto
+166 113.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 166 134.5 moveto
+108 134.5 lineto
+108 113.5 lineto
+166 113.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+116 121.5 moveto 42 (NavAgent) alignedtext
+grestore
+% jadex_agent_SwarmAgent
+gsave
+[ /Rect [ 210 75.5 282 96.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (SwarmAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 282 96.5 moveto
+210 96.5 lineto
+210 75.5 lineto
+282 75.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 282 96.5 moveto
+210 96.5 lineto
+210 75.5 lineto
+282 75.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+218 83.5 moveto 56 (SwarmAgent) alignedtext
+grestore
+% jadex_agent_ViewAgent
+gsave
+[ /Rect [ 106 75.5 168 96.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (ViewAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 168 96.5 moveto
+106 96.5 lineto
+106 75.5 lineto
+168 75.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 168 96.5 moveto
+106 96.5 lineto
+106 75.5 lineto
+168 75.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+113.5 83.5 moveto 47 (ViewAgent) alignedtext
+grestore
+% jadex_agent_WallfollowAgent
+gsave
+[ /Rect [ 94 37.5 180 58.5 ]
+  /Border [ 0 0 0 ]
+  /Action << /Subtype /URI /URI (WallfollowAgent.html) >>
+  /Subtype /Link
+/ANN pdfmark
+0 0 1 nodecolor
+newpath 180 58.5 moveto
+94 58.5 lineto
+94 37.5 lineto
+180 37.5 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0 nodecolor
+newpath 180 58.5 moveto
+94 58.5 lineto
+94 37.5 lineto
+180 37.5 lineto
+closepath stroke
+0 0 0 nodecolor
+10 /Arial set_font
+102 45.5 moveto 70 (WallfollowAgent) alignedtext
+grestore
+% jadex_micro_MicroAgent
+gsave
+0 0 1 nodecolor
+newpath 72 160 moveto
+0 160 lineto
+0 126 lineto
+72 126 lineto
+closepath fill
+1 setlinewidth
+filled
+0 0 0.30196 nodecolor
+newpath 72 160 moveto
+0 160 lineto
+0 126 lineto
+72 126 lineto
+closepath stroke
+0 0 0.30196 nodecolor
+10 /Arial set_font
+11.5 147 moveto 49 (MicroAgent) alignedtext
+0 0 0.30196 nodecolor
+10 /Arial set_font
+8 134 moveto 56 (\(jadex.micro\)) alignedtext
+grestore
+endpage
+showpage
+grestore
+%%PageTrailer
+%%EndPage: 1
+%%Trailer
+end
+restore
+%%EOF
