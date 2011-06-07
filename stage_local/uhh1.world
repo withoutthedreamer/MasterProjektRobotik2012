@@ -1,8 +1,11 @@
+# 2011-06-07 Sebastian Rockel
 # Project world file
+# Stage world with objects
+
 include "map.inc"
 include "devices.inc"
 # defines the models used in the lab
-include "/usr/local/share/stage/worlds/uoa_robotics_lab_models.inc"
+include "uoa_robotics_lab_models.inc"
 
 resolution 0.01 # meters per pixel
 #threads 2

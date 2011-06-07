@@ -1,3 +1,6 @@
+# 2011-06-07 Sebastian Rockel
+# Laptop model
+
 define laptop position
 (
   color "gray"

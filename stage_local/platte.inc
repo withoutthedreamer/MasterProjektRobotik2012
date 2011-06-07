@@ -1,3 +1,6 @@
+# 2011-06-07 Sebastian Rockel
+# Pioneer metal plate for laptop mount
+
 define platte position
 (
   color "white"

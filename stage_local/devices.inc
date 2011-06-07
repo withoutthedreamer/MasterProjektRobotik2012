@@ -1,3 +1,6 @@
+# 2011-06-07 Sebastian Rockel
+# Pioneer model with devices
+
 include "pioneer.inc"
 #include "utm30lx.inc"
 include "urgr.inc"

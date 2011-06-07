@@ -1,3 +1,6 @@
+# 2011-06-07 Sebastian Rockel
+# Hokuyo URG-04LX definition
+
 define laser240 ranger
 (
   sensor (

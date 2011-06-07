@@ -1,3 +1,6 @@
+# 2011-06-07 Sebastian Rockel
+# Hokuyo UTM-30LX definition
+
 define utm30lx ranger
 (
   sensor (
