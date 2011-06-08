@@ -15,8 +15,8 @@ import static org.junit.Assert.*;
 import data.Host;
 import device.Device;
 import device.DeviceNode;
-import device.IDevice;
 import device.Ranger;
+import device.external.IDevice;
 
 /**
  * @author sebastian

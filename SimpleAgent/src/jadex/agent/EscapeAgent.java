@@ -6,9 +6,9 @@ package jadex.agent;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import robot.IPioneer;
+import robot.external.IPioneer;
 import data.Position;
-import device.ILocalizeListener;
+import device.external.ILocalizeListener;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.bridge.IComponentStep;

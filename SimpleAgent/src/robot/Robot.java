@@ -2,11 +2,12 @@ package robot;
 
 import java.util.logging.Logger;
 
+import robot.external.IRobot;
+
 import data.Position;
 import device.Blobfinder;
 import device.Device;
 import device.Gripper;
-import device.IDevice;
 import device.Localize;
 import device.Planner;
 import device.Position2d;
@@ -14,6 +15,7 @@ import device.Ranger;
 import device.RangerSonar;
 import device.RangerLaser;
 import device.Simulation;
+import device.external.IDevice;
 
 /**
  * The Robot class presents a robot that can move in 2 dimensions, i.e. in x and y direction.

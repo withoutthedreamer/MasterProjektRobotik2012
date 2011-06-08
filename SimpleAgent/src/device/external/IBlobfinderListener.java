@@ -1,7 +1,7 @@
 /**
  * 
  */
-package device;
+package device.external;
 
 import data.BlobfinderBlob;
 

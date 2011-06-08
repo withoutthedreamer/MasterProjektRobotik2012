@@ -1,6 +1,6 @@
 package data;
 
-import robot.IRobot;
+import robot.external.IRobot;
 
 public class SimuObject {
 	protected IRobot obj = null;

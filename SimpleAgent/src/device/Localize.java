@@ -5,6 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import data.Position;
+import device.external.ILocalizeListener;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.localize.PlayerLocalizeHypoth;
 import javaclient3.structures.localize.PlayerLocalizeSetPose;

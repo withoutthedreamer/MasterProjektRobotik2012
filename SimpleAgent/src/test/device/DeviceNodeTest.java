@@ -11,7 +11,7 @@ import org.junit.Test;
 import data.Host;
 import device.Device;
 import device.DeviceNode;
-import device.IDevice;
+import device.external.IDevice;
 
 public class DeviceNodeTest extends TestCase
 {

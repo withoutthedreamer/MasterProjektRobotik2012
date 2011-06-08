@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.concurrent.*;
 import java.util.logging.Logger;
 
+import device.external.IDevice;
+
 /**
  * A Device represents an abstract entity, i.e. device node, that can have
  * other devices in its internal list. It will start and shutdown

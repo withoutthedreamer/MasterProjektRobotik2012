@@ -4,7 +4,7 @@
 package jadex.agent;
 
 import data.Position;
-import device.ILocalizeListener;
+import device.external.ILocalizeListener;
 import jadex.bridge.Argument;
 import jadex.bridge.IArgument;
 import jadex.bridge.IComponentStep;

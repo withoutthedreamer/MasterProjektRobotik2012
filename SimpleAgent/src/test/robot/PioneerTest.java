@@ -13,11 +13,11 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import robot.Pioneer;
-import robot.IPioneer;
+import robot.external.IPioneer;
 import data.Host;
 import device.Device;
 import device.DeviceNode;
-import device.IDevice;
+import device.external.IDevice;
 
 /**
  * @author sebastian

@@ -23,9 +23,9 @@ import data.Position;
 import device.Blobfinder;
 import device.Device;
 import device.DeviceNode;
-import device.IBlobfinderListener;
-import device.IDevice;
 import device.Simulation;
+import device.external.IBlobfinderListener;
+import device.external.IDevice;
 
 /**
  * @author sebastian
@@ -117,7 +117,7 @@ public class BlobfinderTest
     }
 
     /**
-     * Test method for {@link device.Blobfinder#addBlobListener(device.IBlobfinderListener)}.
+     * Test method for {@link device.Blobfinder#addBlobListener(device.external.IBlobfinderListener)}.
      */
     @Test public void testAddBlobListener()
     {
@@ -183,7 +183,7 @@ public class BlobfinderTest
     }
 
     /**
-     * Test method for {@link device.Blobfinder#removeBlobListener(device.IBlobfinderListener)}.
+     * Test method for {@link device.Blobfinder#removeBlobListener(device.external.IBlobfinderListener)}.
      */
     @Test public void testRemoveBlobListener()
     {

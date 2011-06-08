@@ -38,10 +38,10 @@ package usecase;
 import robot.*;
 import data.Position;
 import device.Device;
-import device.IDevice;
 import device.DeviceNode;
 import device.Simulation;
 import device.Tracker;
+import device.external.IDevice;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;

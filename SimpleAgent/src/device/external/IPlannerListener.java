@@ -1,4 +1,4 @@
-package device;
+package device.external;
 
 public interface IPlannerListener
 {

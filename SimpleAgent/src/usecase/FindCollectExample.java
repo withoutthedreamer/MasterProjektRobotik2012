@@ -8,9 +8,9 @@ import robot.NavRobot;
 import data.Position;
 import device.Blackboard;
 import device.Device;
-import device.IDevice;
 import device.DeviceNode;
 import device.Simulation;
+import device.external.IDevice;
 
 public class FindCollectExample {
 

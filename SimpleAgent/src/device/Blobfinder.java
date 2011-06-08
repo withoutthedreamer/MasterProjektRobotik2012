@@ -5,6 +5,7 @@ import javaclient3.BlobfinderInterface;
 import javaclient3.structures.blobfinder.PlayerBlobfinderBlob;
 import javaclient3.structures.blobfinder.PlayerBlobfinderData;
 import data.BlobfinderBlob;
+import device.external.IBlobfinderListener;
 
 import java.util.Iterator;
 import java.util.concurrent.*;

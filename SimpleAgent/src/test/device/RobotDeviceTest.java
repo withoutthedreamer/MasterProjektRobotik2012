@@ -17,7 +17,7 @@ import data.Host;
 import device.Device;
 import device.DeviceNode;
 import device.Gripper;
-import device.IDevice;
+import device.external.IDevice;
 
 /**
  * @author sebastian

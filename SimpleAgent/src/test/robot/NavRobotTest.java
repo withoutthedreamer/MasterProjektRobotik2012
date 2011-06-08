@@ -15,9 +15,9 @@ import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
-import device.IDevice;
-import device.IPlannerListener;
 import device.Simulation;
+import device.external.IDevice;
+import device.external.IPlannerListener;
 
 public class NavRobotTest
 {

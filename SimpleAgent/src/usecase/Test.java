@@ -8,9 +8,9 @@ import java.io.InputStreamReader;
 import robot.NavRobot;
 import data.Position;
 import device.Device;
-import device.IDevice;
 import device.DeviceNode;
 import device.Position2d;
+import device.external.IDevice;
 
 
 

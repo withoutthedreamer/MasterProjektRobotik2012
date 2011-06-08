@@ -11,6 +11,7 @@ import java.util.concurrent.*;
 import java.util.logging.Logger;
 
 import data.Host;
+import device.external.IDevice;
 
 /**
  * Client API to the robot server.

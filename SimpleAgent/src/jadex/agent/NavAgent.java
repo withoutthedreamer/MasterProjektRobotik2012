@@ -16,9 +16,9 @@ import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
-import device.IDevice;
-import device.ILocalizeListener;
-import device.IPlannerListener;
+import device.external.IDevice;
+import device.external.ILocalizeListener;
+import device.external.IPlannerListener;
 import robot.NavRobot;
 
 public class NavAgent extends MicroAgent

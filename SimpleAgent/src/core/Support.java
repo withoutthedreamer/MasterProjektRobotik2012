@@ -6,7 +6,7 @@ package core;
 import java.util.HashMap;
 
 import device.Device;
-import device.IDevice;
+import device.external.IDevice;
 
 /**
  * @author sebastian

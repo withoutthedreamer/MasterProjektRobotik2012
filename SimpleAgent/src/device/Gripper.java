@@ -6,6 +6,9 @@ import java.util.TimerTask;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
+import device.external.IDevice;
+import device.external.IGripperListener;
+
 import javaclient3.GripperInterface;
 
 /**

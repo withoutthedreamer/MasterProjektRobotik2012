@@ -4,6 +4,7 @@
  */
 package robot;
 
+import robot.external.IPioneer;
 import data.Position;
 import device.Device;
 
@@ -603,7 +604,10 @@ public class Pioneer extends Robot implements IPioneer
         
         setCurrentState(StateType.LWALL_FOLLOWING);
     }
-
+    /**
+     * Sets the robot into manual mode.
+     * In this mode the speed and the turnrate of the motors can be modified.
+     */
     public void setCommand()
     {
         if (getSimu() == null)

@@ -13,8 +13,8 @@ import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
-import device.IDevice;
 import device.Simulation;
+import device.external.IDevice;
 
 public class SimulationTest
 {	

@@ -4,7 +4,7 @@ import java.util.Vector;
 
 import data.Position;
 import data.SimuObject;
-import robot.IRobot;
+import robot.external.IRobot;
 
 //import javaclient3.PlayerException;
 

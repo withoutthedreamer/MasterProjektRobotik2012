@@ -18,8 +18,8 @@ import data.Host;
 import device.Device;
 import device.DeviceNode;
 import device.Gripper;
-import device.IDevice;
-import device.IGripperListener;
+import device.external.IDevice;
+import device.external.IGripperListener;
 
 /**
  * @author sebastian

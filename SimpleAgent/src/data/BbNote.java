@@ -2,7 +2,7 @@ package data;
 
 import java.util.Date;
 
-import robot.IRobot;
+import robot.external.IRobot;
 
 import device.Simulation;
 

@@ -15,11 +15,11 @@ import data.Host;
 import data.Position;
 import device.Device;
 import device.DeviceNode;
-import device.IDevice;
-import device.ILocalizeListener;
 import device.Localize;
 import device.Position2d;
 import device.Simulation;
+import device.external.IDevice;
+import device.external.ILocalizeListener;
 
 public class LocalizerTest
 {	

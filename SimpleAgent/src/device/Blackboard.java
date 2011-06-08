@@ -5,7 +5,7 @@ import java.util.concurrent.*;
 import java.util.Map;
 import java.util.Set;
 
-import robot.IRobot;
+import robot.external.IRobot;
 import data.BbNote;
 import data.Position;
 
