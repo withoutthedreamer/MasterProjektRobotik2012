@@ -7,6 +7,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
 import device.external.IDevice;
+import device.external.IGripper;
 import device.external.IGripperListener;
 
 import javaclient3.GripperInterface;
@@ -16,7 +17,7 @@ import javaclient3.GripperInterface;
  * typically two paddles that can open/close and lift/release to manipulate some objects.
  * @author sebastian
  */
-public class Gripper extends RobotDevice
+public class Gripper extends RobotDevice implements IGripper
 {
     stateType currentState = stateType.IDLE;
     
@@ -70,25 +71,6 @@ public class Gripper extends RobotDevice
 	
 	boolean timeout;
 
-	/**
-	 * Taken from the player IF documentation.
-	 */
-	public static enum stateType
-	{
-		OPEN_LIFT,
-		RELEASE_OPEN,
-		CLOSE_LIFT,
-		CLOSE_RELEASE,
-		OPEN,
-		CLOSE,
-		MOVING,
-		LIFT,
-		RELEASE,
-		ERROR,
-		IDLE,
-		STOP
-	}
-	
 	/**
 	 * Creates a Gripper object.
 	 * @param deviceNode The device node containing this device.
@@ -208,7 +190,11 @@ public class Gripper extends RobotDevice
 		} else
 			try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
-	public void open (IGripperListener cb)
+	/* (non-Javadoc)
+     * @see device.IGripper2#open(device.external.IGripperListener)
+     */
+	@Override
+    public void open (IGripperListener cb)
 	{
 	    addIsDoneListener(cb);
 	    setCurrentState(stateType.OPEN);
@@ -236,7 +222,11 @@ public class Gripper extends RobotDevice
 
 		try { Thread.sleep(3000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
-	public void close (IGripperListener cb)
+	/* (non-Javadoc)
+     * @see device.IGripper2#close(device.external.IGripperListener)
+     */
+	@Override
+    public void close (IGripperListener cb)
 	{
 	    addIsDoneListener(cb);
 	    setCurrentState(stateType.CLOSE);
@@ -270,7 +260,11 @@ public class Gripper extends RobotDevice
 	   	   
 	    try { Thread.sleep(4000); } catch (InterruptedException e) { e.printStackTrace(); }
 	}
-	public void lift(IGripperListener cb)
+	/* (non-Javadoc)
+     * @see device.IGripper2#lift(device.external.IGripperListener)
+     */
+	@Override
+    public void lift(IGripperListener cb)
 	{
 	    addIsDoneListener(cb);
         setCurrentState(stateType.LIFT);
@@ -349,6 +343,10 @@ public class Gripper extends RobotDevice
         open();
         // TODO notify
     }
+    /* (non-Javadoc)
+     * @see device.IGripper2#releaseOpen(device.external.IGripperListener)
+     */
+    @Override
     public void releaseOpen(IGripperListener cb)
     {
         addIsDoneListener(cb);
@@ -362,6 +360,10 @@ public class Gripper extends RobotDevice
         close();
         lift();
     }
+    /* (non-Javadoc)
+     * @see device.IGripper2#closeLift(device.external.IGripperListener)
+     */
+    @Override
     public void closeLift(IGripperListener cb)
     {
         addIsDoneListener(cb);
@@ -391,7 +393,11 @@ public class Gripper extends RobotDevice
 	    } else
 	    	try { Thread.sleep(5000); } catch (InterruptedException e) { e.printStackTrace(); }
     }
-	public void release (IGripperListener cb)
+	/* (non-Javadoc)
+     * @see device.IGripper2#release(device.external.IGripperListener)
+     */
+	@Override
+    public void release (IGripperListener cb)
 	{
 	    addIsDoneListener(cb);
         setCurrentState(stateType.RELEASE);
@@ -504,11 +510,19 @@ public class Gripper extends RobotDevice
     protected void setDio(Dio dio) {
         this.dio = dio;
     }
+    /* (non-Javadoc)
+     * @see device.IGripper2#addIsDoneListener(device.external.IGripperListener)
+     */
+    @Override
     public void addIsDoneListener(IGripperListener cb)
     {
         if (cb != null)
             isDoneListeners.addIfAbsent(cb);
     }
+    /* (non-Javadoc)
+     * @see device.IGripper2#removeIsDoneListener(device.external.IGripperListener)
+     */
+    @Override
     public void removeIsDoneListener(IGripperListener cb)
     {
         if (cb != null)

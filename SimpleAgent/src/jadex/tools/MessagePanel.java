@@ -1,4 +1,4 @@
-package jadex.service;
+package jadex.tools;
 
 import jadex.agent.ConsoleAgent;
 import jadex.bridge.IComponentListener;

@@ -4,10 +4,10 @@ import jadex.micro.IMicroExternalAccess;
 import jadex.micro.MicroAgent;
 import jadex.service.GoalReachedService;
 import jadex.service.HelloService;
-import jadex.service.MessagePanel;
 import jadex.service.MessageService;
 import jadex.service.ReceiveNewGoalService;
 import jadex.service.SendPositionService;
+import jadex.tools.MessagePanel;
 
 import javax.swing.SwingUtilities;
 

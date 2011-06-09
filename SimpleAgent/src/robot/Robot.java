@@ -7,7 +7,6 @@ import robot.external.IRobot;
 import data.Position;
 import device.Blobfinder;
 import device.Device;
-import device.Gripper;
 import device.Localize;
 import device.Planner;
 import device.Position2d;
@@ -16,6 +15,7 @@ import device.RangerSonar;
 import device.RangerLaser;
 import device.Simulation;
 import device.external.IDevice;
+import device.external.IGripper;
 
 /**
  * The Robot class presents a robot that can move in 2 dimensions, i.e. in x and y direction.
@@ -41,7 +41,7 @@ public class Robot extends Device implements IRobot
 	RangerSonar rSonar;
 	Planner planner;
 	Localize localizer;
-	Gripper gripper;
+	IGripper gripper;
 	Blobfinder bloFi;
 	Simulation simu;
 	
@@ -176,7 +176,7 @@ public class Robot extends Device implements IRobot
     	                bloFi = (Blobfinder) dev; break;
     
     	            case IDevice.DEVICE_GRIPPER_CODE : 
-    	                gripper = (Gripper) dev; break;
+    	                gripper = (IGripper) dev; break;
     
     	            case IDevice.DEVICE_SIMULATION_CODE : 
     	                simu = (Simulation) dev; break; 
@@ -296,7 +296,7 @@ public class Robot extends Device implements IRobot
 	/**
 	 * @return The @see Gripper @see Device or 'null' if no such device.
 	 */
-	public Gripper getGripper()
+	public IGripper getGripper()
 	{
 	    return gripper;
 	}
