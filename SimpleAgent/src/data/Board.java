@@ -11,9 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class Board
 {
 	ConcurrentHashMap<String,BoardObject> objectHm = null;
-	/**
-	 * Expire time in ms after that a @see BoardObject will be obsolete.
-	 */
+	/** Expire time in ms after that a {@link BoardObject} will be obsolete */
 	long timeout = 3600000;
 
 	public Board() {
@@ -24,7 +22,7 @@ public class Board
 	 * 
 	 * @param key
 	 * @param newObject
-	 * @return Previous @ref BoardObject or null if it was not found.
+	 * @return Previous {@link BoardObject} or null if it was not found
 	 */
 	public BoardObject addObject(String key, BoardObject newObject){
 		removeIfObsolete();
@@ -37,7 +35,7 @@ public class Board
 	/**
 	 * 
 	 * @param key
-	 * @return The @ref BoardObject for the key or null if not found on the board.
+	 * @return The {@link BoardObject} for the key or null if not found on the board.
 	 */
 	public BoardObject getObject(String key) {
 		removeIfObsolete();
@@ -46,8 +44,8 @@ public class Board
 	
 	/**
 	 * 
-	 * @param key @ref BoardObject identifier.
-	 * @return Previous @ref BoardObject or null if it was not found.
+	 * @param key {@link BoardObject} identifier.
+	 * @return Previous {@link BoardObject} or null if it was not found.
 	 */
 	public BoardObject removeObject(String key) {
 		removeIfObsolete();
@@ -72,14 +70,14 @@ public class Board
 	}
 
 	/**
-	 * @return The timeout of a @see BoardObject in ms before it will be considered obsolete.
+	 * @return The timeout of a {@link BoardObject} in ms before it will be considered obsolete.
 	 */
 	public long getTimeout() {
 		return timeout;
 	}
 
 	/**
-	 * @param timeout The timeout in ms of a @see BoardObject before it will be considered obsolete.
+	 * @param timeout The timeout in ms of a {@link BoardObject} before it will be considered obsolete.
 	 */
 	public void setTimeout(long timeout) {
 		this.timeout = timeout;
@@ -113,7 +111,7 @@ public class Board
 	}
 	/**
 	 * @param topic String identifying the topic.
-	 * @return An @see ArrayList of all board keys belonging to the given topic.
+	 * @return An {@link ArrayList} of all board keys belonging to the given topic.
 	 * Usually the topic is the Object class name.
 	 */
 	public ArrayList<String> getTopicList (String topic) {

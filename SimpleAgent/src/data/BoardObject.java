@@ -7,6 +7,7 @@ public class BoardObject {
 	double distanceGoal;
 	String topic;
 	long timestamp;
+	/** timeout in milli seconds */
 	long timeout = 3600000;
 	boolean isDone = false;
 	
@@ -59,7 +60,7 @@ public class BoardObject {
 	}
 
 	/**
-	 * @return The timestamp when this @see BoardObject was last accessed (write).
+	 * @return The timestamp when this {@link BoardObject} was last accessed (write).
 	 */
 	public long getTimestamp() {
 		return timestamp;

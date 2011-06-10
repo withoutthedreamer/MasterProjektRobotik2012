@@ -9,6 +9,12 @@ import robot.external.IRobot;
 import data.BbNote;
 import data.Position;
 
+/**
+ * Blackboard implementation.
+ * @deprecated Use {@link data.Board} instead.
+ * @author sebastian
+ *
+ */
 public class Blackboard extends Device {
 	
 	protected static Blackboard instance = null;

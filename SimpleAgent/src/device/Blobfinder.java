@@ -115,7 +115,7 @@ public class Blobfinder extends RobotDevice
 	 * Add a new listener to this device.
 	 * The callback is called whenever a new blob is found.
 	 * @param cb The callback method.
-	 * @return 
+	 * @return {@link CopyOnWriteArrayList#addIfAbsent(Object)}
 	 */
 	public boolean addBlobListener(IBlobfinderListener cb)
 	{
@@ -124,7 +124,7 @@ public class Blobfinder extends RobotDevice
 	/**
 	 * Remove a listener to this device.
 	 * @param cb The callback method.
-	 * @return 
+	 * @return {@link CopyOnWriteArrayList#remove(Object)}
 	 */
     public boolean removeBlobListener(IBlobfinderListener cb)
     {

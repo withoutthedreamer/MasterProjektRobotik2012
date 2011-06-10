@@ -6,7 +6,12 @@ import robot.external.IRobot;
 
 import device.Simulation;
 
-// Blackboard note object
+/**
+ * Blackboard note object
+ * @deprecated use {@link data.BoardObject} instead.
+ * @author sebastian
+ *
+ */
 public class BbNote {
 
 	protected Simulation simu = null;
