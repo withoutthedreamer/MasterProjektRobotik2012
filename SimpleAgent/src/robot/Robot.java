@@ -18,9 +18,10 @@ import device.external.IDevice;
 import device.external.IGripper;
 
 /**
- * The Robot class presents a robot that can move in 2 dimensions, i.e. in x and y direction.
- * It will dynamically use if possible any devices from a device node given.
- * A robot can have a current location and a goal position (global coordinate system).
+ * The Robot class represents a robot that can move in two dimensions,
+ * that is in x and y direction. It will dynamically use if possible any devices
+ * provided by the device list given. A robot can have a current location and
+ * a goal position (in global coordinate system).
  * 
  * @author sebastian
  */
@@ -63,7 +64,7 @@ public class Robot extends Device implements IRobot
 	}
 	
 	/**
-	 * @deprecated Use @see Robot#Robot(Device[]) instead.
+	 * @deprecated Use {@link Robot#Robot(Device[])} instead.
 	 * This constructor has to be overwritten in any subclasses!
 	 * It will parse all devices from the given device and connects
 	 * it to the internal device list.
@@ -126,7 +127,7 @@ public class Robot extends Device implements IRobot
 	 * always the last one of the same device code will be chosen!
 	 * @param deviceList The device list to search for applicable devices.
 	 */
-	public void connectDevices (Device[] deviceList)
+	void connectDevices (Device[] deviceList)
 	{	
 	    if (deviceList != null && deviceList.length > 0)
 	    {

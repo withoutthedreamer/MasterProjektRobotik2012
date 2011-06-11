@@ -9,12 +9,10 @@ import data.Position;
 import device.Device;
 
 /**
- * This class represents a minimal or standard coniguration
- * of a Pioneer 2DX robot at TAMS laboratory at University Hamburg
- * informatics center
- * It can be instantiated or inherited to add other devices.
+ * This class represents a minimal or standard configuration
+ * of a Pioneer 2DX robot at TAMS laboratory. Specialized classes
+ * can inherit from it to add new devices.
  * @author sebastian
- *
  */
 public class Pioneer extends Robot implements IPioneer
 {	
@@ -28,7 +26,7 @@ public class Pioneer extends Robot implements IPioneer
 
 
     /**
-     * @deprecated Use @see #Pioneer(Device[]) instead.
+     * @deprecated Use {@see Pioneer#Pioneer(Device[])} instead.
      * Creates a Pioneer robot object.
      * @param roboDevices The robot devices this robot can access.
      */

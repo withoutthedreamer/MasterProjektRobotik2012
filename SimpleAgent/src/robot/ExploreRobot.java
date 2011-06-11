@@ -11,11 +11,13 @@ import device.Device;
  * 
  * @author sebastian
  */
+@SuppressWarnings("deprecation")
 public class ExploreRobot extends Pioneer
 {
 	/** Logging support */
     Logger logger = Logger.getLogger (ExploreRobot.class.getName ());
 
+    /** @deprecated */
 	protected Blackboard blackboard = null;
 
 	/**
