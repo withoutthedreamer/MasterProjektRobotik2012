@@ -591,7 +591,7 @@ public class Pioneer extends Robot implements IPioneer
     }
 
     /**
-     * @param currentState the currentState to set
+     * @param newCurrentState the currentState to set
      */
     void setCurrentState(StateType newCurrentState)
     {
