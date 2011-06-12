@@ -2,7 +2,6 @@ package robot;
 
 import java.util.logging.Logger;
 
-import device.Blackboard;
 import device.Device;
 
 /**
@@ -11,14 +10,10 @@ import device.Device;
  * 
  * @author sebastian
  */
-@SuppressWarnings("deprecation")
 public class ExploreRobot extends Pioneer
 {
 	/** Logging support */
     Logger logger = Logger.getLogger (ExploreRobot.class.getName ());
-
-    /** @deprecated */
-	protected Blackboard blackboard = null;
 
 	/**
 	 * @deprecated Use {@link #ExploreRobot(Device[])} instead.
@@ -42,14 +37,5 @@ public class ExploreRobot extends Pioneer
 	        logger.config("No blobfinder device found "+this);
 	        throw new IllegalStateException("No blobfinder device found");
 	    }
-	}
-	
-	/**
-	 * @deprecated
-	 * @param bb
-	 */
-	public void setBlackboard (Blackboard bb)
-	{
-		blackboard = bb;
-	}
+	}	
 }

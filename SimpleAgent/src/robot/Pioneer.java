@@ -26,7 +26,7 @@ public class Pioneer extends Robot implements IPioneer
 
 
     /**
-     * @deprecated Use {@see Pioneer#Pioneer(Device[])} instead.
+     * @deprecated Use {@link Pioneer#Pioneer(Device[])} instead.
      * Creates a Pioneer robot object.
      * @param roboDevices The robot devices this robot can access.
      */
