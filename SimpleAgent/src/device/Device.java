@@ -26,21 +26,22 @@ public class Device implements IDevice, Runnable
 	
 	/**
 	 * If it is an abstract device the following fields are not set.
+	 * These are dependend on the used MRS level underneath.
 	 */
 	/** The numerical identifiers of this device. */
-	int name = -1;
+	int id = -1;
 	/** The host string, i.e. network name. */
 	String host = null;
 	/** The port number, i.e. host port. */
 	int port = -1;
 	/** The numerical device number. */
-	int deviceNumber = -1;
+	int index = -1;
 	
 	/** Every class of this type has it's own thread */
 	Thread thread = new Thread ( this );
 
 	/** The periodical idle time in ms this device sleeps between action cycles. */
-	long SLEEPTIME = 100;
+	long sleeptime = 100;
 	
 	/** Indicating if this device is currently in an action cycle. */
 	boolean isRunning = false;
@@ -58,19 +59,19 @@ public class Device implements IDevice, Runnable
      * This constructor is used to create a data device object
      * and has no internal devicelist or thread
      *
-	 * @param name The Device id.
+	 * @param id The Device id.
 	 * @param host The host to which this Device is connected.
 	 * @param port The port to which this Device is connected.
-	 * @param devNum The Device number (aka index) of the Device.
+	 * @param index The Device number (aka index) of the Device.
 	 */
-	public Device (int name, String host, int port, int devNum)
+	public Device (int id, String host, int port, int index)
 	{
 		this();
-		this.name = name;
+		this.id = id;
 		if (host != null)
 			this.host = host;
 		this.port = port;
-		deviceNumber = devNum;
+		this.index = index;
 	}
 	/**
 	 * Creates a device with the given properties.
@@ -180,12 +181,12 @@ public class Device implements IDevice, Runnable
 	            /** Do sub-class specific stuff */
 	            update();
 
-	            if (SLEEPTIME > 0)
+	            if (sleeptime > 0)
 	            {
-	                Thread.sleep ( SLEEPTIME );
+	                Thread.sleep ( sleeptime );
 	            }
 	            else
-	                if (SLEEPTIME == 0)
+	                if (sleeptime == 0)
 	                {
 	                    Thread.yield();
 	                }
@@ -289,6 +290,7 @@ public class Device implements IDevice, Runnable
     }
     
     /**
+     * @deprecated
      * Adds the devices of the given device node to this one.
      * @param dev The device node containing other devices.
      */
@@ -395,21 +397,21 @@ public class Device implements IDevice, Runnable
 	 */
 	public int getName()
 	{
-		return name;
+		return id;
 	}
 	/**
 	 * Sets this device' numerical identifier.
 	 * @param name The identifier.
 	 */
 	public void setName(int name) {
-		this.name = name;
+		this.id = name;
 	}
 	/**
 	 * @return The device number.
 	 */
 	public int getDeviceNumber()
 	{
-		return deviceNumber;
+		return index;
 	}
 	/**
 	 * @return This device' thread name.
@@ -430,14 +432,14 @@ public class Device implements IDevice, Runnable
 	 */
 	public void setSleepTime(long time)
 	{
-		this.SLEEPTIME = time;
+		this.sleeptime = time;
 	}
 	/**
 	 * @return This device' idle time.
 	 */
 	public long getSleepTime()
 	{
-		return SLEEPTIME;
+		return sleeptime;
 	}
 	/**
 	 * @return true if this device is currently doing something (action cycle).
