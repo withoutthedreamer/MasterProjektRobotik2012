@@ -38,9 +38,9 @@ public class Planner extends RobotDevice
 
     int newGoalValidDelay = -2;
 
-	public Planner(DeviceNode roboClient, Device device)
+	public Planner(DeviceNode deviceNode, Device device)
 	{
-		super(roboClient, device);
+		super(deviceNode, device);
 
 		goal = new Position();
 		globalGoal = new Position();

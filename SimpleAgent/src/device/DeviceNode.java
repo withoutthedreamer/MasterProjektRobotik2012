@@ -324,13 +324,18 @@ public class DeviceNode extends Device
 			}
 		}
 	}
+	/**
+	 * Creates a new device according to the device info given.
+	 * @param devInfo The device template.
+	 * @return null on failure, the device else.
+	 */
 	Device initDevice(Device devInfo)
 	{
 	    Device dev = null;
-	    int devId = devInfo.getName();
+	    int devId = devInfo.getId();
 	    String host = devInfo.getHost();
 	    int port = devInfo.getPort();
-	    int devIdx = devInfo.getDeviceNumber();
+	    int devIdx = devInfo.getIndex();
 	    
 	    switch (devId)
         {

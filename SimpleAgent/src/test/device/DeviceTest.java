@@ -92,19 +92,19 @@ public class DeviceTest {
     }
 
     /**
-     * Test method for {@link device.Device#getName()}.
+     * Test method for {@link device.Device#getId()}.
      */
     @Test
     public void testGetName() {
-        assertTrue( dev.getDevice(new Device(1,"localhost",-1,-1)).getName() == 1);
+        assertTrue( dev.getDevice(new Device(1,"localhost",-1,-1)).getId() == 1);
     }
 
     /**
-     * Test method for {@link device.Device#getDeviceNumber()}.
+     * Test method for {@link device.Device#getIndex()}.
      */
     @Test
     public void testGetDeviceNumber() {
-        assertTrue( dev.getDevice(new Device(1,"localhost",-1,-1)).getDeviceNumber() == 1);
+        assertTrue( dev.getDevice(new Device(1,"localhost",-1,-1)).getIndex() == 1);
     }
 
     /**

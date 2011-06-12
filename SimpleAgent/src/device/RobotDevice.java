@@ -63,8 +63,8 @@ public class RobotDevice extends Device
             {
                 device = myNode.getPlayerClient().requestInterface
                 (
-                    devTemplate.getName(),
-                    devTemplate.getDeviceNumber(),
+                    devTemplate.getId(),
+                    devTemplate.getIndex(),
                     PlayerConstants.PLAYER_OPEN_MODE
                 );
 
@@ -111,7 +111,7 @@ public class RobotDevice extends Device
      */
     @Override public String toString()
     {
-        return ""+getName()+"@"+getHost()+":"+getPort()+":"+getDeviceNumber();
+        return ""+getId()+"@"+getHost()+":"+getPort()+":"+getIndex();
     }
     
 }

@@ -80,10 +80,10 @@ public class Device implements IDevice, Runnable
 	public Device (Device device)
 	{
 	    this (
-            device.getName(),
+            device.getId(),
             device.getHost(),
             device.getPort(),
-            device.getDeviceNumber()
+            device.getIndex()
 	    );
 	}
 	/**
@@ -254,27 +254,6 @@ public class Device implements IDevice, Runnable
     }
     
     /**
-     * @deprecated
-     * Adds the devices of the given device node to this one.
-     * @param dev The device node containing other devices.
-     */
-    public synchronized final void addToDeviceList(Device dev)
-    {
-		/** Check if it has other devices linked */
-		Iterator<Device> iter = dev.getDeviceIterator(); 
-		
-		if (iter != null)
-		{
-			while (iter.hasNext()) {
-				/** Add the device to internal list */	
-				addToDeviceList(dev);
-			}
-		}
-		
-		deviceList.add(dev);
-	}
-	
-    /**
      * @return An iterator of the internal device list.
      */
 	public final Iterator<Device> getDeviceIterator()
@@ -295,8 +274,8 @@ public class Device implements IDevice, Runnable
 	 */
 	public final Device getDevice (Device dev)
 	{
-		int name = dev.getName();
-		int number = dev.getDeviceNumber();
+		int name = dev.getId();
+		int number = dev.getIndex();
 		Device found = null;
 		
 		Iterator<Device> it = getDeviceIterator();
@@ -304,11 +283,11 @@ public class Device implements IDevice, Runnable
 		while (it.hasNext())
 		{
 			Device curDev = it.next();
-			if (curDev.getName() == name)
+			if (curDev.getId() == name)
 			{
 				if (number != -1)
 				{
-					if (curDev.getDeviceNumber() == number)
+					if (curDev.getIndex() == number)
 					{
 						found = curDev;
 					}
@@ -359,7 +338,7 @@ public class Device implements IDevice, Runnable
 	/**
 	 * @return This device' numerical identifier.
 	 */
-	public int getName()
+	public int getId()
 	{
 		return id;
 	}
@@ -373,7 +352,7 @@ public class Device implements IDevice, Runnable
 	/**
 	 * @return The device number.
 	 */
-	public int getDeviceNumber()
+	public int getIndex()
 	{
 		return index;
 	}
@@ -428,7 +407,7 @@ public class Device implements IDevice, Runnable
     }
     @Override public String toString()
     {
-        return ""+getName()+","+getHost()+":"+getPort()+":"+getDeviceNumber()+"("+getSleepTime()+"ms)";
+        return ""+getId()+","+getHost()+":"+getPort()+":"+getIndex()+"("+getSleepTime()+"ms)";
     }
     /**
      * Compares a Device according to its properties to another one
@@ -438,10 +417,10 @@ public class Device implements IDevice, Runnable
     public boolean equals(Device aDevice)
     {
         if (
-            getName() == aDevice.getName() &&
+            getId() == aDevice.getId() &&
             getHost().equals(aDevice.getHost()) == true &&
             getPort() == aDevice.getPort() &&
-            getDeviceNumber() == aDevice.getDeviceNumber()
+            getIndex() == aDevice.getIndex()
         )
         {
             return true;
@@ -463,13 +442,13 @@ public class Device implements IDevice, Runnable
         if (aDevice == null)
             return true;
         
-        if ( getName() == aDevice.getName() || getName() == -1 || aDevice.getName() == -1 )
+        if ( getId() == aDevice.getId() || getId() == -1 || aDevice.getId() == -1 )
         {
             if ( getHost() == null || aDevice.getHost() == null || getHost().equals(aDevice.getHost()) == true )
             {
                 if ( getPort() == aDevice.getPort() || getPort() == -1 || aDevice.getPort() == -1 )
                 {
-                    if ( getDeviceNumber() == aDevice.getDeviceNumber() || getDeviceNumber() == -1 || aDevice.getDeviceNumber() == -1 )
+                    if ( getIndex() == aDevice.getIndex() || getIndex() == -1 || aDevice.getIndex() == -1 )
                     {
                         return true;
                     }

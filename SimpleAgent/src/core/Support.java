@@ -76,7 +76,7 @@ public abstract class Support
      */
     public static boolean check(Device dev)
     {
-        Boolean support = supHm.get(new Integer(dev.getName()).shortValue());
+        Boolean support = supHm.get(new Integer(dev.getId()).shortValue());
        
         if (support == null)
         {

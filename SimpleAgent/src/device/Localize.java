@@ -25,8 +25,8 @@ public class Localize extends RobotDevice
 	Position oldPosition;
 	PlayerLocalizeSetPose setPosition;
 
-	public Localize(DeviceNode roboClient, Device device) {
-		super(roboClient, device);
+	public Localize(DeviceNode deviceNode, Device device) {
+		super(deviceNode, device);
 
 		getPosition = new Position();
 		oldPosition = new Position();

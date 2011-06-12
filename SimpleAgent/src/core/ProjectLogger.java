@@ -57,7 +57,7 @@ public class ProjectLogger
 				
 			String logMsg = event + " of "
 			+ objName.toString()
-			+ " @[" + objName.getHost() + "," + objName.getPort() + "," + objName.getDeviceNumber() + "]"
+			+ " @[" + objName.getHost() + "," + objName.getPort() + "," + objName.getIndex() + "]"
 			+ " in " + threadName;
 
 			if (isError == true) {

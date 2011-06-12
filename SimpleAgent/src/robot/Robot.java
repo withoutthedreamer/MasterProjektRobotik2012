@@ -135,7 +135,7 @@ public class Robot extends Device implements IRobot
 	        {
 	            Device dev = deviceList[i];
 
-	            switch (dev.getName())
+	            switch (dev.getId())
 	            {
     	            case IDevice.DEVICE_POSITION2D_CODE :
     	                posi = (Position2d) dev; break;
