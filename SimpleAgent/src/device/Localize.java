@@ -9,6 +9,7 @@ import device.external.ILocalizeListener;
 import javaclient3.structures.PlayerPose;
 import javaclient3.structures.localize.PlayerLocalizeHypoth;
 import javaclient3.structures.localize.PlayerLocalizeSetPose;
+import javaclient3.LocalizeInterface;
 
 public class Localize extends RobotDevice
 {
@@ -39,10 +40,10 @@ public class Localize extends RobotDevice
 	}
 	@Override protected void update ()
 	{
-		if (((javaclient3.LocalizeInterface) getDevice()).isDataReady())
+		if (((LocalizeInterface) getDevice()).isDataReady())
 		{
 			/** Get current position belief */
-			PlayerLocalizeHypoth[] hypList = ((javaclient3.LocalizeInterface) device).getData().getHypoths();
+			PlayerLocalizeHypoth[] hypList = ((LocalizeInterface) device).getData().getHypoths();
 			if (hypList.length > 0)
 			{
 				/** Only first hypothesis is interesting */
