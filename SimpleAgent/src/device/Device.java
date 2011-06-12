@@ -87,42 +87,6 @@ public class Device implements IDevice, Runnable
 	    );
 	}
 	/**
-	 * @deprecated
-	 * This constructor adds all devices of the devices in the list
-	 * to its internal device list.
-	 * @param aDeviceList The list of devices that contain devices.
-	 */
-	public Device (Device[] aDeviceList)
-	{
-		this();
-		
-		if (aDeviceList != null)
-		{
-			for (int i=0; i<aDeviceList.length; i++)
-			{
-				addDevicesOf(aDeviceList[i]);
-			}
-		}
-	}
-	/**
-	 * @deprecated
-	 * Adds all devices of the given device (if any and without itself)
-	 * to the internal device list of this device.
-	 * @param yad A device containing other devices.
-	 */
-	public void addDevicesOf ( Device yad )
-	{
-		if (yad != null && deviceList != null)
-		{
-			Iterator<Device> devIt = yad.getDeviceIterator();
-			
-			while (devIt.hasNext())
-			{
-				deviceList.add(devIt.next());
-			}
-		}
-	}
-	/**
 	 * Might be to be implemented by subclass to do something
 	 */
 	protected void update() {}

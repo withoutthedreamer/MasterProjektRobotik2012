@@ -156,17 +156,6 @@ public class DeviceNodeTest extends TestCase
             }, (Device) null);
     }
 
-	@SuppressWarnings("deprecation")
-    @Test public void testDeviceNodeAddDevices()
-	{
-		deviceNode = new DeviceNode(new Host("localhost", 6665));
-		
-		DeviceNode devNode2 = new DeviceNode(new Host("localhost", 6666));
-		assertNotNull(devNode2);
-		
-		deviceNode.addDevicesOf(devNode2);
-	}	
-	
 	/** To use JUnit  test suite */
     public static JUnit4TestAdapter suite()
     { 
