@@ -128,8 +128,8 @@ public class ExploreAgent extends WallfollowAgent
         }
     }
     /**
-     * Send a new goal locating a Boardobject.
-     * @param bo The board object to be found.
+     * Send a new goal locating a {@link BoardObject}
+     * @param bo The board object to be found
      */
     void sendBlobInfo(BoardObject bo)
     {
