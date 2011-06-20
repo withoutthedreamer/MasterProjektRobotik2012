@@ -26,7 +26,7 @@ public class Device implements IDevice, Runnable
 	
 	/**
 	 * If it is an abstract device the following fields are not set.
-	 * These are dependend on the used MRS level underneath.
+	 * These are dependent on the used MRS level underneath.
 	 */
 	/** The numerical identifiers of this device. */
 	int id = -1;

@@ -353,7 +353,7 @@ public class CollectAgent extends NavAgent
         waitForTick(step);
         
         /** Depot Pose */
-        waitFor(1000, new IComponentStep()
+        waitFor(2000, new IComponentStep()
         {
 			@Override public Object execute(IInternalAccess ia) {
 		        /** Set current depot pose */
