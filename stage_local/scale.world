@@ -1,6 +1,7 @@
 # cave.world - 100 robot test and benchmark world
 # Authors: Richard Vaughan
 # $id$
+# 2011-06-25 Sebastian Rockel Robot positions fixed to not collide
 
 include "pioneer_gps.inc"
 include "map.inc"
