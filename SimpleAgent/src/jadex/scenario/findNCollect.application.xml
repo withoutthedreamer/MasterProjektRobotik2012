@@ -34,14 +34,14 @@
 					<arguments>
 						<argument name="port"> 6669 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="robId"> 2 </argument>
 					</arguments>
 				</component>
 				<component type="Collect0" name="Collect0">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 						<argument name="X"> 5.0 </argument>
 						<argument name="Y"> 5.0 </argument>
 					</arguments>
@@ -55,7 +55,7 @@
 					<arguments>
 						<argument name="port"> $args.port+4 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="robId"> 2 </argument>
             <argument name="X"> -18.5 </argument>
             <argument name="Y"> 5.5 </argument>
             <!--<argument name="Angle"> -90.0 </argument>-->
@@ -65,7 +65,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 						<argument name="X"> -22.0 </argument>
 						<argument name="Y"> 5.0 </argument>
             <argument name="Angle"> -90.0 </argument>
@@ -83,7 +83,7 @@
 					<arguments>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
+						<argument name="robId"> 1 </argument>
             <argument name="X"> -8.0 </argument>
             <argument name="Y"> 4.0 </argument>
 					</arguments>
@@ -97,7 +97,7 @@
 					<arguments>
 						<argument name="port"> $args.port+4 </argument>
 						<argument name="host"> "localhost" </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="robId"> 2 </argument>
             <argument name="X"> -18.5 </argument>
             <argument name="Y"> 5.5 </argument>
 					</arguments>
@@ -106,7 +106,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 				<!--<component type="Blob0" name="Blob0">-->
@@ -121,7 +121,7 @@
 					<arguments>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
+						<argument name="robId"> 1 </argument>
             <argument name="X"> -8.0 </argument>
             <argument name="Y"> 3.0 </argument>
 					</arguments>
@@ -130,7 +130,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
             <argument name="X"> -8.0 </argument>
             <argument name="Y"> 4.0 </argument>
 					</arguments>

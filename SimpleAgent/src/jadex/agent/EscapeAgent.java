@@ -163,7 +163,7 @@ public class EscapeAgent extends WallfollowAgent
         IArgument[] args = {
                 new Argument("host", "Player", "String", "localhost"),
                 new Argument("port", "Player", "Integer", new Integer(6665)),
-                new Argument("index", "Robot index", "Integer", new Integer(0)),
+                new Argument("robId", "Robot identifier", "Integer", new Integer(0)),
                 new Argument("devIndex", "Device index", "Integer", new Integer(0)),
                 new Argument("X", "Meter", "Double", new Double(0.0)),
                 new Argument("Y", "Meter", "Double", new Double(0.0)),

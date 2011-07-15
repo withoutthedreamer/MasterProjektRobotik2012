@@ -51,7 +51,7 @@ public class CollectAgent extends NavAgent
 
         String host = (String)getArgument("host");
         Integer port = (Integer)getArgument("port");
-        Integer robotIdx = (Integer)getArgument("index");
+        Integer robotIdx = (Integer)getArgument("robId");
         Boolean hasLaser = (Boolean)getArgument("laser");
         Boolean hasSimu = (Boolean)getArgument("simulation");
         Integer devIdx = (Integer)getArgument("devIndex");
@@ -493,7 +493,7 @@ public class CollectAgent extends NavAgent
 		IArgument[] args = {
                 new Argument("host", "Player", "String", "localhost"),
 				new Argument("port", "Player", "Integer", new Integer(6665)),
-                new Argument("index", "Robot index", "Integer", new Integer(0)),
+                new Argument("robId", "Robot identifier", "Integer", new Integer(0)),
                 new Argument("devIndex", "Device index", "Integer", new Integer(0)),
 				new Argument("X", "Meter", "Double", new Double(0.0)),
 				new Argument("Y", "Meter", "Double", new Double(0.0)),

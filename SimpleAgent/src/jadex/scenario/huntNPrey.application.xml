@@ -46,7 +46,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 			</components>
@@ -58,7 +58,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 				<component type="Follow0" name="Follow0">
@@ -66,7 +66,7 @@
 						<argument name="robot"> 3 </argument>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 4 </argument>
+						<argument name="robId"> 4 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
@@ -79,7 +79,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 				<component type="Follow0" name="Follow0">
@@ -87,7 +87,7 @@
 						<argument name="robot"> 3 </argument>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 4 </argument>
+						<argument name="robId"> 4 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
@@ -96,7 +96,7 @@
 						<argument name="robot"> 3 </argument>
 						<argument name="port"> 6669 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="robId"> 2 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
@@ -109,7 +109,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 					</arguments>
 				</component>
 				<component type="Follow0" name="Follow0">
@@ -117,7 +117,7 @@
 						<argument name="robot"> 0 </argument>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
@@ -126,7 +126,7 @@
 						<argument name="robot"> 0 </argument>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 4 </argument>
+						<argument name="robId"> 4 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
@@ -135,7 +135,7 @@
 						<argument name="robot"> 0 </argument>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "134.100.13.163" </argument>
-						<argument name="index"> 5 </argument>
+						<argument name="robId"> 5 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
@@ -148,7 +148,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 				<component type="Follow2" name="Follow2">
@@ -156,7 +156,7 @@
 						<argument name="robot"> 3 </argument>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 4 </argument>
+						<argument name="robId"> 4 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
@@ -165,7 +165,7 @@
 						<argument name="robot"> 3 </argument>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "134.100.13.163" </argument>
-						<argument name="index"> 5 </argument>
+						<argument name="robId"> 5 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>
@@ -178,7 +178,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 						<argument name="X"> 1.0 </argument>
 						<argument name="Y"> 1.0 </argument>
 					</arguments>
@@ -188,7 +188,7 @@
 						<argument name="robot"> 0 </argument>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
+						<argument name="robId"> 1 </argument>
 						<argument name="updateInterval"> 3000 </argument>
 						<argument name="X"> -7.0 </argument>
 						<argument name="Y"> 7.0 </argument>
@@ -199,7 +199,7 @@
 						<argument name="robot"> 0 </argument>
 						<argument name="port"> $args.port+4 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="robId"> 2 </argument>
 						<argument name="updateInterval"> 5000 </argument>
 						<argument name="X"> -7.0 </argument>
 						<argument name="Y"> -3.0 </argument>
@@ -214,7 +214,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 						<argument name="X"> -17.0 </argument>
 						<argument name="Y"> -1.5 </argument>
 						<argument name="Angle"> 180.0 </argument>
@@ -225,7 +225,7 @@
 						<argument name="robot"> 0 </argument>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
+						<argument name="robId"> 1 </argument>
 						<argument name="updateInterval"> 3000 </argument>
 						<argument name="X"> -25.0 </argument>
 						<argument name="Y"> 3.5 </argument>
@@ -237,7 +237,7 @@
 						<argument name="robot"> 0 </argument>
 						<argument name="port"> $args.port+4 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="robId"> 2 </argument>
 						<argument name="updateInterval"> 5000 </argument>
 						<argument name="X"> -29.0 </argument>
 						<argument name="Y"> -1.5 </argument>
@@ -253,7 +253,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 						<argument name="X"> -17.0 </argument>
 						<argument name="Y"> -1.5 </argument>
 						<argument name="Angle"> 180.0 </argument>
@@ -264,7 +264,7 @@
 						<argument name="robot"> 0 </argument>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
+						<argument name="robId"> 1 </argument>
 						<argument name="updateInterval"> 3000 </argument>
 						<argument name="X"> -10.0 </argument>
 						<argument name="Y"> 4.0 </argument>
@@ -276,7 +276,7 @@
 						<argument name="robot"> 0 </argument>
 						<argument name="port"> $args.port+4 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="robId"> 2 </argument>
 						<argument name="updateInterval"> 5000 </argument>
 						<argument name="X"> 0.0 </argument>
 						<argument name="Y"> -1.5 </argument>

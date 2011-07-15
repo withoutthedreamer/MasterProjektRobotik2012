@@ -34,7 +34,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 					</arguments>
 				</component>
 			</components>
@@ -46,7 +46,7 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 			</components>
@@ -58,14 +58,14 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 					</arguments>
 				</component>
 				<component type="Nav1" name="Nav1">
 					<arguments>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
+						<argument name="robId"> 1 </argument>
 					</arguments>
 				</component>
 			</components>
@@ -77,14 +77,14 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 				<component type="Nav4" name="Nav4">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 4 </argument>
+						<argument name="robId"> 4 </argument>
 					</arguments>
 				</component>
 			</components>
@@ -96,21 +96,21 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 					</arguments>
 				</component>
 				<component type="Nav1" name="Nav1">
 					<arguments>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
+						<argument name="robId"> 1 </argument>
 					</arguments>
 				</component>
 				<component type="Nav2" name="Nav2">
 					<arguments>
 						<argument name="port"> $args.port+4 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="robId"> 2 </argument>
 					</arguments>
 				</component>
 			</components>
@@ -122,21 +122,21 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 				<component type="Nav4" name="Nav4">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 4 </argument>
+						<argument name="robId"> 4 </argument>
 					</arguments>
 				</component>
 				<component type="Nav5" name="Nav5">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "134.100.13.163" </argument>
-						<argument name="index"> 5 </argument>
+						<argument name="robId"> 5 </argument>
 					</arguments>
 				</component>
 			</components>
@@ -148,42 +148,42 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 0 </argument>
+						<argument name="robId"> 0 </argument>
 					</arguments>
 				</component>
 				<component type="Nav1" name="Nav1">
 					<arguments>
 						<argument name="port"> $args.port+2 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 1 </argument>
+						<argument name="robId"> 1 </argument>
 					</arguments>
 				</component>
 				<component type="Nav2" name="Nav2">
 					<arguments>
 						<argument name="port"> $args.port+4 </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="index"> 2 </argument>
+						<argument name="robId"> 2 </argument>
 					</arguments>
 				</component>
 				<component type="Nav3" name="Nav3">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams66" </argument>
-						<argument name="index"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 				<component type="Nav4" name="Nav4">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "tams67" </argument>
-						<argument name="index"> 4 </argument>
+						<argument name="robId"> 4 </argument>
 					</arguments>
 				</component>
 				<component type="Nav5" name="Nav5">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> "134.100.13.163" </argument>
-						<argument name="index"> 5 </argument>
+						<argument name="robId"> 5 </argument>
 					</arguments>
 				</component>
 			</components>

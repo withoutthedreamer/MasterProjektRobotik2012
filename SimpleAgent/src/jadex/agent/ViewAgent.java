@@ -42,7 +42,7 @@ public class ViewAgent extends MicroAgent
 
 		String host = (String)getArgument("host");
         Integer port = (Integer)getArgument("port");
-        int id = (Integer)getArgument("robot");
+        int id = (Integer)getArgument("robId");
         if (id != -1)
             folRobot = "r"+id;
 
@@ -119,7 +119,7 @@ public class ViewAgent extends MicroAgent
 		IArgument[] args = {
                 new Argument("host", "Player", "String", "localhost"),
 				new Argument("port", "Player", "Integer", new Integer(6600)),
-                new Argument("robot", "Only track this", "Integer", new Integer(-1))
+                new Argument("robId", "Only track this", "Integer", new Integer(-1))
 		};
 		
 		return new MicroAgentMetaInfo("This agent starts up a view agent.", null, args, null);

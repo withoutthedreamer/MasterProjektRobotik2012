@@ -37,7 +37,7 @@ public class SwarmAgent extends NavAgent
 
         String host = (String)getArgument("host");
         Integer port = (Integer)getArgument("port");
-        Integer robotIdx = (Integer)getArgument("index");
+        Integer robotIdx = (Integer)getArgument("robId");
         
         /** Get the device node */
         deviceNode = new DeviceNode(
@@ -77,7 +77,7 @@ public class SwarmAgent extends NavAgent
         IArgument[] args = {
                 new Argument("host", "Robot host", "String", "localhost"),
                 new Argument("port", "Robot port", "Integer", new Integer(6665)),
-                new Argument("index", "Robot index", "Integer", new Integer(0)),
+                new Argument("robId", "Robot identifier", "Integer", new Integer(0)),
                 new Argument("X", "Meter", "Double", new Double(0.0)),
                 new Argument("Y", "Meter", "Double", new Double(0.0)),
                 new Argument("Angle", "Degree", "Double", new Double(0.0))
