@@ -37,7 +37,8 @@ define yellowrob robot( color "yellow" )
 define redrob robot( color "red" )
 
 # Place some robots
-yellowrob ( pose [ -21 4 0 0 ] name "r0" )
+#yellowrob ( pose [ -21 4 0 0 ] name "r0" )
+yellowrob ( pose [ -19.5 3.5 0 0 ] name "r0" )
 yellowrob ( pose [ -21 3 0 0 ] name "r1" )
 yellowrob ( pose [ -21 2 0 0 ] name "r2" )
 
@@ -47,7 +48,8 @@ redrob( pose [-19 10 0 0] name "r5" )
 
 # Place some blobs
 #blob ( pose [ -7 5 0 0] color "green" name "green")
-blob ( pose [ -21.0 1.5 0 0] color "green" name "green")
+#blob ( pose [ -21.0 1.5 0 0] color "green" name "green")
+blob ( pose [ -19.5 -1.2 0 0] color "green" name "green")
 blob ( pose [ 7 -5 0 0] color "green" name "green1")
 blob ( pose [ 2.5 7 0 0] color "green" name "green2")
 

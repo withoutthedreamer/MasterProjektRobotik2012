@@ -110,7 +110,7 @@ public class ExploreAgent extends WallfollowAgent
                             {
 //                                Position blobPose = new Position(newBlob.getRange(),0,newBlob.getAngle(Math.PI/2,80));
 //                                Position globPose = blobPose.getCartesianCoordinates().getGlobalCoordinates(getRobot().getPosition());
-                                Position globPose = new Position(-21.0,1.5,0);
+                                Position globPose = new Position(-19.5,-1.2,0);
 
                                 BoardObject bo = new BoardObject();
                                 bo.setTopic(""+newBlob.getClass());

@@ -15,6 +15,7 @@ import device.Device;
 import device.DeviceNode;
 import device.external.IDevice;
 import device.external.IGripperListener;
+import device.external.ILocalizeListener;
 import device.external.IPlannerListener;
 import jadex.bridge.*;
 import jadex.commons.ChangeEvent;
@@ -34,6 +35,7 @@ public class CollectAgent extends NavAgent
     /** Where to store objects */
     Position depotPose;
     boolean permitGripperOpen = false;
+    boolean objectInGripper = false;
     CollectAgent agent;
 
 	@Override public void agentCreated()
@@ -294,6 +296,7 @@ public class CollectAgent extends NavAgent
         });        
         /**
          *  Check if near to goal
+         *  Nice to now for approaching angle:)
          */
         final IComponentStep step = new IComponentStep()
         {
@@ -351,6 +354,35 @@ public class CollectAgent extends NavAgent
             }
         };        
         waitForTick(step);
+       
+        /**
+		 *  Register localizer callback
+		 */
+		scheduleStep(new IComponentStep()
+		{
+			public Object execute(IInternalAccess ia)
+			{
+				if (robot.getLocalizer() != null) /** Does it have a localizer? */
+				{
+				    /**
+				     * Register a localize callback.
+				     * When it is called send the new position.
+				     */
+					robot.getLocalizer().addListener(new ILocalizeListener()
+					{
+						@Override public void newPositionAvailable(Position newPose)
+						{
+							//sendPosition(newPose);
+							if (objectInGripper == true && getRobot().getSimu() != null)
+							{
+								getRobot().getSimu().setPositionOf("green", newPose);
+							}
+						}
+					});
+				}
+				return null;
+			}
+		});
         
         /** Depot Pose */
         waitFor(2000, new IComponentStep()
@@ -362,7 +394,7 @@ public class CollectAgent extends NavAgent
 				return null;
 			}        	
         });
-	}
+	} // executeBody()
 	
 	@Override public void agentKilled()
 	{
@@ -441,6 +473,7 @@ public class CollectAgent extends NavAgent
 					}                                		
             	});
 	        }
+	        objectInGripper = false;
 	    }
 	    else
 	    {
@@ -452,6 +485,7 @@ public class CollectAgent extends NavAgent
 	            getRobot().setGoal(goal);
 	            permitGripperOpen = false;
 	            logger.info("Heading to depot "+goal);
+	            objectInGripper = true;
 	        }
 	        else
 	        {
