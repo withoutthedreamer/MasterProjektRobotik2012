@@ -108,10 +108,17 @@ public class ExploreAgent extends WallfollowAgent
                             /** Board object */
                             if (bb.getObject(newBlob.getColorString()) == null)
                             {
-//                                Position blobPose = new Position(newBlob.getRange(),0,newBlob.getAngle(Math.PI/2,80));
+                                Position blobPose = new Position(newBlob.getRange(),0,newBlob.getAngle(Math.PI/2,80));
 //                                Position globPose = blobPose.getCartesianCoordinates().getGlobalCoordinates(getRobot().getPosition());
-                                Position globPose = new Position(-19.5,-1.2,0);
-
+//                                Position globPose = new Position(-19.5,-1.2,0);
+                            	Position globPose = getRobot().getPosition();
+                            	System.out.println("Rob pose: "+globPose);
+                            	// Transform to robot camera coordinates
+                            	double camRange = 2.0; // meter
+                            	globPose.setX(globPose.getX() + Math.cos(globPose.getYaw())*camRange);
+                            	globPose.setY(globPose.getY() + Math.sin(globPose.getYaw())*camRange);
+                            	
+                            	// Create board object
                                 BoardObject bo = new BoardObject();
                                 bo.setTopic(""+newBlob.getClass());
                                 bo.setPosition(globPose);

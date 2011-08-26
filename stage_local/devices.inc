@@ -12,8 +12,9 @@ define bobsblobfinder blobfinder
   colors_count 1
   colors [ "green" ]
   #fov 1.047196667 # 60 degrees = pi/3 radians
-  fov 90 # degrees
-  range 3
+  #fov 90 # degrees
+  fov 1 # degrees
+  range 2
   #range_max 5
   # camera parameters
   #image [160 120]		#resolution

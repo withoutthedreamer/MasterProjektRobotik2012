@@ -357,6 +357,7 @@ public class CollectAgent extends NavAgent
        
         /**
 		 *  Register localizer callback
+		 *  to update carried blob in Simulation
 		 */
 		scheduleStep(new IComponentStep()
 		{
@@ -372,7 +373,6 @@ public class CollectAgent extends NavAgent
 					{
 						@Override public void newPositionAvailable(Position newPose)
 						{
-							//sendPosition(newPose);
 							if (objectInGripper == true && getRobot().getSimu() != null)
 							{
 								getRobot().getSimu().setPositionOf("green", newPose);
