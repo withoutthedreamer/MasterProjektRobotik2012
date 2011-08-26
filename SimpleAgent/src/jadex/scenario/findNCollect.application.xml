@@ -22,6 +22,8 @@
 			master="true" />
 		<componenttype name="Nav1" filename="jadex/agent/NavAgent.class"
 			master="true" />
+		<componenttype name="View3" filename="jadex/agent/ViewAgent.class"
+			master="true" />
 		<!--<componenttype name="Blob0" filename="jadex/agent/BlobAgent.class"-->
 			<!--master="true" />-->
 	</componenttypes>
@@ -95,7 +97,7 @@
 			<components>
 				<component type="Explore0" name="Explore0">
 					<arguments>
-						<argument name="port"> $args.port+4 </argument>
+						<argument name="port"> 6669 </argument>
 						<argument name="host"> "localhost" </argument>
 						<argument name="robId"> 2 </argument>
             <argument name="X"> -18.5 </argument>
@@ -104,8 +106,15 @@
 				</component>
 				<component type="Collect0" name="Collect0">
 					<arguments>
-						<argument name="port"> $args.port </argument>
-						<argument name="host"> "tams66" </argument>
+						<argument name="port"> 6671 </argument>
+						<argument name="host"> "localhost" </argument>
+						<argument name="robId"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="View3" name="View3">
+					<arguments>
+						<argument name="port"> 6665 </argument>
+						<argument name="host"> "localhost" </argument>
 						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>

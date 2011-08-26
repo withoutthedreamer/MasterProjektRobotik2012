@@ -36,21 +36,21 @@
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="robot"> 3 </argument>
+						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
 				<component type="View4" name="View4">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="robot"> 4 </argument>
+						<argument name="robId"> 4 </argument>
 					</arguments>
 				</component>
 				<component type="View5" name="View5">
 					<arguments>
 						<argument name="port"> $args.port </argument>
 						<argument name="host"> $args.host </argument>
-						<argument name="robot"> 5 </argument>
+						<argument name="robId"> 5 </argument>
 					</arguments>
 				</component>
 			</components>
