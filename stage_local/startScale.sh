@@ -8,4 +8,4 @@ killall player
 
 player scale.cfg &
 player -p 6667 scale_laser.cfg &
-player -p 6666 planner_scSwarm Scenario Start Scriptale.cfg &
+player -p 6666 planner_scale.cfg &
