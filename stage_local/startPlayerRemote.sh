@@ -17,8 +17,15 @@ else
   host="$1"
   ssh -f $user@$host "cd $locDir; $locDir/startPlayer.sh"
   sleep 5
-  playernav localhost:6665 localhost:6672 &
-  ssh -F "/Users/sebastian/.ssh/tams" $host"_L6671"
+  if [ $host == "tams66" ] ; then
+    playernav localhost:6665 localhost:6672 &
+    ssh $host"_L6671"
+  fi
+  if [ $host == "tams67" ] ; then
+    #playernav localhost:6665 localhost:6674 &
+    ssh $host"_L6673"
+  fi
 fi
 
 
+    #ssh -F "/Users/sebastian/.ssh/tams" $host"_L6673"
