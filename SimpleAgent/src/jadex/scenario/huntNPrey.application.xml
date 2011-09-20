@@ -73,6 +73,27 @@
 			</components>
 		</application>
 
+		<application name="2 Robots (66,49), Tams floor, real">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> 6671 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="robId"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> 6675 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="robId"> 5 </argument>
+						<argument name="updateInterval"> 2000 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
 		<application name="4 Robots (66,67), Tams floor, mixed">
 			<components>
 				<component type="Escape0" name="Escape0">
@@ -88,6 +109,51 @@
 						<argument name="port"> 6673 </argument>
 						<argument name="host"> $args.host </argument>
 						<argument name="robId"> 4 </argument>
+						<argument name="updateInterval"> 2000 </argument>
+					</arguments>
+				</component>
+				<component type="Follow1" name="Follow1">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> 6665 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="robId"> 0 </argument>
+						<argument name="updateInterval"> 5000 </argument>
+						<argument name="X"> -29.0 </argument>
+						<argument name="Y"> -1.5 </argument>
+						<argument name="Angle"> 0.0 </argument>
+					</arguments>
+				</component>
+				<component type="Follow2" name="Follow2">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> 6667 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="robId"> 1 </argument>
+						<argument name="updateInterval"> 5000 </argument>
+						<argument name="X"> -17.0 </argument>
+						<argument name="Y"> -1.5 </argument>
+						<argument name="Angle"> 0.0 </argument>
+					</arguments>
+				</component>
+			</components>
+		</application>
+
+		<application name="4 Robots (66,49), Tams floor, mixed">
+			<components>
+				<component type="Escape0" name="Escape0">
+					<arguments>
+						<argument name="port"> 6671 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="robId"> 3 </argument>
+					</arguments>
+				</component>
+				<component type="Follow0" name="Follow0">
+					<arguments>
+						<argument name="robot"> 3 </argument>
+						<argument name="port"> 6675 </argument>
+						<argument name="host"> $args.host </argument>
+						<argument name="robId"> 5 </argument>
 						<argument name="updateInterval"> 2000 </argument>
 					</arguments>
 				</component>

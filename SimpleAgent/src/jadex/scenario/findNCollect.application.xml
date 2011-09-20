@@ -111,13 +111,13 @@
 						<argument name="robId"> 3 </argument>
 					</arguments>
 				</component>
-				<component type="View3" name="View3">
-					<arguments>
-						<argument name="port"> 6665 </argument>
-						<argument name="host"> "localhost" </argument>
-						<argument name="robId"> 3 </argument>
-					</arguments>
-				</component>
+				<!--<component type="View3" name="View3">-->
+					<!--<arguments>-->
+						<!--<argument name="port"> 6665 </argument>-->
+						<!--<argument name="host"> "localhost" </argument>-->
+						<!--<argument name="robId"> 3 </argument>-->
+					<!--</arguments>-->
+				<!--</component>-->
 				<!--<component type="Blob0" name="Blob0">-->
 					<!--<arguments>-->
 						<!--<argument name="port"> $args.port </argument>-->
