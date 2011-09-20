@@ -14,17 +14,25 @@ if [ -z $1 ] ; then
   ssh -f $user@$host3 "cd $locDir; $locDir/startPlayer.sh"
   ssh -f $user@$host2 "cd $locDir; $locDir/startPlayer.sh"
 else
-  host="$1"
-  ssh -f $user@$host "cd $locDir; $locDir/startPlayer.sh"
-  sleep 5
-  if [ $host == "tams66" ] ; then
-    playernav localhost:6665 localhost:6672 &
-    ssh $host"_L6671"
-  fi
-  if [ $host == "tams67" ] ; then
-    #playernav localhost:6665 localhost:6674 &
-    ssh $host"_L6673"
-  fi
+  for i in $*
+  do
+    #host="$1"
+    host="$i"
+    ssh -f $user@$host "cd $locDir; $locDir/startPlayer.sh"
+    sleep 5
+    if [ $host == $host1 ] ; then
+      playernav localhost:6665 localhost:6672 &
+      ssh $host"_L6671"
+    fi
+    if [ $host == $host2 ] ; then
+      playernav localhost:6665 localhost:6674 &
+      ssh $host"_L6673"
+    fi
+    if [ $host == $host3 ] ; then
+      playernav localhost:6665 localhost:6676 &
+      ssh $host"_L6675"
+    fi
+  done
 fi
 
 

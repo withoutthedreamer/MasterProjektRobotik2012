@@ -12,6 +12,9 @@ if [ -z "$1" ] ; then
   ssh -f $user@$host3 "killall player; killall player; killall player"
   ssh -f $user@$host2 "killall player; killall player; killall player"
 else
-  host="$1"
-  ssh -f $user@$host "killall player; killall player; killall player"
+  for i in $*
+  do
+    host="$i"
+    ssh -f $user@$host "killall player; killall player; killall player"
+  done
 fi
