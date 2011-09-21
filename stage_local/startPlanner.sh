@@ -20,11 +20,11 @@ sleep 2
   #0)  host3="localhost:6676"
 #esac
 
-#playernav localhost:6665 localhost:6666 localhost:6668 localhost:6670 &
-playernav localhost:6665 localhost:6666 localhost:6668 localhost:6670 \
-  localhost:6672 \
-  localhost:6676 \
-  &
+playernav localhost:6665 localhost:6666 localhost:6668 localhost:6670 &
+#playernav localhost:6665 localhost:6666 localhost:6668 localhost:6670 \
+  #localhost:6672 \
+  #localhost:6676 \
+  #&
 
   #localhost:6674 \
   #$host1 \
