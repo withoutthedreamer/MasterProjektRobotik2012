@@ -24,7 +24,8 @@ define bobsblobfinder blobfinder
 
 define bobsgripper gripper
 (
-  pose [0.23 0.000 -0.20 0.000]
+  #pose [0.23 0.000 -0.20 0.000]
+  pose [0.22 0.000 -0.20 0.000]
   color "gray"
 )
 
