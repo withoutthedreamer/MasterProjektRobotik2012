@@ -190,7 +190,7 @@ public class Robot extends Device implements IRobot
 		
 	/**
 	 * Sets a goal if the robot possesses a navigation device. 
-	 * @param newGoal New @see Position goal.
+	 * @param newGoal New {@link Position} goal.
 	 */
 	@Override public void setGoal(Position newGoal)
 	{
@@ -204,7 +204,7 @@ public class Robot extends Device implements IRobot
 		}
 	}
 	/**
-	 * @return Current goal @see Position or null.
+	 * @return Current goal {@link Position} or null.
 	 */
 	@Override public Position getGoal()
 	{
@@ -219,7 +219,7 @@ public class Robot extends Device implements IRobot
 	}
 	/**
 	 * Sets the position if the robot possesses an position device.
-	 * @param newPosition New @see Position.
+	 * @param newPosition New {@link Position}.
 	 */
 	@Override public void setPosition(Position newPosition)
 	{
@@ -246,7 +246,7 @@ public class Robot extends Device implements IRobot
 	}
 
 	/**
-	 * @return Current robot @see Position or null.
+	 * @return Current robot {@link Position} or null.
 	 */
 	@Override public Position getPosition()
 	{		
@@ -281,21 +281,21 @@ public class Robot extends Device implements IRobot
 	}
 	/**
 	 * Returns the current Planner.
-	 * @return The @see Planner or 'null' if no one is available.
+	 * @return The {@link Planner} or 'null' if no one is available.
 	 */
 	public Planner getPlanner()
 	{
 		return planner;
 	}
 	/**
-	 * @return the current @see Localize @see Device or 'null' if no such device.
+	 * @return the current {@link Localize} {@link Device} or 'null' if no such device.
 	 */
 	public Localize getLocalizer()
 	{
 		return localizer;
 	}
 	/**
-	 * @return The @see Gripper @see Device or 'null' if no such device.
+	 * @return The {@link Gripper} {@link Device} or 'null' if no such device.
 	 */
 	public IGripper getGripper()
 	{
@@ -303,7 +303,7 @@ public class Robot extends Device implements IRobot
 	}
 
     /**
-     * @return the posi
+     * @return The current position.
      */
     public Position2d getPosi()
     {
@@ -311,7 +311,7 @@ public class Robot extends Device implements IRobot
     }
 
     /**
-     * @return the laser
+     * @return The laser.
      */
     public Ranger getLaser()
     {
@@ -322,7 +322,7 @@ public class Robot extends Device implements IRobot
     }
 
     /**
-     * @return the sonar
+     * @return The sonar.
      */
     public Ranger getSonar()
     {
@@ -333,7 +333,7 @@ public class Robot extends Device implements IRobot
     }
 
     /**
-     * @return the bloFi
+     * @return The blobfinder.
      */
     public Blobfinder getBloFi()
     {
@@ -341,7 +341,7 @@ public class Robot extends Device implements IRobot
     }
 
     /**
-     * @return the simu
+     * @return The simulation.
      */
     public Simulation getSimu()
     {
@@ -349,7 +349,7 @@ public class Robot extends Device implements IRobot
     }
 
     /**
-     * @return the speed
+     * @return The speed.
      */
     public double getSpeed()
     {
@@ -357,7 +357,7 @@ public class Robot extends Device implements IRobot
     }
 
     /**
-     * @return the turnrate
+     * @return The turnrate.
      */
     public double getTurnrate()
     {
@@ -365,7 +365,7 @@ public class Robot extends Device implements IRobot
     }
 
     /**
-     * @param speed the speed to set
+     * @param speed The speed to set
      */
     public void setSpeed(double speed)
     {
@@ -373,7 +373,7 @@ public class Robot extends Device implements IRobot
     }
 
     /**
-     * @param turnrate the turnrate to set
+     * @param turnrate The turnrate to set
      */
     public void setTurnrate(double turnrate)
     {

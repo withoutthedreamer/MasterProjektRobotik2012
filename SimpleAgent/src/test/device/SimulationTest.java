@@ -111,6 +111,7 @@ public class SimulationTest
 	    Position goalPose = simu.getPositionOf("r0");
 	    System.out.println("r0 "+goalPose);
 	    
+	    //TODO debug
 	    assertTrue(goalPose.distanceTo(new Position(-2,-2,360)) < 0.1);
 
 	}

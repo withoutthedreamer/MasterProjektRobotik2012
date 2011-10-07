@@ -29,7 +29,7 @@ import javaclient3.structures.blobfinder.*;
 import javaclient3.structures.fiducial.*;
 import javaclient3.structures.laser.*;
 import javaclient3.structures.planner.*;
-import javaclient3.structures.position3d.*;
+//import javaclient3.structures.position3d.*;
 import javaclient3.structures.ptz.*;
 import javaclient3.structures.simulation.*;
 import javaclient3.structures.sonar.*;
@@ -50,6 +50,7 @@ public class Javaclient3Test {
 	
 	static NumberFormat fmt = NumberFormat.getInstance ();
 	
+	@SuppressWarnings("unused")
 	public static void main(String[] args) throws PlayerException {
 		//System.setProperty ("PlayerClient.debug", "true");
 		

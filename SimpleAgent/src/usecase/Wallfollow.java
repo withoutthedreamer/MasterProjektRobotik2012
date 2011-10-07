@@ -46,6 +46,7 @@ public class Wallfollow {
 	private static BufferedReader in = new BufferedReader(
           new InputStreamReader(System.in));
 
+	@SuppressWarnings("deprecation")
 	public static void main (String[] args) {
 		try {
 			DeviceNode roboClient = new DeviceNode("localhost", 6667);

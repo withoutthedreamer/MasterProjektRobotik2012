@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import robot.NavRobot;
-import data.Position;
+//import data.Position;
 import device.Device;
 import device.DeviceNode;
 import device.Position2d;
@@ -22,6 +22,7 @@ public class Test {
 	 * @param args
 	 * @throws IOException 
 	 */
+	@SuppressWarnings({ "unused", "deprecation" })
 	public static void main(String[] args) throws IOException {
 		NavRobot pion = null;
 		DeviceNode roboClient = null, plannerClient = null;
