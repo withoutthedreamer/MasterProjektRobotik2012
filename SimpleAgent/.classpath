@@ -29,5 +29,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jadex-runtimetools"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/jadex-xml"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Communication"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

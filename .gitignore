@@ -1,3 +1,5 @@
 .metadata/
 /doc/
 JavaPlayer/
+*.class
+SimpleAgent/bin/
