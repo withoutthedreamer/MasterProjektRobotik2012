@@ -26,6 +26,7 @@ public class AntAgent extends NavAgent {
 		addListenerToPlanner();
 		addListenerToLocalizer();
 		addListenerToSendPositionService();
+		robot.doStep();
 	}
 	
 	@Override public void agentKilled() {
