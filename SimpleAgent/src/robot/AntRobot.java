@@ -100,7 +100,7 @@ public class AntRobot extends NavRobot implements Exploration {
 	public State getState() {
 		State result = null;
 		if(state == RobotState.NEEDS_NEW_GOAL || state == RobotState.ON_THE_WAY) {
-			result = State.EXPLORATING;
+			result = State.EXPLORING;
 		} else if(state == RobotState.TRANSPORTING_BARREL) {
 			result = State.TRANSPORTING;
 		}
