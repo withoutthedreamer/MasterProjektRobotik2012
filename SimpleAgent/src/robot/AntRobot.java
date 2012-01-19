@@ -47,6 +47,7 @@ public class AntRobot extends PatrolRobot implements Exploration {
 			grid.increaseToken(Math.max(grid.getToken(prevGpos), grid.getToken(gpos))+1, gpos);
 			state = RobotState.ON_THE_WAY;
 			
+			// TODO Does this work? Does planner have a reference to state?
 			planner.addIsDoneListener(new IPlannerListener() {
 				@Override public void callWhenIsDone() {
 					state = RobotState.NEEDS_NEW_GOAL;
