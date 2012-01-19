@@ -5,14 +5,15 @@ import jadex.bridge.IInternalAccess;
 import jadex.commons.ChangeEvent;
 import jadex.commons.IChangeListener;
 import robot.AntRobot;
+import robot.PatrolRobot;
 import data.Position;
 import device.external.ILocalizeListener;
 import device.external.IPlannerListener;
 
 
-public class AntAgent extends NavAgent {
+public class PatrolAgent extends NavAgent {
 	
-	AntRobot robot;
+	PatrolRobot robot;
 	
 	public void agentCreated() {
 		super.agentCreated();
