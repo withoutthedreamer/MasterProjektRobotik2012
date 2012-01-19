@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import data.Position;
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration;
 import de.unihamburg.informatik.tams.project.communication.exploration.Grid;
 import de.unihamburg.informatik.tams.project.communication.exploration.GridPosition;
 import device.Device;
 import device.external.IPlannerListener;
-import data.Position;
 
 public class AntRobot extends PatrolRobot implements Exploration {
 
@@ -19,6 +19,7 @@ public class AntRobot extends PatrolRobot implements Exploration {
 	private data.Position ownPosition = this.getPosition();
 	
 	private Grid grid;
+	GridPosition prevGpos;
 	GridPosition gpos;
 	GridPosition goal;
 	List<GridPosition> positions;
@@ -28,6 +29,7 @@ public class AntRobot extends PatrolRobot implements Exploration {
 		if(state == RobotState.NEEDS_NEW_GOAL) {
 			ownPosition = this.getPosition();
 			position = new MapPosition((int)ownPosition.getX(), (int)ownPosition.getY());
+			prevGpos = gpos;
 			gpos = grid.getOwnPosition(position);
 
 			positions = new ArrayList<GridPosition>();
@@ -40,7 +42,7 @@ public class AntRobot extends PatrolRobot implements Exploration {
 			goal = choose();
 			grid.setRobotOnWayTo(this, goal);
 			getPlanner().setGoal(new Position(goal.getxPosition(), goal.getyPosition(), 0));
-			grid.increaseToken(grid.getToken(gpos)+1, gpos);
+			grid.increaseToken(Math.max(grid.getToken(prevGpos), grid.getToken(gpos))+1, gpos);
 			state = RobotState.ON_THE_WAY;
 			
 			getPlanner().addIsDoneListener(new IPlannerListener() {

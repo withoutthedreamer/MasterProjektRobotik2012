@@ -2,15 +2,12 @@ package robot;
 
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
 import de.unihamburg.informatik.tams.project.communication.State;
-import de.unihamburg.informatik.tams.project.communication.exploration.Exploration;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration.RobotState;
 import device.Device;
 
 public abstract class PatrolRobot extends NavRobot {
 
 	protected MapPosition position;
-
-	public abstract void doStep();
 
 	protected RobotState state;
 
@@ -40,5 +37,7 @@ public abstract class PatrolRobot extends NavRobot {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public abstract void doStep();
 
 }
