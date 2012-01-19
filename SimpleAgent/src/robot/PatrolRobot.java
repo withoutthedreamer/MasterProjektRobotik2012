@@ -28,6 +28,10 @@ public abstract class PatrolRobot extends NavRobot {
 		}
 		return result;
 	}
+	
+	public void setState(RobotState state) {
+		this.state = state;
+	}
 
 	public MapPosition getMapPosition() {
 		return position;

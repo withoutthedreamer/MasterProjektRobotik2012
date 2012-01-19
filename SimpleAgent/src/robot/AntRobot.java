@@ -10,6 +10,7 @@ import de.unihamburg.informatik.tams.project.communication.exploration.Explorati
 import de.unihamburg.informatik.tams.project.communication.exploration.Grid;
 import de.unihamburg.informatik.tams.project.communication.exploration.GridPosition;
 import device.Device;
+import device.Planner;
 import device.external.IPlannerListener;
 
 public class AntRobot extends PatrolRobot implements Exploration {
@@ -23,6 +24,7 @@ public class AntRobot extends PatrolRobot implements Exploration {
 	GridPosition gpos;
 	GridPosition goal;
 	List<GridPosition> positions;
+	Planner planner;
 	
 	@Override
 	public void doStep() {
@@ -41,11 +43,11 @@ public class AntRobot extends PatrolRobot implements Exploration {
 			
 			goal = choose();
 			grid.setRobotOnWayTo(this, goal);
-			getPlanner().setGoal(new Position(goal.getxPosition(), goal.getyPosition(), 0));
+			planner.setGoal(new Position(goal.getxPosition(), goal.getyPosition(), 0));
 			grid.increaseToken(Math.max(grid.getToken(prevGpos), grid.getToken(gpos))+1, gpos);
 			state = RobotState.ON_THE_WAY;
 			
-			getPlanner().addIsDoneListener(new IPlannerListener() {
+			planner.addIsDoneListener(new IPlannerListener() {
 				@Override public void callWhenIsDone() {
 					state = RobotState.NEEDS_NEW_GOAL;
 				}
@@ -66,6 +68,7 @@ public class AntRobot extends PatrolRobot implements Exploration {
 	public AntRobot(Device[] roboDevList) {
 		super(roboDevList);
 		state = RobotState.NEEDS_NEW_GOAL;
+		planner = getPlanner();
 		doStep();
 	}
 	
