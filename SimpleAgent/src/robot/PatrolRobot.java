@@ -73,5 +73,9 @@ public abstract class PatrolRobot extends NavRobot {
 	private Position convertBarrelCoordToWorldCoord(Barrel barrel) {
 		return null;
 	}
+	
+	private void checkForNewBarrels() {
+		
+	}
 
 }
