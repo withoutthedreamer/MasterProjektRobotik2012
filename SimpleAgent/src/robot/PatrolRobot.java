@@ -1,6 +1,9 @@
 package robot;
 
+import java.util.ArrayList;
+
 import data.Position;
+import de.unihamburg.informatik.tams.project.communication.Barrel;
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
 import de.unihamburg.informatik.tams.project.communication.State;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration.RobotState;
@@ -15,6 +18,12 @@ public abstract class PatrolRobot extends NavRobot {
 	protected RobotState state;
 
 	protected Planner planner;
+	
+	protected ArrayList<double[]> barrelPositions;
+	
+	protected ArrayList<Barrel> knownBarrels;
+
+	protected data.Position ownPosition = this.getPosition();
 
 	public PatrolRobot(Device[] devList) {
 		super(devList);
@@ -58,5 +67,11 @@ public abstract class PatrolRobot extends NavRobot {
 	}
 
 	public abstract void doStep();
+	
+	// TODO Aus den relativen Position des Barrels müssen die Weltkoordinaten berechnet werden.
+	// Barrelobject muss aus dem Informationen im Barrelarray gebaut werden. Angaben in cm. Könnte schwierig  sein
+	private Position convertBarrelCoordToWorldCoord(Barrel barrel) {
+		return null;
+	}
 
 }

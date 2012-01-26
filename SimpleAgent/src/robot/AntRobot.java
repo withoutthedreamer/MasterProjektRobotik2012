@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import data.Position;
+import de.unihamburg.informatik.tams.project.communication.Barrel;
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration;
 import de.unihamburg.informatik.tams.project.communication.exploration.Grid;
@@ -16,8 +17,6 @@ import device.external.IPlannerListener;
 public class AntRobot extends PatrolRobot implements Exploration {
 
 	private Random rand = new Random();
-	
-	private data.Position ownPosition = this.getPosition();
 	
 	private Grid grid;
 	GridPosition prevGpos;
@@ -87,6 +86,8 @@ public class AntRobot extends PatrolRobot implements Exploration {
 			public void whenError() {}
 			});
 		planner = getPlanner();
+		barrelPositions = null;
+		knownBarrels = new ArrayList<Barrel>();
 		doStep();
 	}
 	
