@@ -10,6 +10,7 @@ import de.unihamburg.informatik.tams.project.communication.exploration.Explorati
 import de.unihamburg.informatik.tams.project.communication.exploration.Grid;
 import de.unihamburg.informatik.tams.project.communication.exploration.GridPosition;
 import device.Device;
+import device.external.IGripperListener;
 import device.external.IPlannerListener;
 
 public class AntRobot extends PatrolRobot implements Exploration {
@@ -39,15 +40,12 @@ public class AntRobot extends PatrolRobot implements Exploration {
 			positions.add(new GridPosition(gpos.getxPosition(), gpos.getyPosition()+1)); // east
 			
 			goal = choose();
-			grid.setRobotOnWayTo(this, goal);
-			planner.setGoal(new Position(goal.getxPosition(), goal.getyPosition(), 0));
-			grid.increaseToken(Math.max(grid.getToken(prevGpos), grid.getToken(gpos))+1, gpos);
-			state = RobotState.ON_THE_WAY;
 			
 			// TODO Does this work? Does planner have a reference to state?
 			planner.addIsDoneListener(new IPlannerListener() {
 				@Override public void callWhenIsDone() {
 					state = RobotState.NEEDS_NEW_GOAL;
+					planner.removeIsDoneListener(this);
 				}
 
 				@Override public void callWhenAbort() {
@@ -60,12 +58,34 @@ public class AntRobot extends PatrolRobot implements Exploration {
 					logger.info("No valid path");
 				}
 			});
+			planner.setGoal(new Position(goal.getxPosition(), goal.getyPosition(), 0));
+			grid.setRobotOnWayTo(this, goal);
+			grid.increaseToken(Math.max(grid.getToken(prevGpos), grid.getToken(gpos))+1, gpos);
+			state = RobotState.ON_THE_WAY;
 		}
 	}	
 	
 	public AntRobot(Device[] roboDevList) {
 		super(roboDevList);
 		state = RobotState.NEEDS_NEW_GOAL;
+		getGripper().close(new IGripperListener(){
+			@Override
+			public void whenOpened() {}
+			@Override
+			public void whenClosed() {
+				gripperState = RobotState.GRIPPER_CLOSE;
+			}
+			@Override
+			public void whenLifted() {}
+			@Override
+			public void whenReleased() {}
+			@Override
+			public void whenClosedLifted() {}
+			@Override
+			public void whenReleasedOpened() {}
+			@Override
+			public void whenError() {}
+			});
 		planner = getPlanner();
 		doStep();
 	}
