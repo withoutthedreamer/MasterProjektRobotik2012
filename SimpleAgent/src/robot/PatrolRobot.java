@@ -75,7 +75,9 @@ public abstract class PatrolRobot extends NavRobot {
 	}
 	
 	private void checkForNewBarrels() {
-		
+		if(barrelPositions != null) {
+			
+		}
 	}
 
 }
