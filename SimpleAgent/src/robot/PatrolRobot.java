@@ -1,15 +1,20 @@
 package robot;
 
+import data.Position;
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
 import de.unihamburg.informatik.tams.project.communication.State;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration.RobotState;
 import device.Device;
+import device.Planner;
+import device.external.IGripperListener;
 
 public abstract class PatrolRobot extends NavRobot {
 
 	protected MapPosition position;
 
 	protected RobotState state;
+
+	protected Planner planner;
 
 	public PatrolRobot(Device[] devList) {
 		super(devList);
@@ -38,8 +43,18 @@ public abstract class PatrolRobot extends NavRobot {
 	}
 
 	public void transportBarrelTo(MapPosition currentPositionOfBarrel, MapPosition targetPositionOfBarrel) {
-		// TODO Auto-generated method stub
-		
+		Position barrelPos = new Position(currentPositionOfBarrel.getxPosition(), currentPositionOfBarrel.getyPosition(), 0);
+		IGripperListener gl = new IGripperListener() {
+			public void whenOpened(){}
+			public void whenClosed(){}
+			public void whenLifted(){}
+			public void whenReleased(){}
+			public void whenClosedLifted(){}
+			public void whenReleasedOpened(){}
+			public void whenError(){}
+		};
+		getGripper().open(gl);
+		getPlanner().setGoal(barrelPos);
 	}
 
 	public abstract void doStep();

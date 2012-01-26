@@ -10,7 +10,6 @@ import de.unihamburg.informatik.tams.project.communication.exploration.Explorati
 import de.unihamburg.informatik.tams.project.communication.exploration.Grid;
 import de.unihamburg.informatik.tams.project.communication.exploration.GridPosition;
 import device.Device;
-import device.Planner;
 import device.external.IPlannerListener;
 
 public class AntRobot extends PatrolRobot implements Exploration {
@@ -24,8 +23,6 @@ public class AntRobot extends PatrolRobot implements Exploration {
 	GridPosition gpos;
 	GridPosition goal;
 	List<GridPosition> positions;
-	Planner planner;
-	
 	@Override
 	public void doStep() {
 		if(state == RobotState.NEEDS_NEW_GOAL) {
