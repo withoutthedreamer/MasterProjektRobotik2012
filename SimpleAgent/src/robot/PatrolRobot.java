@@ -7,13 +7,14 @@ import de.unihamburg.informatik.tams.project.communication.Barrel;
 import de.unihamburg.informatik.tams.project.communication.BarrelColor;
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
 import de.unihamburg.informatik.tams.project.communication.State;
+import de.unihamburg.informatik.tams.project.communication.exploration.Exploration;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration.RobotState;
 import device.Device;
 import device.Planner;
 import device.external.IGripperListener;
 import device.external.IPlannerListener;
 
-public abstract class PatrolRobot extends NavRobot {
+public abstract class PatrolRobot extends NavRobot implements Exploration {
 
 	protected MapPosition position;
 
@@ -64,7 +65,7 @@ public abstract class PatrolRobot extends NavRobot {
 	public void waitForGripperState(RobotState rs) {
 		while (gripperState != rs) {
 			try {
-				Thread.sleep(500); // 500ms warten bis gripperState erneut abgefragt wird
+				Thread.sleep(500); // 500ms warten bis planerState erneut abgefragt wird
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -84,9 +85,10 @@ public abstract class PatrolRobot extends NavRobot {
 		}
 	}
 
-	public void transportBarrelTo(MapPosition currentPositionOfBarrel, MapPosition targetPositionOfBarrel) {
+	public void transportBarrelTo(Barrel barrel, MapPosition targetPositionOfBarrel) {
 		// state setzen
 		state = RobotState.TRANSPORTING_BARREL;
+		MapPosition currentPositionOfBarrel = barrel.getPosition();
 		
 		// Position der Barrel und des Ziels erzeugen
 		Position barrelPos = new Position(currentPositionOfBarrel.getxPosition(), currentPositionOfBarrel.getyPosition(), 0);

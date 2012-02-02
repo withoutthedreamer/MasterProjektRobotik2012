@@ -14,7 +14,7 @@ import device.Device;
 import device.external.IGripperListener;
 import device.external.IPlannerListener;
 
-public class AntRobot extends PatrolRobot implements Exploration {
+public class AntRobot extends PatrolRobot {
 
 	private Random rand = new Random();
 	
