@@ -56,51 +56,72 @@ public abstract class PatrolRobot extends NavRobot {
 	public MapPosition getMapPosition() {
 		return position;
 	}
+	
+	/*
+	 * Auf bestimmten gripperState warten
+	 */
+	public void waitForGripperState(RobotState rs) {
+		while (gripperState != rs) {
+			try {
+				Thread.sleep(500); // 500ms warten bis gripperState erneut abgefragt wird
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/*
+	 * Auf bestimmten plannerState warten
+	 */
+	public void waitForPlannerState(RobotState rs) {
+		while (plannerState != rs) {
+			try {
+				Thread.sleep(500); // 500ms warten bis gripperState erneut abgefragt wird
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-	public void transportBarrelTo(MapPosition currentPositionOfBarrel,
-			MapPosition targetPositionOfBarrel) {
-			// state setzen
-			state = RobotState.TRANSPORTING_BARREL;
+	public void transportBarrelTo(MapPosition currentPositionOfBarrel, MapPosition targetPositionOfBarrel) {
+		// state setzen
+		state = RobotState.TRANSPORTING_BARREL;
+		
+		// Position der Barrel und des Ziels erzeugen
+		Position barrelPos = new Position(currentPositionOfBarrel.getxPosition(), currentPositionOfBarrel.getyPosition(), 0);
+		Position targetPos = new Position(targetPositionOfBarrel.getxPosition(), targetPositionOfBarrel.getyPosition(), 0);
 
-			// Position der Barrel und des Ziels erzeugen
-			Position barrelPos = new Position(
-				currentPositionOfBarrel.getxPosition(),
-				currentPositionOfBarrel.getyPosition(), 0);
-			Position targetPos = new Position(
-				targetPositionOfBarrel.getxPosition(),
-				targetPositionOfBarrel.getyPosition(), 0);
-
-			// IGripperListener für den Gripper
-			IGripperListener gl = new IGripperListener() {
+		// IGripperListener für den Gripper
+		IGripperListener gl = new IGripperListener() {
+			@Override
 			public void whenOpened() {
 				gripperState = RobotState.GRIPPER_OPEN;
 				gripper.removeIsDoneListener(this);
 			}
+			@Override
 			public void whenClosed() {}
+			@Override
 			public void whenLifted() {}
+			@Override
 			public void whenReleased() {}
+			@Override
 			public void whenClosedLifted() {
 				gripperState = RobotState.GRIPPER_CLOSE;
 				gripper.removeIsDoneListener(this);
 			}
+			@Override
 			public void whenReleasedOpened() {
 				gripperState = RobotState.GRIPPER_OPEN;
 				gripper.removeIsDoneListener(this);
 			}
+			@Override
 			public void whenError() {}
 		};
 		// Gripper öffnen
 		gripperState = RobotState.OPENING_GRIPPER;
 		getGripper().open(gl);
 		// Warten bis Gripper offen
-		while (gripperState != RobotState.GRIPPER_OPEN) {
-			try {
-				Thread.sleep(500); // 500ms warten bis gripperState erneut
-									// abgefragt wird
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		waitForGripperState(RobotState.GRIPPER_OPEN);
 
 		// Zur Barrel fahren
 		plannerState = RobotState.DRIVING_TO_BARREL;
@@ -116,27 +137,13 @@ public abstract class PatrolRobot extends NavRobot {
 		});
 		planner.setGoal(barrelPos);
 		// Warten bis Barrel erreicht wurde
-		while (plannerState != RobotState.BARREL_REACHED) {
-			try {
-				Thread.sleep(500); // 500ms warten bis plannerState erneut
-									// abgefragt wird
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		waitForPlannerState(RobotState.BARREL_REACHED);
 
 		// Gripper schliessen
 		gripperState = RobotState.CLOSING_GRIPPER;
 		getGripper().closeLift(gl);
 		// Warten bis Gripper geschlossen
-		while (gripperState != RobotState.GRIPPER_CLOSE) {
-			try {
-				Thread.sleep(500); // 500ms warten bis gripperState erneut
-									// abgefragt wird
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		waitForGripperState(RobotState.GRIPPER_CLOSE);
 
 		// Barrel zum Ziel fahren
 		plannerState = RobotState.TRANSPORTING_BARREL;
@@ -154,27 +161,13 @@ public abstract class PatrolRobot extends NavRobot {
 		});
 		planner.setGoal(targetPos);
 		// Warten bis Ziel erreicht wurde
-		while (plannerState != RobotState.BARREL_TARGET_REACHED) {
-			try {
-				Thread.sleep(500); // 500ms warten bis plannerState erneut
-									// abgefragt wird
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		waitForPlannerState(RobotState.BARREL_TARGET_REACHED);
 
 		// Barrel absetzen
 		gripperState = RobotState.OPENING_GRIPPER;
 		getGripper().releaseOpen(gl);
 		// Warten bis Gripper offen
-		while (gripperState != RobotState.GRIPPER_OPEN) {
-			try {
-				Thread.sleep(500); // 500ms warten bis gripperState erneut
-									// abgefragt wird
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		waitForGripperState(RobotState.GRIPPER_OPEN);
 
 		// Etwas Abstand von der Barrel nehmen
 		Position newPos = new Position(); // TODO Abstand zur Barrel als Position berechnen!
