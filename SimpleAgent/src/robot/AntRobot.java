@@ -86,7 +86,7 @@ public class AntRobot extends PatrolRobot {
 			public void whenError() {}
 			});
 		planner = getPlanner();
-		barrelPositions = null;
+		barrelPositions = new ArrayList<double[]>();
 		knownBarrels = new ArrayList<Barrel>();
 		doStep();
 	}
