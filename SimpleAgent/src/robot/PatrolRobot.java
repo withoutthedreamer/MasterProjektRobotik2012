@@ -204,8 +204,8 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 		double x0 = ownPosition.getX();
 		double y0 = ownPosition.getY();
 		double a = ownPosition.getYaw();
-		double x = ownPosition.getX() + ycoord;
-		double y = ownPosition.getY() + (-xcoord);
+		double x = ownPosition.getX() + ycoord/100;
+		double y = ownPosition.getY() + (-xcoord/100);
 		MapPosition barrelPosition = new MapPosition(x0 + (x - x0)*Math.cos(a) - (y - y0)*Math.sin(a),
 																								 y0 + (x - x0)*Math.sin(a) + (y - y0)*Math.cos(a));
 		return barrelPosition;
@@ -213,7 +213,7 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 	
 	// TODO implementieren
 	private void checkForNewBarrels() {
-		if(barrelPositions != null) {
+		if(barrelPositions.size() != 0) {
 			for(double[] barrel : barrelPositions) {
 				Barrel currentBarrel;
 				BarrelColor color = null;
