@@ -1,6 +1,7 @@
 package robot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import data.Position;
 import de.unihamburg.informatik.tams.project.communication.Barrel;
@@ -9,7 +10,6 @@ import de.unihamburg.informatik.tams.project.communication.MapPosition;
 import de.unihamburg.informatik.tams.project.communication.RobotMap;
 import de.unihamburg.informatik.tams.project.communication.State;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration;
-import de.unihamburg.informatik.tams.project.communication.exploration.Exploration.RobotState;
 import device.Device;
 import device.Planner;
 import device.external.IGripperListener;
@@ -27,7 +27,7 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 
 	protected Planner planner;
 	
-	protected ArrayList<double[]> barrelPositions;
+	protected List<double[]> barrelPositions;
 	
 	protected ArrayList<Barrel> knownBarrels;
 
@@ -247,6 +247,7 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 				// Farbe existiert.
 				if(!knownBarrels.contains(currentBarrel)) {
 					knownBarrels.add(currentBarrel);
+					map.setBarrel(currentBarrel);
 				}
 			}
 		}

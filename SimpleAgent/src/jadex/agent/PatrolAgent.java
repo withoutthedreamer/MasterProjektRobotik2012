@@ -19,6 +19,8 @@ public class PatrolAgent extends NavAgent {
 		super.agentCreated();
 		
 		robot = new AntRobot(super.getDeviceNode().getDeviceListArray());
+		// TODO sinnvoller Serverstring
+		robot.setServer("localhost");
 		robot.setRobotId("r"+(Integer)getArgument("robId"));
 	}
 	

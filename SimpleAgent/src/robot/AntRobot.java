@@ -1,6 +1,7 @@
 package robot;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -89,7 +90,7 @@ public class AntRobot extends PatrolRobot {
 			public void whenError() {}
 			});
 		planner = getPlanner();
-		barrelPositions = new ArrayList<double[]>();
+		barrelPositions = Collections.synchronizedList(new ArrayList<double[]>());
 		knownBarrels = new ArrayList<Barrel>();
 		CommunicationFactory cf = new CommunicationFactory();
 		map = cf.getSlaveMap(server);
