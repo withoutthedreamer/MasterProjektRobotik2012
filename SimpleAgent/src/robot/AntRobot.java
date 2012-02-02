@@ -7,7 +7,6 @@ import java.util.Random;
 import data.Position;
 import de.unihamburg.informatik.tams.project.communication.Barrel;
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
-import de.unihamburg.informatik.tams.project.communication.RobotMap;
 import de.unihamburg.informatik.tams.project.communication.exploration.Grid;
 import de.unihamburg.informatik.tams.project.communication.exploration.GridPosition;
 import de.unihamburg.informatik.tams.project.communication.network.CommunicationFactory;
@@ -19,10 +18,6 @@ public class AntRobot extends PatrolRobot {
 
 	private Random rand = new Random();
 	
-	// TODO Sinnvoller Serverstring von Nöten
-	private final String server = "";
-	
-	private RobotMap map;
 	private Grid grid;
 	GridPosition prevGpos;
 	GridPosition gpos;

@@ -6,6 +6,7 @@ import data.Position;
 import de.unihamburg.informatik.tams.project.communication.Barrel;
 import de.unihamburg.informatik.tams.project.communication.BarrelColor;
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
+import de.unihamburg.informatik.tams.project.communication.RobotMap;
 import de.unihamburg.informatik.tams.project.communication.State;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration.RobotState;
@@ -31,6 +32,14 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 	protected ArrayList<Barrel> knownBarrels;
 
 	protected data.Position ownPosition = this.getPosition();
+
+	protected String server = "";
+
+	public void setServer(String server) {
+		this.server = server;
+	}
+
+	protected RobotMap map;
 
 	public PatrolRobot(Device[] devList) {
 		super(devList);
@@ -198,8 +207,7 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 	// TODO Aus den relativen Position des Barrels müssen die Weltkoordinaten berechnet werden.
 	// Barrelobject muss aus dem Informationen im Barrelarray gebaut werden. Angaben in cm. Könnte schwierig  sein
 	private MapPosition barrelCoordToWorldCoord(double xcoord, double ycoord) {
-		Position ownPosition = this.getPosition();
-
+		
 		// Drehung um ownPosition als Drehzentrum, um den Winkel ownPosition.getYawn()
 		double x0 = ownPosition.getX();
 		double y0 = ownPosition.getY();
