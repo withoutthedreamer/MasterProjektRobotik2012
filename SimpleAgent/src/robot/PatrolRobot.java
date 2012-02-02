@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import data.Position;
 import de.unihamburg.informatik.tams.project.communication.Barrel;
+import de.unihamburg.informatik.tams.project.communication.BarrelColor;
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
 import de.unihamburg.informatik.tams.project.communication.State;
 import de.unihamburg.informatik.tams.project.communication.exploration.Exploration.RobotState;
@@ -198,15 +199,51 @@ public abstract class PatrolRobot extends NavRobot {
 	
 	// TODO Aus den relativen Position des Barrels müssen die Weltkoordinaten berechnet werden.
 	// Barrelobject muss aus dem Informationen im Barrelarray gebaut werden. Angaben in cm. Könnte schwierig  sein
-	private Position convertBarrelCoordToWorldCoord(Barrel barrel) {
-		return null;
+	private MapPosition barrelCoordToWorldCoord(double xcoord, double ycoord) {
+		Position ownPosition = this.getPosition();
+
+		// Drehung um ownPosition als Drehzentrum, um den Winkel ownPosition.getYawn()
+		double x0 = ownPosition.getX();
+		double y0 = ownPosition.getY();
+		double a = ownPosition.getYaw();
+		double x = ownPosition.getX() + ycoord;
+		double y = ownPosition.getY() + (-xcoord);
+		MapPosition barrelPosition = new MapPosition(x0 + (x - x0)*Math.cos(a) - (y - y0)*Math.sin(a),
+																								 y0 + (x - x0)*Math.sin(a) + (y - y0)*Math.cos(a));
+		return barrelPosition;
 	}
 	
 	// TODO implementieren
 	private void checkForNewBarrels() {
 		if(barrelPositions != null) {
-			
+			for(double[] barrel : barrelPositions) {
+				Barrel currentBarrel;
+				BarrelColor color = null;
+				MapPosition position = barrelCoordToWorldCoord(barrel[1], barrel[2]);
+				
+				switch((int)barrel[0]) {
+				case 0:
+					color = BarrelColor.BLUE;
+					break;
+				case 1:
+					color = BarrelColor.GREEN;
+					break;
+				case 2:
+					color = BarrelColor.YELLOW;
+					break;
+				default:
+					break;
+				}
+
+				currentBarrel = new Barrel(color, position);
+				// Barrels werden im Moment nur anhand ihrer Farbe verglichen,
+				// dass ist aber auch erstmal ok, da nur ein exemplar pro
+				// Farbe existiert.
+				if(!knownBarrels.contains(currentBarrel)) {
+					knownBarrels.add(currentBarrel);
+				}
+			}
 		}
 	}
-
+	
 }
