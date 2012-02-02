@@ -7,9 +7,10 @@ import java.util.Random;
 import data.Position;
 import de.unihamburg.informatik.tams.project.communication.Barrel;
 import de.unihamburg.informatik.tams.project.communication.MapPosition;
-import de.unihamburg.informatik.tams.project.communication.exploration.Exploration;
+import de.unihamburg.informatik.tams.project.communication.RobotMap;
 import de.unihamburg.informatik.tams.project.communication.exploration.Grid;
 import de.unihamburg.informatik.tams.project.communication.exploration.GridPosition;
+import de.unihamburg.informatik.tams.project.communication.network.CommunicationFactory;
 import device.Device;
 import device.external.IGripperListener;
 import device.external.IPlannerListener;
@@ -18,6 +19,10 @@ public class AntRobot extends PatrolRobot {
 
 	private Random rand = new Random();
 	
+	// TODO Sinnvoller Serverstring von Nöten
+	private final String server = "";
+	
+	private RobotMap map;
 	private Grid grid;
 	GridPosition prevGpos;
 	GridPosition gpos;
@@ -44,6 +49,7 @@ public class AntRobot extends PatrolRobot {
 			planner.addIsDoneListener(new IPlannerListener() {
 				@Override public void callWhenIsDone() {
 					state = RobotState.NEEDS_NEW_GOAL;
+					grid.setOwnPosition(goal);
 					planner.removeIsDoneListener(this);
 				}
 
@@ -62,6 +68,8 @@ public class AntRobot extends PatrolRobot {
 			grid.increaseToken(Math.max(grid.getToken(prevGpos), grid.getToken(gpos))+1, gpos);
 			state = RobotState.ON_THE_WAY;
 		}
+
+		checkForNewBarrels();
 	}	
 	
 	public AntRobot(Device[] roboDevList) {
@@ -88,9 +96,12 @@ public class AntRobot extends PatrolRobot {
 		planner = getPlanner();
 		barrelPositions = new ArrayList<double[]>();
 		knownBarrels = new ArrayList<Barrel>();
+		CommunicationFactory cf = new CommunicationFactory();
+		map = cf.getSlaveMap(server);
 		doStep();
 	}
 	
+	@Override
 	public void setGrid(Grid grid) {
 		this.grid = grid;
 	}

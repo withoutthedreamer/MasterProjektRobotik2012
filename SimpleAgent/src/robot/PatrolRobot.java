@@ -209,7 +209,7 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 	}
 	
 	// TODO implementieren
-	private void checkForNewBarrels() {
+	protected void checkForNewBarrels() {
 		if(barrelPositions.size() != 0) {
 			for(double[] barrel : barrelPositions) {
 				Barrel currentBarrel;
