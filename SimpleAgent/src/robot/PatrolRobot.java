@@ -171,6 +171,9 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 		getGripper().releaseOpen(gl);
 		// Warten bis Gripper offen
 		waitForGripperState(RobotState.GRIPPER_OPEN);
+		
+		// Barrel aus Liste löschen
+		knownBarrels.remove(barrel);
 
 		// Etwas Abstand von der Barrel nehmen
 		Position newPos = new Position(); // TODO Abstand zur Barrel als Position berechnen!
