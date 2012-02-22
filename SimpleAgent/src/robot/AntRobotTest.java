@@ -115,7 +115,6 @@ public class AntRobotTest {
 
 	@Test
 	public void northHasFewestTokens() {
-		System.out.println("northHasFewestTokens");
 		when(grid.getToken(north)).thenReturn(0);
 		when(grid.getToken(west)).thenReturn(1);
 		when(grid.getToken(south)).thenReturn(1);
@@ -133,7 +132,6 @@ public class AntRobotTest {
 	
 	@Test
 	public void allHaveSameAmountOfTokens() {
-		System.out.println("sameAmount");
 		when(grid.getToken(north)).thenReturn(1);
 		when(grid.getToken(west)).thenReturn(1);
 		when(grid.getToken(south)).thenReturn(1);
@@ -150,7 +148,6 @@ public class AntRobotTest {
 	
 	@Test
 	public void anotherRobotIsOnWayToBestPosition() {
-		System.out.println("Other Robot to best position");
 		when(grid.getToken(north)).thenReturn(0);
 		when(grid.getToken(west)).thenReturn(1);
 		when(grid.getToken(south)).thenReturn(2);
