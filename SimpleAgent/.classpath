@@ -30,5 +30,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/jadex-xml"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Communication"/>
+	<classpathentry kind="lib" path="/home/j2006/6koch/workspace/Robot-Collaboration/SimpleAgent/mockito-all-1.9.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

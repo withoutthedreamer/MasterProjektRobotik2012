@@ -1,5 +1,6 @@
 package robot;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +24,7 @@ public class AntRobot extends PatrolRobot {
 	GridPosition prevGpos;
 	GridPosition gpos;
 	GridPosition goal;
-	List<GridPosition> positions;
+	ArrayList<GridPosition> positions;
 	@Override
 	public void doStep() {
 		if(state == RobotState.NEEDS_NEW_GOAL) {
@@ -39,7 +40,7 @@ public class AntRobot extends PatrolRobot {
 			positions.add(new GridPosition(gpos.getxPosition()+1, gpos.getyPosition())); // south
 			positions.add(new GridPosition(gpos.getxPosition(), gpos.getyPosition()+1)); // east
 			
-			goal = choose();
+			goal = choose(positions, grid);
 			
 			// TODO Does this work? Does planner have a reference to state?
 			planner.addIsDoneListener(new IPlannerListener() {
@@ -61,7 +62,11 @@ public class AntRobot extends PatrolRobot {
 			});
 			planner.setGoal(new Position(goal.getxPosition(), goal.getyPosition(), 0));
 			grid.setRobotOnWayTo(this, goal);
-			grid.increaseToken(Math.max(grid.getToken(prevGpos), grid.getToken(gpos))+1, gpos);
+			if(prevGpos == null) {
+				grid.increaseToken(grid.getToken(gpos)+1, gpos);
+			} else {
+				grid.increaseToken(Math.max(grid.getToken(prevGpos), grid.getToken(gpos))+1, gpos);
+			}
 			state = RobotState.ON_THE_WAY;
 		}
 
@@ -93,7 +98,13 @@ public class AntRobot extends PatrolRobot {
 		barrelPositions = Collections.synchronizedList(new ArrayList<double[]>());
 		knownBarrels = new ArrayList<Barrel>();
 		CommunicationFactory cf = new CommunicationFactory();
-		map = cf.getSlaveMap(server);
+		try {
+			map = cf.getSlaveMap(server, this);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		grid = map.getGrid();
 		doStep();
 	}
 	
@@ -101,19 +112,33 @@ public class AntRobot extends PatrolRobot {
 	public void setGrid(Grid grid) {
 		this.grid = grid;
 	}
+	
+	public void setPositions(ArrayList<GridPosition> positions) {
+		this.positions = positions;
+	}
 
-	private GridPosition choose() {
+	public GridPosition choose(ArrayList<GridPosition> positions, Grid grid) {
 		List<GridPosition> result = new ArrayList<GridPosition>();
 		for(GridPosition gpos : positions) {
-			if(result.size() == 0) {
+			if(grid.isRobotOnWayToToken(gpos)) {
+				System.out.println("RobotIsOnWay");
+				continue;
+			} else if(result.size() == 0) {
 				result.add(gpos);
-			} else if(!grid.isRobotOnWayToToken(gpos) && grid.getToken(gpos) == grid.getToken(result.get(0))) {
+				System.out.println("List is Empty");
+				System.out.println("gpos: "+grid.getToken(result.get(0)));
+			} else if(grid.getToken(gpos) == grid.getToken(result.get(0))) {
 				result.add(gpos);
-			} else if(!grid.isRobotOnWayToToken(gpos) && grid.getToken(gpos) < grid.getToken(result.get(0))) {
+				System.out.println("Equal Tokens as Pos in List");
+				System.out.println("gpos1: "+grid.getToken(gpos)+" gpos2 "+grid.getToken(result.get(0)));
+			} else if(grid.getToken(gpos) < grid.getToken(result.get(0))) {
 				result = new ArrayList<GridPosition>();
 				result.add(gpos);
+				System.out.println("Has Fewer Tokens");
 			}
 		}
-		return result.get(rand.nextInt(result.size()));
+		System.out.println("Size of List"+ result.size());
+		System.out.println("First element is "+ result.get(0).toString());
+		return result.get(0);
 	}
 }
