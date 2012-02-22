@@ -3,7 +3,6 @@ package robot;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import data.Host;
-import de.unihamburg.informatik.tams.project.communication.BarrelFoundListener;
 import de.unihamburg.informatik.tams.project.communication.network.CommunicationFactory;
 import device.Device;
 import device.DeviceNode;

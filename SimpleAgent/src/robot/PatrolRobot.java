@@ -239,7 +239,6 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 		return barrelPosition;
 	}
 	
-	// TODO implementieren
 	protected void checkForNewBarrels() {
 		if(barrelPositions.size() != 0) {
 			for(double[] barrel : barrelPositions) {
@@ -265,10 +264,13 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 				// Barrels werden im Moment nur anhand ihrer Farbe verglichen,
 				// dass ist aber auch erstmal ok, da nur ein exemplar pro
 				// Farbe existiert.
-				if(!knownBarrels.contains(currentBarrel)) {
-					knownBarrels.add(currentBarrel);
-					map.setBarrel(currentBarrel);
-				}
+//				if(!knownBarrels.contains(currentBarrel)) {
+//					knownBarrels.add(currentBarrel);
+//					map.setBarrel(currentBarrel);
+//				}
+				
+				// Gefundene Barrel werden ungefiltert an die Map weitergegeben
+				map.setBarrel(currentBarrel);
 			}
 		}
 	}

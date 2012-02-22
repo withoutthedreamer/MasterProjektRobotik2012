@@ -42,32 +42,39 @@ public class AntRobot extends PatrolRobot {
 			
 			goal = choose(positions, grid);
 			
-			// TODO Does this work? Does planner have a reference to state?
-			planner.addIsDoneListener(new IPlannerListener() {
-				@Override public void callWhenIsDone() {
-					state = RobotState.NEEDS_NEW_GOAL;
-					grid.setOwnPosition(goal);
-					planner.removeIsDoneListener(this);
-				}
+			if (goal != null) {
+				// TODO Does this work? Does planner have a reference to state?
+				planner.addIsDoneListener(new IPlannerListener() {
+					@Override
+					public void callWhenIsDone() {
+						state = RobotState.NEEDS_NEW_GOAL;
+						grid.setOwnPosition(goal);
+						planner.removeIsDoneListener(this);
+					}
 
-				@Override public void callWhenAbort() {
-					/** Set the goal again. */
-					//robot.setGoal(robot.getGoal());
-					logger.info("Aborted");
-				}
+					@Override
+					public void callWhenAbort() {
+						/** Set the goal again. */
+						//robot.setGoal(robot.getGoal());
+						logger.info("Aborted");
+					}
 
-				@Override public void callWhenNotValid() {
-					logger.info("No valid path");
+					@Override
+					public void callWhenNotValid() {
+						logger.info("No valid path");
+					}
+				});
+				planner.setGoal(new Position(goal.getxPosition(), goal.getyPosition(),
+						0));
+				grid.setRobotOnWayTo(this, goal);
+				if (prevGpos == null) {
+					grid.increaseToken(grid.getToken(gpos) + 1, gpos);
+				} else {
+					grid.increaseToken(
+							Math.max(grid.getToken(prevGpos), grid.getToken(gpos)) + 1, gpos);
 				}
-			});
-			planner.setGoal(new Position(goal.getxPosition(), goal.getyPosition(), 0));
-			grid.setRobotOnWayTo(this, goal);
-			if(prevGpos == null) {
-				grid.increaseToken(grid.getToken(gpos)+1, gpos);
-			} else {
-				grid.increaseToken(Math.max(grid.getToken(prevGpos), grid.getToken(gpos))+1, gpos);
+				state = RobotState.ON_THE_WAY;
 			}
-			state = RobotState.ON_THE_WAY;
 		}
 
 		checkForNewBarrels();
@@ -121,24 +128,20 @@ public class AntRobot extends PatrolRobot {
 		List<GridPosition> result = new ArrayList<GridPosition>();
 		for(GridPosition gpos : positions) {
 			if(grid.isRobotOnWayToToken(gpos)) {
-				System.out.println("RobotIsOnWay");
 				continue;
 			} else if(result.size() == 0) {
 				result.add(gpos);
-				System.out.println("List is Empty");
-				System.out.println("gpos: "+grid.getToken(result.get(0)));
 			} else if(grid.getToken(gpos) == grid.getToken(result.get(0))) {
 				result.add(gpos);
-				System.out.println("Equal Tokens as Pos in List");
-				System.out.println("gpos1: "+grid.getToken(gpos)+" gpos2 "+grid.getToken(result.get(0)));
 			} else if(grid.getToken(gpos) < grid.getToken(result.get(0))) {
 				result = new ArrayList<GridPosition>();
 				result.add(gpos);
-				System.out.println("Has Fewer Tokens");
 			}
 		}
-		System.out.println("Size of List"+ result.size());
-		System.out.println("First element is "+ result.get(0).toString());
-		return result.get(0);
+		if (result.size() != 0) {
+			return result.get(rand.nextInt(result.size()));
+		} else {
+			return null;
+		}
 	}
 }

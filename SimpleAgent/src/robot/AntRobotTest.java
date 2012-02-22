@@ -166,6 +166,38 @@ public class AntRobotTest {
 	}
 	
 	@Test
+	public void allPositionsOccupied() {
+		when(grid.getToken(north)).thenReturn(0);
+		when(grid.getToken(west)).thenReturn(1);
+		when(grid.getToken(south)).thenReturn(2);
+		when(grid.getToken(east)).thenReturn(2);
+		
+		when(grid.isRobotOnWayToToken(north)).thenReturn(true);
+		when(grid.isRobotOnWayToToken(west)).thenReturn(true);
+		when(grid.isRobotOnWayToToken(south)).thenReturn(true);
+		when(grid.isRobotOnWayToToken(east)).thenReturn(true);
+		
+		GridPosition result = robot.choose(positions, grid);
+		assertEquals(null, result);
+	}
+	
+	@Test
+	public void twoBestPositions() {
+		when(grid.getToken(north)).thenReturn(0);
+		when(grid.getToken(west)).thenReturn(0);
+		when(grid.getToken(south)).thenReturn(2);
+		when(grid.getToken(east)).thenReturn(2);
+		
+		when(grid.isRobotOnWayToToken(north)).thenReturn(false);
+		when(grid.isRobotOnWayToToken(west)).thenReturn(false);
+		when(grid.isRobotOnWayToToken(south)).thenReturn(false);
+		when(grid.isRobotOnWayToToken(east)).thenReturn(false);
+		
+		GridPosition result = robot.choose(positions, grid);
+		assertTrue(result.equals(north) || result.equals(west));
+	}
+	
+	@Test
 	public void testMockito() {
 		when(grid.getToken(north)).thenReturn(0);
 		when(grid.getToken(west)).thenReturn(1);
