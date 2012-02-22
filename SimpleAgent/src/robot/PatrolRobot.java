@@ -185,7 +185,27 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 		knownBarrels.remove(barrel);
 
 		// Etwas Abstand von der Barrel nehmen
-		Position newPos = new Position(); // TODO Abstand zur Barrel als Position berechnen!
+		Position p = this.getPosition();
+		double yaw = Math.toDegrees(p.getYaw());
+		int x = 0;
+		int y = 0;
+		if (yaw <= 90) {
+			x = -20;
+			y = 20;
+		}
+		else if (yaw > 90 && yaw <= 180) {
+			x = 20;
+			y = 20;
+		}
+		else if (yaw > 180 && yaw <= 270) {
+			x = 20;
+			y = -20;
+		}
+		else if (yaw > 270) {
+			x = -20;
+			y = -20;
+		}
+		Position newPos = new Position(p.getX()+x, p.getY()+y, p.getYaw());
 		planner.addIsDoneListener(new IPlannerListener() {
 			@Override
 			public void callWhenIsDone() {
