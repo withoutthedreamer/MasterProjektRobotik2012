@@ -33,6 +33,7 @@ public class AntRobot extends PatrolRobot {
 			prevGpos = gpos;
 			gpos = grid.getOwnPosition(position);
 
+			// TODO wird ersetzt durch neighbours Methode des Grids
 			positions = new ArrayList<GridPosition>();
 		
 			positions.add(new GridPosition(gpos.getxPosition()-1, gpos.getyPosition())); // north
