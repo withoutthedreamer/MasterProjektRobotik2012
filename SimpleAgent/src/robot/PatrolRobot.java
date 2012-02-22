@@ -3,6 +3,7 @@ package robot;
 import java.util.ArrayList;
 import java.util.List;
 
+import roboteyes.RobotEyes;
 import data.Position;
 import de.unihamburg.informatik.tams.project.communication.Barrel;
 import de.unihamburg.informatik.tams.project.communication.BarrelColor;
@@ -34,6 +35,8 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 	protected data.Position ownPosition = this.getPosition();
 
 	protected String server = "";
+	
+	protected RobotEyes eyes;
 
 	public void setServer(String server) {
 		this.server = server;
@@ -43,6 +46,8 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 
 	public PatrolRobot(Device[] devList) {
 		super(devList);
+		// TODO Commented till Kinectdrivers work
+//		eyes = new RobotEyes(barrelPositions);
 	}
 
 	public boolean hasGripper() {
@@ -240,37 +245,39 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 	}
 	
 	protected void checkForNewBarrels() {
-		if(barrelPositions.size() != 0) {
-			for(double[] barrel : barrelPositions) {
-				Barrel currentBarrel;
-				BarrelColor color = null;
-				MapPosition position = barrelCoordToWorldCoord(barrel[1], barrel[2]);
-				
-				switch((int)barrel[0]) {
-				case 0:
-					color = BarrelColor.BLUE;
-					break;
-				case 1:
-					color = BarrelColor.GREEN;
-					break;
-				case 2:
-					color = BarrelColor.YELLOW;
-					break;
-				default:
-					break;
-				}
+		synchronized (barrelPositions) {
+			if (barrelPositions.size() != 0) {
+				for (double[] barrel : barrelPositions) {
+					Barrel currentBarrel;
+					BarrelColor color = null;
+					MapPosition position = barrelCoordToWorldCoord(barrel[1], barrel[2]);
 
-				currentBarrel = new Barrel(color, position);
-				// Barrels werden im Moment nur anhand ihrer Farbe verglichen,
-				// dass ist aber auch erstmal ok, da nur ein exemplar pro
-				// Farbe existiert.
-//				if(!knownBarrels.contains(currentBarrel)) {
-//					knownBarrels.add(currentBarrel);
-//					map.setBarrel(currentBarrel);
-//				}
-				
-				// Gefundene Barrel werden ungefiltert an die Map weitergegeben
-				map.setBarrel(currentBarrel);
+					switch ((int) barrel[0]) {
+					case 0:
+						color = BarrelColor.BLUE;
+						break;
+					case 1:
+						color = BarrelColor.GREEN;
+						break;
+					case 2:
+						color = BarrelColor.YELLOW;
+						break;
+					default:
+						break;
+					}
+
+					currentBarrel = new Barrel(color, position);
+					// Barrels werden im Moment nur anhand ihrer Farbe verglichen,
+					// dass ist aber auch erstmal ok, da nur ein exemplar pro
+					// Farbe existiert.
+					//				if(!knownBarrels.contains(currentBarrel)) {
+					//					knownBarrels.add(currentBarrel);
+					//					map.setBarrel(currentBarrel);
+					//				}
+
+					// Gefundene Barrel werden ungefiltert an die Map weitergegeben
+					map.setBarrel(currentBarrel);
+				}
 			}
 		}
 	}

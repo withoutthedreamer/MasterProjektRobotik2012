@@ -3,3 +3,4 @@
 JavaPlayer/
 *.class
 SimpleAgent/bin/
+.classpath
