@@ -61,7 +61,8 @@ public class AntRobot extends PatrolRobot {
 					@Override
 					public void callWhenIsDone() {
 						state = RobotState.NEEDS_NEW_GOAL;
-						grid.setOwnPosition(goal);
+						// TODO wieder aktivieren, wenn es keine Nullpointerexception mehr gibt
+//						grid.setOwnPosition(goal);
 						planner.removeIsDoneListener(this);
 					}
 
@@ -74,11 +75,14 @@ public class AntRobot extends PatrolRobot {
 
 					@Override
 					public void callWhenNotValid() {
+						state = RobotState.NEEDS_NEW_GOAL;
 						logger.info("No valid path");
 					}
 				});
 				// TODO Fix wenn Grid richtig funktioniert
-				Position goalPos = new Position(goal.getxPosition(), goal.getyPosition(), 0);
+				Position goalPos = new Position(goal.getxPosition(), 
+																				goal.getyPosition(), 
+																				calculateGoalYawn(goal.getxPosition(), goal.getyPosition()));
 				this.setGoal(goalPos);
 				grid.setRobotOnWayTo(this, goal);
 				if (prevGpos == null) {

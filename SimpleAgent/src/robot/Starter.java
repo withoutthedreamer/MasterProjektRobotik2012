@@ -53,7 +53,7 @@ public class Starter {
 	private void initialize() {
 		/** Device list */
 		CopyOnWriteArrayList<Device> devList = new CopyOnWriteArrayList<Device>();
-		devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,devIdx) ); // TODO why playerclient blocks if not present?
+		devList.add( new Device(IDevice.DEVICE_POSITION2D_CODE,host,port,devIdx) );
 		if (hasSimu == true)
 			devList.add( new Device(IDevice.DEVICE_SIMULATION_CODE,null,-1,-1) );
         

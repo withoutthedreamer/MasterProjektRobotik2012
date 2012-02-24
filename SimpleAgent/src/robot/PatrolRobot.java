@@ -229,8 +229,6 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 
 	public abstract void doStep();
 	
-	// TODO Aus den relativen Position des Barrels müssen die Weltkoordinaten berechnet werden.
-	// Barrelobject muss aus dem Informationen im Barrelarray gebaut werden. Angaben in cm. Könnte schwierig  sein
 	private MapPosition barrelCoordToWorldCoord(double xcoord, double ycoord) {
 		
 		// Drehung um ownPosition als Drehzentrum, um den Winkel ownPosition.getYawn()
@@ -280,6 +278,16 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 				}
 			}
 		}
+	}
+	
+	protected double calculateGoalYawn(double xGoal, double yGoal) {
+		double y = yGoal - ownPosition.getY();
+		double x = xGoal - ownPosition.getX();
+		double degree = Math.acos(x / Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
+		if(yGoal < ownPosition.getY()) {
+			degree = degree * (-1);
+		}
+		return degree; 
 	}
 	
 }
