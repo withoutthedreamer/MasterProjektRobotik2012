@@ -32,7 +32,7 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 	
 	protected ArrayList<Barrel> knownBarrels;
 
-	protected data.Position ownPosition = this.getPosition();
+	protected data.Position ownPosition = new Position(0,0,0);
 
 	protected String server = "";
 	

@@ -3,10 +3,14 @@ package robot;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import data.Host;
+import data.Position;
+import de.unihamburg.informatik.tams.project.communication.exploration.Exploration.RobotState;
 import de.unihamburg.informatik.tams.project.communication.network.CommunicationFactory;
 import device.Device;
 import device.DeviceNode;
+import device.Localize;
 import device.external.IDevice;
+import device.external.ILocalizeListener;
 
 
 public class Starter {
@@ -32,7 +36,6 @@ public class Starter {
 			e.printStackTrace();
 		}
 		start.initialize();
-		
 		start.run();
 	}
 
@@ -40,7 +43,6 @@ public class Starter {
 	private void run() {
 		while(true) {
 			if(Math.abs(lastCalled - System.currentTimeMillis()) > 1000) {
-				System.out.println("now");
 				robot.doStep();
 				lastCalled = System.currentTimeMillis();
 			}
@@ -68,15 +70,14 @@ public class Starter {
 		CopyOnWriteArrayList<Host> hostList = new CopyOnWriteArrayList<Host>();
 		hostList.add(new Host(host,port));
 		hostList.add(new Host(host,port+1));
-		if (port != 6665)
-			hostList.add(new Host(host,6665));
         
 		/** Get the device node */
 		DeviceNode devNode = new DeviceNode(hostList.toArray(new Host[hostList.size()]), devList.toArray(new Device[devList.size()]));
-//		deviceNode.runThreaded();
+		devNode.runThreaded();
 
 		robot = new AntRobot(devNode.getDeviceListArray());
 		System.out.println("Robot erstellt");
 		robot.setRobotId("r"+robotIdx);
+		robot.setState(RobotState.NEEDS_NEW_GOAL);
 	}
 }

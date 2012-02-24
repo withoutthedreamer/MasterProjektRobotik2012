@@ -4,3 +4,4 @@ JavaPlayer/
 *.class
 SimpleAgent/bin/
 .classpath
+*.swp

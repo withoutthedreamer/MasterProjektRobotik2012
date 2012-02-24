@@ -13,7 +13,9 @@ import de.unihamburg.informatik.tams.project.communication.exploration.Grid;
 import de.unihamburg.informatik.tams.project.communication.exploration.GridPosition;
 import de.unihamburg.informatik.tams.project.communication.network.CommunicationFactory;
 import device.Device;
+import device.Localize;
 import device.external.IGripperListener;
+import device.external.ILocalizeListener;
 import device.external.IPlannerListener;
 
 public class AntRobot extends PatrolRobot {
@@ -25,14 +27,23 @@ public class AntRobot extends PatrolRobot {
 	GridPosition gpos;
 	GridPosition goal;
 	ArrayList<GridPosition> positions;
+	Localize localize;
+	
 	@Override
 	public void doStep() {
-		if(state == RobotState.NEEDS_NEW_GOAL) {
+		if(ownPosition.equals(new Position(0,0,0))) {
 			ownPosition = this.getPosition();
+		}
+		System.out.println("Robotstate: "+state);
+		System.out.println("Planner aktiv " + planner.isActive());
+		System.out.println("Planner aktuelles Ziel " + planner.getGoal());
+		System.out.println("Planner aktuelles Ziel valid " + planner.isValidGoal());
+		System.out.println("Eigene Position " + ownPosition);
+		System.out.println();
+		if(state == RobotState.NEEDS_NEW_GOAL) {
 			position = new MapPosition((int)ownPosition.getX(), (int)ownPosition.getY());
 			prevGpos = gpos;
 			gpos = grid.getOwnPosition(position);
-
 			// TODO wird ersetzt durch neighbours Methode des Grids
 			positions = new ArrayList<GridPosition>();
 		
@@ -41,10 +52,11 @@ public class AntRobot extends PatrolRobot {
 			positions.add(new GridPosition(gpos.getxPosition()+1, gpos.getyPosition())); // south
 			positions.add(new GridPosition(gpos.getxPosition(), gpos.getyPosition()+1)); // east
 			
-			goal = choose(positions, grid);
+			if(!ownPosition.equals(new Position(0,0,0))) {
+				goal = choose(positions, grid);
+			}
 			
 			if (goal != null) {
-				// TODO Does this work? Does planner have a reference to state?
 				planner.addIsDoneListener(new IPlannerListener() {
 					@Override
 					public void callWhenIsDone() {
@@ -65,8 +77,9 @@ public class AntRobot extends PatrolRobot {
 						logger.info("No valid path");
 					}
 				});
-				planner.setGoal(new Position(goal.getxPosition(), goal.getyPosition(),
-						0));
+				// TODO Fix wenn Grid richtig funktioniert
+				Position goalPos = new Position(goal.getxPosition(), goal.getyPosition(), 0);
+				this.setGoal(goalPos);
 				grid.setRobotOnWayTo(this, goal);
 				if (prevGpos == null) {
 					grid.increaseToken(grid.getToken(gpos) + 1, gpos);
@@ -105,6 +118,15 @@ public class AntRobot extends PatrolRobot {
 		planner = getPlanner();
 		barrelPositions = Collections.synchronizedList(new ArrayList<double[]>());
 		knownBarrels = new ArrayList<Barrel>();
+		localizer = getLocalizer();
+		localizer.addListener(new ILocalizeListener()
+        {
+            public void newPositionAvailable(Position newPose)
+            {
+                ownPosition = newPose;
+                System.err.println("New position: "+newPose.toString());
+            }
+        });
 		CommunicationFactory cf = new CommunicationFactory();
 		try {
 			map = cf.getSlaveMap(server, this);
@@ -113,7 +135,6 @@ public class AntRobot extends PatrolRobot {
 			e.printStackTrace();
 		}
 		grid = map.getGrid();
-		doStep();
 	}
 	
 	@Override
