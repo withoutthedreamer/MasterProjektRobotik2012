@@ -44,7 +44,7 @@ public class AntRobotTest {
   @BeforeClass
   public static void setUpClass() {
   	cf = new CommunicationFactory();
-		cf.startMasterMap(null);
+		cf.startMasterMap(null, null);
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {

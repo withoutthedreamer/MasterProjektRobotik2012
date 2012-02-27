@@ -28,7 +28,7 @@ public class Starter {
 	public static void main(String[] args) {
 		Starter start = new Starter();
 		CommunicationFactory cf = new CommunicationFactory();
-		cf.startMasterMap(null);
+		cf.startMasterMap(null, null);
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
