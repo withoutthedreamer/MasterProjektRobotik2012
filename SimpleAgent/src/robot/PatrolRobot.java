@@ -47,7 +47,7 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 	public PatrolRobot(Device[] devList) {
 		super(devList);
 		// TODO Commented till Kinectdrivers work
-//		eyes = new RobotEyes(barrelPositions);
+		eyes = new RobotEyes(barrelPositions);
 	}
 
 	public boolean hasGripper() {
