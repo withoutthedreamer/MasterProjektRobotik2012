@@ -65,6 +65,10 @@ public abstract class PatrolRobot extends Pioneer implements Exploration {
 		return result;
 	}
 
+	/**
+	 * Sets the state of the robot
+	 * @param state The robot state
+	 */
 	public void setState(RobotState state) {
 		this.state = state;
 	}
@@ -227,8 +231,19 @@ public abstract class PatrolRobot extends Pioneer implements Exploration {
 		planner.setGoal(newPos);
 	}
 
+
+	/**
+	 * This method get periodically invoked. Depending on the current state it governs the robots behavior.
+	 */
 	public abstract void doStep();
 	
+	/**
+	 * Calculates from the distances given by the Kinect the world coordinates of the barrel.
+	 *
+	 * @param xcoord The distance from the middle of the robot to the middle of the barrel
+	 * @param ycoord The sidewise distance of the barrel. Positive is to the right
+	 * @return The absolute world coordinates of the barrel
+	 */
 	private MapPosition barrelCoordToWorldCoord(double xcoord, double ycoord) {
 		
 		// Drehung um ownPosition als Drehzentrum, um den Winkel ownPosition.getYawn()
@@ -242,6 +257,9 @@ public abstract class PatrolRobot extends Pioneer implements Exploration {
 		return barrelPosition;
 	}
 	
+	/**
+	 * Sends all barrels in the barrelPositions list to the map
+	 */
 	protected void checkForNewBarrels() {
 		synchronized (barrelPositions) {
 			if (barrelPositions.size() != 0) {
@@ -265,21 +283,20 @@ public abstract class PatrolRobot extends Pioneer implements Exploration {
 					}
 
 					currentBarrel = new Barrel(color, position);
-					// Barrels werden im Moment nur anhand ihrer Farbe verglichen,
-					// dass ist aber auch erstmal ok, da nur ein exemplar pro
-					// Farbe existiert.
-					//				if(!knownBarrels.contains(currentBarrel)) {
-					//					knownBarrels.add(currentBarrel);
-					//					map.setBarrel(currentBarrel);
-					//				}
-
-					// Gefundene Barrel werden ungefiltert an die Map weitergegeben
 					map.setBarrel(currentBarrel);
 				}
 			}
 		}
 	}
 	
+	/**
+	 * Calculates the yawn the robot would have at the target position, if
+	 * it could drive there in a straight line.
+	 *
+	 * @param xGoal X-coordinate of the goal
+	 * @param yGoal Y-coordinate of the goal
+	 * @return The yawn at the target position
+	 */
 	protected double calculateGoalYawn(double xGoal, double yGoal) {
 		double y = yGoal - ownPosition.getY();
 		double x = xGoal - ownPosition.getX();

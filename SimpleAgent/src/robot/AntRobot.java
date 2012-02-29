@@ -32,21 +32,13 @@ public class AntRobot extends PatrolRobot {
 	private double previousMean = 0;
 	private double movingMean = 0;
 	private int nthMean = 1;
-	
+
 	@Override
 	public void doStep() {
+
 		if(ownPosition.equals(new Position(0,0,0))) {
 			ownPosition = this.getPosition();
 		}
-		
-//		if(state == RobotState.ON_THE_WAY) {
-//			onTheWayCounter += 1;
-//		}
-//		
-//		if(onTheWayCounter >= 30) {
-//			state = RobotState.NEEDS_NEW_GOAL;
-//			System.out.println("Brauche zu lange, wähle neues Ziel");
-//		}
 		
 		if(state == RobotState.ON_THE_WAY) {
 			onTheWayCounter += 1;
@@ -63,9 +55,8 @@ public class AntRobot extends PatrolRobot {
 		
 		if(state == RobotState.NEEDS_NEW_GOAL && !ownPosition.equals(new Position(0,0,0))) {
 			onTheWayCounter = 0;
-			position = new MapPosition((int)ownPosition.getX(), (int)ownPosition.getY());
+			position = new MapPosition(ownPosition.getX(), ownPosition.getY());
 			map.setRobotMapPosition(position);
-//			System.out.println("MapPosition: " + position);
 			prevGpos = gpos;
 //			gpos = new GridPosition(ownPosition.getX(), ownPosition.getY());
 			// TODO till fixed
@@ -190,10 +181,18 @@ public class AntRobot extends PatrolRobot {
 		this.positions = positions;
 	}
 
+	/**
+	 * Gets a list of grid positions and chooses the one with the fewest tokens, where no
+	 * other robot is driving to.
+	 *
+	 * @param positions The grid positions (neighbors)
+	 * @param grid The grid
+	 * @return The grid position with fewest tokens that no other robot is driving to.
+	 */
 	public GridPosition choose(ArrayList<GridPosition> positions, Grid grid) {
 		List<GridPosition> result = new ArrayList<GridPosition>();
 		for(GridPosition gpos : positions) {
-			// Commented bis isRobotOnWayToToken gefixt ist
+			// TODO Commented bis isRobotOnWayToToken gefixt ist
 //			if(grid.isRobotOnWayToToken(gpos)) {
 //				System.out.println("Robot on the way");
 //				continue;
