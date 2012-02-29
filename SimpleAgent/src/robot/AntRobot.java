@@ -55,7 +55,7 @@ public class AntRobot extends PatrolRobot {
 		
 		if(state == RobotState.NEEDS_NEW_GOAL && !ownPosition.equals(new Position(0,0,0))) {
 			onTheWayCounter = 0;
-			position = new MapPosition((int)ownPosition.getX(), (int)ownPosition.getY());
+			position = new MapPosition(ownPosition.getX(), ownPosition.getY());
 			map.setRobotMapPosition(position);
 			prevGpos = gpos;
 //			gpos = new GridPosition(ownPosition.getX(), ownPosition.getY());
