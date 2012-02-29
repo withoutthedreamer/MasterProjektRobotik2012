@@ -5,3 +5,4 @@ JavaPlayer/
 SimpleAgent/bin/
 .classpath
 *.swp
+stage_local/startMasterProjekt.sh

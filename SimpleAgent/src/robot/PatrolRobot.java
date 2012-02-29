@@ -16,7 +16,7 @@ import device.Planner;
 import device.external.IGripperListener;
 import device.external.IPlannerListener;
 
-public abstract class PatrolRobot extends NavRobot implements Exploration {
+public abstract class PatrolRobot extends Pioneer implements Exploration {
 
 	protected MapPosition position;
 
