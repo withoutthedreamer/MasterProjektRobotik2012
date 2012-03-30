@@ -5,3 +5,5 @@ JavaPlayer/
 SimpleAgent/bin/
 .classpath
 *.swp
+*junit*
+SimpleAgent/.settings/

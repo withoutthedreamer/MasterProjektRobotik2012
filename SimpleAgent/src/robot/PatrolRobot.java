@@ -46,8 +46,6 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 
 	public PatrolRobot(Device[] devList) {
 		super(devList);
-		// TODO Commented till Kinectdrivers work
-		eyes = new RobotEyes(barrelPositions);
 	}
 
 	public boolean hasGripper() {
@@ -243,8 +241,11 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 	}
 	
 	protected void checkForNewBarrels() {
+		System.out.println("Check for new Barrels");
 		synchronized (barrelPositions) {
-			if (barrelPositions.size() != 0) {
+			System.out.println("Synchroner Zugriff erfolgt");
+			if (!barrelPositions.isEmpty()) {
+				System.out.println("barrelPositions ungleich 0");
 				for (double[] barrel : barrelPositions) {
 					Barrel currentBarrel;
 					BarrelColor color = null;
@@ -275,6 +276,9 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 
 					// Gefundene Barrel werden ungefiltert an die Map weitergegeben
 					map.setBarrel(currentBarrel);
+					System.out.println("Barrel gefunden: "+ color + " " 
+							                              + position.getxPosition() + " " 
+							                              + position.getyPosition());
 				}
 			}
 		}
@@ -289,5 +293,9 @@ public abstract class PatrolRobot extends NavRobot implements Exploration {
 		}
 		return degree; 
 	}
-	
+
+	protected void startRobotEyes(List<double[]> positions) {
+		eyes = new RobotEyes(positions);
+		new Thread(eyes).start();
+	}	
 }
