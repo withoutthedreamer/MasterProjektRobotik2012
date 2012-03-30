@@ -153,6 +153,7 @@ public class AntRobot extends PatrolRobot {
 			});
 		planner = getPlanner();
 		barrelPositions = Collections.synchronizedList(new ArrayList<double[]>());
+		startRobotEyes(barrelPositions);
 		knownBarrels = new ArrayList<Barrel>();
 		localizer = getLocalizer();
 		localizer.addListener(new ILocalizeListener()

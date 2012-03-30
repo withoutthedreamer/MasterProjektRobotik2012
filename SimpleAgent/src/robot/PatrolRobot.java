@@ -46,8 +46,6 @@ public abstract class PatrolRobot extends Pioneer implements Exploration {
 
 	public PatrolRobot(Device[] devList) {
 		super(devList);
-		// TODO Commented till Kinectdrivers work
-//		eyes = new RobotEyes(barrelPositions);
 	}
 
 	public boolean hasGripper() {
@@ -261,8 +259,11 @@ public abstract class PatrolRobot extends Pioneer implements Exploration {
 	 * Sends all barrels in the barrelPositions list to the map
 	 */
 	protected void checkForNewBarrels() {
+		System.out.println("Check for new Barrels");
 		synchronized (barrelPositions) {
-			if (barrelPositions.size() != 0) {
+			System.out.println("Synchroner Zugriff erfolgt");
+			if (!barrelPositions.isEmpty()) {
+				System.out.println("barrelPositions ungleich 0");
 				for (double[] barrel : barrelPositions) {
 					Barrel currentBarrel;
 					BarrelColor color = null;
@@ -284,6 +285,9 @@ public abstract class PatrolRobot extends Pioneer implements Exploration {
 
 					currentBarrel = new Barrel(color, position);
 					map.setBarrel(currentBarrel);
+					System.out.println("Barrel gefunden: "+ color + " " 
+							                              + position.getxPosition() + " " 
+							                              + position.getyPosition());
 				}
 			}
 		}
@@ -306,5 +310,9 @@ public abstract class PatrolRobot extends Pioneer implements Exploration {
 		}
 		return degree; 
 	}
-	
+
+	protected void startRobotEyes(List<double[]> positions) {
+		eyes = new RobotEyes(positions);
+		new Thread(eyes).start();
+	}	
 }
