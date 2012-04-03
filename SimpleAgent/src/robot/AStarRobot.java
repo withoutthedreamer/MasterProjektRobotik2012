@@ -1,5 +1,6 @@
 package robot;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -132,14 +133,14 @@ public class AStarRobot extends PatrolRobot {
 		if(ownPosition.equals(new Position(0,0,0))) {
 			ownPosition = this.getPosition();
 		}
-		
+
 		//If all vectors in the graph are visited, then generate a new graph.
 		if (_visitedTargets == _quantity) {
 			generateGraph();
 			_visitedTargets = 0;
 			_pathIterator = 0;
 		}
-		
+
 //		if (_timer == 60)
 //		{
 //			System.out.println("Timer rescue!");
@@ -147,10 +148,10 @@ public class AStarRobot extends PatrolRobot {
 //			_pathIterator++;
 //			state = RobotState.NEEDS_NEW_GOAL;
 //		}
-		
+
 		if (state == RobotState.NEEDS_NEW_GOAL) {
 			position = new MapPosition((int)ownPosition.getX(), (int)ownPosition.getY());
-			
+
 			planner.addIsDoneListener(new IPlannerListener() {
 				@Override
 				public void callWhenIsDone() {
@@ -191,7 +192,7 @@ public class AStarRobot extends PatrolRobot {
 				generateTarget();
 				aStar();
 			}
-			
+
 		}
 		_timer++;
 		checkForNewBarrels();
@@ -220,6 +221,7 @@ public class AStarRobot extends PatrolRobot {
 			});
 		planner = getPlanner();
 		barrelPositions = Collections.synchronizedList(new ArrayList<double[]>());
+		startRobotEyes(barrelPositions);
 		knownBarrels = new ArrayList<Barrel>();
 		localizer = getLocalizer();
 		localizer.addListener(new ILocalizeListener()
@@ -237,15 +239,15 @@ public class AStarRobot extends PatrolRobot {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		//Map size
 		_mapMaximumPosition = map.getMaximumPosition();
 		_mapMaxX = (int)_mapMaximumPosition.getxPosition();
 		_mapMaxY = (int)_mapMaximumPosition.getyPosition();
 		getMapLength();
-		
+
 		_grid = map.getGrid();
-		
+
 		//First Graph
 		generateGraph();
 		_visitedTargets = 0;
@@ -256,7 +258,7 @@ public class AStarRobot extends PatrolRobot {
 		generateTarget();
 		aStar();
 	}
-	
+
 	/**
 	 * Calculating the length of the Map, for 0-point is in the middle of the map.
 	 */
@@ -390,7 +392,7 @@ public class AStarRobot extends PatrolRobot {
 	}
 
 	/**
-	 * Generating a path in coordinate view from an existing way (which has nodes). 
+	 * Generating a path in coordinate view from an existing way (which has nodes).
 	 */
 	private void makePath() {
 		_path.clear();
